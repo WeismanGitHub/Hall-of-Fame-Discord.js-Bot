@@ -94,6 +94,7 @@ async function getAuthorById(id, guildId) {
 }
 
 async function checkTags(uncheckedTags, guildTags) {
+    uncheckedTags = uncheckedTags.map(tag => {tag.toLowerCase()})
     let checkedTagsObject = {
         tagsExist: true,
         checkedTags: []
