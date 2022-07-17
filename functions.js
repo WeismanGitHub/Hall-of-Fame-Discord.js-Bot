@@ -94,12 +94,15 @@ async function getAuthorById(id, guildId) {
 }
 
 async function checkTags(uncheckedTags, guildTags) {
-    uncheckedTags = uncheckedTags.map(tag => {tag.toLowerCase()})
+    uncheckedTags = uncheckedTags.map(tag => {
+        return typeof(tag) == 'string' ? tag.toLowerCase() : tag
+    })
+    
     let checkedTagsObject = {
         tagsExist: true,
         checkedTags: []
     };
-
+    
     for (let uncheckedTag of uncheckedTags) {
         if (guildTags.includes(uncheckedTag)) {
             checkedTagsObject.checkedTags.push(uncheckedTag);
@@ -110,6 +113,7 @@ async function checkTags(uncheckedTags, guildTags) {
 
     return checkedTagsObject;
 }
+
 module.exports = {
 	basicEmbed, 
 	quoteEmbed,
