@@ -1,5 +1,5 @@
-const {QuoteEmbed, errorEmbed} = require('../../functions');
-const QuoteSchema = require('../../schemas/quote-schema');
+const {quoteEmbed, errorEmbed, getAuthorById} = require('../functions');
+const QuoteSchema = require('../schemas/quote-schema');
 
 module.exports = {
     category:'Quotes',
@@ -19,9 +19,8 @@ module.exports = {
 
             const randomNumber = Math.floor(Math.random() * amountOfDocuments) + 0;
 
-            await QuoteSchema.findOne(
-                {guildId: guildId},
-                {$addToSet: {tags: tag}}
+            const randomQuote = await QuoteSchema.findOne(
+                {guildId: guildId}
             ).skip(randomNumber).lean()
 
             const author = await getAuthorById(randomQuote.authorId, guildId);
