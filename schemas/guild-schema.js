@@ -6,7 +6,6 @@ const AuthorSchema = new mongoose.Schema({
         required: [true, 'Must provide a name.\n(Probably a server error.)'],
         minlength: 1,
         maxlength: 50,
-        unique: true,
     },
     imgUrl: {
         type: String,
