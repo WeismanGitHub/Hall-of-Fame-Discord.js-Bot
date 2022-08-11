@@ -1,9 +1,5 @@
-const {errorEmbed, checkTags} = require('../../functions');
+const {errorEmbed, checkTags, audioQuoteEmbed} = require('../../functions');
 const {Constants} = require('discord.js');
-const {REST} = require('@discordjs/rest');
-const {Routes} = require('discord.js');
-const fs = require('node:fs');
-require('dotenv').config();
 
 module.exports = {
     category:'Audio Quotes',
@@ -13,8 +9,8 @@ module.exports = {
 
     options: [
         {
-            name: 'name',
-            description: "The name of the new slash command you're creating.",
+            name: 'author',
+            description: 'The name of who said the quote. You must first register an author with /createauthor.',
             required: true,
             type: Constants.ApplicationCommandOptionTypes.STRING,
         },
@@ -52,31 +48,46 @@ module.exports = {
             const guildId = interaction.guildId;
             const {options} = interaction;
 
-            const name = options.getString('name');
-            const audioFileLink = options.getString('audio file link');
-            const description= options.getString('description');
+            const inputtedAuthor = options.getString('author');
+            const checkedAuthor = await getAuthorByName(inputtedAuthor, guildId);
 
-            const uncheckedTags = [
-                options.getString('first_tag'),
-                options.getString('second_tag'),
-                options.getString('third_tag'),
-            ];
+            if (checkedAuthor.name !== 'Deleted Author') {
+                const title = options.getString('title');
+                const audioFileLink = options.getString('audio file link');
 
-            const thereAreTags = uncheckedTags.some(tag => tag !== null);
-            let checkedTags = [];
-
-            if (thereAreTags) {
-                const guildTags = (await GuildSchema.findOne({guildId: guildId}).select('tags')).tags;
-                let checkedTagsObject = await checkTags(uncheckedTags, guildTags)
-                
-                if (checkedTagsObject.tagsExist) {
-                    checkedTags = checkedTagsObject.checkedTags
-                } else {
-                    await interaction.reply(errorEmbed('Make sure all your tags exist.'))
-                    return;
+                const uncheckedTags = [
+                    options.getString('first_tag'),
+                    options.getString('second_tag'),
+                    options.getString('third_tag'),
+                ];
+    
+                const thereAreTags = uncheckedTags.some(tag => tag !== null);
+                let checkedTags = [];
+    
+                if (thereAreTags) {
+                    const guildTags = (await GuildSchema.findOne({guildId: guildId}).select('tags')).tags;
+                    let checkedTagsObject = await checkTags(uncheckedTags, guildTags)
+                    
+                    if (checkedTagsObject.tagsExist) {
+                        checkedTags = checkedTagsObject.checkedTags
+                    } else {
+                        await interaction.reply(errorEmbed('Make sure all your tags exist.'))
+                        return;
+                    }
                 }
-            }
 
+                const audioQuote = await QuoteSchema.create({
+                    guildId: guildId,
+                    authorId: checkedAuthor._id,
+                    tags: checkedTags,
+                    attachment: attachmentLink,
+                    audioQuote: true
+                });
+                
+                await interaction.reply(audioQuoteEmbed(audioQuote))
+            } else {
+                await interaction.reply(errorEmbed(`Make sure that '${inputtedAuthor}' author exists.`));
+            }
         } catch(err) {
             await interaction.reply(errorEmbed(err));
         };
