@@ -79,11 +79,11 @@ module.exports = {
                 const audioQuote = await QuoteSchema.create({
                     guildId: guildId,
                     authorId: checkedAuthor._id,
+                    title: title,
+                    audioFileLink: audioFileLink,
                     tags: checkedTags,
-                    attachment: attachmentLink,
-                    audioQuote: true
                 });
-                
+
                 await interaction.reply(audioQuoteEmbed(audioQuote))
             } else {
                 await interaction.reply(errorEmbed(`Make sure that '${inputtedAuthor}' author exists.`));
