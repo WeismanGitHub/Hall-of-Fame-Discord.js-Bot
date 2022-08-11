@@ -1,4 +1,4 @@
-const {errorEmbed} = require('../../functions');
+const {errorEmbed, checkTags} = require('../../functions');
 const {Constants} = require('discord.js');
 const {REST} = require('@discordjs/rest');
 const {Routes} = require('discord.js');
@@ -49,7 +49,6 @@ module.exports = {
 
     callback: async ({interaction}) => {
         try {
-            const rest = new REST({ version: '10' }).setToken(process.env.TOKEN)
             const guildId = interaction.guildId;
             const {options} = interaction;
 
@@ -57,18 +56,26 @@ module.exports = {
             const audioFileLink = options.getString('audio file link');
             const description= options.getString('description');
 
+            const uncheckedTags = [
+                options.getString('first_tag'),
+                options.getString('second_tag'),
+                options.getString('third_tag'),
+            ];
 
-            await rest.put(
-                Routes.applicationGuildCommands(guildId),
-                { body: [{
-                    data: new SlashCommandBuilder()
-                        .setName(name)
-                        .setDescription(description),
-                    async execute(interaction) {
-                        await interaction.reply(audioFileLink);
-                    },
-                }]},
-            );
+            const thereAreTags = uncheckedTags.some(tag => tag !== null);
+            let checkedTags = [];
+
+            if (thereAreTags) {
+                const guildTags = (await GuildSchema.findOne({guildId: guildId}).select('tags')).tags;
+                let checkedTagsObject = await checkTags(uncheckedTags, guildTags)
+                
+                if (checkedTagsObject.tagsExist) {
+                    checkedTags = checkedTagsObject.checkedTags
+                } else {
+                    await interaction.reply(errorEmbed('Make sure all your tags exist.'))
+                    return;
+                }
+            }
 
         } catch(err) {
             await interaction.reply(errorEmbed(err));
