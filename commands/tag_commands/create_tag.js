@@ -4,7 +4,7 @@ const {Constants} = require('discord.js');
 
 module.exports = {
     category:'Tags',
-    description: 'Creates a tag tied to your server. Tags are used to categorize quotes.',
+    description: 'Creates a tag tied to your server.',
     name: 'createtag',
     slash: true,
 

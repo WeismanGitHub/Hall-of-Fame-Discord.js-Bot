@@ -25,10 +25,25 @@ module.exports = {
             type: Constants.ApplicationCommandOptionTypes.STRING,
         },
         {
-            name: 'description',
-            description: 'Add a description to your slash command.',
+            name: 'title',
+            description: 'Title of the audio quote.',
             required: true,
             type: Constants.ApplicationCommandOptionTypes.STRING
+        },
+        {
+            name: 'first_tag',
+            description: 'Tags are used for filtering.',
+            type: Constants.ApplicationCommandOptionTypes.STRING,
+        },
+        {
+            name: 'second_tag',
+            description: 'Tags are used for filtering.',
+            type: Constants.ApplicationCommandOptionTypes.STRING
+        },
+        {
+            name: 'third_tag',
+            description: 'Tags are used for filtering.',
+            type: Constants.ApplicationCommandOptionTypes.STRING,
         }
     ],
 

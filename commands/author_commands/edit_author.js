@@ -5,7 +5,7 @@ let commandAlreadyRespondedTo = false
 
 module.exports = {
     category:'Authors',
-    description: 'Edits an author tied to your server. You attribute an author to a quote.',
+    description: 'Edits an author tied to your server.',
     name: 'editauthor',
     slash: true,
 
