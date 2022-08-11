@@ -1,4 +1,5 @@
-const {errorEmbed, checkTags, audioQuoteEmbed} = require('../../functions');
+const {errorEmbed, checkTags, basicEmbed} = require('../../functions');
+const AudioQuoteSchema = require('../../schemas/audio-quote-schema')
 const {Constants} = require('discord.js');
 
 module.exports = {
@@ -76,7 +77,7 @@ module.exports = {
                     }
                 }
 
-                const audioQuote = await QuoteSchema.create({
+                await AudioQuoteSchema.create({
                     guildId: guildId,
                     authorId: checkedAuthor._id,
                     title: title,
@@ -84,7 +85,7 @@ module.exports = {
                     tags: checkedTags,
                 });
 
-                await interaction.reply(audioQuoteEmbed(audioQuote))
+                await interaction.reply(basicEmbed(`Created audio quote '${title}'!`))
             } else {
                 await interaction.reply(errorEmbed(`Make sure that '${inputtedAuthor}' author exists.`));
             }
