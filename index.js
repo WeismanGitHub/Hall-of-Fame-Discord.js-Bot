@@ -26,8 +26,8 @@ const client = new Client({
 });
 
 client.on("ready", async () => {
-    client.user.setActivity('Being worked on!');
-    
+    client.user.setActivity('working on an audio quotes feature');
+
     mongoose.connect(process.env.MONGO_URI, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
