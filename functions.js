@@ -16,7 +16,7 @@ const quoteEmbed = function(quote, author, color='#5865F2') {
 
 	let embed = new MessageEmbed()
 	.setColor(color)
-	.setTitle(quote.text ?? '(No Title)')
+	.setTitle(quote.text ?? '(No Text)')
 	.setAuthor({name: author.name, iconURL: author.imgUrl})
 	.addFields({name: 'Id:', value: `${quote._id}`})
 	.addFields({name: 'Tags:', value: tags.join(', ')})
