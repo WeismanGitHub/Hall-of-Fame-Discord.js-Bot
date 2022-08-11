@@ -23,7 +23,7 @@ const AudioQuoteSchema = new mongoose.Schema({
         collation: { locale: 'en', strength: 2 },
     }],
     isAudioQuote: {
-        type: Boolean,
+        type: mongoose.Schema.Types.Boolean,
         default: true,
         index: true
     }
