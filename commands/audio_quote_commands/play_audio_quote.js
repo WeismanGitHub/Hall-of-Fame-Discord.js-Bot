@@ -1,6 +1,5 @@
-const {errorEmbed, checkTags, quoteEmbed, getAuthorByName} = require('../../functions');
+const {errorEmbed, quoteEmbed, getAuthorById} = require('../../functions');
 const AudioQuoteSchema = require('../../schemas/audio-quote-schema')
-const GuildSchema = require('../../schemas/guild-schema')
 const {Constants} = require('discord.js');
 
 module.exports = {
@@ -40,9 +39,11 @@ module.exports = {
                 isAudioQuote: true,
                 guildId: guildId,
                 ...searchObject
-            })
+            }).lean()
 
-            console.log(audioQuote)
+            const author = await getAuthorById(audioQuote.authorId, guildId)
+
+            await interaction.reply(quoteEmbed(audioQuote, author))
 
         } catch(err) {
             await interaction.reply(errorEmbed(err));
