@@ -9,11 +9,11 @@ const AudioQuoteSchema = new mongoose.Schema({
         required: [true, 'Must provide a valid author.'],
     },
     title: {
-        type: mongoose.Types.String,
+        type: String,
         required: [true, 'Must provide a title.']
     },
     audioFileLink: {
-        type: mongoose.Types.String,
+        type: String,
         required: [true, 'Must provide a title.']
     },
     tags: [{
@@ -23,7 +23,7 @@ const AudioQuoteSchema = new mongoose.Schema({
         collation: { locale: 'en', strength: 2 },
     }],
     isAudioQuote: {
-        type: mongoose.Schema.Types.Boolean,
+        type: Boolean,
         default: true,
         index: true
     }

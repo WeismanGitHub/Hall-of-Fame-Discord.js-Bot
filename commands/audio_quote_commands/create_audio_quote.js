@@ -16,7 +16,7 @@ module.exports = {
             type: Constants.ApplicationCommandOptionTypes.STRING,
         },
         {
-            name: 'audio file link',
+            name: 'audio_file_link',
             description: 'Must be a link to an audio file. You can upload the audio file to discord and copy that link.',
             required: true,
             type: Constants.ApplicationCommandOptionTypes.STRING,
