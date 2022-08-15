@@ -8,13 +8,13 @@ const AudioQuoteSchema = new mongoose.Schema({
         type: mongoose.Types.ObjectId,
         required: [true, 'Must provide a valid author.'],
     },
-    title: {
+    text: {
         type: String,
         required: [true, 'Must provide a title.']
     },
     audioFileLink: {
         type: String,
-        required: [true, 'Must provide a title.']
+        required: [true, 'Must provide an audio file link.']
     },
     tags: [{
         type: String,

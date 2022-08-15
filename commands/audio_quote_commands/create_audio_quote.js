@@ -1,5 +1,6 @@
-const {errorEmbed, checkTags, basicEmbed} = require('../../functions');
+const {errorEmbed, checkTags, quoteEmbed, getAuthorByName} = require('../../functions');
 const AudioQuoteSchema = require('../../schemas/audio-quote-schema')
+const GuildSchema = require('../../schemas/guild-schema')
 const {Constants} = require('discord.js');
 
 module.exports = {
@@ -54,7 +55,7 @@ module.exports = {
 
             if (checkedAuthor.name !== 'Deleted Author') {
                 const title = options.getString('title');
-                const audioFileLink = options.getString('audio file link');
+                const audioFileLink = options.getString('audio_file_link');
 
                 const uncheckedTags = [
                     options.getString('first_tag'),
@@ -64,7 +65,7 @@ module.exports = {
     
                 const thereAreTags = uncheckedTags.some(tag => tag !== null);
                 let checkedTags = [];
-    
+
                 if (thereAreTags) {
                     const guildTags = (await GuildSchema.findOne({guildId: guildId}).select('tags')).tags;
                     let checkedTagsObject = await checkTags(uncheckedTags, guildTags)
@@ -77,15 +78,15 @@ module.exports = {
                     }
                 }
 
-                await AudioQuoteSchema.create({
+                const audioQuote = await AudioQuoteSchema.create({
                     guildId: guildId,
                     authorId: checkedAuthor._id,
-                    title: title,
+                    text: title,
                     audioFileLink: audioFileLink,
                     tags: checkedTags,
                 });
 
-                await interaction.reply(basicEmbed(`Created audio quote '${title}'!`))
+                await interaction.reply(quoteEmbed(audioQuote, checkedAuthor))
             } else {
                 await interaction.reply(errorEmbed(`Make sure that '${inputtedAuthor}' author exists.`));
             }
