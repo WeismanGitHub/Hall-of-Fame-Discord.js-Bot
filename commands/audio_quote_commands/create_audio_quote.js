@@ -62,7 +62,7 @@ module.exports = {
                     options.getString('second_tag'),
                     options.getString('third_tag'),
                 ];
-    
+
                 const thereAreTags = uncheckedTags.some(tag => tag !== null);
                 let checkedTags = [];
 
