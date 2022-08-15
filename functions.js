@@ -20,7 +20,8 @@ const quoteEmbed = function(quote, author, color='#5865F2') {
 	.setAuthor({name: author.name, iconURL: author.imgUrl})
 	.addFields({name: 'Id:', value: `${quote._id}`})
 	.addFields({name: 'Tags:', value: tags.join(', ')})
-	.setTimestamp(quote.createdAt);
+	.setTimestamp(quote.createdAt)
+    .addFields({name: 'Audio Quote:', value: String(Boolean(quote.isAudioQuote))})
 
 	if (quote.attachment !== null) {
 		embed.setImage(quote.attachment);
