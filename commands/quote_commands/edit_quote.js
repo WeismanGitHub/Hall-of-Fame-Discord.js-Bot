@@ -114,7 +114,7 @@ module.exports = {
             if (newAuthorName) {
                 const author = await getAuthorByName(newAuthorName, guildId);
 
-                if (author.name = 'Deleted Author') {
+                if (author.name == 'Deleted Author') {
                     throw new Error('Author does not exist.')
                 }
     
