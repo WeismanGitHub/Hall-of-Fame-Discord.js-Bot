@@ -40,4 +40,4 @@ function setRunValidators() {
     this.setOptions({ runValidators: true });
 }
 
-module.exports = mongoose.model('quotes', AudioQuoteSchema);
+module.exports = mongoose.model('audio quotes', AudioQuoteSchema, 'quotes');

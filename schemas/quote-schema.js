@@ -36,5 +36,4 @@ QuoteSchema.plugin(schema => {
 function setRunValidators() {
     this.setOptions({ runValidators: true });
 }
-
-module.exports = mongoose.model('quotes', QuoteSchema);
+module.exports = mongoose.model('regular quotes', QuoteSchema, 'quotes');
