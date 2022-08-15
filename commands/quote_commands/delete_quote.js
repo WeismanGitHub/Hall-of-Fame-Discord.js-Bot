@@ -23,9 +23,13 @@ module.exports = {
             const _id = options.getString('id');
             const guildId = interaction.guildId;
     
-            await QuoteSchema.deleteOne({_id: _id, guildId: guildId})
-            
-            await interaction.reply(basicEmbed('Deleted Quote!'));
+            const quoteData = await QuoteSchema.deleteOne({_id: _id, guildId: guildId})
+
+            if (quoteData.deletedCount) {
+                await interaction.reply(basicEmbed('Deleted Quote!'));
+            } else {
+                await interaction.reply(errorEmbed('Quote does not exist!'))
+            }
         } catch(err) {
             await interaction.reply(errorEmbed(err));
         };
