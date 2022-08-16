@@ -56,6 +56,11 @@ module.exports = {
                 },
             ]
         },
+        {
+            name: 'is_audio_quote',
+            description: 'Sorts by if quote is audio quote or not.',
+            type: Constants.ApplicationCommandOptionTypes.BOOLEAN,
+        }
     ],
 
     callback: async ({interaction}) => {
@@ -64,6 +69,7 @@ module.exports = {
             const sortObject = options.getString('date') == null ? {createdAt: -1} : {createdAt: options.getString('date')}
             const limit = options.getInteger('limit') == null ? Infinity : options.getInteger('limit')
             const searchPhrase = options.getString('search_phrase')
+            const isAudioQuote = options.getBoolean('is_audio_quote')
             let inputtedAuthor = options.getString('author');
             const guildId = interaction.guildId;
             const queryObject = {guildId: guildId};
@@ -76,6 +82,10 @@ module.exports = {
                 } else {
                     throw new Error(`'${inputtedAuthor}' author does not exist.`)
                 }
+            }
+
+            if (isAudioQuote !== null) {
+                queryObject.isAudioQuote = isAudioQuote
             }
 
             const uncheckedTags = [
@@ -100,7 +110,11 @@ module.exports = {
             if (searchPhrase) {
                 queryObject.text ={$regex: searchPhrase, $options: 'i'}
             }
-                
+
+            if (Object.keys(queryObject).length == 1) {
+                throw new Error('Please add some specifications. To get all quotes use /getallquotes.')
+            }
+
             const quotes = await QuoteSchema.find(queryObject).sort(sortObject).limit(limit);
 
             //Do not set up pagination to send ten embeds at a time because if one of the embeds is broken the other 9 won't send.

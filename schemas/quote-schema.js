@@ -23,6 +23,10 @@ const QuoteSchema = new mongoose.Schema({
         type: String,
         minLength: 1,
         maxLength: 256,
+    },
+    isAudioQuote: {
+        type: Boolean,
+        default: false,
     }
 }, {timestamps: true});
 

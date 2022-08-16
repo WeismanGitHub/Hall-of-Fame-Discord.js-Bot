@@ -25,7 +25,6 @@ const AudioQuoteSchema = new mongoose.Schema({
     isAudioQuote: {
         type: Boolean,
         default: true,
-        index: true
     }
 }, {timestamps: true});
 
