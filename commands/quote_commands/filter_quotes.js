@@ -98,9 +98,7 @@ module.exports = {
             }
 
             if (searchPhrase) {
-                queryObject.$text = {
-                    '$search': searchPhrase
-                }
+                queryObject.text ={$regex: searchPhrase, $options: 'i'}
             }
                 
             const quotes = await QuoteSchema.find(queryObject).sort(sortObject).limit(limit);
