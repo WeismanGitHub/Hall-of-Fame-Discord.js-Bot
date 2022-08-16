@@ -65,7 +65,11 @@ module.exports = {
             const guildId  = interaction.guildId;
             const _id = options.getString('id');
 
-            const quote = await QuoteSchema.findOne({_id: _id, guildId: guildId});
+            const quote = await QuoteSchema.findOne({
+                _id: _id,
+                guildId: guildId,
+                isAudioQuote: false
+            });
 
             if (!quote) {
                 throw new Error('Quote does not exist.')
