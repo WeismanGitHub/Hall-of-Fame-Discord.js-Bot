@@ -1,7 +1,15 @@
-const { createAudioPlayer, NoSubscriberBehavior, createAudioResource, joinVoiceChannel } = require('@discordjs/voice');
 const {errorEmbed, quoteEmbed, getAuthorById} = require('../../functions');
 const AudioQuoteSchema = require('../../schemas/audio-quote-schema')
 const {Constants} = require('discord.js');
+const path = require('path')
+
+const {
+    createAudioPlayer,
+    NoSubscriberBehavior,
+    createAudioResource,
+    joinVoiceChannel,
+    AudioPlayerStatus
+} = require('@discordjs/voice');
 
 module.exports = {
     category:'Audio Quotes',
@@ -53,22 +61,21 @@ module.exports = {
             }
 
             const player = createAudioPlayer({ behaviors: { noSubscriber: NoSubscriberBehavior.Stop } });
+            const audioQuoteResource = createAudioResource(audioQuote.audioFileLink)
             
-            player.on('error', error => {
-                console.log(error)
-                throw new Error(error.message)
+            player.on('error', err => {
+                console.log(err)
             });
 
             const connection = joinVoiceChannel({
-                channelId: voiceChannel,
+                channelId: voiceChannel.id,
                 guildId: interaction.guild.id,
                 adapterCreator: interaction.guild.voiceAdapterCreator
             });
 
-            const audioQuoteResource = createAudioResource(audioQuote.audioFileLink);
             connection.subscribe(player);
             player.play(audioQuoteResource);
-            player.stop();
+            player.on(AudioPlayerStatus.Idle, () => { connection.destroy() })
 
             const author = await getAuthorById(audioQuote.authorId, guildId)
             await interaction.reply(quoteEmbed(audioQuote, author))
