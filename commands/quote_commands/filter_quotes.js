@@ -112,7 +112,7 @@ module.exports = {
             }
 
             if (Object.keys(queryObject).length == 1) {
-                throw new Error('Please add some specifications. To get all quotes use /getallquotes.')
+                throw new Error('Please add some filters. To get all quotes use /getallquotes.')
             }
 
             const quotes = await QuoteSchema.find(queryObject).sort(sortObject).limit(limit);
