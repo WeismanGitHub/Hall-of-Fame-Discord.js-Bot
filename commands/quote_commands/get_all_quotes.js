@@ -15,11 +15,6 @@ module.exports = {
     slash: true,
     options: [
         {
-            name: 'limit',
-            description: 'Amount of quotes returned.',
-            type: Constants.ApplicationCommandOptionTypes.INTEGER
-        },
-        {
             name: 'date',
             description: 'Sort by newest/oldest.',
             type: Constants.ApplicationCommandOptionTypes.STRING,
@@ -40,9 +35,8 @@ module.exports = {
         try {
             const guildId = interaction.guildId;
             const { options } = interaction;
-            const limit = options.getInteger('limit') == null ? Infinity : options.getInteger('limit')
             const sortObject = options.getString('date') == null ? { createdAt: -1 } : { createdAt: options.getString('date') }
-            const quotes = await QuoteSchema.find({ guildId: guildId }).sort(sortObject).limit(limit).lean();
+            const quotes = await QuoteSchema.find({ guildId: guildId }).sort(sortObject).limit(10).lean();
 
             if (quotes.length) {
                 await interaction.reply(basicEmbed(`Started!\nAmount: ${quotes.length}`));
