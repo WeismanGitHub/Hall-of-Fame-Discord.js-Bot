@@ -39,7 +39,7 @@ module.exports = {
             const quotes = await QuoteSchema.find({ guildId: guildId }).sort(sortObject).limit(10).lean();
 
             if (quotes.length) {
-                await interaction.reply(basicEmbed(`Started!\nAmount: ${quotes.length}`));
+                await interaction.reply(basicEmbed('Started!'))
                 
                 for (let quote of quotes) {
                     let author = await getAuthorById(quote.authorId, guildId)
@@ -53,7 +53,7 @@ module.exports = {
                 const row = new MessageActionRow()
                 .addComponents(
                     new MessageButton()
-                    .setCustomId('10')
+                    .setCustomId(`10,${sortObject.createdAt},`)
                     .setLabel('⏩')
                     .setStyle('PRIMARY')
                 )
@@ -65,13 +65,44 @@ module.exports = {
 
                 const collector = interaction.channel.createMessageComponentCollector({ max: 1 })
 
-                collector.on('collect', async (i) => {
-                    
+                collector.on('collect', (i) => {
+                    i.reply(basicEmbed('Started!'));
                 })
-                await interaction.channel.send(basicEmbed('Done!'));
+
+                collector.on('end', async (collection) => {
+                    collection.forEach(async (click) => {
+                        const customId = click.customId.split(',')
+                        const skipAmount = customId[0]
+                        const sortObject = { createdAt: customId[1] }
+    
+                        const quotes = await QuoteSchema.find({ guildId: guildId }).sort(sortObject).skip(skipAmount).limit(10).lean();
+                        
+                        for (let quote of quotes) {
+                            let author = await getAuthorById(quote.authorId, guildId)
+                            
+                            interaction.channel.send(quoteEmbed(quote, author))
+                            .catch(async err => {
+                                interaction.channel.send(errorEmbed(err, `Quote Id: ${quote._id}`));
+                            });
+                        }
+    
+                        const row = new MessageActionRow()
+                        .addComponents(
+                            new MessageButton()
+                            .setCustomId(`${skipAmount + 10},${sortObject.createdAt},`)
+                            .setLabel('⏩')
+                            .setStyle('PRIMARY')
+                        )
+    
+                        await interaction.channel.send({
+                            ...basicEmbed('Get Next 10 Quotes?'),
+                            components: [row]
+                        })
+                    })
+                })
                 
             } else {
-                await interaction.reply(basicEmbed('This server has no quotes.'));
+                throw new Error('This server has no quotes.')
             }
         } catch(err) {
             console.log(err)
