@@ -1,4 +1,4 @@
-const GuildSchema = require('../../schemas/guild-schema');
+const GuildSchema = require('../../schemas/guild_schema');
 const { errorEmbed, authorEmbed } = require('../../functions');
 const { Constants } = require('discord.js');
 

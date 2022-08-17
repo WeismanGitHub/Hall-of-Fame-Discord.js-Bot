@@ -1,5 +1,5 @@
 const { basicEmbed, errorEmbed } = require('../../functions');
-const GuildSchema = require('../../schemas/guild-schema');
+const GuildSchema = require('../../schemas/guild_schema');
 const { Constants } = require('discord.js');
 
 module.exports = {

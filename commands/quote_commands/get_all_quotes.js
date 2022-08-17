@@ -1,5 +1,5 @@
 const { errorEmbed, quoteEmbed, basicEmbed, getAuthorById } = require('../../functions');
-const QuoteSchema = require('../../schemas/quote-schema');
+const QuoteSchema = require('../../schemas/quote_schema');
 const { Constants } = require('discord.js');
 
 module.exports = {

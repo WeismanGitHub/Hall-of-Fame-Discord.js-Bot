@@ -1,4 +1,4 @@
-const GuildSchema = require('./schemas/guild-schema');
+const GuildSchema = require('./schemas/guild_schema');
 const WOKCommands = require('wokcommands');
 const mongoose = require('mongoose');
 const path = require('path');
