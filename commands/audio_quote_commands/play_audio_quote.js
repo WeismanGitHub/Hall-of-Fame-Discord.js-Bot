@@ -1,7 +1,6 @@
 const {errorEmbed, quoteEmbed, getAuthorById} = require('../../functions');
 const AudioQuoteSchema = require('../../schemas/audio-quote-schema')
 const {Constants} = require('discord.js');
-const path = require('path')
 
 const {
     createAudioPlayer,
