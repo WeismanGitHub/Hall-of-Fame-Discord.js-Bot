@@ -26,7 +26,7 @@ const client = new Client({
 });
 
 client.on("ready", async () => {
-    client.user.setActivity('working on an audio quotes feature');
+    client.user.setActivity('Use /help for help.');
 
     mongoose.connect(process.env.MONGO_URI, {
         useNewUrlParser: true,
