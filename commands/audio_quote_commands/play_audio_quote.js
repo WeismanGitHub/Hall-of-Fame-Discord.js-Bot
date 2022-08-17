@@ -63,16 +63,13 @@ module.exports = {
             const player = createAudioPlayer({ behaviors: { noSubscriber: NoSubscriberBehavior.Stop } });
             const audioQuoteResource = createAudioResource(audioQuote.audioFileLink)
             
-            player.on('error', err => {
-                console.log(err)
-            });
-
+            
             const connection = joinVoiceChannel({
                 channelId: voiceChannel.id,
                 guildId: interaction.guild.id,
                 adapterCreator: interaction.guild.voiceAdapterCreator
             });
-
+            
             player.play(audioQuoteResource);
             connection.subscribe(player);
             player.on(AudioPlayerStatus.Idle, () => { connection.destroy() })

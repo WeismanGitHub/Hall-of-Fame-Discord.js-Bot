@@ -21,7 +21,7 @@ module.exports = {
         try {
             const {options} = interaction;
             const guildId = interaction.guildId;
-            const tag = options.getString('tag');
+            const tag = (options.getString('tag')).toLowerCase();
 
             await GuildSchema.updateOne(
                 {guildId: guildId},
