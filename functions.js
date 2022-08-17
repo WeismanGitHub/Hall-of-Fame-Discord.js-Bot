@@ -1,4 +1,4 @@
-const {MessageEmbed} = require('discord.js');
+const { MessageEmbed } = require('discord.js');
 const GuildSchema = require('./schemas/guild-schema');
 const mongoose = require('mongoose');
 
@@ -17,26 +17,26 @@ const quoteEmbed = function(quote, author, color='#5865F2') {
 	let embed = new MessageEmbed()
 	.setColor(color)
 	.setTitle(quote.text ?? '(No Text)')
-	.setAuthor({name: author.name, iconURL: author.imgUrl})
-	.addFields({name: 'Id:', value: `${quote._id}`})
-	.addFields({name: 'Tags:', value: tags.join(', ')})
+	.setAuthor({ name: author.name, iconURL: author.imgUrl })
+	.addFields({ name: 'Id:', value: `${quote._id}` })
+	.addFields({ name: 'Tags:', value: tags.join(', ') })
 	.setTimestamp(quote.createdAt)
-    .addFields({name: 'Audio Quote:', value: String(Boolean(quote.isAudioQuote))})
+    .addFields({ name: 'Audio Quote:', value: String(Boolean(quote.isAudioQuote)) })
 
 	if (quote.attachment !== null) {
 		embed.setImage(quote.attachment);
 	};
 	
-	return {embeds: [embed]};
+	return { embeds: [embed] };
 };
 
 const errorEmbed = function(error, title='Theres been an error!', color='#FF0000') {
 	error = error.toString();
 	
-	return {embeds: [new MessageEmbed()
+	return { embeds: [new MessageEmbed()
 	.setColor(color)
 	.setTitle(title)
-	.setDescription(error)]};
+	.setDescription(error)] };
 };
 
 const authorEmbed = function(author, color='#5865F2') {
@@ -58,7 +58,7 @@ async function getAuthorByName(name, guildId) {
                     "input": "$authors",
                     "as": "author",
                     "cond":
-                    {"$eq": ["$$author.name", name]}
+                    { "$eq": ["$$author.name", name] }
                 }
             }
         }))['authors'][0]
@@ -75,14 +75,14 @@ async function getAuthorById(id, guildId) {
         return (await GuildSchema.findOne(
             {
                 "guildId" : guildId,
-                authors : {$elemMatch: {_id: new mongoose.Types.ObjectId(id)}
+                authors : { $elemMatch: { _id: new mongoose.Types.ObjectId(id) }
             }},
             {authors: {
                 "$filter": {
                     "input": "$authors",
                     "as": "author",
                     "cond":
-                    {"$eq": ["$$author._id", new mongoose.Types.ObjectId(id)]}
+                    { "$eq": ["$$author._id", new mongoose.Types.ObjectId(id)] }
                 }
             }
         }))['authors'][0]
