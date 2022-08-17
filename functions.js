@@ -61,7 +61,7 @@ async function getAuthorByName(name, guildId) {
                     { "$eq": ["$$author.name", name] }
                 }
             }
-        }))['authors'][0]
+        }).lean())['authors'][0]
     } catch (err) {
         return {
             name: 'Deleted Author',
@@ -85,7 +85,7 @@ async function getAuthorById(id, guildId) {
                     { "$eq": ["$$author._id", new mongoose.Types.ObjectId(id)] }
                 }
             }
-        }))['authors'][0]
+        }).lean())['authors'][0]
     } catch (err) {
         return {
             name: 'Deleted Author',

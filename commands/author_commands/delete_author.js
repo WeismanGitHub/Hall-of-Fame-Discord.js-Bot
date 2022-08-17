@@ -26,7 +26,7 @@ module.exports = {
             const guildDoc = await GuildSchema.findOneAndUpdate(
                 { guildId: guildId },
                 { $pull: { authors: { name: author } }
-            })
+            }).select('-_id authors').lean()
     
             const isAnAuthor = await guildDoc.authors.some(guildAuthor => {
                 return guildAuthor.name == author;

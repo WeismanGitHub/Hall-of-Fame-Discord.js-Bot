@@ -12,7 +12,7 @@ module.exports = {
         try {
             const guildId = interaction.guildId;
         
-            const tagsList= await GuildSchema.find({ guildId: guildId }).select('tags');
+            const tagsList= await GuildSchema.find({ guildId: guildId }).select('tags').lean();
             
             if (!tagsList) {
                 await interaction.reply('Please register server.');

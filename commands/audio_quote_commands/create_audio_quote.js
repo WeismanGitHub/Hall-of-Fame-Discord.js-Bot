@@ -73,7 +73,7 @@ module.exports = {
                 let checkedTags = [];
 
                 if (thereAreTags) {
-                    const guildTags = (await GuildSchema.findOne({ guildId: guildId }).select('tags')).tags;
+                    const guildTags = (await GuildSchema.findOne({ guildId: guildId }).select(' -_id tags').lean()).tags;
                     let checkedTagsObject = await checkTags(uncheckedTags, guildTags)
                     
                     if (checkedTagsObject.tagsExist) {

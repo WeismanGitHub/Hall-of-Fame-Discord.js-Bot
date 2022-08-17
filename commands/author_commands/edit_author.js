@@ -47,7 +47,7 @@ module.exports = {
                         { "authors": { "$elemMatch": { "name": { "$eq": oldName } } } }
                     ]},
                     { "$set": { "authors.$.imgUrl": imgUrl }
-                })
+                }).select('_id').lean()
     
                 if (guildDoc == null) {
                     throw new Error(`No author named '${oldName}'.`)
@@ -61,7 +61,7 @@ module.exports = {
                         { "authors": { "$elemMatch": { "name": { "$eq": oldName } } } }
                     ]},
                     { "$set": { "authors.$.name": newName }
-                })
+                }).select('_id').lean()
     
                 if (guildDoc == null) {
                     throw new Error(`No author named '${oldName}'.`)

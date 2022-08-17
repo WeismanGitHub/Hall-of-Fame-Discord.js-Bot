@@ -104,7 +104,7 @@ module.exports = {
             const thereAreTags = uncheckedTags.some(tag => tag !== null);
             
             if (thereAreTags) {
-                const guildTags = (await GuildSchema.findOne({ guildId: guildId }).select('tags')).tags;
+                const guildTags = (await GuildSchema.findOne({ guildId: guildId }).select('-_id tags').lean()).tags;
                 let checkedTagsObject = await checkTags(uncheckedTags, guildTags)
 
                 if (checkedTagsObject.tagsExist) {
@@ -122,7 +122,7 @@ module.exports = {
                 throw new Error('Please add some filters. To get all quotes use /getallquotes.')
             }
 
-            const quotes = await QuoteSchema.find(queryObject).sort(sortObject).limit(limit);
+            const quotes = await QuoteSchema.find(queryObject).sort(sortObject).limit(limit).lean();
 
             //Do not set up pagination to send ten embeds at a time because if one of the embeds is broken the other 9 won't send.
             if (quotes.length) {

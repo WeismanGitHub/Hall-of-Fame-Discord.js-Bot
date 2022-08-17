@@ -71,7 +71,7 @@ module.exports = {
                 _id: _id,
                 guildId: guildId,
                 isAudioQuote: true,
-            });
+            }).select('_id').lean()
 
             if (!audioQuote) {
                 throw new Error('Quote does not exist.')
@@ -97,7 +97,7 @@ module.exports = {
             const thereAreNewTags = uncheckedTags.some(tag => tag !== null);
             
             if (thereAreNewTags) {
-                const guildTags = (await GuildSchema.findOne({ guildId: guildId }).select('tags')).tags;
+                const guildTags = (await GuildSchema.findOne({ guildId: guildId }).select(' -_id tags').lean()).tags;
                 let checkedTagsObject = await checkTags(uncheckedTags, guildTags)
 
                 if (checkedTagsObject.tagsExist) {
@@ -128,7 +128,7 @@ module.exports = {
                 const updatedAudioQuote = await audioQuoteSchema.findOneAndUpdate({
                     _id: _id,
                     guildId: guildId
-                }, updateObject, { new: true });
+                }, updateObject, { new: true }).lean()
 
                 const author = await getAuthorById(updatedAudioQuote.authorId, guildId);
     

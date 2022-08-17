@@ -26,7 +26,7 @@ module.exports = {
             const guildDoc = await GuildSchema.findOneAndUpdate(
                 { guildId: guildId },
                 { $pull: { tags: tag }
-            })
+            }).select('-_id tags').lean()
 
             if (guildDoc.tags.includes(tag)) {
                 await interaction.reply(basicEmbed(`Deleted '${tag}' tag!`));

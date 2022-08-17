@@ -11,7 +11,7 @@ module.exports = {
         try {
             const guildId = interaction.guildId;
     
-            let authors = (await GuildSchema.findOne({ guildId: guildId }).select('-_id authors')).authors;
+            let authors = (await GuildSchema.findOne({ guildId: guildId }).select('-_id authors').lean()).authors;
 
             if (authors.length) {
                 await interaction.reply(basicEmbed(`Started!\nAmount: ${authors.length}`))
