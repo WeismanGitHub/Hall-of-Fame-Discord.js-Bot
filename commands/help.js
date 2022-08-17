@@ -18,7 +18,7 @@ module.exports = {
                     commandsEmbed.addFields({ name: `${command.names[0]}`, value: `${command.description}` });
                   }
               }
-
+            
             const descriptionEmbed = new Discord.MessageEmbed()
             .setColor('#5865F2')
             .setTitle('Instructions:')
