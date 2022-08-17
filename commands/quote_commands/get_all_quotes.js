@@ -1,6 +1,12 @@
 const { errorEmbed, quoteEmbed, basicEmbed, getAuthorById } = require('../../functions');
 const QuoteSchema = require('../../schemas/quote_schema');
-const { Constants } = require('discord.js');
+
+const {
+    Constants,
+    MessageActionRow,
+    MessageButton,
+    createMessageComponentCollector
+} = require('discord.js');
 
 module.exports = {
     category:'Quotes',
@@ -41,7 +47,6 @@ module.exports = {
             if (quotes.length) {
                 await interaction.reply(basicEmbed(`Started!\nAmount: ${quotes.length}`));
                 
-                //Do not set up pagination to send ten embeds at a time because if one of the embeds is broken the other 9 won't send.
                 for (let quote of quotes) {
                     let author = await getAuthorById(quote.authorId, guildId)
                     
@@ -51,12 +56,31 @@ module.exports = {
                     });
                 }
 
+                const row = new MessageActionRow()
+                .addComponents(
+                    new MessageButton()
+                    .setCustomId('10')
+                    .setLabel('⏩')
+                    .setStyle('PRIMARY')
+                )
+
+                await interaction.channel.send({
+                    ...basicEmbed('Get Next 10 Quotes?'),
+                    components: [row]
+                })
+
+                const collector = interaction.channel.createMessageComponentCollector({ max: 1 })
+
+                collector.on('collect', async (i) => {
+                    
+                })
                 await interaction.channel.send(basicEmbed('Done!'));
                 
             } else {
                 await interaction.reply(basicEmbed('This server has no quotes.'));
             }
         } catch(err) {
+            console.log(err)
             await interaction.reply(errorEmbed(err));
         }
     })
