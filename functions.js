@@ -1,5 +1,5 @@
 const { MessageEmbed } = require('discord.js');
-const GuildSchema = require('./schemas/guild-schema');
+const GuildSchema = require('./schemas/guild_schema');
 const mongoose = require('mongoose');
 
 const basicEmbed = function (title, message='', color='#5865F2') {

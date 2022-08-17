@@ -50,9 +50,9 @@ module.exports = {
                         interaction.channel.send(errorEmbed(err, `Quote Id: ${quote._id}`));
                     });
                 }
-            
-                await interaction.channel.send(basicEmbed('Done!'));
 
+                await interaction.channel.send(basicEmbed('Done!'));
+                
             } else {
                 await interaction.reply(basicEmbed('This server has no quotes.'));
             }
