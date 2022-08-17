@@ -69,9 +69,14 @@ module.exports = {
                 guildId: interaction.guild.id,
                 adapterCreator: interaction.guild.voiceAdapterCreator
             });
-            
+
+            player.on('error', err => {
+                console.log(err)
+            });
+
             player.play(audioQuoteResource);
             connection.subscribe(player);
+            player.on(AudioPlayerStatus.Playing, () => { setTimeout(() => { player.stop() }, 30000) })
             player.on(AudioPlayerStatus.Idle, () => { connection.destroy() })
 
             const author = await getAuthorById(audioQuote.authorId, guildId)
