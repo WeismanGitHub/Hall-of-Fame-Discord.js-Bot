@@ -1,4 +1,4 @@
-const audioQuoteSchema = require('../../schemas/audio-quote_schema');
+const audioQuoteSchema = require('../../schemas/audio_quote_schema');
 const GuildSchema = require('../../schemas/guild_schema');
 const { Constants } = require('discord.js');
 
