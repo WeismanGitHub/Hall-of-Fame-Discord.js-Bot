@@ -1,7 +1,6 @@
 const GuildSchema = require('../../schemas/guild-schema');
-const {errorEmbed, authorEmbed} = require('../../functions');
-const {Constants} = require('discord.js');
-let commandAlreadyRespondedTo = false
+const { errorEmbed, authorEmbed } = require('../../functions');
+const { Constants } = require('discord.js');
 
 module.exports = {
     category:'Authors',
@@ -24,28 +23,23 @@ module.exports = {
         }
     ],
 
-    callback: async ({interaction}) => {
+    callback: async ({ interaction }) => {
         try {
-            const {options} = interaction;
+            const { options } = interaction;
             const guildId = interaction.guildId;
             const authorName = options.getString('author');
             const imgUrl = options.getString('icon_url');
             const authorObject = {name: authorName, imgUrl: imgUrl}
             
             await GuildSchema.updateOne(
-                {guildId: guildId},
-                {$addToSet: {authors: {name: authorName, imgUrl: imgUrl}}
+                { guildId: guildId },
+                { $addToSet: { authors: { name: authorName, imgUrl: imgUrl } }
             })
 
-            await interaction.reply(authorEmbed(authorObject));
-            commandAlreadyRespondedTo = true
+            await interaction.reply(authorEmbed(authorObject))
 
         } catch(err) {
-            if (commandAlreadyRespondedTo) {
-                await interaction.channel.send(errorEmbed(err))
-            } else {
-                await interaction.reply(errorEmbed(err));
-            }
+            await interaction.reply(errorEmbed(err));
         };
     }
 };

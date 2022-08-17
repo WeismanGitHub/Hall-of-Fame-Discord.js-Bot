@@ -1,6 +1,6 @@
 const GuildSchema = require('../../schemas/guild-schema');
-const {basicEmbed, errorEmbed} = require('../../functions');
-const {Constants} = require('discord.js');
+const { basicEmbed, errorEmbed } = require('../../functions');
+const { Constants } = require('discord.js');
 
 module.exports = {
     category:'Tags',
@@ -17,15 +17,15 @@ module.exports = {
         }
     ],
 
-    callback: async ({interaction}) => {
+    callback: async ({ interaction }) => {
         try {
-            const {options} = interaction;
+            const { options } = interaction;
             const guildId = interaction.guildId;
             const tag = options.getString('tag');
             
             const guildDoc = await GuildSchema.findOneAndUpdate(
-                {guildId: guildId},
-                {$pull: {tags: tag}
+                { guildId: guildId },
+                { $pull: { tags: tag }
             })
 
             if (guildDoc.tags.includes(tag)) {

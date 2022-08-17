@@ -1,7 +1,7 @@
-const {errorEmbed, quoteEmbed, getAuthorByName, checkTags} = require('../../functions');
+const { errorEmbed, quoteEmbed, getAuthorByName, checkTags } = require('../../functions');
 const GuildSchema = require('../../schemas/guild-schema');
 const QuoteSchema = require('../../schemas/quote-schema');
-const {Constants} = require('discord.js');
+const { Constants } = require('discord.js');
 
 module.exports = {
     category:'Quotes',
@@ -43,9 +43,9 @@ module.exports = {
         }
     ],
 
-    callback: async ({interaction}) => {
+    callback: async ({ interaction }) => {
         try {
-            const {options} = interaction;
+            const { options } = interaction;
             const guildId = interaction.guildId;
     
             const inputtedAuthor = options.getString('author');
@@ -70,14 +70,13 @@ module.exports = {
                 let checkedTags = [];
                 
                 if (thereAreTags) {
-                    const guildTags = (await GuildSchema.findOne({guildId: guildId}).select('tags')).tags;
+                    const guildTags = (await GuildSchema.findOne({ guildId: guildId }).select('tags')).tags;
                     let checkedTagsObject = await checkTags(uncheckedTags, guildTags)
                     
                     if (checkedTagsObject.tagsExist) {
                         checkedTags = checkedTagsObject.checkedTags
                     } else {
-                        await interaction.reply(errorEmbed('Make sure all your tags exist.'))
-                        return;
+                        throw new Error('Make sure all your tags exist.')
                     }
                 }
                 
@@ -101,7 +100,7 @@ module.exports = {
                 await interaction.reply(quoteEmbed(quote, checkedAuthor));
     
             } else {
-                await interaction.reply(errorEmbed(`Make sure that '${inputtedAuthor}' author exists.`));
+                throw new Error(`Make sure that '${inputtedAuthor}' author exists.`)
             }
             
         } catch(err) {

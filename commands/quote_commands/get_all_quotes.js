@@ -1,7 +1,6 @@
-const {errorEmbed, quoteEmbed, basicEmbed, getAuthorById} = require('../../functions');
+const { errorEmbed, quoteEmbed, basicEmbed, getAuthorById } = require('../../functions');
 const QuoteSchema = require('../../schemas/quote-schema');
-const {Constants} = require('discord.js');
-let commandAlreadyRespondedTo = false
+const { Constants } = require('discord.js');
 
 module.exports = {
     category:'Quotes',
@@ -31,17 +30,16 @@ module.exports = {
         }
     ],
 
-    callback: (async ({interaction}) => {
+    callback: (async ({ interaction }) => {
         try {
             const guildId = interaction.guildId;
-            const {options} = interaction;
+            const { options } = interaction;
             const limit = options.getInteger('limit') == null ? Infinity : options.getInteger('limit')
-            const sortObject = options.getString('date') == null ? {createdAt: -1} : {createdAt: options.getString('date')}
-            const quotes = await QuoteSchema.find({guildId: guildId}).sort(sortObject).limit(limit);
+            const sortObject = options.getString('date') == null ? { createdAt: -1 } : { createdAt: options.getString('date') }
+            const quotes = await QuoteSchema.find({ guildId: guildId }).sort(sortObject).limit(limit);
 
             if (quotes.length) {
                 await interaction.reply(basicEmbed(`Started!\nAmount: ${quotes.length}`));
-                commandAlreadyRespondedTo = true
                 
                 //Do not set up pagination to send ten embeds at a time because if one of the embeds is broken the other 9 won't send.
                 for (let quote of quotes) {
@@ -57,14 +55,9 @@ module.exports = {
 
             } else {
                 await interaction.reply(basicEmbed('This server has no quotes.'));
-                commandAlreadyRespondedTo = true
             }
         } catch(err) {
-            if (commandAlreadyRespondedTo) {
-                await interaction.channel.send(errorEmbed(err))
-            } else {
-                await interaction.reply(errorEmbed(err));
-            }
+            await interaction.reply(errorEmbed(err));
         }
     })
 };

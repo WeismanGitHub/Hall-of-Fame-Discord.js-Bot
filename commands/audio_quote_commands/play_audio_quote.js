@@ -1,6 +1,6 @@
-const {errorEmbed, quoteEmbed, getAuthorById} = require('../../functions');
+const { errorEmbed, quoteEmbed, getAuthorById } = require('../../functions');
 const AudioQuoteSchema = require('../../schemas/audio-quote-schema')
-const {Constants} = require('discord.js');
+const { Constants } = require('discord.js');
 
 const {
     createAudioPlayer,
@@ -29,16 +29,16 @@ module.exports = {
         }
     ],
 
-    callback: async ({interaction}) => {
+    callback: async ({ interaction }) => {
         try {
             const guildId = interaction.guildId;
-            const {options} = interaction;
+            const { options } = interaction;
 
             const id = options.getString('id');
             const title = options.getString('title');
 
             if (!title && !id) {
-                return await interaction.reply(errorEmbed('Enter either an id or title.'))
+                throw new Error('Enter either an id or title.')
             }
 
             const searchObject = { ...title && { text: title }, ...id && { _id: id } }
@@ -50,13 +50,13 @@ module.exports = {
             }).lean()
 
             if (!audioQuote) {
-                return await interaction.reply(errorEmbed('Could not find audio quote.'))
+                throw new Error('Could not find audio quote.')
             }
 
             const voiceChannel = interaction.member.voice.channel
 
             if (!voiceChannel) {
-                return await interaction.reply(errorEmbed('You must be in a voice channel.'))
+                throw new Error('You must be in a voice channel.')
             }
 
             const player = createAudioPlayer({ behaviors: { noSubscriber: NoSubscriberBehavior.Stop } });
@@ -82,7 +82,6 @@ module.exports = {
             await interaction.reply(quoteEmbed(audioQuote, author))
 
         } catch(err) {
-            console.log(err)
             await interaction.reply(errorEmbed(err));
         };
     }

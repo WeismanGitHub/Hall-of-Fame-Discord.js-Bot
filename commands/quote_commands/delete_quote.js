@@ -1,6 +1,6 @@
-const {basicEmbed, errorEmbed} = require('../../functions');
+const { basicEmbed, errorEmbed } = require('../../functions');
 const QuoteSchema = require('../../schemas/quote-schema');
-const {Constants} = require('discord.js');
+const { Constants } = require('discord.js');
 
 module.exports = {
     category:'Quotes',
@@ -17,18 +17,18 @@ module.exports = {
         },
     ],
 
-    callback: async ({interaction}) => {
+    callback: async ({ interaction }) => {
         try {
-            const {options} = interaction;
+            const { options } = interaction;
             const _id = options.getString('id');
             const guildId = interaction.guildId;
     
-            const quoteData = await QuoteSchema.deleteOne({_id: _id, guildId: guildId})
+            const quoteData = await QuoteSchema.deleteOne({ _id: _id, guildId: guildId })
 
             if (quoteData.deletedCount) {
                 await interaction.reply(basicEmbed('Deleted Quote!'));
             } else {
-                await interaction.reply(errorEmbed('Quote does not exist!'))
+                throw new Error('Quote does not exist!')
             }
         } catch(err) {
             await interaction.reply(errorEmbed(err));

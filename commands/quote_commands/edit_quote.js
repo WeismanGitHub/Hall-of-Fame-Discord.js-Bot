@@ -1,8 +1,15 @@
-const {basicEmbed, errorEmbed, quoteEmbed, getAuthorByName, getAuthorById, checkTags} = require('../../functions');
 const GuildSchema = require('../../schemas/guild-schema');
 const QuoteSchema= require('../../schemas/quote-schema');
-const {Constants} = require('discord.js');
-let commandAlreadyRespondedTo = false
+const { Constants } = require('discord.js');
+
+const {
+    basicEmbed,
+    errorEmbed,
+    quoteEmbed,
+    getAuthorByName,
+    getAuthorById,
+    checkTags
+} = require('../../functions');
 
 module.exports = {
     category:'Quotes',
@@ -59,9 +66,9 @@ module.exports = {
         }
     ],
 
-    callback: async ({interaction}) => {
+    callback: async ({ interaction }) => {
         try {
-            const {options} = interaction;
+            const { options } = interaction;
             const guildId  = interaction.guildId;
             const _id = options.getString('id');
 
@@ -92,7 +99,7 @@ module.exports = {
             const thereAreNewTags = uncheckedTags.some(tag => tag !== null);
             
             if (thereAreNewTags) {
-                const guildTags = (await GuildSchema.findOne({guildId: guildId}).select('tags')).tags;
+                const guildTags = (await GuildSchema.findOne({ guildId: guildId }).select('tags')).tags;
                 let checkedTagsObject = await checkTags(uncheckedTags, guildTags)
 
                 if (checkedTagsObject.tagsExist) {
@@ -126,28 +133,22 @@ module.exports = {
             }
             
             if (Object.keys(updateObject).length || deleteAttachment) {
-                const updatedQuote = await QuoteSchema.findOneAndUpdate({_id: _id, guildId: guildId}, updateObject, {new: true});
+                const updatedQuote = await QuoteSchema.findOneAndUpdate({ _id: _id, guildId: guildId }, updateObject, { new: true })
 
                 if (deleteAttachment) {
-                    await QuoteSchema.updateOne({_id: _id, guildId: guildId}, {$unset: {'attachment': ''}});
+                    await QuoteSchema.updateOne({ _id: _id, guildId: guildId }, { $unset: {'attachment': '' } });
                 }
 
                 const author = await getAuthorById(updatedQuote.authorId, guildId);
     
                 await interaction.reply(quoteEmbed(updatedQuote, author));
-                commandAlreadyRespondedTo = true
     
             } else {
                 await interaction.reply(basicEmbed('Nothing Updated.'));
-                commandAlreadyRespondedTo = true
             }
             
         } catch(err) {
-            if (commandAlreadyRespondedTo) {
-                await interaction.channel.send(errorEmbed(err))
-            } else {
-                await interaction.reply(errorEmbed(err));
-            }
+            await interaction.reply(errorEmbed(err));
         };
 
     }

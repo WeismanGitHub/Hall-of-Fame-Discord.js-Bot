@@ -1,6 +1,6 @@
 const GuildSchema = require('../../schemas/guild-schema');
-const {basicEmbed, errorEmbed} = require('../../functions');
-const {Constants} = require('discord.js');
+const { basicEmbed, errorEmbed } = require('../../functions');
+const { Constants } = require('discord.js');
 let commandAlreadyRespondedTo = false
 
 module.exports = {
@@ -28,26 +28,25 @@ module.exports = {
         }
     ],
 
-    callback: async ({interaction}) => {
+    callback: async ({ interaction }) => {
         try {
-            const {options} = interaction;
+            const { options } = interaction;
             const guildId = interaction.guildId;
             const oldName = options.getString('name');
             const newName = options.getString('new_name');
             const imgUrl = options.getString('icon_url');
 
             if ((newName == null) && (imgUrl == null)) {
-                await interaction.reply(basicEmbed(`Nothing Updated.`));
-                return commandAlreadyRespondedTo = true
+                return await interaction.reply(basicEmbed(`Nothing Updated.`));
             }
 
             if (imgUrl) {
                 const guildDoc = await GuildSchema.findOneAndUpdate(
-                    {"$and": [
-                        {"guildId": {"$eq": guildId}},
-                        {"authors": {"$elemMatch": {"name": {"$eq": oldName}}}}
+                    { "$and": [
+                        { "guildId": { "$eq": guildId } },
+                        { "authors": { "$elemMatch": { "name": { "$eq": oldName } } } }
                     ]},
-                    {"$set": {"authors.$.imgUrl": imgUrl}
+                    { "$set": { "authors.$.imgUrl": imgUrl }
                 })
     
                 if (guildDoc == null) {
@@ -57,11 +56,11 @@ module.exports = {
 
             if (newName) {
                 const guildDoc = await GuildSchema.findOneAndUpdate(
-                    {"$and": [
-                        {"guildId": {"$eq": guildId}},
-                        {"authors": {"$elemMatch": {"name": {"$eq": oldName}}}}
+                    { "$and": [
+                        { "guildId": { "$eq": guildId } },
+                        { "authors": { "$elemMatch": { "name": { "$eq": oldName } } } }
                     ]},
-                    {"$set": {"authors.$.name": newName}
+                    { "$set": { "authors.$.name": newName }
                 })
     
                 if (guildDoc == null) {
@@ -70,14 +69,9 @@ module.exports = {
             }
 
             await interaction.reply(basicEmbed(`Updated '${newName? newName: oldName}'!`));
-            commandAlreadyRespondedTo = true
 
         } catch(err) {
-            if (commandAlreadyRespondedTo) {
-                await interaction.channel.send(errorEmbed(err))
-            } else {
-                await interaction.reply(errorEmbed(err));
-            }
+            await interaction.reply(errorEmbed(err));
         };
     }
 };

@@ -1,7 +1,13 @@
-const {errorEmbed, checkTags, quoteEmbed, getAuthorByName} = require('../../functions');
 const AudioQuoteSchema = require('../../schemas/audio-quote-schema')
 const GuildSchema = require('../../schemas/guild-schema')
-const {Constants} = require('discord.js');
+const { Constants } = require('discord.js');
+
+const {
+    errorEmbed,
+    checkTags,
+    quoteEmbed,
+    getAuthorByName
+} = require('../../functions');
 
 module.exports = {
     category:'Audio Quotes',
@@ -45,10 +51,10 @@ module.exports = {
         }
     ],
 
-    callback: async ({interaction}) => {
+    callback: async ({ interaction }) => {
         try {
             const guildId = interaction.guildId;
-            const {options} = interaction;
+            const { options } = interaction;
 
             const inputtedAuthor = options.getString('author');
             const checkedAuthor = await getAuthorByName(inputtedAuthor, guildId);
@@ -67,14 +73,13 @@ module.exports = {
                 let checkedTags = [];
 
                 if (thereAreTags) {
-                    const guildTags = (await GuildSchema.findOne({guildId: guildId}).select('tags')).tags;
+                    const guildTags = (await GuildSchema.findOne({ guildId: guildId }).select('tags')).tags;
                     let checkedTagsObject = await checkTags(uncheckedTags, guildTags)
                     
                     if (checkedTagsObject.tagsExist) {
                         checkedTags = checkedTagsObject.checkedTags
                     } else {
-                        await interaction.reply(errorEmbed('Make sure all your tags exist.'))
-                        return;
+                        throw new Error('Make sure all your tags exist.')
                     }
                 }
 
@@ -88,7 +93,7 @@ module.exports = {
 
                 await interaction.reply(quoteEmbed(audioQuote, checkedAuthor))
             } else {
-                await interaction.reply(errorEmbed(`Make sure that '${inputtedAuthor}' author exists.`));
+                throw new Error(`Make sure that '${inputtedAuthor}' author exists.`)
             }
         } catch(err) {
             await interaction.reply(errorEmbed(err));

@@ -1,5 +1,5 @@
 const GuildSchema = require('../../schemas/guild-schema');
-const {basicEmbed, errorEmbed} = require('../../functions');
+const { basicEmbed, errorEmbed } = require('../../functions');
 require('dotenv').config();
 
 module.exports = {
@@ -8,11 +8,11 @@ module.exports = {
     name: 'getalltags',
     slash: true,
 
-    callback: async ({interaction}) => {
+    callback: async ({ interaction }) => {
         try {
             const guildId = interaction.guildId;
         
-            const tagsList= await GuildSchema.find({guildId: guildId}).select('tags');
+            const tagsList= await GuildSchema.find({ guildId: guildId }).select('tags');
             
             if (!tagsList) {
                 await interaction.reply('Please register server.');
@@ -28,7 +28,7 @@ module.exports = {
             await interaction.reply(tags.length? basicEmbed('Server Tags:', message) : basicEmbed('There are no tags.'));
             
         } catch(err) {
-            await interaction.reply(errorEmbed(err));   
+            await interaction.reply(errorEmbed(err));
         };
     }
 };

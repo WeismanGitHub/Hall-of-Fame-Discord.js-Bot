@@ -1,8 +1,7 @@
-const {errorEmbed, quoteEmbed, basicEmbed, getAuthorByName, getAuthorById, checkTags} = require('../functions');
+const { errorEmbed, quoteEmbed, getAuthorByName, getAuthorById, checkTags } = require('../functions');
 const QuoteSchema = require('../schemas/quote-schema');
 const GuildSchema = require('../schemas/guild-schema');
-const {Constants} = require('discord.js');
-let commandAlreadyRespondedTo = false
+const { Constants } = require('discord.js');
 
 module.exports = {
     category:'Quotes',
@@ -37,14 +36,14 @@ module.exports = {
         },
     ],
     
-    callback: async ({interaction}) => {
+    callback: async ({ interaction }) => {
         try {
-            const {options} = interaction;
-            const sortObject = options.getString('date') == null ? {createdAt: -1} : {createdAt: options.getString('date')}
+            const { options } = interaction;
+            const sortObject = options.getString('date') == null ? { createdAt: -1 } : { createdAt: options.getString('date') }
             const searchPhrase = options.getString('search_phrase')
             let inputtedAuthor = options.getString('author');
             const guildId = interaction.guildId;
-            const queryObject = {guildId: guildId};
+            const queryObject = { guildId: guildId };
             
             if (inputtedAuthor) {
                 inputtedAuthor = await getAuthorByName(inputtedAuthor, guildId);
@@ -65,11 +64,11 @@ module.exports = {
             const thereAreTags = uncheckedTags.some(tag => tag !== null);
             
             if (thereAreTags) {
-                const guildTags = (await GuildSchema.findOne({guildId: guildId}).select('tags')).tags;
+                const guildTags = (await GuildSchema.findOne({ guildId: guildId }).select('tags')).tags;
                 let checkedTagsObject = await checkTags(uncheckedTags, guildTags)
             
                 if (checkedTagsObject.tagsExist) {
-                    queryObject.tags = {$all: checkedTagsObject.checkedTags};
+                    queryObject.tags = { $all: checkedTagsObject.checkedTags };
                 } else {
                     throw new Error('Make sure all your tags exist.')
                 }
@@ -95,11 +94,7 @@ module.exports = {
             await interaction.reply(quoteEmbed(randomQuote, author));
 
         } catch(err) {
-            if (commandAlreadyRespondedTo) {
-                await interaction.channel.send(errorEmbed(err))
-            } else {
-                await interaction.reply(errorEmbed(err));
-            }
+            await interaction.reply(errorEmbed(err));
         };
     }
 };

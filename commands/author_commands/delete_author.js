@@ -1,7 +1,6 @@
 const GuildSchema = require('../../schemas/guild-schema');
-const {basicEmbed, errorEmbed} = require('../../functions');
-const {Constants} = require('discord.js');
-let commandAlreadyRespondedTo = false
+const { basicEmbed, errorEmbed } = require('../../functions');
+const { Constants } = require('discord.js');
 
 module.exports = {
     category:'Authors',
@@ -18,15 +17,15 @@ module.exports = {
         }
     ],
 
-    callback: async ({interaction}) => {
+    callback: async ({ interaction }) => {
         try {
-            const {options} = interaction;
+            const { options } = interaction;
             const guildId = interaction.guildId;
             const author = options.getString('author');
     
             const guildDoc = await GuildSchema.findOneAndUpdate(
-                {guildId: guildId},
-                {$pull: {authors: {name: author}}
+                { guildId: guildId },
+                { $pull: { authors: { name: author } }
             })
     
             const isAnAuthor = await guildDoc.authors.some(guildAuthor => {
@@ -35,18 +34,12 @@ module.exports = {
     
             if (isAnAuthor) {
                 await interaction.reply(basicEmbed(`Deleted '${author}' author!`));
-                return commandAlreadyRespondedTo = true
             }
 
             await interaction.reply(basicEmbed(`Nothing Deleted.`));
-            commandAlreadyRespondedTo = true
             
         } catch(err) {
-            if (commandAlreadyRespondedTo) {
-                await interaction.channel.send(errorEmbed(err))
-            } else {
-                await interaction.reply(errorEmbed(err));
-            }
+            await interaction.reply(errorEmbed(err));
         };
     }
 };

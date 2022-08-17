@@ -1,6 +1,6 @@
-const {basicEmbed, errorEmbed} = require('../../functions');
+const { basicEmbed, errorEmbed } = require('../../functions');
 const GuildSchema = require('../../schemas/guild-schema');
-const {Constants} = require('discord.js');
+const { Constants } = require('discord.js');
 
 module.exports = {
     category:'Tags',
@@ -17,15 +17,15 @@ module.exports = {
         }
     ],
 
-    callback: async ({interaction}) => {
+    callback: async ({ interaction }) => {
         try {
-            const {options} = interaction;
+            const { options } = interaction;
             const guildId = interaction.guildId;
             const tag = (options.getString('tag')).toLowerCase();
 
             await GuildSchema.updateOne(
-                {guildId: guildId},
-                {$addToSet: {tags: tag}})
+                { guildId: guildId },
+                { $addToSet: { tags: tag } })
 
             await interaction.reply(basicEmbed(`Created '${tag}' tag!`));
             
