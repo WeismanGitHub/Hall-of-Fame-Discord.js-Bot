@@ -73,7 +73,7 @@ module.exports = {
                     const quotes = await QuoteSchema.find({ guildId: guildId }).sort(sortObject).skip(skipAmount).limit(10).lean();
                     
                     if (!Object.keys(quotes).length) {
-                        return await interaction.channel.send(basicEmbed('There are no quotes left!'))
+                        return await i.reply(basicEmbed('There are no quotes left!'))
                     }
 
                     i.reply(basicEmbed('Started!'));
