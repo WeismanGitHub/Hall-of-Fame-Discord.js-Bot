@@ -24,11 +24,6 @@ module.exports = {
             type: Constants.ApplicationCommandOptionTypes.STRING,
         },
         {
-            name: 'limit',
-            description: 'Amount of quotes returned.',
-            type: Constants.ApplicationCommandOptionTypes.INTEGER
-        },
-        {
             name: 'first_tag',
             description: 'Quote must include this tag.',
             type: Constants.ApplicationCommandOptionTypes.STRING,
@@ -74,7 +69,6 @@ module.exports = {
         try {
             const { options } = interaction;
             const sortObject = options.getString('date') == null ? { createdAt: -1 } : { createdAt: options.getString('date') }
-            const limit = options.getInteger('limit') == null ? Infinity : options.getInteger('limit')
             const searchPhrase = options.getString('search_phrase')
             const isAudioQuote = options.getBoolean('is_audio_quote')
             let inputtedAuthor = options.getString('author');
@@ -122,7 +116,7 @@ module.exports = {
                 throw new Error('Please add some filters. To get all quotes use /getallquotes.')
             }
 
-            const quotes = await QuoteSchema.find(queryObject).sort(sortObject).limit(limit).lean();
+            const quotes = await QuoteSchema.find(queryObject).sort(sortObject).limit(10).lean();
 
             //Do not set up pagination to send ten embeds at a time because if one of the embeds is broken the other 9 won't send.
             if (quotes.length) {
