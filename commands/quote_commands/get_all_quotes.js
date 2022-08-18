@@ -66,13 +66,17 @@ module.exports = {
                 const collector = interaction.channel.createMessageComponentCollector()
 
                 collector.on('collect', async (i) => {
-                    i.reply(basicEmbed('Started!'));
-
                     const customId = i.customId.split(',')
                     const skipAmount = customId[0]
                     const sortObject = { createdAt: customId[1] }
-
+                    
                     const quotes = await QuoteSchema.find({ guildId: guildId }).sort(sortObject).skip(skipAmount).limit(10).lean();
+                    
+                    if (!Object.keys(quotes).length) {
+                        return await interaction.channel.send(basicEmbed('There are no quotes left!'))
+                    }
+
+                    i.reply(basicEmbed('Started!'));
 
                     for (let quote of quotes) {
                         let author = await getAuthorById(quote.authorId, guildId)
