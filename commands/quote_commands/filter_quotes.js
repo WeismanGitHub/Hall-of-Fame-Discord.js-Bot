@@ -74,7 +74,7 @@ module.exports = {
             let inputtedAuthor = options.getString('author');
             const guildId = interaction.guildId;
             const queryObject = { guildId: guildId };
-
+        
             if (inputtedAuthor) {
                 inputtedAuthor = await getAuthorByName(inputtedAuthor, guildId);
 
@@ -102,14 +102,14 @@ module.exports = {
                 let checkedTagsObject = await checkTags(uncheckedTags, guildTags)
 
                 if (checkedTagsObject.tagsExist) {
-                    queryObject.tags = {$all: checkedTagsObject.checkedTags};
+                    queryObject.tags = { $all: checkedTagsObject.checkedTags };
                 } else {
                     throw new Error('Make sure all your tags exist.')
                 }
             }
 
             if (searchPhrase) {
-                queryObject.text ={$regex: searchPhrase, $options: 'i'}
+                queryObject.text ={ $regex: searchPhrase, $options: 'i' }
             }
 
             if (Object.keys(queryObject).length == 1) {
