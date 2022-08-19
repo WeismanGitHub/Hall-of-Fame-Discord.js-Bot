@@ -53,7 +53,7 @@ module.exports = {
                 const row = new MessageActionRow()
                 .addComponents(
                     new MessageButton()
-                    .setCustomId(`10,${sortObject.createdAt},`)
+                    .setCustomId(`10,${sortObject.createdAt}`)
                     .setLabel('⏩')
                     .setStyle('PRIMARY')
                 )

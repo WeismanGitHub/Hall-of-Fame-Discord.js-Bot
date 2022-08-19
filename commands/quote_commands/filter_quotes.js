@@ -1,7 +1,13 @@
 const QuoteSchema = require('../../schemas/quote_schema');
 const GuildSchema = require('../../schemas/guild_schema');
 const FilterSchema = require('../../schemas/filter_schema');
-const { Constants } = require('discord.js');
+
+const {
+    Constants,
+    MessageActionRow,
+    MessageButton,
+    createMessageComponentCollector
+} = require('discord.js');
 
 const {
     errorEmbed,
@@ -116,12 +122,11 @@ module.exports = {
             if (Object.keys(queryObject).length == 1) {
                 throw new Error('Please add some filters. To get all quotes use /getallquotes.')
             }
-
+            const filterId = (await FilterSchema.create({ queryObject: queryObject, sortObject: sortObject }))._id
             const quotes = await QuoteSchema.find(queryObject).sort(sortObject).limit(10).lean();
 
-            //Do not set up pagination to send ten embeds at a time because if one of the embeds is broken the other 9 won't send.
             if (quotes.length) {
-                await interaction.reply(basicEmbed(`Started!\nAmount: ${quotes.length}`))
+                await interaction.reply(basicEmbed('Started!'))
 
                 for (let quote of quotes) {
                     const quoteAuthor = await getAuthorById(quote.authorId, guildId);
@@ -132,13 +137,66 @@ module.exports = {
                     });
                 }
 
-                await interaction.channel.send(basicEmbed('Done!'));
+                const row = new MessageActionRow()
+                .addComponents(
+                    new MessageButton()
+                    .setCustomId(`10,${filterId}`)
+                    .setLabel('⏩')
+                    .setStyle('PRIMARY')
+                )
+                    
+                await interaction.channel.send({
+                    ...basicEmbed('Get Next 10 Quotes?'),
+                    components: [row]
+                })
+            
+                const collector = interaction.channel.createMessageComponentCollector()
+
+                collector.on('collect', async (i) => {
+                    const customId = i.customId.split(',')
+                    const skipAmount = customId[0]
+                    const filterObject = await FilterSchema.findById(customId[1])
+                    
+                    if (!filterObject) {
+                        throw new Error('Please use the command again. This button is broken.')
+                    }
+                    const { queryObject, sortObject } = filterObject
+
+                    const quotes = await QuoteSchema.find(queryObject).sort(sortObject).skip(skipAmount).limit(10).lean();
+
+                    if (!Object.keys(quotes).length) {
+                        return await i.reply(basicEmbed('There are no quotes left!'))
+                    }
+
+                    i.reply(basicEmbed('Started!'));
+
+                    for (let quote of quotes) {
+                        let author = await getAuthorById(quote.authorId, guildId)
+                        
+                        await interaction.channel.send(quoteEmbed(quote, author))
+                        .catch(async err => {
+                            await interaction.channel.send(errorEmbed(err, `Quote Id: ${quote._id}`));
+                        });
+                    }
+
+                    const row = new MessageActionRow()
+                    .addComponents(
+                        new MessageButton()
+                        .setCustomId(`${Number(skipAmount) + 10},${filterId}`)
+                        .setLabel('⏩')
+                        .setStyle('PRIMARY')
+                    )
+                        
+                    await interaction.channel.send({
+                        ...basicEmbed('Get Next 10 Quotes?'),
+                        components: [row]
+                    })
+                })
             } else {
                 throw new Error('No quotes match your specifications.')
             }
-
-
         } catch(err) {
+            console.log(err)
             await interaction.reply(errorEmbed(err));
         };
     }
