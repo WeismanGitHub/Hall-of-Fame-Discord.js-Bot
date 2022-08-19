@@ -87,6 +87,10 @@ module.exports = {
                         });
                     }
 
+                    if (quotes.length !== 10) {
+                        return await interaction.channel.send(basicEmbed('End of the line!'))
+                    }
+                    
                     const row = new MessageActionRow()
                     .addComponents(
                         new MessageButton()

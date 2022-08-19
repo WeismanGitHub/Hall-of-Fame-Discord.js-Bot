@@ -122,21 +122,26 @@ module.exports = {
             if (Object.keys(queryObject).length == 1) {
                 throw new Error('Please add some filters. To get all quotes use /getallquotes.')
             }
-            const filterId = (await FilterSchema.create({ queryObject: queryObject, sortObject: sortObject }))._id
             const quotes = await QuoteSchema.find(queryObject).sort(sortObject).limit(10).lean();
-
+            
             if (quotes.length) {
                 await interaction.reply(basicEmbed('Started!'))
-
+                
                 for (let quote of quotes) {
                     const quoteAuthor = await getAuthorById(quote.authorId, guildId);
-
+                    
                     await interaction.channel.send(quoteEmbed(quote, quoteAuthor))
                     .catch(async err => {
                         await interaction.channel.send(errorEmbed(err, `Quote Id: ${quote._id}`));
                     });
                 }
-
+                
+                if (quotes.length !== 10) {
+                    return await interaction.channel.send(basicEmbed('End of the line!'))
+                }
+                
+                const filterId = (await FilterSchema.create({ queryObject: queryObject, sortObject: sortObject }))._id
+                
                 const row = new MessageActionRow()
                 .addComponents(
                     new MessageButton()
@@ -144,7 +149,7 @@ module.exports = {
                     .setLabel('⏩')
                     .setStyle('PRIMARY')
                 )
-                    
+                
                 await interaction.channel.send({
                     ...basicEmbed('Get Next 10 Quotes?'),
                     components: [row]
@@ -160,6 +165,7 @@ module.exports = {
                     if (!filterObject) {
                         throw new Error('Please use the command again. This button is broken.')
                     }
+
                     const { queryObject, sortObject } = filterObject
 
                     const quotes = await QuoteSchema.find(queryObject).sort(sortObject).skip(skipAmount).limit(10).lean();
@@ -178,7 +184,7 @@ module.exports = {
                             await interaction.channel.send(errorEmbed(err, `Quote Id: ${quote._id}`));
                         });
                     }
-
+                
                     const row = new MessageActionRow()
                     .addComponents(
                         new MessageButton()
