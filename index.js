@@ -6,7 +6,7 @@ require('dotenv').config();
 
 const express = require('express');
 const app = express();
-const port = 3000;
+const port = 5000;
 
 //The reason for making it a web app is because replit requires that.
 app.get('/', (req, res) => res.send('Hall of Fame Bot is online.'));
