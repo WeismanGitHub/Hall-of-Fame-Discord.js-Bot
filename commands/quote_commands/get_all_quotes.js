@@ -76,7 +76,7 @@ module.exports = {
                         return await i.reply(basicEmbed('There are no quotes left!'))
                     }
 
-                    i.reply(basicEmbed('Started!'));
+                    await i.reply(basicEmbed('Started!'));
 
                     for (let quote of quotes) {
                         let author = await getAuthorById(quote.authorId, guildId)
@@ -94,7 +94,7 @@ module.exports = {
                     const row = new MessageActionRow()
                     .addComponents(
                         new MessageButton()
-                        .setCustomId(`${Number(skipAmount) + 10},${sortObject.createdAt},`)
+                        .setCustomId(`${Number(skipAmount) + 10},${sortObject.createdAt}`)
                         .setLabel('⏩')
                         .setStyle('PRIMARY')
                     )
