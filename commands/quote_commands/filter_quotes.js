@@ -137,9 +137,9 @@ module.exports = {
                 }
                 
                 if (quotes.length !== 10) {
-                    return await interaction.channel.send(basicEmbed('End of the line!'))
+                    await interaction.channel.send(basicEmbed('End of the line!'))
+                    return
                 }
-                
                 const filterId = (await FilterSchema.create({ queryObject: queryObject, sortObject: sortObject }))._id
                 
                 const row = new MessageActionRow()
@@ -169,11 +169,6 @@ module.exports = {
                     const { queryObject, sortObject } = filterObject
 
                     const quotes = await QuoteSchema.find(queryObject).sort(sortObject).skip(skipAmount).limit(10).lean();
-
-                    if (!Object.keys(quotes).length) {
-                        return await i.reply(basicEmbed('There are no quotes left!'))
-                    }
-
                     i.reply(basicEmbed('Started!'));
 
                     for (let quote of quotes) {
