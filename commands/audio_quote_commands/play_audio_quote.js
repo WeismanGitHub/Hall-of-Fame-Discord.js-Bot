@@ -29,7 +29,7 @@ module.exports = {
         }
     ],
 
-    callback: async ({ interaction }) => {
+    callback: async ({ interaction, client }) => {
         try {
             const guildId = interaction.guildId;
             const { options } = interaction;
@@ -40,7 +40,7 @@ module.exports = {
             if (!title && !id) {
                 throw new Error('Enter either an id or title.')
             }
-
+        
             const searchObject = { ...title && { text: title }, ...id && { _id: id } }
 
             const audioQuote = await AudioQuoteSchema.findOne({
@@ -60,10 +60,11 @@ module.exports = {
             }
 
             const player = createAudioPlayer({ behaviors: { noSubscriber: NoSubscriberBehavior.Stop } });
+            
             const audioQuoteResource = createAudioResource(audioQuote.audioFileLink)
             
-            
             const connection = joinVoiceChannel({
+                selfDeaf: false,
                 channelId: voiceChannel.id,
                 guildId: interaction.guild.id,
                 adapterCreator: interaction.guild.voiceAdapterCreator
@@ -72,11 +73,27 @@ module.exports = {
             player.on('error', err => {
                 console.log(err)
             });
+            console.log(connection.receiver.users)
+            if (connection.receiver.speaking.users.has(client.user.id)) {
+                player.on(AudioPlayerStatus.Idle, () => {
+                    console.log('idle')
+                    // player.play(audioQuoteResource)
+                    // connection.subscribe(player)
+                })
+            }
 
-            player.play(audioQuoteResource);
-            connection.subscribe(player);
-            player.on(AudioPlayerStatus.Playing, () => { setTimeout(() => { player.stop() }, 30000) })
-            player.on(AudioPlayerStatus.Idle, () => { connection.destroy() })
+            player.play(audioQuoteResource)
+            connection.subscribe(player)
+            
+            player.on(AudioPlayerStatus.Playing, () => {
+                console.log('playing')
+                setTimeout(() => { player.stop() }, 30000);
+            })
+
+            player.on(AudioPlayerStatus.Idle, () => {
+                console.log('idle')
+                return connection.destroy()
+            })
 
             const author = await getAuthorById(audioQuote.authorId, guildId)
             await interaction.reply(quoteEmbed(audioQuote, author))
