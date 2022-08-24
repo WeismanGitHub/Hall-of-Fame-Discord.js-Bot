@@ -33,16 +33,19 @@ const quoteEmbed = function(quote, author, color='#5865F2') {
 const errorEmbed = function(error, title='Theres been an error!', color='#FF0000') {
 	error = error.toString();
 	
-	return { embeds: [new MessageEmbed()
-	.setColor(color)
-	.setTitle(title)
-	.setDescription(error)] };
+	return {
+        embeds: [new MessageEmbed()
+        .setColor(color)
+        .setTitle(title)
+        .setDescription(error)]
+    };
 };
 
 const authorEmbed = function(author, color='#5865F2') {
-	return {embeds: [new MessageEmbed()
+	return {
+        embeds: [new MessageEmbed()
 		.setColor(color)
-		.setAuthor({name: author.name, iconURL: author.imgUrl})
+		.setAuthor({ name: author.name, iconURL: author.imgUrl })
 	]}
 }
 
