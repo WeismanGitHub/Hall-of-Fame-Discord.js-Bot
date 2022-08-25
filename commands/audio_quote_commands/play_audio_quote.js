@@ -9,6 +9,7 @@ const {
     joinVoiceChannel,
     AudioPlayerStatus
 } = require('@discordjs/voice');
+const { connection } = require('mongoose');
 
 module.exports = {
     category:'Audio Quotes',
@@ -75,22 +76,20 @@ module.exports = {
             });
 
             // Originally I wanted it to just queue the next audio quote, but I couldn't figure it out. I've opted to have it just check if the bot is already playing an audio quote and tell the user you have to wait till the audio quote is done playing.
-
-            //BUT I CANT EVEN GET THAT WORKING CURRENTLY
-            if (connection.receiver.speaking.users.has(client.user.id)) {
-                throw new Error('You must wait for the current audio quote to stop playing.')
-            }
+            interaction.member.voice.channel.members.forEach(member => {
+                if (member.id == '973042179033415690') {
+                    throw new Error('You must wait for the current audio quote to stop playing.')
+                }
+            })
 
             player.play(audioQuoteResource)
             connection.subscribe(player)
             
             player.on(AudioPlayerStatus.Playing, () => {
-                console.log('playing')
                 setTimeout(() => { player.stop() }, 30000);
             })
 
             player.on(AudioPlayerStatus.Idle, () => {
-                console.log('idle')
                 return connection.destroy()
             })
 
