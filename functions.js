@@ -9,13 +9,13 @@ const basicEmbed = function (title, message='', color='#5865F2') {
 	.setDescription(message)]};
 };
 
-const quoteEmbed = function(quote, author, color='#5865F2') {
+const quoteEmbed = function(quote, author, color='#8A2BE2') {
 	let tags = quote.tags;
     tags = tags.filter(x => x !== null)
     tags = tags.length ? tags : ['no tags']
 
     if (quote.isAudioQuote) {
-        color = color == '#5865F2' ? '#287e29' : color
+        color = color == '#8A2BE2' ? '#287e29' : color
         quote.text += '\n(ɪs ᴀᴜᴅɪᴏ ǫᴜᴏᴛᴇ)'
     }
 
