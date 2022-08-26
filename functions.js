@@ -16,7 +16,7 @@ const quoteEmbed = function(quote, author, color='#8A2BE2') {
 
     if (quote.isAudioQuote) {
         color = color == '#8A2BE2' ? '#287e29' : color
-        quote.text += '\n(ɪs ᴀᴜᴅɪᴏ ǫᴜᴏᴛᴇ)'
+        quote.text += '\n(ᴀᴜᴅɪᴏ ǫᴜᴏᴛᴇ)'
     }
 
 	let embed = new MessageEmbed()
