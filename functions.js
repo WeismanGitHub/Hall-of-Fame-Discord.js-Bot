@@ -2,7 +2,7 @@ const { MessageEmbed } = require('discord.js');
 const GuildSchema = require('./schemas/guild_schema');
 const mongoose = require('mongoose');
 
-const basicEmbed = function (title, message='', color='#5865F2') {
+const basicEmbed = function (title, message='', color='#3826ff') {
 	return {embeds: [new MessageEmbed()
 	.setColor(color)
 	.setTitle(title)
