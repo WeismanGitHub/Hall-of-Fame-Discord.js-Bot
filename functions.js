@@ -14,7 +14,6 @@ const quoteEmbed = function(quote, author, color='#5865F2') {
     tags = tags.filter(x => x !== null)
     tags = tags.length ? tags : ['no tags']
 
-    //is default and audio quote
     if (quote.isAudioQuote) {
         color = color == '#5865F2' ? '#287e29' : color
         quote.text += '\n(ɪs ᴀᴜᴅɪᴏ ǫᴜᴏᴛᴇ)'
