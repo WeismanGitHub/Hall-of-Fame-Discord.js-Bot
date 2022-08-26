@@ -14,6 +14,12 @@ const quoteEmbed = function(quote, author, color='#5865F2') {
     tags = tags.filter(x => x !== null)
     tags = tags.length ? tags : ['no tags']
 
+    //is default and audio quote
+    if (quote.isAudioQuote) {
+        color = color == '#5865F2' ? '#287e29' : color
+        quote.text += '\n(ɪs ᴀᴜᴅɪᴏ ǫᴜᴏᴛᴇ)'
+    }
+
 	let embed = new MessageEmbed()
 	.setColor(color)
 	.setTitle(quote.text ?? '(No Text)')
@@ -21,8 +27,7 @@ const quoteEmbed = function(quote, author, color='#5865F2') {
 	.addFields({ name: 'Id:', value: `${quote._id}` })
 	.addFields({ name: 'Tags:', value: tags.join(', ') })
 	.setTimestamp(quote.createdAt)
-    .addFields({ name: 'Audio Quote:', value: String(Boolean(quote.isAudioQuote)) })
-
+    
 	if (quote.attachment !== null) {
 		embed.setImage(quote.attachment);
 	};
