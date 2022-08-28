@@ -1,5 +1,5 @@
+const { errorEmbed, authorEmbed, basicEmbed } = require('../../helpers/embeds');
 const GuildSchema = require('../../schemas/guild_schema');
-const { basicEmbed, errorEmbed, authorEmbed } = require('../../functions');
 
 module.exports = {
     description: 'Gets all authors tied to your server.',
