@@ -1,4 +1,6 @@
-const { errorEmbed, quoteEmbed, getAuthorByName, checkTags } = require('../../functions');
+const { errorEmbed, quoteEmbed } = require('../../helpers/embeds');
+const { getAuthorByName } = require('../../helpers/get_author');
+const { checkTags } = require('../../helpers/check_tags');
 const GuildSchema = require('../../schemas/guild_schema');
 const QuoteSchema = require('../../schemas/quote_schema');
 const { Constants } = require('discord.js');

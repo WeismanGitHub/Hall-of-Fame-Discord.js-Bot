@@ -1,11 +1,11 @@
-const { errorEmbed, quoteEmbed, basicEmbed, getAuthorById } = require('../../functions');
+const { errorEmbed, quoteEmbed, basicEmbed } = require('../../helpers/embeds');
+const { getAuthorById } = require('../../helpers/get_author');
 const QuoteSchema = require('../../schemas/quote_schema');
 
 const {
     Constants,
     MessageActionRow,
     MessageButton,
-    createMessageComponentCollector
 } = require('discord.js');
 
 module.exports = {

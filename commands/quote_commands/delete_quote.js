@@ -1,4 +1,4 @@
-const { basicEmbed, errorEmbed } = require('../../functions');
+const { errorEmbed, basicEmbed } = require('../../helpers/embeds');
 const QuoteSchema = require('../../schemas/quote_schema');
 const { Constants } = require('discord.js');
 
