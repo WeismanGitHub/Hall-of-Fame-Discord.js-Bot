@@ -1,5 +1,5 @@
+const { basicEmbed, errorEmbed } = require('../helpers/embeds');
 const GuildSchema = require('../schemas/guild_schema');
-const { basicEmbed, errorEmbed } = require('../functions');
 
 module.exports = {
     category:'Register',

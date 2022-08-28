@@ -1,5 +1,5 @@
+const { errorEmbed, basicEmbed } = require('../../helpers/embeds');
 const GuildSchema = require('../../schemas/guild_schema');
-const { basicEmbed, errorEmbed } = require('../../functions');
 require('dotenv').config();
 
 module.exports = {
