@@ -1,13 +1,10 @@
 const AudioQuoteSchema = require('../../schemas/audio_quote_schema')
+const { errorEmbed, quoteEmbed } = require('../../helpers/embeds');
+const { getAuthorByName } = require('../../helpers/get_author');
+const { checkTags } = require('../../helpers/check_tags');
 const GuildSchema = require('../../schemas/guild_schema')
 const { Constants } = require('discord.js');
 
-const {
-    errorEmbed,
-    checkTags,
-    quoteEmbed,
-    getAuthorByName
-} = require('../../functions');
 
 module.exports = {
     category:'Audio Quotes',

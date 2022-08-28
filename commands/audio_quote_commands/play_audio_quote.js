@@ -1,5 +1,6 @@
-const { errorEmbed, quoteEmbed, getAuthorById } = require('../../functions');
 const AudioQuoteSchema = require('../../schemas/audio_quote_schema')
+const { errorEmbed, quoteEmbed } = require('../../helpers/embeds');
+const { getAuthorById } = require('../../helpers/get_author');
 const { Constants } = require('discord.js');
 
 const {
@@ -9,7 +10,6 @@ const {
     joinVoiceChannel,
     AudioPlayerStatus
 } = require('@discordjs/voice');
-const { connection } = require('mongoose');
 
 module.exports = {
     category:'Audio Quotes',
