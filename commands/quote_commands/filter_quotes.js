@@ -116,7 +116,7 @@ module.exports = {
             if (!quotes.length) {
                 throw new Error('No quotes match your specifications.')
             }
-            
+
             await interaction.reply(basicEmbed('Started!'))
             
             for (let quote of quotes) {
@@ -132,6 +132,7 @@ module.exports = {
                 await interaction.channel.send(basicEmbed('End of the line!'))
                 return
             }
+            
             const filterId = (await FilterSchema.create({ queryObject: queryObject, sortObject: sortObject }))._id
             
             const row = new MessageActionRow()
