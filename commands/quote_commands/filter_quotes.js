@@ -113,78 +113,78 @@ module.exports = {
             }
             const quotes = await QuoteSchema.find(queryObject).sort(sortObject).limit(10).lean();
             
-            if (quotes.length) {
-                await interaction.reply(basicEmbed('Started!'))
+            if (!quotes.length) {
+                throw new Error('No quotes match your specifications.')
+            }
+            
+            await interaction.reply(basicEmbed('Started!'))
+            
+            for (let quote of quotes) {
+                const quoteAuthor = await getAuthorById(quote.authorId, guildId);
                 
+                await interaction.channel.send(quoteEmbed(quote, quoteAuthor))
+                .catch(async err => {
+                    await interaction.channel.send(errorEmbed(err, `Quote Id: ${quote._id}`));
+                });
+            }
+            
+            if (quotes.length !== 10) {
+                await interaction.channel.send(basicEmbed('End of the line!'))
+                return
+            }
+            const filterId = (await FilterSchema.create({ queryObject: queryObject, sortObject: sortObject }))._id
+            
+            const row = new MessageActionRow()
+            .addComponents(
+                new MessageButton()
+                .setCustomId(`10,${filterId}`)
+                .setLabel('⏩')
+                .setStyle('PRIMARY')
+            )
+            
+            await interaction.channel.send({
+                ...basicEmbed('Get Next 10 Quotes?'),
+                components: [row]
+            })
+        
+            const collector = interaction.channel.createMessageComponentCollector()
+
+            collector.on('collect', async (i) => {
+                const customId = i.customId.split(',')
+                const skipAmount = customId[0]
+                const filterObject = await FilterSchema.findById(customId[1])
+                
+                if (!filterObject) {
+                    return await i.channel.send('Please use the command again. This button is broken.')
+                }
+
+                const { queryObject, sortObject } = filterObject
+
+                const quotes = await QuoteSchema.find(queryObject).sort(sortObject).skip(skipAmount).limit(10).lean();
+                i.reply(basicEmbed('Started!'));
+
                 for (let quote of quotes) {
-                    const quoteAuthor = await getAuthorById(quote.authorId, guildId);
+                    let author = await getAuthorById(quote.authorId, guildId)
                     
-                    await interaction.channel.send(quoteEmbed(quote, quoteAuthor))
+                    await interaction.channel.send(quoteEmbed(quote, author))
                     .catch(async err => {
                         await interaction.channel.send(errorEmbed(err, `Quote Id: ${quote._id}`));
                     });
                 }
-                
-                if (quotes.length !== 10) {
-                    await interaction.channel.send(basicEmbed('End of the line!'))
-                    return
-                }
-                const filterId = (await FilterSchema.create({ queryObject: queryObject, sortObject: sortObject }))._id
-                
+            
                 const row = new MessageActionRow()
                 .addComponents(
                     new MessageButton()
-                    .setCustomId(`10,${filterId}`)
+                    .setCustomId(`${Number(skipAmount) + 10},${filterId}`)
                     .setLabel('⏩')
                     .setStyle('PRIMARY')
                 )
-                
+                    
                 await interaction.channel.send({
                     ...basicEmbed('Get Next 10 Quotes?'),
                     components: [row]
                 })
-            
-                const collector = interaction.channel.createMessageComponentCollector()
-
-                collector.on('collect', async (i) => {
-                    const customId = i.customId.split(',')
-                    const skipAmount = customId[0]
-                    const filterObject = await FilterSchema.findById(customId[1])
-                    
-                    if (!filterObject) {
-                        return await i.channel.send('Please use the command again. This button is broken.')
-                    }
-
-                    const { queryObject, sortObject } = filterObject
-
-                    const quotes = await QuoteSchema.find(queryObject).sort(sortObject).skip(skipAmount).limit(10).lean();
-                    i.reply(basicEmbed('Started!'));
-
-                    for (let quote of quotes) {
-                        let author = await getAuthorById(quote.authorId, guildId)
-                        
-                        await interaction.channel.send(quoteEmbed(quote, author))
-                        .catch(async err => {
-                            await interaction.channel.send(errorEmbed(err, `Quote Id: ${quote._id}`));
-                        });
-                    }
-                
-                    const row = new MessageActionRow()
-                    .addComponents(
-                        new MessageButton()
-                        .setCustomId(`${Number(skipAmount) + 10},${filterId}`)
-                        .setLabel('⏩')
-                        .setStyle('PRIMARY')
-                    )
-                        
-                    await interaction.channel.send({
-                        ...basicEmbed('Get Next 10 Quotes?'),
-                        components: [row]
-                    })
-                })
-            } else {
-                throw new Error('No quotes match your specifications.')
-            }
+            })
         } catch(err) {
             console.log(err)
             await interaction.reply(errorEmbed(err));
