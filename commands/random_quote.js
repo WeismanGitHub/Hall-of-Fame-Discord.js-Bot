@@ -2,7 +2,6 @@ const { getAuthorByName, getAuthorById } = require('../helpers/get_author');
 const { errorEmbed, quoteEmbed } = require('../helpers/embeds');
 const { checkTags } = require('../helpers/check_tags');
 const QuoteSchema = require('../schemas/quote_schema');
-const GuildSchema = require('../schemas/guild_schema');
 const { Constants } = require('discord.js');
 
 module.exports = {
@@ -56,24 +55,17 @@ module.exports = {
                     throw new Error(`'${inputtedAuthor}' author does not exist.`)
                 }
             }
-            
-            const uncheckedTags = [
+
+            let tags = [
                 options.getString('first_tag'),
                 options.getString('second_tag'),
                 options.getString('third_tag'),
             ];
+
+            tags = await checkTags(tags, guildId);
             
-            const thereAreTags = uncheckedTags.some(tag => tag !== null);
-            
-            if (thereAreTags) {
-                const guildTags = (await GuildSchema.findOne({ guildId: guildId }).select('tags')).tags;
-                let checkedTagsObject = await checkTags(uncheckedTags, guildTags)
-            
-                if (checkedTagsObject.tagsExist) {
-                    queryObject.tags = { $all: checkedTagsObject.checkedTags };
-                } else {
-                    throw new Error('Make sure all your tags exist.')
-                }
+            if (tags.length) {
+                queryObject.tags = { $all: tags };
             }
             
             if (searchPhrase) {
