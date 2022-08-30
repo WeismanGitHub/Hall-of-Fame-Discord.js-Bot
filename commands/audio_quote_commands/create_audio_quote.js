@@ -66,17 +66,13 @@ module.exports = {
                 ];
     
                 tags = await checkTags(tags, guildId);
-                
-                if (tags.length) {
-                    queryObject.tags = { $all: tags };
-                }
 
                 const audioQuote = await AudioQuoteSchema.create({
                     guildId: guildId,
                     authorId: checkedAuthor._id,
                     text: title,
                     audioFileLink: audioFileLink,
-                    tags: checkedTags,
+                    tags: tags,
                 });
 
                 await interaction.reply(quoteEmbed(audioQuote, checkedAuthor))
