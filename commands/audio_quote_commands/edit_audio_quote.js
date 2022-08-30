@@ -1,8 +1,7 @@
-const audioQuoteSchema = require('../../schemas/audio_quote_schema');
 const { errorEmbed, quoteEmbed, basicEmbed } = require('../../helpers/embeds');
 const { getAuthorByName, getAuthorById } = require('../../helpers/get_author');
+const audioQuoteSchema = require('../../schemas/audio_quote_schema');
 const { checkTags } = require('../../helpers/check_tags');
-const GuildSchema = require('../../schemas/guild_schema');
 const { Constants } = require('discord.js');
 
 module.exports = {
@@ -81,24 +80,16 @@ module.exports = {
             if (newAudioFile) {
                 updateObject.audioFileLink = newAudioFile;
             };
-
-            const uncheckedTags = [
+            let tags = [
                 options.getString('first_tag'),
                 options.getString('second_tag'),
                 options.getString('third_tag'),
             ];
-            
-            const thereAreNewTags = uncheckedTags.some(tag => tag !== null);
-            
-            if (thereAreNewTags) {
-                const guildTags = (await GuildSchema.findOne({ guildId: guildId }).select(' -_id tags').lean()).tags;
-                let checkedTagsObject = await checkTags(uncheckedTags, guildTags)
 
-                if (checkedTagsObject.tagsExist) {
-                    updateObject['tags'] = checkedTagsObject.checkedTags
-                } else {
-                    throw new Error('Make sure all your tags exist.')
-                }
+            tags = await checkTags(tags, guildId);
+            
+            if (tags.length) {
+                updateObject.tags = tags
             }
 
             if (deleteTags) {
