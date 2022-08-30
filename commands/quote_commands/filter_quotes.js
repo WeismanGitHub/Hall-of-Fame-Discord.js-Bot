@@ -125,7 +125,7 @@ module.exports = {
             }
 
             const filterId = (await FilterSchema.create({ queryObject: queryObject, sortObject: sortObject }))._id
-            
+
             const row = new MessageActionRow()
             .addComponents(
                 new MessageButton()
@@ -138,7 +138,7 @@ module.exports = {
                 ...basicEmbed('Get Next 10 Quotes?'),
                 components: [row]
             })
-        
+
             const collector = interaction.channel.createMessageComponentCollector()
 
             collector.on('collect', async (i) => {
