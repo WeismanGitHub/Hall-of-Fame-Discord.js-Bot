@@ -4,8 +4,6 @@ const { Constants, MessageActionRow, MessageButton } = require('discord.js');
 const FilterSchema = require('../../schemas/filter_schema');
 const { checkTags } = require('../../helpers/check_tags');
 const QuoteSchema = require('../../schemas/quote_schema');
-const GuildSchema = require('../../schemas/guild_schema');
-
 
 module.exports = {
     category:'Quotes',
@@ -85,23 +83,16 @@ module.exports = {
                 queryObject.isAudioQuote = isAudioQuote
             }
 
-            const uncheckedTags = [
+            let tags = [
                 options.getString('first_tag'),
                 options.getString('second_tag'),
                 options.getString('third_tag'),
             ];
 
-            const thereAreTags = uncheckedTags.some(tag => tag !== null);
+            tags = await checkTags(tags, guildId);
             
-            if (thereAreTags) {
-                const guildTags = (await GuildSchema.findOne({ guildId: guildId }).select('-_id tags').lean()).tags;
-                let checkedTagsObject = await checkTags(uncheckedTags, guildTags)
-
-                if (checkedTagsObject.tagsExist) {
-                    queryObject.tags = { $all: checkedTagsObject.checkedTags };
-                } else {
-                    throw new Error('Make sure all your tags exist.')
-                }
+            if (tags.length) {
+                queryObject.tags = { $all: tags };
             }
 
             if (searchPhrase) {
@@ -132,7 +123,7 @@ module.exports = {
                 await interaction.channel.send(basicEmbed('End of the line!'))
                 return
             }
-            
+
             const filterId = (await FilterSchema.create({ queryObject: queryObject, sortObject: sortObject }))._id
             
             const row = new MessageActionRow()
