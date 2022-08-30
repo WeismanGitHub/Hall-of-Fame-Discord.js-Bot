@@ -2,7 +2,6 @@ const AudioQuoteSchema = require('../../schemas/audio_quote_schema')
 const { errorEmbed, quoteEmbed } = require('../../helpers/embeds');
 const { getAuthorByName } = require('../../helpers/get_author');
 const { checkTags } = require('../../helpers/check_tags');
-const GuildSchema = require('../../schemas/guild_schema')
 const { Constants } = require('discord.js');
 
 
@@ -60,24 +59,16 @@ module.exports = {
                 const title = options.getString('title');
                 const audioFileLink = options.getString('audio_file_link');
 
-                const uncheckedTags = [
+                let tags = [
                     options.getString('first_tag'),
                     options.getString('second_tag'),
                     options.getString('third_tag'),
                 ];
-
-                const thereAreTags = uncheckedTags.some(tag => tag !== null);
-                let checkedTags = [];
-
-                if (thereAreTags) {
-                    const guildTags = (await GuildSchema.findOne({ guildId: guildId }).select(' -_id tags').lean()).tags;
-                    let checkedTagsObject = await checkTags(uncheckedTags, guildTags)
-                    
-                    if (checkedTagsObject.tagsExist) {
-                        checkedTags = checkedTagsObject.checkedTags
-                    } else {
-                        throw new Error('Make sure all your tags exist.')
-                    }
+    
+                tags = await checkTags(tags, guildId);
+                
+                if (tags.length) {
+                    queryObject.tags = { $all: tags };
                 }
 
                 const audioQuote = await AudioQuoteSchema.create({
