@@ -120,6 +120,7 @@ module.exports = {
             }
             
             if (quotes.length !== 10) {
+                // For some reason putting the message and return on the same line doesn't actually cause it to return.
                 await interaction.channel.send(basicEmbed('End of the line!'))
                 return
             }
@@ -163,7 +164,11 @@ module.exports = {
                         await interaction.channel.send(errorEmbed(err, `Quote Id: ${quote._id}`));
                     });
                 }
-            
+
+                if (quotes.length !== 10) {
+                    return await interaction.channel.send(basicEmbed('End of the line!'))
+                }
+
                 const row = new MessageActionRow()
                 .addComponents(
                     new MessageButton()
