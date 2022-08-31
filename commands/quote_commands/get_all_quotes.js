@@ -38,22 +38,70 @@ module.exports = {
             const sortObject = options.getString('date') == null ? { createdAt: -1 } : { createdAt: options.getString('date') }
             const quotes = await QuoteSchema.find({ guildId: guildId }).sort(sortObject).limit(10).lean();
 
-            if (quotes.length) {
-                await interaction.reply(basicEmbed('Started!'))
+            if (!quotes.length) {
+                throw new Error('This server has no quotes.')
+            }
+
+            await interaction.reply(basicEmbed('Started!'))
+
+            for (let quote of quotes) {
+                let author = await getAuthorById(quote.authorId, guildId)
                 
+                await interaction.channel.send(quoteEmbed(quote, author))
+                .catch(async err => {
+                    interaction.channel.send(errorEmbed(err, `Quote Id: ${quote._id}`));
+                });
+            }
+
+            if (quotes.length !== 10) {
+                return await interaction.channel.send(basicEmbed('End of the line!'))
+            }
+
+            const row = new MessageActionRow()
+            .addComponents(
+                new MessageButton()
+                .setCustomId(`10,${sortObject.createdAt}`)
+                .setLabel('⏩')
+                .setStyle('PRIMARY')
+            )
+
+            await interaction.channel.send({
+                ...basicEmbed('Get Next 10 Quotes?'),
+                components: [row]
+            })
+
+            const collector = interaction.channel.createMessageComponentCollector()
+
+            collector.on('collect', async (i) => {
+                const customId = i.customId.split(',')
+                const skipAmount = customId[0]
+                const sortObject = { createdAt: customId[1] }
+                
+                const quotes = await QuoteSchema.find({ guildId: guildId }).sort(sortObject).skip(skipAmount).limit(10).lean();
+                
+                if (!Object.keys(quotes).length) {
+                    return await i.reply(basicEmbed('End of the line!'))
+                }
+
+                await i.reply(basicEmbed('Started!'));
+
                 for (let quote of quotes) {
                     let author = await getAuthorById(quote.authorId, guildId)
                     
                     await interaction.channel.send(quoteEmbed(quote, author))
                     .catch(async err => {
-                        interaction.channel.send(errorEmbed(err, `Quote Id: ${quote._id}`));
+                        await interaction.channel.send(errorEmbed(err, `Quote Id: ${quote._id}`));
                     });
                 }
 
+                if (quotes.length !== 10) {
+                    return await interaction.channel.send(basicEmbed('End of the line!'))
+                }
+                
                 const row = new MessageActionRow()
                 .addComponents(
                     new MessageButton()
-                    .setCustomId(`10,${sortObject.createdAt}`)
+                    .setCustomId(`${Number(skipAmount) + 10},${sortObject.createdAt}`)
                     .setLabel('⏩')
                     .setStyle('PRIMARY')
                 )
@@ -62,53 +110,8 @@ module.exports = {
                     ...basicEmbed('Get Next 10 Quotes?'),
                     components: [row]
                 })
-
-                const collector = interaction.channel.createMessageComponentCollector()
-
-                collector.on('collect', async (i) => {
-                    const customId = i.customId.split(',')
-                    const skipAmount = customId[0]
-                    const sortObject = { createdAt: customId[1] }
-                    
-                    const quotes = await QuoteSchema.find({ guildId: guildId }).sort(sortObject).skip(skipAmount).limit(10).lean();
-                    
-                    if (!Object.keys(quotes).length) {
-                        return await i.reply(basicEmbed('End of the line!'))
-                    }
-
-                    await i.reply(basicEmbed('Started!'));
-
-                    for (let quote of quotes) {
-                        let author = await getAuthorById(quote.authorId, guildId)
-                        
-                        await interaction.channel.send(quoteEmbed(quote, author))
-                        .catch(async err => {
-                            await interaction.channel.send(errorEmbed(err, `Quote Id: ${quote._id}`));
-                        });
-                    }
-
-                    if (quotes.length !== 10) {
-                        return await interaction.channel.send(basicEmbed('End of the line!'))
-                    }
-                    
-                    const row = new MessageActionRow()
-                    .addComponents(
-                        new MessageButton()
-                        .setCustomId(`${Number(skipAmount) + 10},${sortObject.createdAt}`)
-                        .setLabel('⏩')
-                        .setStyle('PRIMARY')
-                    )
-
-                    await interaction.channel.send({
-                        ...basicEmbed('Get Next 10 Quotes?'),
-                        components: [row]
-                    })
-                })
-            } else {
-                throw new Error('This server has no quotes.')
-            }
+            })
         } catch(err) {
-            console.log(err)
             await interaction.reply(errorEmbed(err));
         }
     })
