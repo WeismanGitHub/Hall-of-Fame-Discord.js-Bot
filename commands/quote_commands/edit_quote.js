@@ -1,7 +1,6 @@
 const { errorEmbed, quoteEmbed, basicEmbed } = require('../../helpers/embeds');
 const { getAuthorByName, getAuthorById } = require('../../helpers/get_author');
 const { checkTags } = require('../../helpers/check_tags');
-const GuildSchema = require('../../schemas/guild_schema');
 const QuoteSchema= require('../../schemas/quote_schema');
 const { Constants } = require('discord.js');
 
@@ -84,23 +83,16 @@ module.exports = {
             const newAuthorName = options.getString('new_author');
             const newText = options.getString('new_text');
 
-            const uncheckedTags = [
+            let tags = [
                 options.getString('first_tag'),
                 options.getString('second_tag'),
                 options.getString('third_tag'),
             ];
-            
-            const thereAreNewTags = uncheckedTags.some(tag => tag !== null);
-            
-            if (thereAreNewTags) {
-                const guildTags = (await GuildSchema.findOne({ guildId: guildId }).select('-_id tags').lean()).tags;
-                let checkedTagsObject = await checkTags(uncheckedTags, guildTags)
 
-                if (checkedTagsObject.tagsExist) {
-                    updateObject['tags'] = checkedTagsObject.checkedTags
-                } else {
-                    throw new Error('Make sure all your tags exist.')
-                }
+            tags = await checkTags(tags, guildId);
+            
+            if (tags.length) {
+                updateObject.tags = tags
             }
     
             if (newAttatchment) {
