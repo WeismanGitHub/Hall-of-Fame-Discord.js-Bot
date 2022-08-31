@@ -1,7 +1,6 @@
 const { errorEmbed, quoteEmbed } = require('../../helpers/embeds');
 const { getAuthorByName } = require('../../helpers/get_author');
 const { checkTags } = require('../../helpers/check_tags');
-const GuildSchema = require('../../schemas/guild_schema');
 const QuoteSchema = require('../../schemas/quote_schema');
 const { Constants } = require('discord.js');
 
@@ -62,31 +61,19 @@ module.exports = {
                     throw new Error('Please provide either at least text or an attachment.')
                 }
 
-                const uncheckedTags = [
+                let tags = [
                     options.getString('first_tag'),
                     options.getString('second_tag'),
                     options.getString('third_tag'),
                 ];
-                
-                const thereAreTags = uncheckedTags.some(tag => tag !== null);
-                let checkedTags = [];
-                
-                if (thereAreTags) {
-                    const guildTags = (await GuildSchema.findOne({ guildId: guildId }).select('-_id tags').lean()).tags;
-                    let checkedTagsObject = await checkTags(uncheckedTags, guildTags)
-                    
-                    if (checkedTagsObject.tagsExist) {
-                        checkedTags = checkedTagsObject.checkedTags
-                    } else {
-                        throw new Error('Make sure all your tags exist.')
-                    }
-                }
+    
+                tags = await checkTags(tags, guildId);
                 
                 if (attachmentLink) {
                     var quote = await QuoteSchema.create({
                         guildId: guildId,
                         authorId: checkedAuthor._id,
-                        tags: checkedTags,
+                        tags: tags,
                         text: text,
                         attachment: attachmentLink
                     });
@@ -94,7 +81,7 @@ module.exports = {
                     var quote = await QuoteSchema.create({
                         guildId: guildId,
                         authorId: checkedAuthor._id,
-                        tags: checkedTags,
+                        tags: tags,
                         text: text,
                     });
                 }
