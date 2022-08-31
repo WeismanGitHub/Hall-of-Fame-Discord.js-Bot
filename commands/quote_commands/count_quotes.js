@@ -2,7 +2,6 @@ const { errorEmbed, basicEmbed } = require('../../helpers/embeds');
 const { getAuthorByName } = require('../../helpers/get_author');
 const { checkTags } = require('../../helpers/check_tags');
 const QuoteSchema = require('../../schemas/quote_schema');
-const GuildSchema = require('../../schemas/guild_schema');
 const { Constants } = require('discord.js');
 
 
@@ -82,24 +81,17 @@ module.exports = {
             if (isAudioQuote !== null) {
                 queryObject.isAudioQuote = isAudioQuote
             }
-
-            const uncheckedTags = [
+            
+            let tags = [
                 options.getString('first_tag'),
                 options.getString('second_tag'),
                 options.getString('third_tag'),
             ];
 
-            const thereAreTags = uncheckedTags.some(tag => tag !== null);
+            tags = await checkTags(tags, guildId);
             
-            if (thereAreTags) {
-                const guildTags = (await GuildSchema.findOne({ guildId: guildId }).select('-_id tags').lean()).tags;
-                let checkedTagsObject = await checkTags(uncheckedTags, guildTags)
-
-                if (checkedTagsObject.tagsExist) {
-                    queryObject.tags = { $all: checkedTagsObject.checkedTags };
-                } else {
-                    throw new Error('Make sure all your tags exist.')
-                }
+            if (tags.length) {
+                queryObject.tags = { $all: tags };
             }
 
             if (searchPhrase) {
