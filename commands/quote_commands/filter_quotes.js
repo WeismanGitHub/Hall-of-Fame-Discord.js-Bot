@@ -154,7 +154,7 @@ module.exports = {
                 const { queryObject, sortObject } = filterObject
 
                 const quotes = await QuoteSchema.find(queryObject).sort(sortObject).skip(skipAmount).limit(10).lean();
-                i.reply(basicEmbed('Started!'));
+                await i.reply(basicEmbed('Started!'));
 
                 for (let quote of quotes) {
                     let author = await getAuthorById(quote.authorId, guildId)
