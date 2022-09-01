@@ -154,6 +154,11 @@ module.exports = {
                 const { queryObject, sortObject } = filterObject
 
                 const quotes = await QuoteSchema.find(queryObject).sort(sortObject).skip(skipAmount).limit(10).lean();
+                
+                if (!quotes.length) {
+                    return await i.reply(basicEmbed('No more quotes!'))
+                }
+
                 await i.reply(basicEmbed('Started!'));
 
                 for (let quote of quotes) {
