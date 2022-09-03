@@ -56,19 +56,29 @@ module.exports = {
             name: 'is_audio_quote',
             description: 'Sorts by if quote is audio quote or not.',
             type: Constants.ApplicationCommandOptionTypes.BOOLEAN,
-        }
+        },
+        {
+            name: 'limit',
+            description: 'Amount of quotes returned. Must be less than 10.',
+            type: Constants.ApplicationCommandOptionTypes.INTEGER
+        },
     ],
 
     callback: async ({ interaction }) => {
         try {
             const { options } = interaction;
             const sortObject = options.getString('date') == null ? { createdAt: -1 } : { createdAt: options.getString('date') }
+            const limit = options.getInteger('limit') == null ? 10 : options.getInteger('limit')
             const searchPhrase = options.getString('search_phrase')
             const isAudioQuote = options.getBoolean('is_audio_quote')
             let inputtedAuthor = options.getString('author');
             const guildId = interaction.guildId;
             const queryObject = { guildId: guildId };
-        
+
+            if ((limit < 1) || (10 < limit)) {
+                throw new Error('Limit must be between 1 and 10.')
+            }
+
             if (inputtedAuthor) {
                 inputtedAuthor = await getAuthorByName(inputtedAuthor, guildId);
 
@@ -102,7 +112,8 @@ module.exports = {
             if (Object.keys(queryObject).length == 1) {
                 throw new Error('Please add some filters. To get all quotes use /getallquotes.')
             }
-            const quotes = await QuoteSchema.find(queryObject).sort(sortObject).limit(10).lean();
+
+            const quotes = await QuoteSchema.find(queryObject).sort(sortObject).limit(limit).lean();
             
             if (!quotes.length) {
                 throw new Error('No quotes match your specifications.')
