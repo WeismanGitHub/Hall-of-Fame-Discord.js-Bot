@@ -1,4 +1,4 @@
-const { quoteEmbed } = require('../helpers/embeds');
+const { quoteEmbed, errorEmbed } = require('../helpers/embeds');
 const { getAuthorById } = require('../helpers/get_author');
 
 async function sendQuotes(quotes, channel) {
@@ -11,6 +11,14 @@ async function sendQuotes(quotes, channel) {
     }
 
     await channel.send({ embeds: quoteEmbeds })
+    .catch(async _ => {
+        for (let quote of quoteEmbeds) {
+            await channel.send({ embeds: [quote] })
+            .catch(async err => {
+                channel.send(errorEmbed(err, `Quote Id: ${quote.fields[0]['value']}`));
+            });
+        }
+    })
 }
 
 module.exports = sendQuotes
