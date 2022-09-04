@@ -81,7 +81,6 @@ module.exports = {
             }
 
             const randomNumber = Math.floor(Math.random() * amountOfDocuments);
-            console.log(randomNumber, amountOfDocuments)
             const randomQuote = await QuoteSchema.findOne(queryObject).sort(sortObject).skip(randomNumber).lean()
 
             const author = await getAuthorById(randomQuote.authorId, guildId);
