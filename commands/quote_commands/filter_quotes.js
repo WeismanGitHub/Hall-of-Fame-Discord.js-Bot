@@ -54,7 +54,7 @@ module.exports = {
             ]
         },
         {
-            name: 'is_audio_quote',
+            name: 'audio_quote',
             description: 'Sorts by if quote is audio quote or not.',
             type: Constants.ApplicationCommandOptionTypes.BOOLEAN,
         },
@@ -71,7 +71,7 @@ module.exports = {
             const sortObject = options.getString('date') == null ? { createdAt: -1 } : { createdAt: options.getString('date') }
             const limit = options.getInteger('limit') == null ? 10 : options.getInteger('limit')
             const searchPhrase = options.getString('search_phrase')
-            const isAudioQuote = options.getBoolean('is_audio_quote')
+            const isAudioQuote = options.getBoolean('audio_quote')
             let inputtedAuthor = options.getString('author');
             const guildId = interaction.guildId;
             const queryObject = { guildId: guildId };
