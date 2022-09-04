@@ -2,6 +2,7 @@ const { errorEmbed, quoteEmbed, basicEmbed } = require('../../helpers/embeds');
 const { getAuthorByName, getAuthorById } = require('../../helpers/get_author');
 const audioQuoteSchema = require('../../schemas/audio_quote_schema');
 const { checkTags } = require('../../helpers/check_tags');
+const checkURL = require('../../helpers/check_url')
 const { Constants } = require('discord.js');
 
 module.exports = {
@@ -72,14 +73,19 @@ module.exports = {
     
             let updateObject = {};
     
-            const newAudioFile = options.getString('new_audio_file_link');
+            const newAudioFileLink = options.getString('new_audio_file_link');
             const deleteTags = options.getBoolean('delete_tags');
             const newAuthorName = options.getString('new_author');
             const newTitle = options.getString('new_title');
 
-            if (newAudioFile) {
-                updateObject.audioFileLink = newAudioFile;
+            if (newAudioFileLink) {
+                if (!checkURL(newAudioFileLink)) {
+                    throw new Error('Please input a valid url.')
+                }
+
+                updateObject.audioFileLink = newAudioFileLink;
             };
+
             let tags = [
                 options.getString('first_tag'),
                 options.getString('second_tag'),
