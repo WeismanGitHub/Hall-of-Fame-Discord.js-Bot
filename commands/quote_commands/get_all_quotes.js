@@ -1,6 +1,7 @@
 const { errorEmbed, quoteEmbed, basicEmbed } = require('../../helpers/embeds');
 const { getAuthorById } = require('../../helpers/get_author');
 const QuoteSchema = require('../../schemas/quote_schema');
+const sendQuotes = require('../../helpers/send_quotes')
 
 const {
     Constants,
@@ -44,14 +45,7 @@ module.exports = {
 
             await interaction.reply(basicEmbed('Started!'))
 
-            for (let quote of quotes) {
-                let author = await getAuthorById(quote.authorId, guildId)
-                
-                await interaction.channel.send(quoteEmbed(quote, author))
-                .catch(async err => {
-                    interaction.channel.send(errorEmbed(err, `Quote Id: ${quote._id}`));
-                });
-            }
+            await sendQuotes(quotes, interaction.channel)
 
             if (quotes.length !== 10) {
                 return await interaction.channel.send(basicEmbed('End of the line!'))
