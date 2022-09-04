@@ -1,7 +1,7 @@
-const { getAuthorByName, getAuthorById } = require('../helpers/get_author');
-const { errorEmbed, quoteEmbed } = require('../helpers/embeds');
-const { checkTags } = require('../helpers/check_tags');
-const QuoteSchema = require('../schemas/quote_schema');
+const { getAuthorByName, getAuthorById } = require('../../helpers/get_author');
+const { errorEmbed, quoteEmbed } = require('../../helpers/embeds');
+const { checkTags } = require('../../helpers/check_tags');
+const QuoteSchema = require('../../schemas/quote_schema');
 const { Constants } = require('discord.js');
 
 module.exports = {
