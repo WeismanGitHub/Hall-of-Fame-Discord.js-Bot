@@ -4,6 +4,7 @@ const { Constants, MessageActionRow, MessageButton } = require('discord.js');
 const FilterSchema = require('../../schemas/filter_schema');
 const { checkTags } = require('../../helpers/check_tags');
 const QuoteSchema = require('../../schemas/quote_schema');
+const sendQuotes = require('../../helpers/send_quotes')
 
 module.exports = {
     category:'Quotes',
@@ -114,21 +115,14 @@ module.exports = {
             }
 
             const quotes = await QuoteSchema.find(queryObject).sort(sortObject).limit(limit).lean();
-            
+
             if (!quotes.length) {
                 throw new Error('No quotes match your specifications.')
             }
 
+            await sendQuotes(quotes, interaction.channel)
+
             await interaction.reply(basicEmbed('Started!'))
-            
-            for (let quote of quotes) {
-                const quoteAuthor = await getAuthorById(quote.authorId, guildId);
-                
-                await interaction.channel.send(quoteEmbed(quote, quoteAuthor))
-                .catch(async err => {
-                    await interaction.channel.send(errorEmbed(err, `Quote Id: ${quote._id}`));
-                });
-            }
             
             if (quotes.length !== 10) {
                 // For some reason putting the message and return on the same line doesn't actually cause it to return.
@@ -172,14 +166,7 @@ module.exports = {
 
                 await i.reply(basicEmbed('Started!'));
 
-                for (let quote of quotes) {
-                    let author = await getAuthorById(quote.authorId, guildId)
-                    
-                    await interaction.channel.send(quoteEmbed(quote, author))
-                    .catch(async err => {
-                        await interaction.channel.send(errorEmbed(err, `Quote Id: ${quote._id}`));
-                    });
-                }
+                await sendQuotes(quotes, interaction.channel)
 
                 if (quotes.length !== 10) {
                     return await interaction.channel.send(basicEmbed('End of the line!'))
