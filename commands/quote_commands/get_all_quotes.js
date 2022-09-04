@@ -54,7 +54,7 @@ module.exports = {
             const row = new MessageActionRow()
             .addComponents(
                 new MessageButton()
-                .setCustomId(`10,${sortObject.createdAt}`)
+                .setCustomId(`10,${sortObject}`)
                 .setLabel('⏩')
                 .setStyle('PRIMARY')
             )
@@ -69,7 +69,7 @@ module.exports = {
             collector.on('collect', async (i) => {
                 const customId = i.customId.split(',')
                 const skipAmount = customId[0]
-                const sortObject = { createdAt: customId[1] }
+                const sortObject = customId[1]
                 
                 const quotes = await QuoteSchema.find({ guildId: guildId }).sort(sortObject).skip(skipAmount).limit(10).lean();
 
@@ -79,14 +79,7 @@ module.exports = {
 
                 await i.reply(basicEmbed('Started!'));
 
-                for (let quote of quotes) {
-                    let author = await getAuthorById(quote.authorId, guildId)
-                    
-                    await interaction.channel.send(quoteEmbed(quote, author))
-                    .catch(async err => {
-                        await interaction.channel.send(errorEmbed(err, `Quote Id: ${quote._id}`));
-                    });
-                }
+                await sendQuotes(quotes, interaction.channel)
 
                 if (quotes.length !== 10) {
                     return await interaction.channel.send(basicEmbed('End of the line!'))
