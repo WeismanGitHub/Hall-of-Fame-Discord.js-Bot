@@ -141,10 +141,9 @@ module.exports = {
             } else {
                 await interaction.reply(basicEmbed('Nothing Updated.'));
             }
-            
         } catch(err) {
-            await interaction.reply(errorEmbed(err));
-        };
-
+            interaction.reply(errorEmbed(err))
+            .catch(_ => interaction.channel.send(errorEmbed(err)))
+        }
     }
 };

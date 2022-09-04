@@ -26,9 +26,9 @@ module.exports = {
             });
             
             await interaction.reply(tags.length? basicEmbed('Server Tags:', message) : basicEmbed('There are no tags.'));
-            
         } catch(err) {
-            await interaction.reply(errorEmbed(err));
-        };
+            interaction.reply(errorEmbed(err))
+            .catch(_ => interaction.channel.send(errorEmbed(err)))
+        }
     }
 };

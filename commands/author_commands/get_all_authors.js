@@ -27,9 +27,9 @@ module.exports = {
             } else {
                 throw new Error('This server has no authors.')
             }
-
         } catch(err) {
-            await interaction.reply(errorEmbed(err));
-        };
+            interaction.reply(errorEmbed(err))
+            .catch(_ => interaction.channel.send(errorEmbed(err)))
+        }
     }
 };

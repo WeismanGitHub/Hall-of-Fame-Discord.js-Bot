@@ -95,9 +95,9 @@ module.exports = {
 
             const author = await getAuthorById(audioQuote.authorId, guildId)
             await interaction.reply(quoteEmbed(audioQuote, author))
-
         } catch(err) {
-            await interaction.reply(errorEmbed(err));
-        };
+            interaction.reply(errorEmbed(err))
+            .catch(_ => interaction.channel.send(errorEmbed(err)))
+        }
     }
 };

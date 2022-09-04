@@ -86,9 +86,9 @@ module.exports = {
 
             const author = await getAuthorById(randomQuote.authorId, guildId);
             await interaction.reply(quoteEmbed(randomQuote, author));
-
         } catch(err) {
-            await interaction.reply(errorEmbed(err));
-        };
+            interaction.reply(errorEmbed(err))
+            .catch(_ => interaction.channel.send(errorEmbed(err)))
+        }
     }
 };

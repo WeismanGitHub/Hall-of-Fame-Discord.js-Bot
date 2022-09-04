@@ -96,9 +96,9 @@ module.exports = {
             } else {
                 throw new Error(`Make sure that '${inputtedAuthor}' author exists.`)
             }
-            
         } catch(err) {
-            await interaction.reply(errorEmbed(err));
-        };
+            interaction.reply(errorEmbed(err))
+            .catch(_ => interaction.channel.send(errorEmbed(err)))
+        }
     }
 };

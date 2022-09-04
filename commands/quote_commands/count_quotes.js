@@ -108,8 +108,8 @@ module.exports = {
 
             await interaction.reply(basicEmbed(`${count} quotes match your specifications!`))
         } catch(err) {
-            console.log(err)
-            await interaction.reply(errorEmbed(err));
-        };
+            interaction.reply(errorEmbed(err))
+            .catch(_ => interaction.channel.send(errorEmbed(err)))
+        }
     }
 };

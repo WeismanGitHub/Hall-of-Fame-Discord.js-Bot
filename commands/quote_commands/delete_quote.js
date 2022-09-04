@@ -31,7 +31,8 @@ module.exports = {
                 throw new Error('Quote does not exist!')
             }
         } catch(err) {
-            await interaction.reply(errorEmbed(err));
-        };
+            interaction.reply(errorEmbed(err))
+            .catch(_ => interaction.channel.send(errorEmbed(err)))
+        }
     }
 };

@@ -26,7 +26,8 @@ module.exports = {
         
             await interaction.reply({ embeds: [descriptionEmbed, commandsEmbed] });
         } catch(err) {
-            await interaction.reply(errorEmbed(err));
-        };
+            interaction.reply(errorEmbed(err))
+            .catch(_ => interaction.channel.send(errorEmbed(err)))
+        }
     }
 };
