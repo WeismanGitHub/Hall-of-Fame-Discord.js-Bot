@@ -120,10 +120,10 @@ module.exports = {
                 throw new Error('No quotes match your specifications.')
             }
 
-            await sendQuotes(quotes, interaction.channel)
-
             await interaction.reply(basicEmbed('Started!'))
             
+            await sendQuotes(quotes, interaction.channel)
+
             if (quotes.length !== 10) {
                 // For some reason putting the message and return on the same line doesn't actually cause it to return.
                 await interaction.channel.send(basicEmbed('End of the line!'))
