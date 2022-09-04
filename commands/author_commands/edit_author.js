@@ -1,5 +1,6 @@
 const { errorEmbed, basicEmbed } = require('../../helpers/embeds');
 const GuildSchema = require('../../schemas/guild_schema');
+const checkURL = require('../../helpers/check_url')
 const { Constants } = require('discord.js');
 
 module.exports = {
@@ -33,19 +34,23 @@ module.exports = {
             const guildId = interaction.guildId;
             const oldName = options.getString('name');
             const newName = options.getString('new_name');
-            const imgUrl = options.getString('icon_url');
+            const newImgUrl = options.getString('icon_url');
 
-            if ((newName == null) && (imgUrl == null)) {
+            if ((newName == null) && (newImgUrl == null)) {
                 return await interaction.reply(basicEmbed(`Nothing Updated.`));
             }
 
-            if (imgUrl) {
+            if (newImgUrl) {
+                if (!checkURL(newImgUrl)) {
+                    throw new Error('Please input a valid url.')
+                }
+
                 const guildDoc = await GuildSchema.findOneAndUpdate(
                     { "$and": [
                         { "guildId": { "$eq": guildId } },
                         { "authors": { "$elemMatch": { "name": { "$eq": oldName } } } }
                     ]},
-                    { "$set": { "authors.$.imgUrl": imgUrl }
+                    { "$set": { "authors.$.imgUrl": newImgUrl }
                 }).select('_id').lean()
     
                 if (guildDoc == null) {
