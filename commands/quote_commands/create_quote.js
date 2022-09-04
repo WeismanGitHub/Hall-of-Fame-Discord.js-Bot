@@ -2,6 +2,7 @@ const { errorEmbed, quoteEmbed } = require('../../helpers/embeds');
 const { getAuthorByName } = require('../../helpers/get_author');
 const { checkTags } = require('../../helpers/check_tags');
 const QuoteSchema = require('../../schemas/quote_schema');
+const checkURL = require('../../helpers/check_url')
 const { Constants } = require('discord.js');
 
 module.exports = {
@@ -70,6 +71,10 @@ module.exports = {
                 tags = await checkTags(tags, guildId);
                 
                 if (attachmentLink) {
+                    if (!checkURL(attachmentLink)) {
+                        throw new Error('Please input a valid url.')
+                    }
+                    
                     var quote = await QuoteSchema.create({
                         guildId: guildId,
                         authorId: checkedAuthor._id,
