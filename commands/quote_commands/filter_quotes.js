@@ -1,5 +1,5 @@
-const { errorEmbed, quoteEmbed, basicEmbed } = require('../../helpers/embeds');
-const { getAuthorByName, getAuthorById } = require('../../helpers/get_author');
+const { errorEmbed, basicEmbed } = require('../../helpers/embeds');
+const { getAuthorByName } = require('../../helpers/get_author');
 const { Constants, MessageActionRow, MessageButton } = require('discord.js');
 const FilterSchema = require('../../schemas/filter_schema');
 const { checkTags } = require('../../helpers/check_tags');
