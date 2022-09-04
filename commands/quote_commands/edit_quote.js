@@ -2,6 +2,7 @@ const { errorEmbed, quoteEmbed, basicEmbed } = require('../../helpers/embeds');
 const { getAuthorByName, getAuthorById } = require('../../helpers/get_author');
 const { checkTags } = require('../../helpers/check_tags');
 const QuoteSchema= require('../../schemas/quote_schema');
+const checkURL = require('../../helpers/check_url')
 const { Constants } = require('discord.js');
 
 module.exports = {
@@ -96,6 +97,10 @@ module.exports = {
             }
     
             if (newAttatchment) {
+                if (!checkURL(newAttatchment)) {
+                    throw new Error('Please input a valid url.')
+                }
+
                 updateObject.attachment = newAttatchment;
             };
 
