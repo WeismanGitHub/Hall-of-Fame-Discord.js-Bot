@@ -62,7 +62,7 @@ module.exports = {
 
             const title = options.getString('title');
             const audioFileLink = options.getString('audio_file_link');
-
+            
             if (!checkURL(audioFileLink)) {
                 throw new Error('Please input a valid url.')
             }
