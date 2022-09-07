@@ -35,12 +35,18 @@ module.exports = {
             description: 'A phrase to search for in the quote text.',
             type: Constants.ApplicationCommandOptionTypes.STRING,
         },
+        {
+            name: 'audio_quote',
+            description: 'Sorts by if quote is audio quote or not.',
+            type: Constants.ApplicationCommandOptionTypes.BOOLEAN,
+        },
     ],
     
     callback: async ({ interaction }) => {
         try {
             const { options } = interaction;
             const searchPhrase = options.getString('search_phrase')
+            const isAudioQuote = options.getBoolean('audio_quote')
             let inputtedAuthor = options.getString('author');
             const guildId = interaction.guildId;
             const queryObject = { guildId: guildId };
@@ -71,6 +77,10 @@ module.exports = {
                 queryObject.$text = {
                     '$search': searchPhrase
                 }
+            }
+            
+            if (isAudioQuote !== null) {
+                queryObject.isAudioQuote = isAudioQuote
             }
             
             const amountOfDocuments = await QuoteSchema.countDocuments(queryObject)
