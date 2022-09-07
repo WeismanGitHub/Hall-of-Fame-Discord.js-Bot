@@ -153,7 +153,7 @@ module.exports = {
                 const filterObject = await FilterSchema.findById(customId[1])
                 
                 if (!filterObject) {
-                    return await i.channel.send('Please use the command again. This button is broken.')
+                    throw new Error('Please use the command again. This button is broken.')
                 }
 
                 const { queryObject, sortObject } = filterObject
