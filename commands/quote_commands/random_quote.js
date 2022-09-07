@@ -40,7 +40,6 @@ module.exports = {
     callback: async ({ interaction }) => {
         try {
             const { options } = interaction;
-            const sortObject = options.getString('date') == null ? { createdAt: -1 } : { createdAt: options.getString('date') }
             const searchPhrase = options.getString('search_phrase')
             let inputtedAuthor = options.getString('author');
             const guildId = interaction.guildId;
@@ -81,7 +80,7 @@ module.exports = {
             }
 
             const randomNumber = Math.floor(Math.random() * amountOfDocuments);
-            const randomQuote = await QuoteSchema.findOne(queryObject).sort(sortObject).skip(randomNumber).lean()
+            const randomQuote = await QuoteSchema.findOne(queryObject).skip(randomNumber).lean()
 
             const author = await getAuthorById(randomQuote.authorId, guildId);
             await interaction.reply(quoteEmbed(randomQuote, author));
