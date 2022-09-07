@@ -7,7 +7,7 @@ const { Constants } = require('discord.js');
 module.exports = {
     category:'Quotes',
     description: 'Get a random quote.',
-    name: 'randomquote',
+    name: 'random_quote',
     slash: true,
     options: [
         {

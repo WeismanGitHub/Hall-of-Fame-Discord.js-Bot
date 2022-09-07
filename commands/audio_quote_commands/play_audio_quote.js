@@ -14,7 +14,7 @@ const {
 module.exports = {
     category:'Audio Quotes',
     description: 'Plays an audio quote.',
-    name: 'playaudioquote',
+    name: 'play_quote',
     slash: true,
 
     options: [

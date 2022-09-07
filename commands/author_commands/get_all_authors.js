@@ -4,7 +4,7 @@ const GuildSchema = require('../../schemas/guild_schema');
 module.exports = {
     description: 'Gets all authors tied to your server.',
     category:'Authors',
-    name: 'getallauthors',
+    name: 'get_authors',
     slash: true,
     
     callback: async ({ interaction }) => {

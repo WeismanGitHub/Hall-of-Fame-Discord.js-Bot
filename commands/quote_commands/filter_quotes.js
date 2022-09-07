@@ -9,7 +9,7 @@ const sendQuotes = require('../../helpers/send_quotes')
 module.exports = {
     category:'Quotes',
     description: 'Sort quotes by a number of fields and send them.',
-    name: 'filterquotes',
+    name: 'filter_quotes',
     slash: true,
 
     options: [

@@ -15,7 +15,7 @@ const {
 module.exports = {
     category:'Audio Quotes',
     description: 'Plays a random audio quote.',
-    name: 'playrandomaudioquote',
+    name: 'play_random_quote',
     slash: true,
 
     options: [

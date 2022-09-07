@@ -12,7 +12,7 @@ const {
 module.exports = {
     category:'Quotes',
     description: 'Get all quotes tied to your server.',
-    name: 'getallquotes',
+    name: 'get_all_quotes',
     slash: true,
     options: [
         {

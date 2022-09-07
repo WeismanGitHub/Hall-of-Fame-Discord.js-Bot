@@ -5,7 +5,7 @@ require('dotenv').config();
 module.exports = {
     description: 'Gets all tags tied to your server.',
     category:'Tags',
-    name: 'getalltags',
+    name: 'get_tags',
     slash: true,
 
     callback: async ({ interaction }) => {

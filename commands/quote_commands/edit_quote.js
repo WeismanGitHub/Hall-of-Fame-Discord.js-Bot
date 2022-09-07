@@ -8,7 +8,7 @@ const { Constants } = require('discord.js');
 module.exports = {
     category:'Quotes',
     description: 'Edit a quote tied to your server.',
-    name: 'editquote',
+    name: 'edit_quote',
     slash: true,
 
     options: [

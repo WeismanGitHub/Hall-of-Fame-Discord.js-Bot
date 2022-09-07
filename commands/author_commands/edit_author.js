@@ -6,7 +6,7 @@ const { Constants } = require('discord.js');
 module.exports = {
     category:'Authors',
     description: 'Edits an author tied to your server.',
-    name: 'editauthor',
+    name: 'edit_author',
     slash: true,
 
     options: [

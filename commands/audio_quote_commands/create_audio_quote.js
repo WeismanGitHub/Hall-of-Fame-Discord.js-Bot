@@ -8,7 +8,7 @@ const { Constants } = require('discord.js');
 module.exports = {
     category:'Audio Quotes',
     description: 'Creates an audio quote tied to your server.',
-    name: 'createaudioquote',
+    name: 'create_audio_quote',
     slash: true,
 
     options: [
