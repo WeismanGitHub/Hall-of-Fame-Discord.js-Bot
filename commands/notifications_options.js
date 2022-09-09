@@ -1,6 +1,6 @@
 const { Constants, MessageEmbed } = require('discord.js');
 const GuildSchema = require('../schemas/guild_schema');
-const { errorEmbed } = require('../helpers/embeds');
+const { errorEmbed, basicEmbed } = require('../helpers/embeds');
 
 module.exports = {
     description: 'Opt in or out of notifications related to the bot. (On by default)',
@@ -44,7 +44,6 @@ module.exports = {
             
             if (notificationChannelId) {
                 updateObject.notificationChannelId = notificationChannelId
-                
             }
             
             if (!Object.keys(updateObject).length) {
@@ -53,12 +52,7 @@ module.exports = {
 
             await GuildSchema.updateOne({ guildId: interaction.guildId }, updateObject)
 
-            const embed = { embeds: [new MessageEmbed()
-                .setColor('#3826ff')
-                .setTitle('Updated notification preferences!')
-            ]}
-
-            await interaction.reply(embed)
+            await interaction.reply(basicEmbed('Updated notification preferences!'))
         } catch(err) {
             interaction.reply(errorEmbed(err))
             .catch(_ => interaction.channel.send(errorEmbed(err)))
