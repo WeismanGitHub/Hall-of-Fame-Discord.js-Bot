@@ -3,7 +3,7 @@ const GuildSchema = require('../../schemas/guild_schema');
 const { errorEmbed, basicEmbed } = require('../../helpers/embeds');
 
 module.exports = {
-    description: 'Change the notifications channel and opt in or out of notifications related to the bot. (On by default)',
+    description: 'Change the notifications channel and opt in or out of notifications related to the bot.',
     name: 'notification_options',
     slash: true,
     category:'Notifications',
