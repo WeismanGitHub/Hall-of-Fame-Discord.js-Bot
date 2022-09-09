@@ -150,7 +150,7 @@ module.exports = {
             collector.on('collect', async (i) => {
                 const customId = i.customId.split(',')
                 const skipAmount = customId[0]
-                const filterObject = await FilterSchema.findById(customId[1])
+                const filterObject = await FilterSchema.findById(customId[1]).lean()
                 
                 if (!filterObject) {
                     throw new Error('Please use the command again. This button is broken.')
@@ -175,7 +175,7 @@ module.exports = {
                 const row = new MessageActionRow()
                 .addComponents(
                     new MessageButton()
-                    .setCustomId(`${Number(skipAmount) + 10},${filterId}`)
+                    .setCustomId(`${Number(skipAmount) + 10},${filterObject._id}`)
                     .setLabel('⏩')
                     .setStyle('PRIMARY')
                 )
