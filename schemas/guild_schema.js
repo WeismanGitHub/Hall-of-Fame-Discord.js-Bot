@@ -30,7 +30,10 @@ const GuildSchema = new mongoose.Schema({
     notifications: {
         type: Boolean,
         default: true,
-    }
+    },
+    notificationChannelId: {
+        type: String
+    },
 });
 
 GuildSchema.plugin(schema => {
