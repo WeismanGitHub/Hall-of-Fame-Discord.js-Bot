@@ -31,7 +31,7 @@ module.exports = {
             const body = (options.getString('body'))
             const title = (options.getString('title'))
 
-            const guildDocs = await GuildSchema.find({ guildId: '817153676128813056', notifications: true })
+            const guildDocs = await GuildSchema.find({ guildId: '746671609909346395', notifications: true })
             .select('-_id guildId notificationChannelId').lean()
 
             for (let guildDoc of guildDocs) {
