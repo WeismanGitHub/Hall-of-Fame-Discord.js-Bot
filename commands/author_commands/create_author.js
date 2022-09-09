@@ -28,9 +28,9 @@ module.exports = {
         try {
             const { options } = interaction;
             const guildId = interaction.guildId;
-            const authorName = options.getString('author');
+            const name = options.getString('name');
             const imgUrl = options.getString('icon_url');
-            const authorObject = { name: authorName, imgUrl: imgUrl }
+            const authorObject = { name: name, imgUrl: imgUrl }
             
             if (!checkURL(imgUrl)) {
                 throw new Error('Please input a valid url.')
@@ -38,7 +38,7 @@ module.exports = {
 
             await GuildSchema.updateOne(
                 { guildId: guildId },
-                { $addToSet: { authors: { name: authorName, imgUrl: imgUrl } }
+                { $addToSet: { authors: { name: name, imgUrl: imgUrl } }
             })
 
             await interaction.reply(authorEmbed(authorObject))
