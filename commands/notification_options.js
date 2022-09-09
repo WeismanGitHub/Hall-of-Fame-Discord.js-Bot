@@ -1,11 +1,11 @@
-const { Constants, MessageEmbed } = require('discord.js');
+const { Constants } = require('discord.js');
 const GuildSchema = require('../schemas/guild_schema');
 const { errorEmbed, basicEmbed } = require('../helpers/embeds');
 
 module.exports = {
     description: 'Opt in or out of notifications related to the bot. (On by default)',
     name: 'notification_options',
-    slash: true, 
+    slash: true,
     category:'Notifications',
 
     options: [
