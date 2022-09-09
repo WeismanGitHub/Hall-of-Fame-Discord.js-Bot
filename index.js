@@ -38,8 +38,8 @@ client.on("ready", async () => {
         client,
         {
             commandsDir: path.join(__dirname, './commands'),
-            testServers: ['746671609909346395'],
-            botOwners: ['745191242970824735', '630250251571298324', '951583432880840745'],
+            testServers: [process.env.TEST_GUILD_ID],
+            botOwners: [process.env.MAIN_ACCOUNT_ID],
             mongoUri: process.env.MONGO_URI
         });
 
