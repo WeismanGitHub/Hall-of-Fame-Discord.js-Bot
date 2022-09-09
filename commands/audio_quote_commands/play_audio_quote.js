@@ -30,7 +30,7 @@ module.exports = {
         }
     ],
 
-    callback: async ({ interaction, client }) => {
+    callback: async ({ interaction }) => {
         try {
             const guildId = interaction.guildId;
             const { options } = interaction;
