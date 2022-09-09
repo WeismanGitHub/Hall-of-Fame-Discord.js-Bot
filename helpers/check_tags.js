@@ -1,18 +1,18 @@
 const GuildSchema = require('../schemas/guild_schema')
 
 async function checkTags(tags, guildId) {
-    const guildTags = (await GuildSchema.findOne({ guildId: guildId }).select('-_id tags').lean()).tags;
+    const guildTags = (await GuildSchema.findOne({ guildId: guildId }).select('-_id tags').lean()).tags
 
     tags = tags.filter(tag => {
         return (tag !== null)
     })
     
     return tags.map(tag => {
-        if (!guildTags.includes(tag)) {
+        if (!guildTags.includes(tag.toLowerCase())) {
             throw new Error(`Please make sure '${tag}' tag exists.`)
         }
         
-        return tag
+        return tag.toLowerCase()
     })
 }
 
