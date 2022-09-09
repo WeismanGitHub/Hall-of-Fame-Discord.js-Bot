@@ -9,7 +9,7 @@ const basicEmbed = function (title, message='', color='#3826ff') {
 
 const notificationEmbed = function(title, body, color='#ffff00') {
 	return { embeds: [new MessageEmbed()
-	   .setDescription(body)
+	   .setDescription(body + '\n\nUse `/notification_options` to unsubscribe or change the notifications channel.')
 	   .setColor(color)
 	   .setTitle(title)
    ]}
