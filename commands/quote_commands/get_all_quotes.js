@@ -36,8 +36,8 @@ module.exports = {
         try {
             const guildId = interaction.guildId;
             const { options } = interaction;
-            const sortObject = options.getString('date') == null ? { createdAt: -1 } : { createdAt: options.getString('date') }
-            const quotes = await QuoteSchema.find({ guildId: guildId }).sort(sortObject).limit(10).lean();
+            const date = options.getString('date') == '1' ? 1 : -1
+            const quotes = await QuoteSchema.find({ guildId: guildId }).sort({ createdAt: date }).limit(10).lean();
 
             if (!quotes.length) {
                 throw new Error('This server has no quotes.')
@@ -48,16 +48,18 @@ module.exports = {
             await sendQuotes(quotes, interaction.channel)
 
             if (quotes.length !== 10) {
-                return await interaction.channel.send(basicEmbed('End of the line!'))
+                // For some reason putting the message and return on the same line doesn't actually cause it to return.
+                await interaction.channel.send(basicEmbed('End of the line!'))
+                return
             }
 
             const row = new MessageActionRow()
             .addComponents(
                 new MessageButton()
-                .setCustomId(`10,${sortObject}`)
+                .setCustomId(`10,${date}`)
                 .setLabel('⏩')
                 .setStyle('PRIMARY')
-            )
+                )
 
             await interaction.channel.send({
                 ...basicEmbed('Get Next 10 Quotes?'),
@@ -69,9 +71,9 @@ module.exports = {
             collector.on('collect', async (i) => {
                 const customId = i.customId.split(',')
                 const skipAmount = customId[0]
-                const sortObject = customId[1]
+                const date = customId[1]
                 
-                const quotes = await QuoteSchema.find({ guildId: guildId }).sort(sortObject).skip(skipAmount).limit(10).lean();
+                const quotes = await QuoteSchema.find({ guildId: guildId }).sort({ createdAt: date }).skip(skipAmount).limit(10).lean();
 
                 if (!quotes.length) {
                     return await i.reply(basicEmbed('No more quotes!'))
@@ -84,11 +86,13 @@ module.exports = {
                 if (quotes.length !== 10) {
                     return await interaction.channel.send(basicEmbed('End of the line!'))
                 }
-                
+
+                console.log(date, skipAmount)
+
                 const row = new MessageActionRow()
                 .addComponents(
                     new MessageButton()
-                    .setCustomId(`${Number(skipAmount) + 10},${sortObject.createdAt}`)
+                    .setCustomId(`${Number(skipAmount) + 10},${date}`)
                     .setLabel('⏩')
                     .setStyle('PRIMARY')
                 )
