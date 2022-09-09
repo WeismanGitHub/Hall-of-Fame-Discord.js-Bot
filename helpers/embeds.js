@@ -26,6 +26,7 @@ const quoteEmbed = function(quote, author, color='#8A2BE2') {
 	.setTimestamp(quote.createdAt)
     
 	if (quote.attachment !== null) {
+		embed.setColor('#ff9915')
 		embed.setImage(quote.attachment);
 	};
 	
