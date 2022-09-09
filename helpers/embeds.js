@@ -25,7 +25,7 @@ const quoteEmbed = function(quote, author, color='#8A2BE2') {
 	.addFields({ name: 'Tags:', value: tags.join(', ') })
 	.setTimestamp(quote.createdAt)
     
-	if (quote.attachment !== null) {
+	if (quote.attachment) {
 		embed.setColor('#ff9915')
 		embed.setImage(quote.attachment);
 	};
