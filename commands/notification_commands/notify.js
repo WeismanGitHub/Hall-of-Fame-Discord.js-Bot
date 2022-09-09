@@ -46,7 +46,7 @@ module.exports = {
                     const body = interact.fields.getTextInputValue('body');
                     const title = interact.fields.getTextInputValue('title');
     
-                    const guildDocs = await GuildSchema.find({ guildId: '746671609909346395', notifications: true })
+                    const guildDocs = await GuildSchema.find({ notifications: true })
                     .select('-_id guildId notificationChannelId').lean()
         
                     for (let guildDoc of guildDocs) {
