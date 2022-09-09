@@ -1,6 +1,12 @@
 const { basicEmbed, errorEmbed, notificationEmbed} = require('../../helpers/embeds');
-const { Constants } = require('discord.js');
 const GuildSchema = require('../../schemas/guild_schema');
+
+const {
+    Constants,
+    Modal,
+    MessageActionRow,
+    TextInputComponent,
+} = require('discord.js');
 
 module.exports = {
     description: 'Notify servers.',
@@ -10,43 +16,51 @@ module.exports = {
     testOnly: true,
     slash: true,
 
-    options: [
-        {
-            name: 'title',
-            description: 'The notification title.',
-            type: Constants.ApplicationCommandOptionTypes.STRING,
-            required: true,
-        },
-        {
-            name: 'body',
-            description: 'The notification text.',
-            type: Constants.ApplicationCommandOptionTypes.STRING,
-            required: true,
-        }
-    ],
-
     callback: async ({ interaction, client }) => {
         try {
-            const { options } = interaction;
-            const body = (options.getString('body'))
-            const title = (options.getString('title'))
+            const modal = new Modal()
+			.setCustomId('notifyId')
+			.setTitle('Notification');
 
-            const guildDocs = await GuildSchema.find({ guildId: '746671609909346395', notifications: true })
-            .select('-_id guildId notificationChannelId').lean()
+            const titleInput = new TextInputComponent()
+			.setCustomId('title')
+			.setLabel('Title of the notification.')
+			.setStyle('SHORT');
 
-            for (let guildDoc of guildDocs) {
-                const guild = await client.guilds.cache.get(guildDoc.guildId)
-                const notificationsChannel = await guild.channels.cache.get(guildDoc.notificationChannelId)
+		    const bodyInput = new TextInputComponent()
+			.setCustomId('body')
+			.setLabel('Body of the notification.')
+			.setStyle('PARAGRAPH');
 
-                //user set notification channel, guild system channel, or first channel in server
-                await (
-                    notificationsChannel ?? guild.systemChannel ?? (guild.channels
-                    .filter(chx => chx.type === 'text')
-                    .find(x => x.position === 0))
-                ).send(notificationEmbed(title, body))
+            const firstActionRow = new MessageActionRow().addComponents(titleInput);
+            const secondActionRow = new MessageActionRow().addComponents(bodyInput);
+
+		    modal.addComponents(firstActionRow, secondActionRow);
+
+		    await interaction.showModal(modal);
+
+            if (interaction.isModalSubmit()) {
+                const body = interaction.fields.getTextInputValue('body');
+                const title = interaction.fields.getTextInputValue('title');
+
+                const guildDocs = await GuildSchema.find({ guildId: '746671609909346395', notifications: true })
+                .select('-_id guildId notificationChannelId').lean()
+    
+                for (let guildDoc of guildDocs) {
+                    const guild = await client.guilds.cache.get(guildDoc.guildId)
+                    const notificationsChannel = await guild.channels.cache.get(guildDoc.notificationChannelId)
+    
+                    //user set notification channel, guild system channel, or first channel in server
+                    await (
+                        notificationsChannel ?? guild.systemChannel ?? (guild.channels
+                        .filter(chx => chx.type === 'text')
+                        .find(x => x.position === 0))
+                    ).send(notificationEmbed(title, body))
+                }
+    
+                await interaction.reply(basicEmbed('Sent!'))
             }
 
-            await interaction.reply(basicEmbed('Sent!'))
         } catch(err) {
             interaction.reply(errorEmbed(err))
             .catch(_ => interaction.channel.send(errorEmbed(err)))
