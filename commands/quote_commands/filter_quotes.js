@@ -135,13 +135,12 @@ module.exports = {
             const row = new MessageActionRow()
             .addComponents(
                 new MessageButton()
+                .setLabel('Next 10 Quotes ⏩')
                 .setCustomId(`10,${filterId}`)
-                .setLabel('⏩')
                 .setStyle('PRIMARY')
             )
             
             await interaction.channel.send({
-                ...basicEmbed('Get Next 10 Quotes?'),
                 components: [row]
             })
 
@@ -176,12 +175,11 @@ module.exports = {
                 .addComponents(
                     new MessageButton()
                     .setCustomId(`${Number(skipAmount) + 10},${filterObject._id}`)
-                    .setLabel('⏩')
+                    .setLabel('Next 10 Quotes ⏩')
                     .setStyle('PRIMARY')
                 )
                     
                 await interaction.channel.send({
-                    ...basicEmbed('Get Next 10 Quotes?'),
                     components: [row]
                 })
             })
