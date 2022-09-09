@@ -22,16 +22,36 @@ module.exports = {
                     name: 'off',
                     value: 'false'
                 },
-            ]
+            ],
         },
+        {
+            name: 'notification_channel',
+            description: 'Change the default notifications channel.',
+            type: Constants.ApplicationCommandOptionTypes.CHANNEL
+        }
     ],
     
     callback: async ( { interaction } ) => {
         try {
             const { options } = interaction;
-            const preference = (options.getString('preference'))
+            const preference = options.getString('preference')
+            const notificationChannelId = (options.getChannel('notification_channel'))?.id
+            let updateObject = {}
+            
+            if (preference) {
+                updateObject.notifications = preference
+            }
+            
+            if (notificationChannelId) {
+                updateObject.notificationChannelId = notificationChannelId
+                
+            }
+            
+            if (!Object.keys(updateObject).length) {
+                throw new Error('Please update something.')
+            }
 
-            await GuildSchema.updateOne({ guildId: interaction.guildId }, { notifications: preference })
+            await GuildSchema.updateOne({ guildId: interaction.guildId }, updateObject)
 
             const embed = { embeds: [new MessageEmbed()
                 .setColor('#3826ff')
