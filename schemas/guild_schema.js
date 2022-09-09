@@ -26,7 +26,11 @@ const GuildSchema = new mongoose.Schema({
         minLength: 1,
         maxLength: 50,
         collation: { locale: 'en', strength: 2 },
-    }]
+    }],
+    notifications: {
+        type: Boolean,
+        default: true,
+    }
 });
 
 GuildSchema.plugin(schema => {
