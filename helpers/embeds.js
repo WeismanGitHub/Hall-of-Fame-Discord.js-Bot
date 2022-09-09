@@ -1,4 +1,5 @@
 const { MessageEmbed } = require('discord.js');
+require('dotenv').config();
 
 const basicEmbed = function (title, message='', color='#3826ff') {
 	return { embeds: [new MessageEmbed()
@@ -10,6 +11,7 @@ const basicEmbed = function (title, message='', color='#3826ff') {
 const notificationEmbed = function(title, body, color='#ffff00') {
 	return { embeds: [new MessageEmbed()
 	   .setDescription(body + '\n\nUse `/notification_options` to unsubscribe or change the notifications channel.')
+	   .addFields({ name: 'Contact the Creator:', value: `<@${process.env.MAIN_ACCOUNT_ID}>` })
 	   .setColor(color)
 	   .setTitle(title)
    ]}
