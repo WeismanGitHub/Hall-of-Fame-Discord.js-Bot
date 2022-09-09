@@ -1,11 +1,19 @@
 const { MessageEmbed } = require('discord.js');
 
 const basicEmbed = function (title, message='', color='#3826ff') {
-	return {embeds: [new MessageEmbed()
+	return { embeds: [new MessageEmbed()
 	.setColor(color)
 	.setTitle(title)
-	.setDescription(message)]};
+	.setDescription(message)] };
 };
+
+const notificationEmbed = function(title, body, color='#ffff00') {
+	return { embeds: [new MessageEmbed()
+	   .setDescription(body)
+	   .setColor(color)
+	   .setTitle(title)
+   ]}
+}
 
 const quoteEmbed = function(quote, author, color='#8A2BE2') {
 	let tags = quote.tags;
@@ -53,8 +61,9 @@ const authorEmbed = function(author, color='#5865F2') {
 }
 
 module.exports = {
-	basicEmbed, 
+	notificationEmbed,
+	authorEmbed,
 	quoteEmbed,
 	errorEmbed,
-	authorEmbed,
+	basicEmbed,
 };
