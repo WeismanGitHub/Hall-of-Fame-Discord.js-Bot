@@ -14,12 +14,14 @@ module.exports = {
         {
             name: 'title',
             description: 'The notification title.',
-            type: Constants.ApplicationCommandOptionTypes.STRING
+            type: Constants.ApplicationCommandOptionTypes.STRING,
+            required: true,
         },
         {
             name: 'body',
             description: 'The notification text.',
-            type: Constants.ApplicationCommandOptionTypes.STRING
+            type: Constants.ApplicationCommandOptionTypes.STRING,
+            required: true,
         }
     ],
 
