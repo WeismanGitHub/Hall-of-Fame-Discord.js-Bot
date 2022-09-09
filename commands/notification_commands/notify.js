@@ -1,4 +1,4 @@
-const { basicEmbed, errorEmbed, notificationEmbed} = require('../helpers/embeds');
+const { basicEmbed, errorEmbed, notificationEmbed} = require('../../helpers/embeds');
 const { Constants } = require('discord.js');
 const GuildSchema = require('../../schemas/guild_schema');
 
