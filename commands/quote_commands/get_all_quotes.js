@@ -1,5 +1,4 @@
-const { errorEmbed, quoteEmbed, basicEmbed } = require('../../helpers/embeds');
-const { getAuthorById } = require('../../helpers/get_author');
+const { errorEmbed, basicEmbed } = require('../../helpers/embeds');
 const QuoteSchema = require('../../schemas/quote_schema');
 const sendQuotes = require('../../helpers/send_quotes')
 
@@ -15,7 +14,7 @@ module.exports = {
     description: 'Get all quotes tied to your server.',
     guildOnly: true,
     slash: true,
-    
+
     options: [
         {
             name: 'date',
