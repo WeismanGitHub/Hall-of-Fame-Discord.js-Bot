@@ -14,14 +14,13 @@ module.exports = {
         {
             name: 'name',
             description: 'The name of the author you want to create.',
+            type: Constants.ApplicationCommandOptionTypes.STRING,
             required: true,
-            type: Constants.ApplicationCommandOptionTypes.STRING
         },
         {
             name: 'icon_url',
             description: 'This will be the image displayed with the author.',
-            required: true,
-            type: Constants.ApplicationCommandOptionTypes.STRING
+            type: Constants.ApplicationCommandOptionTypes.STRING,
         }
     ],
 
@@ -30,7 +29,7 @@ module.exports = {
             const { options } = interaction;
             const guildId = interaction.guildId;
             const name = options.getString('name');
-            const imgUrl = options.getString('icon_url');
+            const imgUrl = options.getString('icon_url') ?? 'https://cdn.discordapp.com/avatars/973042179033415690/a6602f6209ef6546ee8d878e0022a4f3.webp?size=160'
             const authorObject = { name: name, imgUrl: imgUrl }
             
             if (!checkURL(imgUrl)) {
