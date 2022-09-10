@@ -3,9 +3,10 @@ const GuildSchema = require('../../schemas/guild_schema');
 require('dotenv').config();
 
 module.exports = {
-    description: 'Gets all tags tied to your server.',
     category:'Tags',
     name: 'get_tags',
+    description: 'Gets all tags tied to your server.',
+    guildOnly: true,
     slash: true,
 
     callback: async ({ interaction }) => {

@@ -2,9 +2,10 @@ const { errorEmbed, authorEmbed, basicEmbed } = require('../../helpers/embeds');
 const GuildSchema = require('../../schemas/guild_schema');
 
 module.exports = {
-    description: 'Gets all authors tied to your server.',
     category:'Authors',
     name: 'get_authors',
+    description: 'Gets all authors tied to your server.',
+    guildOnly: true,
     slash: true,
     
     callback: async ({ interaction }) => {

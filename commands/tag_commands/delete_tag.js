@@ -4,8 +4,9 @@ const { Constants } = require('discord.js');
 
 module.exports = {
     category:'Tags',
-    description: 'Deletes a tag tied to your server.',
     name: 'delete_tag',
+    description: 'Deletes a tag tied to your server.',
+    guildOnly: true,
     slash: true,
 
     options: [

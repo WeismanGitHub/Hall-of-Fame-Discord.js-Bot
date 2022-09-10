@@ -9,10 +9,11 @@ const {
 } = require('discord.js');
 
 module.exports = {
-    description: 'Notify servers.',
     category:'Notifications',
     name: 'notify',
+    description: 'Notify servers.',
     //This just makes it available to my private server.
+    guildOnly: true,
     testOnly: true,
     slash: true,
 

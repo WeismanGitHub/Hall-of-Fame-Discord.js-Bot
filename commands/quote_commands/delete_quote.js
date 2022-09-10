@@ -4,8 +4,9 @@ const { Constants } = require('discord.js');
 
 module.exports = {
     category:'Quotes',
-    description: 'Deletes a quote tied to your server.',
     name: 'delete_quote',
+    description: 'Deletes a quote tied to your server.',
+    guildOnly: true,
     slash: true,
 
     options: [

@@ -5,8 +5,9 @@ const { Constants } = require('discord.js');
 
 module.exports = {
     category:'Authors',
-    description: 'Creates an author tied to your server.',
     name: 'create_author',
+    description: 'Creates an author tied to your server.',
+    guildOnly: true,
     slash: true,
 
     options: [

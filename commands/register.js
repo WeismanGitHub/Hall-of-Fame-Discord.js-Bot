@@ -3,8 +3,9 @@ const GuildSchema = require('../schemas/guild_schema');
 
 module.exports = {
     category:'Register',
-    description: 'Register your server.',
     name: 'register',
+    description: 'Register your server.',
+    guildOnly: true,
     slash: true,
 
     callback: async ({interaction}) => {

@@ -11,9 +11,11 @@ const {
 
 module.exports = {
     category:'Quotes',
-    description: 'Get all quotes tied to your server.',
     name: 'get_all_quotes',
+    description: 'Get all quotes tied to your server.',
+    guildOnly: true,
     slash: true,
+    
     options: [
         {
             name: 'date',

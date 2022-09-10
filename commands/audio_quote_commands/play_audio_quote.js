@@ -13,8 +13,9 @@ const {
 
 module.exports = {
     category:'Audio Quotes',
-    description: 'Plays an audio quote.',
     name: 'play_quote',
+    description: 'Plays an audio quote.',
+    guildOnly: true,
     slash: true,
 
     options: [

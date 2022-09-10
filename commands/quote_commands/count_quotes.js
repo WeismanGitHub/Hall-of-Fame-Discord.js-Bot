@@ -7,8 +7,9 @@ const { Constants } = require('discord.js');
 
 module.exports = {
     category:'Quotes',
-    description: 'Count number of quotes. Use options to filter.',
     name: 'count_quotes',
+    description: 'Count number of quotes. Use options to filter.',
+    guildOnly: true,
     slash: true,
 
     options: [

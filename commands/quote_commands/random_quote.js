@@ -6,9 +6,11 @@ const { Constants } = require('discord.js');
 
 module.exports = {
     category:'Quotes',
-    description: 'Get a random quote.',
     name: 'random_quote',
+    description: 'Get a random quote.',
+    guildOnly: true,
     slash: true,
+
     options: [
         {
             name: 'author',
