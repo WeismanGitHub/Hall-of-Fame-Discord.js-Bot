@@ -62,7 +62,7 @@ module.exports = {
                         ).send(notificationEmbed(title, body))
                     }
 
-                    await interact.reply(basicEmbed('Notification sent!'))
+                    await interaction.reply(basicEmbed('Notification sent!'))
                 }
             })
         } catch(err) {
