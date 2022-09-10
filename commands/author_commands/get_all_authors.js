@@ -14,20 +14,36 @@ module.exports = {
     
             let authors = (await GuildSchema.findOne({ guildId: guildId }).select('-_id authors').lean()).authors;
 
-            if (authors.length) {
-                await interaction.reply(basicEmbed(`Started!\nAmount: ${authors.length}`))
-
-                for (let author of authors) {
-                    await interaction.channel.send(authorEmbed(author))
-                    .catch(async err => {
-                        await interaction.channel.send(errorEmbed(err, author.name))
-                    })
-                };
-                
-                await interaction.channel.send(basicEmbed('Done!'));
-            } else {
+            if (!authors.length) {
                 throw new Error('This server has no authors.')
             }
+
+            await interaction.reply(basicEmbed(`Started!\nAmount: ${authors.length}`))
+            const authorGroups = [];
+
+            while (authors.length > 0) {
+                authorGroups.push(authors.splice(0, 10))
+            }
+
+            for (let authorGroup of authorGroups) {
+                const authorEmbeds = []
+
+                for (let author of authorGroup) {
+                    authorEmbeds.push(...authorEmbed(author).embeds)
+                }
+
+                await interaction.channel.send({ embeds: authorEmbeds })
+                .catch(async _ => {
+                    for (let authorEmbed of authorEmbeds) {
+                        await interaction.channel.send({ embeds: [authorEmbed] })
+                        .catch(async err => {
+                            interaction.channel.send(errorEmbed(err, authorEmbed.author.name))
+                        });
+                    }
+                })
+            };
+            
+            await interaction.channel.send(basicEmbed('Done!'));
         } catch(err) {
             interaction.reply(errorEmbed(err))
             .catch(_ => interaction.channel.send(errorEmbed(err)))
