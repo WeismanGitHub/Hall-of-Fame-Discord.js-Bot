@@ -5,7 +5,7 @@ require('dotenv').config();
 module.exports = {
     category:'Tags',
     name: 'get_tags',
-    description: 'Gets all tags tied to your server.',
+    description: 'Gets all tags. Tags can be used to classify quotes.',
     guildOnly: true,
     slash: true,
 

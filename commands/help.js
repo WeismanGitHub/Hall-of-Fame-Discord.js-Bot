@@ -2,7 +2,7 @@ const Discord = require('discord.js');
 require('dotenv').config();
 
 module.exports = {
-    description: 'help command',
+    description: "Find out more about this bot and it's commands.",
     name: 'help',
     slash: true, 
     category:'Help',

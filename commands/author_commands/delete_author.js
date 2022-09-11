@@ -5,7 +5,7 @@ const { Constants } = require('discord.js');
 module.exports = {
     category:'Authors',
     name: 'delete_author',
-    description: 'Deletes an author tied to your server.',
+    description: 'Delete an author. To create a quote you need an author.',
     guildOnly: true,
     slash: true,
 

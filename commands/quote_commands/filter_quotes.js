@@ -9,7 +9,7 @@ const sendQuotes = require('../../helpers/send_quotes')
 module.exports = {
     category:'Quotes',
     name: 'filter_quotes',
-    description: 'Sort quotes by a number of fields and send them.',
+    description: 'Get quotes that match your specifications.',
     guildOnly: true,
     slash: true,
 

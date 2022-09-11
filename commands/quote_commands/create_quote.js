@@ -8,7 +8,7 @@ const { Constants } = require('discord.js');
 module.exports = {
     category:'Quotes',
     name: 'create_quote',
-    description: 'Creates a quote tied to your server.',
+    description: 'Create a quote. Quotes must have an author and can have up to three tags.',
     guildOnly: true,
     slash: true,
 
