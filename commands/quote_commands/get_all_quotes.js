@@ -87,8 +87,6 @@ module.exports = {
                     return await interaction.channel.send(basicEmbed('End of the line!'))
                 }
 
-                console.log(date, skipAmount)
-
                 const row = new MessageActionRow()
                 .addComponents(
                     new MessageButton()
