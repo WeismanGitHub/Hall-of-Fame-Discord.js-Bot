@@ -45,8 +45,8 @@ module.exports = {
             type: Constants.ApplicationCommandOptionTypes.STRING,
         },
         {
-            name: 'last_attachment',
-            description: 'Add the last image sent in chat to the quote.',
+            name: 'last_image',
+            description: 'Add the last image sent in a channel to the quote.',
             type: Constants.ApplicationCommandOptionTypes.CHANNEL
         }
     ],
@@ -62,10 +62,10 @@ module.exports = {
 
             if (checkedAuthor.name !== 'Deleted Author') {
                 const text = options.getString('text');
-                const lastAttachmentChannel = options.getChannel('last_attachment');
+                const lastImageChannel = options.getChannel('last_image');
                 const attachmentLink = options.getString('attachment');
 
-                if (!text && !attachmentLink && !lastAttachmentChannel) {
+                if (!text && !attachmentLink && !lastImageChannel) {
                     throw new Error('Please provide either at least text or an attachment.')
                 }
 
@@ -89,10 +89,10 @@ module.exports = {
                         text: text,
                         attachment: attachmentLink
                     });
-                } else if (lastAttachmentChannel) {
+                } else if (lastImageChannel) {
                     let firstAttachmentURL;
 
-                    (await lastAttachmentChannel.messages.fetch({ limit: 50 }))
+                    (await lastImageChannel.messages.fetch({ limit: 50 }))
                     .find(message => message.attachments.find(attachment => {
                         firstAttachmentURL = attachment.proxyURL
                         return Boolean(attachment)
