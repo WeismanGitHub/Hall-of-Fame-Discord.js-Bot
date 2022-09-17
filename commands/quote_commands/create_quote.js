@@ -43,6 +43,11 @@ module.exports = {
             name: 'third_tag',
             description: 'Tags are used for filtering.',
             type: Constants.ApplicationCommandOptionTypes.STRING,
+        },
+        {
+            name: 'last_attachment',
+            description: 'Add the last image sent in chat to the quote.',
+            type: Constants.ApplicationCommandOptionTypes.BOOLEAN
         }
     ],
 
