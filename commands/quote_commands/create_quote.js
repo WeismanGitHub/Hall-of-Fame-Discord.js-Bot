@@ -47,7 +47,7 @@ module.exports = {
         {
             name: 'last_attachment',
             description: 'Add the last image sent in chat to the quote.',
-            type: Constants.ApplicationCommandOptionTypes.BOOLEAN
+            type: Constants.ApplicationCommandOptionTypes.CHANNEL
         }
     ],
 
@@ -62,9 +62,10 @@ module.exports = {
 
             if (checkedAuthor.name !== 'Deleted Author') {
                 const text = options.getString('text');
+                const lastAttachmentChannel = options.getChannel('last_attachment');
                 const attachmentLink = options.getString('attachment');
 
-                if (!text && !attachmentLink) {
+                if (!text && !attachmentLink && !lastAttachmentChannel) {
                     throw new Error('Please provide either at least text or an attachment.')
                 }
 
@@ -88,6 +89,22 @@ module.exports = {
                         text: text,
                         attachment: attachmentLink
                     });
+                } else if (lastAttachmentChannel) {
+                    let firstAttachmentURL;
+
+                    (await lastAttachmentChannel.messages.fetch({ limit: 50 }))
+                    .find(message => message.attachments.find(attachment => {
+                        firstAttachmentURL = attachment.proxyURL
+                        return Boolean(attachment)
+                    }))
+
+                    var quote = await QuoteSchema.create({
+                        guildId: guildId,
+                        authorId: checkedAuthor._id,
+                        tags: tags,
+                        text: text,
+                        attachment: firstAttachmentURL
+                    });
                 } else {
                     var quote = await QuoteSchema.create({
                         guildId: guildId,
@@ -103,6 +120,7 @@ module.exports = {
                 throw new Error(`Make sure that '${inputtedAuthor}' author exists.`)
             }
         } catch(err) {
+            console.log(err)
             interaction.reply(errorEmbed(err))
             .catch(_ => interaction.channel.send(errorEmbed(err)))
         }
