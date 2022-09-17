@@ -25,8 +25,8 @@ module.exports = {
             type: Constants.ApplicationCommandOptionTypes.STRING
         },
         {
-            name: 'attachment',
-            description: 'Image attachment. Must be a link.',
+            name: 'image_link',
+            description: 'Image attachment link. Upload an image to Discord and copy the link to that image.',
             type: Constants.ApplicationCommandOptionTypes.STRING
         },
         {
@@ -65,10 +65,10 @@ module.exports = {
 
             const text = options.getString('text');
             const lastImageChannel = options.getChannel('last_image');
-            const attachmentLink = options.getString('attachment');
+            const imageLink = options.getString('image_link');
 
-            if (!text && !attachmentLink && !lastImageChannel) {
-                throw new Error('Please provide either at least text or an attachment.')
+            if (!text && !imageLink && !lastImageChannel) {
+                throw new Error('Please provide text and or an image link.')
             }
 
             let tags = [
@@ -79,8 +79,8 @@ module.exports = {
 
             tags = await checkTags(tags, guildId);
             
-            if (attachmentLink) {
-                if (!checkURL(attachmentLink)) {
+            if (imageLink) {
+                if (!checkURL(imageLink)) {
                     throw new Error('Please input a valid url.')
                 }
                 
@@ -89,18 +89,18 @@ module.exports = {
                     authorId: checkedAuthor._id,
                     tags: tags,
                     text: text,
-                    attachment: attachmentLink
+                    attachment: imageLink
                 });
             } else if (lastImageChannel) {
-                let firstAttachmentURL;
+                let firstImageUrl;
 
                 (await lastImageChannel.messages.fetch({ limit: 25 }))
                 .find(message => message.attachments.find(attachment => {
-                    firstAttachmentURL = attachment.proxyURL
+                    firstImageUrl = attachment.proxyURL
                     return Boolean(attachment)
                 }))
 
-                if (!firstAttachmentURL) {
+                if (!firstImageUrl) {
                     throw new Error('No attachment could be found in the last 25 messages.')
                 }
 
@@ -109,7 +109,7 @@ module.exports = {
                     authorId: checkedAuthor._id,
                     tags: tags,
                     text: text,
-                    attachment: firstAttachmentURL
+                    attachment: firstImageUrl
                 });
             } else {
                 var quote = await QuoteSchema.create({
