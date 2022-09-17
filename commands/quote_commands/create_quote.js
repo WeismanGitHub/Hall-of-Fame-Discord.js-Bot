@@ -57,68 +57,70 @@ module.exports = {
             const guildId = interaction.guildId;
     
             const inputtedAuthor = options.getString('author');
-            
             const checkedAuthor = await getAuthorByName(inputtedAuthor, guildId);
 
-            if (checkedAuthor.name !== 'Deleted Author') {
-                const text = options.getString('text');
-                const lastImageChannel = options.getChannel('last_image');
-                const attachmentLink = options.getString('attachment');
-
-                if (!text && !attachmentLink && !lastImageChannel) {
-                    throw new Error('Please provide either at least text or an attachment.')
-                }
-
-                let tags = [
-                    options.getString('first_tag'),
-                    options.getString('second_tag'),
-                    options.getString('third_tag'),
-                ];
-    
-                tags = await checkTags(tags, guildId);
-                
-                if (attachmentLink) {
-                    if (!checkURL(attachmentLink)) {
-                        throw new Error('Please input a valid url.')
-                    }
-                    
-                    var quote = await QuoteSchema.create({
-                        guildId: guildId,
-                        authorId: checkedAuthor._id,
-                        tags: tags,
-                        text: text,
-                        attachment: attachmentLink
-                    });
-                } else if (lastImageChannel) {
-                    let firstAttachmentURL;
-
-                    (await lastImageChannel.messages.fetch({ limit: 50 }))
-                    .find(message => message.attachments.find(attachment => {
-                        firstAttachmentURL = attachment.proxyURL
-                        return Boolean(attachment)
-                    }))
-
-                    var quote = await QuoteSchema.create({
-                        guildId: guildId,
-                        authorId: checkedAuthor._id,
-                        tags: tags,
-                        text: text,
-                        attachment: firstAttachmentURL
-                    });
-                } else {
-                    var quote = await QuoteSchema.create({
-                        guildId: guildId,
-                        authorId: checkedAuthor._id,
-                        tags: tags,
-                        text: text,
-                    });
-                }
-
-                await interaction.reply(quoteEmbed(quote, checkedAuthor));
-    
-            } else {
+            if (checkedAuthor.name == 'Deleted Author') {
                 throw new Error(`Make sure that '${inputtedAuthor}' author exists.`)
             }
+
+            const text = options.getString('text');
+            const lastImageChannel = options.getChannel('last_image');
+            const attachmentLink = options.getString('attachment');
+
+            if (!text && !attachmentLink && !lastImageChannel) {
+                throw new Error('Please provide either at least text or an attachment.')
+            }
+
+            let tags = [
+                options.getString('first_tag'),
+                options.getString('second_tag'),
+                options.getString('third_tag'),
+            ];
+
+            tags = await checkTags(tags, guildId);
+            
+            if (attachmentLink) {
+                if (!checkURL(attachmentLink)) {
+                    throw new Error('Please input a valid url.')
+                }
+                
+                var quote = await QuoteSchema.create({
+                    guildId: guildId,
+                    authorId: checkedAuthor._id,
+                    tags: tags,
+                    text: text,
+                    attachment: attachmentLink
+                });
+            } else if (lastImageChannel) {
+                let firstAttachmentURL;
+
+                (await lastImageChannel.messages.fetch({ limit: 25 }))
+                .find(message => message.attachments.find(attachment => {
+                    firstAttachmentURL = attachment.proxyURL
+                    return Boolean(attachment)
+                }))
+
+                if (!firstAttachmentURL) {
+                    throw new Error('No attachment could be found in the last 25 messages.')
+                }
+
+                var quote = await QuoteSchema.create({
+                    guildId: guildId,
+                    authorId: checkedAuthor._id,
+                    tags: tags,
+                    text: text,
+                    attachment: firstAttachmentURL
+                });
+            } else {
+                var quote = await QuoteSchema.create({
+                    guildId: guildId,
+                    authorId: checkedAuthor._id,
+                    tags: tags,
+                    text: text,
+                });
+            }
+
+            await interaction.reply(quoteEmbed(quote, checkedAuthor));
         } catch(err) {
             console.log(err)
             interaction.reply(errorEmbed(err))
