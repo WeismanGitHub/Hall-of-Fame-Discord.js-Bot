@@ -139,7 +139,6 @@ module.exports = {
                 updateObject['authorId'] = author._id;
             }
             
-            
             if (deleteImage) {
                 updateObject.$unset = {'attachment': '' }
             }
@@ -153,7 +152,6 @@ module.exports = {
                 const author = await getAuthorById(updatedQuote.authorId, guildId);
     
                 await interaction.reply(quoteEmbed(updatedQuote, author));
-    
             } else {
                 await interaction.reply(basicEmbed('Nothing Updated.'));
             }
