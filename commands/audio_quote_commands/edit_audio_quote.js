@@ -119,8 +119,7 @@ module.exports = {
             if (Object.keys(updateObject).length) {
                 const updatedAudioQuote = await audioQuoteSchema.findOneAndUpdate(
                     { _id: _id },
-                    updateObject,
-                    { new: true }
+                    updateObject
                 ).lean()
 
                 const author = await getAuthorById(updatedAudioQuote.authorId, guildId);
