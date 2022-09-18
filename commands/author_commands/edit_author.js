@@ -35,7 +35,7 @@ module.exports = {
             const guildId = interaction.guildId;
             const oldName = options.getString('name');
             const newName = options.getString('new_name');
-            const newImgUrl = options.getString('icon_url');
+            const newImgUrl = options.getString('icon_url') ?? 'https://cdn.discordapp.com/avatars/973042179033415690/a6602f6209ef6546ee8d878e0022a4f3.webp?size=160'
 
             if ((newName == null) && (newImgUrl == null)) {
                 return await interaction.reply(basicEmbed(`Nothing Updated.`));
