@@ -122,7 +122,6 @@ module.exports = {
 
             await interaction.reply(quoteEmbed(quote, checkedAuthor));
         } catch(err) {
-            console.log(err)
             interaction.reply(errorEmbed(err))
             .catch(_ => interaction.channel.send(errorEmbed(err)))
         }
