@@ -1,5 +1,6 @@
 const { errorEmbed, quoteEmbed } = require('../../helpers/embeds');
 const { getAuthorByName } = require('../../helpers/get_author');
+const getLastImage = require('../../helpers/get_last_image');
 const { checkTags } = require('../../helpers/check_tags');
 const QuoteSchema = require('../../schemas/quote_schema');
 const checkURL = require('../../helpers/check_url')
@@ -92,17 +93,7 @@ module.exports = {
                     attachment: imageLink
                 });
             } else if (lastImageChannel) {
-                let firstImageUrl;
-
-                (await lastImageChannel.messages.fetch({ limit: 25 }))
-                .find(message => message.attachments.find(attachment => {
-                    firstImageUrl = attachment.proxyURL
-                    return Boolean(attachment)
-                }))
-
-                if (!firstImageUrl) {
-                    throw new Error('No attachment could be found in the last 25 messages.')
-                }
+                const firstImageUrl = await getLastImage(lastImageChannel)
 
                 var quote = await QuoteSchema.create({
                     guildId: guildId,
