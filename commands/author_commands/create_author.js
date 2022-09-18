@@ -1,3 +1,4 @@
+const { getLastImage } = require('../../helpers/get_last_attachment');
 const { errorEmbed, authorEmbed } = require('../../helpers/embeds');
 const GuildSchema = require('../../schemas/guild_schema');
 const checkURL = require('../../helpers/check_url')
@@ -21,7 +22,12 @@ module.exports = {
             name: 'icon_url',
             description: 'This will be the image displayed with the author.',
             type: Constants.ApplicationCommandOptionTypes.STRING,
-        }
+        },
+        {
+            name: 'last_image',
+            description: 'Use the last image sent in a channel for the author icon.',
+            type: Constants.ApplicationCommandOptionTypes.CHANNEL
+        },
     ],
 
     callback: async ({ interaction }) => {
@@ -29,9 +35,18 @@ module.exports = {
             const { options } = interaction;
             const guildId = interaction.guildId;
             const name = options.getString('name');
-            const imgUrl = options.getString('icon_url') ?? 'https://cdn.discordapp.com/avatars/973042179033415690/a6602f6209ef6546ee8d878e0022a4f3.webp?size=160'
+            const lastImageChannel = options.getChannel('last_image');
             const authorObject = { name: name, imgUrl: imgUrl }
+            let imgUrl = options.getString('icon_url')
             
+            if (!lastImageChannel && !imgUrl) {
+                imgUrl = 'https://cdn.discordapp.com/avatars/973042179033415690/a6602f6209ef6546ee8d878e0022a4f3.webp?size=160'
+            }
+
+            if (lastImageChannel) {
+                imgUrl = await getLastImage(lastImageChannel)
+            }
+
             if (!checkURL(imgUrl)) {
                 throw new Error('Please input a valid url.')
             }
