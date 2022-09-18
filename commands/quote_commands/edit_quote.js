@@ -30,8 +30,8 @@ module.exports = {
             type: Constants.ApplicationCommandOptionTypes.STRING
         },
         {
-            name: 'new_attachment',
-            description: 'New image attachment. Must be a link.',
+            name: 'new_image_link',
+            description: 'Image attachment link. Upload an image to Discord and copy the link to that image.',
             type: Constants.ApplicationCommandOptionTypes.STRING
         },
         {
@@ -40,8 +40,8 @@ module.exports = {
             type: Constants.ApplicationCommandOptionTypes.BOOLEAN
         },
         {
-            name: 'delete_attachment',
-            description: 'Removes image attachment from quote.',
+            name: 'delete_image',
+            description: 'Removes image from quote.',
             type: Constants.ApplicationCommandOptionTypes.BOOLEAN
         },
         {
@@ -79,9 +79,9 @@ module.exports = {
     
             let updateObject = {};
     
-            const newAttatchment = options.getString('new_attachment');
+            const newImageLink = options.getString('new_image_link');
             const deleteTags = options.getBoolean('delete_tags');
-            const deleteAttachment = options.getBoolean('delete_attachment');
+            const deleteImage = options.getBoolean('delete_image');
             const newAuthorName = options.getString('new_author');
             const newText = options.getString('new_text');
 
@@ -97,12 +97,12 @@ module.exports = {
                 updateObject.tags = tags
             }
     
-            if (newAttatchment) {
-                if (!checkURL(newAttatchment)) {
+            if (newImageLink) {
+                if (!checkURL(newImageLink)) {
                     throw new Error('Please input a valid url.')
                 }
 
-                updateObject.attachment = newAttatchment;
+                updateObject.attachment = newImageLink;
             };
 
 
@@ -124,14 +124,14 @@ module.exports = {
                 updateObject['authorId'] = author._id;
             }
             
-            if (Object.keys(updateObject).length || deleteAttachment) {
+            if (Object.keys(updateObject).length || deleteImage) {
                 const updatedQuote = await QuoteSchema.findOneAndUpdate(
                     { _id: _id, guildId: guildId },
                     updateObject,
                     { new: true }
                 ).lean()
 
-                if (deleteAttachment) {
+                if (deleteImage) {
                     await QuoteSchema.updateOne({ _id: _id, guildId: guildId }, { $unset: {'attachment': '' } });
                 }
 
