@@ -119,9 +119,7 @@ module.exports = {
                 if (!updateObject.attachment) {
                     throw new Error('No attachment could be found in the last 25 messages.')
                 }
-                
             }
-
 
             if (deleteTags) {
                 updateObject['tags'] = [];
@@ -141,16 +139,17 @@ module.exports = {
                 updateObject['authorId'] = author._id;
             }
             
+            
+            if (deleteImage) {
+                updateObject.$unset = {'attachment': '' }
+            }
+
             if (Object.keys(updateObject).length || deleteImage) {
                 const updatedQuote = await QuoteSchema.findOneAndUpdate(
                     { _id: _id, guildId: guildId },
                     updateObject,
                     { new: true }
                 ).lean()
-
-                if (deleteImage) {
-                    await QuoteSchema.updateOne({ _id: _id, guildId: guildId }, { $unset: {'attachment': '' } });
-                }
 
                 const author = await getAuthorById(updatedQuote.authorId, guildId);
     
