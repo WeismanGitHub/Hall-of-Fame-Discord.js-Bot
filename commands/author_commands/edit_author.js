@@ -30,7 +30,7 @@ module.exports = {
         },
         {
             name: 'last_image',
-            description: 'Use the last image sent for the author icon.',
+            description: 'Use the last image sent in a channel for the author icon.',
             type: Constants.ApplicationCommandOptionTypes.CHANNEL
         },
         {
