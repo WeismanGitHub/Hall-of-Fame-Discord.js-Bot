@@ -147,8 +147,7 @@ module.exports = {
             if (Object.keys(updateObject).length || deleteImage) {
                 const updatedQuote = await QuoteSchema.findOneAndUpdate(
                     { _id: _id, guildId: guildId },
-                    updateObject,
-                    { new: true }
+                    updateObject
                 ).lean()
 
                 const author = await getAuthorById(updatedQuote.authorId, guildId);
