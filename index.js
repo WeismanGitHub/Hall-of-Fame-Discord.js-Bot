@@ -1,6 +1,7 @@
 const GuildSchema = require('./schemas/guild_schema');
 const WOKCommands = require('wokcommands');
 const mongoose = require('mongoose');
+const log = require('log-to-file');
 const path = require('path');
 require('dotenv').config();
 
@@ -56,13 +57,13 @@ client.on('guildCreate', async guild => {
 });
 
 process.on('uncaughtException', function (error) {
-    console.log(new Date)
-    console.error('Uncaught exception:', error);
+    log(`Time: ${new Date}\n${error}\n\n`, 'error.log');
+    console.log(`\nTime: ${new Date}\n${error}`)
 });
 
 process.on('unhandledRejection', error => {
-    console.log(new Date)
-    console.error('Unhandled promise rejection:', error);
+    log(`Time: ${new Date}\n${error}\n`, 'error.log');
+    console.log(`\nTime: ${new Date}\n${error}`)
 });
 
 client.login(process.env.TOKEN);
