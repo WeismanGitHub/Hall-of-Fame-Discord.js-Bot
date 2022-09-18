@@ -76,17 +76,9 @@ module.exports = {
                         ...newImgUrl && { "authors.$.imgUrl": newImgUrl },
                         ...newName && { "authors.$.name": newName }
                     }
-                },
-                { authors: {
-                    "$filter": {
-                        "input": "$authors",
-                        "as": "author",
-                        "cond":
-                        { "$eq": ["$$author.name", (newName ?? oldName)] }
-                    }
                 }
-            }).select('authors -_id').lean())?.authors
-            console.log(authors)
+            ).select('authors -_id').lean())?.authors
+
             if (!authors) {
                 throw new Error(`No author named '${oldName}'.`)
             }
