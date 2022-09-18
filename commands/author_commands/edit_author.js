@@ -1,4 +1,4 @@
-const { errorEmbed, basicEmbed } = require('../../helpers/embeds');
+const { errorEmbed, authorEmbed } = require('../../helpers/embeds');
 const getLastImage = require('../../helpers/get_last_image');
 const GuildSchema = require('../../schemas/guild_schema');
 const checkURL = require('../../helpers/check_url')
@@ -66,25 +66,34 @@ module.exports = {
                 newImgUrl = 'https://cdn.discordapp.com/avatars/973042179033415690/a6602f6209ef6546ee8d878e0022a4f3.webp?size=160'
             }
 
-            const response = await GuildSchema.updateOne(
+            const authors = (await GuildSchema.findOneAndUpdate(
                 { "$and": [
                     { "guildId": { "$eq": guildId } },
                     { "authors": { "$elemMatch": { "name": { "$eq": oldName } } } }
                 ]},
                 {
                     "$set": {
-                        "authors.$.imgUrl": newImgUrl,
+                        ...newImgUrl && { "authors.$.imgUrl": newImgUrl },
                         ...newName && { "authors.$.name": newName }
                     }
+                },
+                { authors: {
+                    "$filter": {
+                        "input": "$authors",
+                        "as": "author",
+                        "cond":
+                        { "$eq": ["$$author.name", (newName ?? oldName)] }
+                    }
                 }
-            ).select('_id').lean()
-
-            console.log(response)
-            if (response == null) {
+            }).select('authors -_id').lean())?.authors
+            console.log(authors)
+            if (!authors) {
                 throw new Error(`No author named '${oldName}'.`)
             }
 
-            await interaction.reply(basicEmbed(`Updated '${newName? newName: oldName}'!`));
+            const author = authors.find(author => author.name == (newName ?? oldName))
+
+            await interaction.reply(authorEmbed(author));
         } catch(err) {
             interaction.reply(errorEmbed(err))
             .catch(_ => interaction.channel.send(errorEmbed(err)))
