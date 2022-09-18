@@ -6,9 +6,9 @@ async function getAuthorByName(name, guildId) {
         return (await GuildSchema.findOne(
             {
                 "guildId" : guildId, 
-                authors : {$elemMatch : {name: name}
+                authors : {$elemMatch : { name: name }
             }},
-            {authors: {
+            { authors: {
                 "$filter": {
                     "input": "$authors",
                     "as": "author",
