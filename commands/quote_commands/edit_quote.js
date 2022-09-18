@@ -58,6 +58,11 @@ module.exports = {
             name: 'third_tag',
             description: 'Tags are used for filtering. You must create a tag beforehand. New tags will overwrite the old ones.',
             type: Constants.ApplicationCommandOptionTypes.STRING
+        },
+        {
+            name: 'last_image',
+            description: 'Add the last image sent in a channel to the quote.',
+            type: Constants.ApplicationCommandOptionTypes.CHANNEL
         }
     ],
 
@@ -79,9 +84,10 @@ module.exports = {
     
             let updateObject = {};
     
+            const lastImageChannel = options.getChannel('last_image');
             const newImageLink = options.getString('new_image_link');
-            const deleteTags = options.getBoolean('delete_tags');
             const deleteImage = options.getBoolean('delete_image');
+            const deleteTags = options.getBoolean('delete_tags');
             const newAuthorName = options.getString('new_author');
             const newText = options.getString('new_text');
 
@@ -103,7 +109,18 @@ module.exports = {
                 }
 
                 updateObject.attachment = newImageLink;
-            };
+            } else if (lastImageChannel) {
+                (await lastImageChannel.messages.fetch({ limit: 25 }))
+                .find(message => message.attachments.find(attachment => {
+                    updateObject.attachment = attachment.proxyURL
+                    return Boolean(attachment)
+                }))
+
+                if (!updateObject.attachment) {
+                    throw new Error('No attachment could be found in the last 25 messages.')
+                }
+                
+            }
 
 
             if (deleteTags) {
