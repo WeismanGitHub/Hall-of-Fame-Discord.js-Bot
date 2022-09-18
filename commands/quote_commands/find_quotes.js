@@ -77,8 +77,8 @@ module.exports = {
             const guildId = interaction.guildId;
             const queryObject = { guildId: guildId };
 
-            if ((limit < 1) || (10 < limit)) {
-                throw new Error('Limit must be between 1 and 10.')
+            if ((limit < 1) || (10 <= limit)) {
+                throw new Error('Limit must be 1 or more, but less than 10.')
             }
 
             if (inputtedAuthor) {
