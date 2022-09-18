@@ -55,6 +55,11 @@ client.on('guildCreate', async guild => {
     }
 });
 
+process.on('uncaughtException', function (error) {
+    console.log(new Date)
+    console.error('Uncaught exception:', error);
+});
+
 process.on('unhandledRejection', error => {
     console.log(new Date)
     console.error('Unhandled promise rejection:', error);
