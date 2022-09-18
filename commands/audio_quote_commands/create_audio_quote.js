@@ -1,3 +1,4 @@
+const { getLastAudio } = require('../../helpers/get_last_attachment');
 const AudioQuoteSchema = require('../../schemas/audio_quote_schema')
 const { errorEmbed, quoteEmbed } = require('../../helpers/embeds');
 const { getAuthorByName } = require('../../helpers/get_author');
@@ -20,16 +21,15 @@ module.exports = {
             type: Constants.ApplicationCommandOptionTypes.STRING,
         },
         {
-            name: 'audio_file_link',
-            description: 'Must be a link to an audio file. You can upload the audio file to discord and copy that link.',
-            required: true,
-            type: Constants.ApplicationCommandOptionTypes.STRING,
-        },
-        {
             name: 'title',
             description: 'Title of the audio quote.',
             required: true,
             type: Constants.ApplicationCommandOptionTypes.STRING
+        },
+        {
+            name: 'audio_file_link',
+            description: 'Must be a link to an audio file. You can upload the audio file to discord and copy that link.',
+            type: Constants.ApplicationCommandOptionTypes.STRING,
         },
         {
             name: 'first_tag',
@@ -45,6 +45,11 @@ module.exports = {
             name: 'third_tag',
             description: 'Tags are used for filtering.',
             type: Constants.ApplicationCommandOptionTypes.STRING,
+        },
+        {
+            name: 'last_audio',
+            description: 'Use the last audio file sent in a channel.',
+            type: Constants.ApplicationCommandOptionTypes.CHANNEL
         }
     ],
 
@@ -52,18 +57,23 @@ module.exports = {
         try {
             const guildId = interaction.guildId;
             const { options } = interaction;
-
+            
             const inputtedAuthor = options.getString('author');
             const checkedAuthor = await getAuthorByName(inputtedAuthor, guildId);
-
+            
             if (checkedAuthor.name == 'Deleted Author') {
                 throw new Error(`Make sure that '${inputtedAuthor}' author exists.`)
             }
-
+            
+            const lastAudioChannel = options.getChannel('last_audio');
             const title = options.getString('title');
             const audioFileLink = options.getString('audio_file_link');
             
-            if (!checkURL(audioFileLink)) {
+            if (!lastAudioChannel && !audioFileLink) {
+                throw new Error('Please provide an audio file link or choose a channel to get the audio file from.')
+            }
+
+            if (audioFileLink && !checkURL(audioFileLink)) {
                 throw new Error('Please input a valid url.')
             }
 
@@ -79,7 +89,7 @@ module.exports = {
                 guildId: guildId,
                 authorId: checkedAuthor._id,
                 text: title,
-                audioFileLink: audioFileLink,
+                audioFileLink: audioFileLink ?? await getLastAudio(lastAudioChannel),
                 tags: tags,
             });
 

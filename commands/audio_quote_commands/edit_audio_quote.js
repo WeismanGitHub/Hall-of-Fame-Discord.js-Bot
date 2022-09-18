@@ -1,5 +1,6 @@
 const { errorEmbed, quoteEmbed, basicEmbed } = require('../../helpers/embeds');
 const { getAuthorByName, getAuthorById } = require('../../helpers/get_author');
+const { getLastAudio } = require('../../helpers/get_last_attachment');
 const audioQuoteSchema = require('../../schemas/audio_quote_schema');
 const { checkTags } = require('../../helpers/check_tags');
 const checkURL = require('../../helpers/check_url')
@@ -53,6 +54,11 @@ module.exports = {
             name: 'third_tag',
             description: 'Tags are used for filtering. You must create a tag beforehand. New tags will overwrite the old ones.',
             type: Constants.ApplicationCommandOptionTypes.STRING
+        },
+        {
+            name: 'last_audio',
+            description: 'Use the last audio file sent in a channel.',
+            type: Constants.ApplicationCommandOptionTypes.CHANNEL
         }
     ],
 
@@ -75,6 +81,7 @@ module.exports = {
             let updateObject = {};
     
             const newAudioFileLink = options.getString('new_audio_file_link');
+            const lastAudioChannel = options.getChannel('last_audio');
             const deleteTags = options.getBoolean('delete_tags');
             const newAuthorName = options.getString('new_author');
             const newTitle = options.getString('new_title');
@@ -85,7 +92,9 @@ module.exports = {
                 }
 
                 updateObject.audioFileLink = newAudioFileLink;
-            };
+            } else if (lastAudioChannel) {
+                updateObject.audioFileLink = await getLastAudio(lastAudioChannel)
+            }
 
             let tags = [
                 options.getString('first_tag'),
