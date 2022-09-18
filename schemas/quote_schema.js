@@ -31,13 +31,14 @@ const QuoteSchema = new mongoose.Schema({
 }, {timestamps: true});
 
 QuoteSchema.plugin(schema => {
-    schema.pre('findOneAndUpdate', setRunValidators);
-    schema.pre('updateMany', setRunValidators);
-    schema.pre('updateOne', setRunValidators);
-    schema.pre('update', setRunValidators);
+    schema.pre('findOneAndUpdate', setOptions);
+    schema.pre('updateMany', setOptions);
+    schema.pre('updateOne', setOptions);
+    schema.pre('update', setOptions);
 });
 
-function setRunValidators() {
-    this.setOptions({ runValidators: true });
+function setOptions() {
+    this.setOptions({ runValidators: true, new: true });
 }
+
 module.exports = mongoose.model('regular quotes', QuoteSchema, 'quotes');
