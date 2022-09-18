@@ -1,6 +1,6 @@
 const { errorEmbed, quoteEmbed } = require('../../helpers/embeds');
 const { getAuthorByName } = require('../../helpers/get_author');
-const getLastImage = require('../../helpers/get_last_image');
+const { getLastImage } = require('../../helpers/get_last_attachment');
 const { checkTags } = require('../../helpers/check_tags');
 const QuoteSchema = require('../../schemas/quote_schema');
 const checkURL = require('../../helpers/check_url')

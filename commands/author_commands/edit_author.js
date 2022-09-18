@@ -1,5 +1,5 @@
 const { errorEmbed, authorEmbed } = require('../../helpers/embeds');
-const getLastImage = require('../../helpers/get_last_image');
+const { getLastImage } = require('../../helpers/get_last_attachment');
 const GuildSchema = require('../../schemas/guild_schema');
 const checkURL = require('../../helpers/check_url')
 const { Constants } = require('discord.js');
