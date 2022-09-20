@@ -149,44 +149,49 @@ module.exports = {
             const collector = interaction.channel.createMessageComponentCollector()
 
             collector.on('collect', async (i) => {
-                const customId = i.customId.split(',')
-                const skipAmount = customId[0]
-                const filterObject = await FilterSchema.findById(customId[1]).lean()
-                
-                if (!filterObject) {
-                    throw new Error('Please use the command again. This button is broken.')
-                }
+                try {
+                    const customId = i.customId.split(',')
+                    const skipAmount = customId[0]
+                    const filterObject = await FilterSchema.findById(customId[1]).lean()
 
-                const { queryObject, sortObject } = filterObject
-
-                const quotes = await QuoteSchema.find(queryObject).sort(sortObject).skip(skipAmount).limit(10).lean();
-                
-                if (!quotes.length) {
-                    return await i.reply(basicEmbed('No more quotes!'))
-                }
-
-                await i.reply(basicEmbed('Started!'));
-
-                await sendQuotes(quotes, interaction.channel)
-
-                if (quotes.length !== 10) {
-                    return await interaction.channel.send(basicEmbed('End of the line!'))
-                }
-
-                const row = new MessageActionRow()
-                .addComponents(
-                    new MessageButton()
-                    .setCustomId(`${Number(skipAmount) + 10},${filterObject._id}`)
-                    .setLabel('Next 10 Quotes ⏩')
-                    .setStyle('PRIMARY')
-                )
+                    if (!filterObject) {
+                        throw new Error('Please use the command again. This button is broken.')
+                    }
+    
+                    const { queryObject, sortObject } = filterObject
+    
+                    const quotes = await QuoteSchema.find(queryObject).sort(sortObject).skip(skipAmount).limit(10).lean();
                     
-                await interaction.channel.send({
-                    components: [row]
-                })
+                    if (!quotes.length) {
+                        return await i.reply(basicEmbed('No more quotes!'))
+                    }
+    
+                    await i.reply(basicEmbed('Started!'));
+    
+                    await sendQuotes(quotes, interaction.channel)
+    
+                    if (quotes.length !== 10) {
+                        return await interaction.channel.send(basicEmbed('End of the line!'))
+                    }
+    
+                    const row = new MessageActionRow()
+                    .addComponents(
+                        new MessageButton()
+                        .setCustomId(`${Number(skipAmount) + 10},${filterObject._id}`)
+                        .setLabel('Next 10 Quotes ⏩')
+                        .setStyle('PRIMARY')
+                    )
+                        
+                    await interaction.channel.send({
+                        components: [row]
+                    })
+                } catch(err) {
+                    await i.reply(errorEmbed(err))
+                    .catch(_ => i.channel.send(errorEmbed(err)))
+                }
             })
-        } catch(err) {
-            interaction.reply(errorEmbed(err))
+        } catch (err) {
+            await interaction.reply(errorEmbed(err))
             .catch(_ => interaction.channel.send(errorEmbed(err)))
         }
     }
