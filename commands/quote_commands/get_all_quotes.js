@@ -74,7 +74,8 @@ module.exports = {
                     const skipAmount = customId[0]
                     const date = customId[1]
                     
-                    const quotes = await QuoteSchema.find({ guildId: guildId }).sort({ createdAt: date }).skip(skipAmount).limit(10).lean();
+                    const quotes = await QuoteSchema.find({ guildId: guildId })
+                    .sort({ createdAt: date }).skip(skipAmount).limit(10).lean();
 
                     if (!quotes.length) {
                         return await i.reply(basicEmbed('No more quotes!'))
