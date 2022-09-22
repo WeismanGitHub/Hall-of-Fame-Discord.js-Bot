@@ -7,7 +7,6 @@ const log = require('log-to-file');
 const path = require('path');
 require('dotenv').config();
 
-
 const {
     Client,
     Intents,
@@ -28,7 +27,7 @@ client.on("ready", async () => {
     //The reason for making it a web app is because replit requires that.
     app.get('/', (req, res) => res.send('Hall of Fame Bot is online.'));
     app.listen(port, () => console.log(`Started!`));
-    
+
     client.user.setActivity('Use /help for help.');
 
     mongoose.connect(process.env.MONGO_URI, {
