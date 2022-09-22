@@ -58,52 +58,12 @@ module.exports = {
             .addComponents(
                 new MessageButton()
                 .setLabel('Next 10 Quotes ⏩')
-                .setCustomId(`10,${date}`)
+                .setCustomId(`10,${date},getAll`)
                 .setStyle('PRIMARY')
                 )
 
             await interaction.channel.send({
                 components: [row]
-            })
-
-            const collector = interaction.channel.createMessageComponentCollector()
-
-            collector.on('collect', async (i) => {
-                try {
-                    const customId = i.customId.split(',')
-                    const skipAmount = customId[0]
-                    const date = customId[1]
-                    
-                    const quotes = await QuoteSchema.find({ guildId: guildId })
-                    .sort({ createdAt: date }).skip(skipAmount).limit(10).lean();
-
-                    if (!quotes.length) {
-                        return await i.reply(basicEmbed('No more quotes!'))
-                    }
-
-                    await i.reply(basicEmbed('Started!'));
-
-                    await sendQuotes(quotes, interaction.channel)
-
-                    if (quotes.length !== 10) {
-                        return await interaction.channel.send(basicEmbed('End of the line!'))
-                    }
-
-                    const row = new MessageActionRow()
-                    .addComponents(
-                        new MessageButton()
-                        .setCustomId(`${Number(skipAmount) + 10},${date}`)
-                        .setLabel('Next 10 Quotes ⏩')
-                        .setStyle('PRIMARY')
-                    )
-
-                    await interaction.channel.send({
-                        components: [row]
-                    })
-                } catch(err) {
-                    await i.reply(errorEmbed(err))
-                    .catch(_ => i.channel.send(errorEmbed(err)))
-                }
             })
         } catch(err) {
             interaction.reply(errorEmbed(err))
