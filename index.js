@@ -1,4 +1,5 @@
 const GuildSchema = require('./schemas/guild_schema');
+const buttonHandler = require('./button_handler')
 const WOKCommands = require('wokcommands');
 const mongoose = require('mongoose');
 const log = require('log-to-file');
@@ -47,7 +48,7 @@ client.on("ready", async () => {
 	console.log('logged in...');
 });
 
-client.on('guildCreate', async guild => {
+client.on('guildCreate', async (guild) => {
     const guildId = guild.id;
     const guildRegistered = await GuildSchema.exists({guildId: guildId})
 
@@ -56,14 +57,20 @@ client.on('guildCreate', async guild => {
     }
 });
 
+client.on('interactionCreate', async (interaction) => {
+    if (interaction.isButton()) {
+        buttonHandler(interaction)
+    }
+})
+
 process.on('uncaughtException', function (error) {
     log(`Time: ${new Date}\n${error}\n\n`, 'error.log');
-    console.log(`\nTime: ${new Date}\n${error}`)
+    console.log(new Date, error)
 });
 
 process.on('unhandledRejection', error => {
     log(`Time: ${new Date}\n${error}\n`, 'error.log');
-    console.log(`\nTime: ${new Date}\n${error}`)
+    console.log(new Date, error)
 });
 
 client.login(process.env.TOKEN);
