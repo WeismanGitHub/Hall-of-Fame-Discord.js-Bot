@@ -9,11 +9,11 @@ async function buttonHandler(interaction) {
         const customId = interaction.customId.split(',')
         const skipAmount = customId[0]
         const type = customId[2]
-
+        console.log(type)
         if (type == 'getAllQuotes') {
             const date = customId[1]
 
-            var quotes = await QuoteSchema.find({ guildId: guildId })
+            var quotes = await QuoteSchema.find({ guildId: interaction.guild.id })
             .sort({ createdAt: date }).skip(skipAmount).limit(10).lean();
     
             if (!quotes.length) {
@@ -23,7 +23,7 @@ async function buttonHandler(interaction) {
             var row = new MessageActionRow()
             .addComponents(
                 new MessageButton()
-                .setCustomId(`${Number(skipAmount) + 10},${date}`)
+                .setCustomId(`${Number(skipAmount) + 10},${date},getAllQuotes`)
                 .setLabel('Next 10 Quotes ⏩')
                 .setStyle('PRIMARY')
             )
@@ -42,7 +42,7 @@ async function buttonHandler(interaction) {
             var row = new MessageActionRow()
             .addComponents(
                 new MessageButton()
-                .setCustomId(`${Number(skipAmount) + 10},${filterObject._id}`)
+                .setCustomId(`${Number(skipAmount) + 10},${filterObject._id},findQuotes`)
                 .setLabel('Next 10 Quotes ⏩')
                 .setStyle('PRIMARY')
             )
