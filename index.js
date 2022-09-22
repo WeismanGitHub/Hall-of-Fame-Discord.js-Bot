@@ -2,18 +2,11 @@ const GuildSchema = require('./schemas/guild_schema');
 const buttonHandler = require('./button_handler')
 const WOKCommands = require('wokcommands');
 const mongoose = require('mongoose');
+const express = require('express');
 const log = require('log-to-file');
 const path = require('path');
 require('dotenv').config();
 
-const express = require('express');
-const app = express();
-const port = 5000;
-
-//The reason for making it a web app is because replit requires that.
-app.get('/', (req, res) => res.send('Hall of Fame Bot is online.'));
-
-app.listen(port, () => console.log(`Started!`));
 
 const {
     Client,
@@ -29,6 +22,13 @@ const client = new Client({
 });
 
 client.on("ready", async () => {
+    const app = express();
+    const port = 5000;
+
+    //The reason for making it a web app is because replit requires that.
+    app.get('/', (req, res) => res.send('Hall of Fame Bot is online.'));
+    app.listen(port, () => console.log(`Started!`));
+    
     client.user.setActivity('Use /help for help.');
 
     mongoose.connect(process.env.MONGO_URI, {
