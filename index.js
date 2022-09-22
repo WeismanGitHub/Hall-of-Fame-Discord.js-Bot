@@ -1,5 +1,6 @@
 const GuildSchema = require('./schemas/guild_schema');
-const buttonHandler = require('./button_handler')
+const { Client, Intents } = require('discord.js');
+const buttonHandler = require('./button_handler');
 const WOKCommands = require('wokcommands');
 const mongoose = require('mongoose');
 const express = require('express');
@@ -7,10 +8,6 @@ const log = require('log-to-file');
 const path = require('path');
 require('dotenv').config();
 
-const {
-    Client,
-    Intents,
-} = require('discord.js');
 
 const client = new Client({
     intents: [
