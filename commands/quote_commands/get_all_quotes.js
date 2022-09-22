@@ -58,7 +58,7 @@ module.exports = {
             .addComponents(
                 new MessageButton()
                 .setLabel('Next 10 Quotes ⏩')
-                .setCustomId(`10,${date},getAll`)
+                .setCustomId(`10,${date},getAllQuotes`)
                 .setStyle('PRIMARY')
                 )
 
