@@ -64,6 +64,11 @@ module.exports = {
             description: 'Amount of quotes returned. Must be less than 10.',
             type: Constants.ApplicationCommandOptionTypes.INTEGER
         },
+        {
+            name: 'image_quote',
+            description: 'Sorts by if the quote has an image.',
+            type: Constants.ApplicationCommandOptionTypes.BOOLEAN,
+        },
     ],
 
     callback: async ({ interaction }) => {
@@ -73,6 +78,7 @@ module.exports = {
             const limit = options.getInteger('limit') == null ? 10 : options.getInteger('limit')
             const searchPhrase = options.getString('search_phrase')
             const isAudioQuote = options.getBoolean('audio_quote')
+            const isImageQuote = options.getBoolean('image_quote')
             let inputtedAuthor = options.getString('author');
             const guildId = interaction.guildId;
             const queryObject = { guildId: guildId };
@@ -94,6 +100,10 @@ module.exports = {
 
             if (isAudioQuote !== null) {
                 queryObject.isAudioQuote = isAudioQuote
+            }
+
+            if (isImageQuote !== null) {
+                queryObject.attachment = { $exists: isImageQuote }
             }
 
             let tags = [

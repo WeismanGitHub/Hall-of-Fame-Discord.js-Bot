@@ -42,6 +42,11 @@ module.exports = {
             description: 'Sorts by if quote is audio quote or not.',
             type: Constants.ApplicationCommandOptionTypes.BOOLEAN,
         },
+        {
+            name: 'image_quote',
+            description: 'Sorts by if the quote has an image.',
+            type: Constants.ApplicationCommandOptionTypes.BOOLEAN,
+        },
     ],
     
     callback: async ({ interaction }) => {
@@ -49,6 +54,7 @@ module.exports = {
             const { options } = interaction;
             const searchPhrase = options.getString('search_phrase')
             const isAudioQuote = options.getBoolean('audio_quote')
+            const isImageQuote = options.getBoolean('image_quote')
             let inputtedAuthor = options.getString('author');
             const guildId = interaction.guildId;
             const queryObject = { guildId: guildId };
@@ -85,6 +91,10 @@ module.exports = {
                 queryObject.isAudioQuote = isAudioQuote
             }
             
+            if (isImageQuote !== null) {
+                queryObject.attachment = { $exists: isImageQuote }
+            }
+
             const amountOfDocuments = await QuoteSchema.countDocuments(queryObject)
 
             if (!amountOfDocuments) {
