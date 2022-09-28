@@ -8,7 +8,6 @@ const log = require('log-to-file');
 const path = require('path');
 require('dotenv').config();
 
-
 const client = new Client({
     intents: [
         Intents.FLAGS.GUILD_MESSAGES,

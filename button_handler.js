@@ -9,7 +9,7 @@ async function buttonHandler(interaction) {
         const customId = interaction.customId.split(',')
         const skipAmount = customId[0]
         const type = customId[2]
-        console.log(type)
+        
         if (type == 'getAllQuotes') {
             const date = customId[1]
 
