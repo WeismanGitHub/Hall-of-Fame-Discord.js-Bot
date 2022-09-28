@@ -13,15 +13,10 @@ module.exports = {
         try {
             const guildId = interaction.guildId;
         
-            const tagsList= await GuildSchema.find({ guildId: guildId }).select('tags').lean();
-            
-            if (!tagsList) {
-                await interaction.reply('Please register server.');
-            }
-        
-            const tags = tagsList[0].tags;
+            const tags= (await GuildSchema.find({ guildId: guildId }).select('tags').lean())[0].tags
+            .sort((firstTag, secondTag) => firstTag.localeCompare(secondTag, undefined, { sensitivity: 'base' }))
+
             let message = '';
-        
             tags.forEach(tag => {
                 message += `${tag}\n\n`;
             });
