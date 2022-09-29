@@ -59,7 +59,7 @@ module.exports = {
             
             if (quotes.length !== 10) {
                 // Putting the message and return on the same line doesn't actually cause it to return. Maybe because it's a promise? Idk.
-                await interaction.channel.send(basicEmbed('End of the line!'))
+                await interaction.reply('Done!')
                 return
             }
 
