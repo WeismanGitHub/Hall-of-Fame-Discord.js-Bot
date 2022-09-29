@@ -54,7 +54,9 @@ module.exports = async (client, instance) => { //see if you can remove instance
             }
     
             await interaction.reply(basicEmbed('Started!'));
-            await sendQuotes(quotes, interaction.channel)
+
+            // sendQuotes modifies quotes array so gotta use a copy.
+            await sendQuotes([...quotes], interaction.channel)
     
             if (quotes.length !== 10) {
                 return await interaction.channel.send(basicEmbed('End of the line!'))
