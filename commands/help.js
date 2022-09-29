@@ -17,8 +17,8 @@ module.exports = {
             for await (let command of instance.commandHandler.commands) {
                 if (!blackListedCommands.includes(command.names[0])) {
                     commandsEmbed.addFields({ name: `${command.names[0]}`, value: `${command.description}` });
-                  }
-              }
+                }
+            }
             
             const descriptionEmbed = new Discord.MessageEmbed()
             .setColor('#5865F2')
