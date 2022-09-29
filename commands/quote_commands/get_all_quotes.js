@@ -30,7 +30,12 @@ module.exports = {
                     value: '1'
                 },
             ]
-        }
+        },
+        {
+            name: 'pagination',
+            description: 'Send all quotes at once or ten at a time.',
+            type: Constants.ApplicationCommandOptionTypes.BOOLEAN,
+        },
     ],
 
     callback: (async ({ interaction }) => {
@@ -38,7 +43,10 @@ module.exports = {
             const guildId = interaction.guildId;
             const { options } = interaction;
             const date = options.getString('date') == '1' ? 1 : -1
-            const quotes = await QuoteSchema.find({ guildId: guildId }).sort({ createdAt: date }).limit(10).lean();
+            const pagination = options.getString('pagination')
+
+            const quotes = await QuoteSchema.find({ guildId: guildId }).sort({ createdAt: date })
+            .limit(pagination == false ? Infinity : 10).lean();
 
             if (!quotes.length) {
                 throw new Error('This server has no quotes.')
@@ -46,25 +54,30 @@ module.exports = {
 
             await interaction.reply(basicEmbed('Started!'))
 
-            await sendQuotes(quotes, interaction.channel)
-
+            // sendQuotes modifies quotes array so gotta use a copy.
+            await sendQuotes([...quotes], interaction.channel)
+            
             if (quotes.length !== 10) {
-                // For some reason putting the message and return on the same line doesn't actually cause it to return.
+                // Putting the message and return on the same line doesn't actually cause it to return. Maybe because it's a promise? Idk.
                 await interaction.channel.send(basicEmbed('End of the line!'))
                 return
             }
 
-            const row = new MessageActionRow()
-            .addComponents(
-                new MessageButton()
-                .setLabel('Next 10 Quotes ⏩')
-                .setCustomId(`10,${date},getAllQuotes`)
-                .setStyle('PRIMARY')
-                )
-
-            await interaction.channel.send({
-                components: [row]
-            })
+            if (pagination !== false) {
+                const row = new MessageActionRow()
+                .addComponents(
+                    new MessageButton()
+                    .setLabel('Next 10 Quotes ⏩')
+                    .setCustomId(`10,${date},getAllQuotes`)
+                    .setStyle('PRIMARY')
+                    )
+    
+                await interaction.channel.send({
+                    components: [row]
+                })
+            } else {
+                await interaction.reply('Done!')
+            }
         } catch(err) {
             interaction.reply(errorEmbed(err))
             .catch(_ => interaction.channel.send(errorEmbed(err)))

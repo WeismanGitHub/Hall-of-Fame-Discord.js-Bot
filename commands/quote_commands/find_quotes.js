@@ -69,6 +69,11 @@ module.exports = {
             description: 'Sorts by if the quote has an image.',
             type: Constants.ApplicationCommandOptionTypes.BOOLEAN,
         },
+        {
+            name: 'pagination',
+            description: 'Send all quotes at once or ten at a time.',
+            type: Constants.ApplicationCommandOptionTypes.BOOLEAN,
+        },
     ],
 
     callback: async ({ interaction }) => {
@@ -79,6 +84,7 @@ module.exports = {
             const searchPhrase = options.getString('search_phrase')
             const isAudioQuote = options.getBoolean('audio_quote')
             const isImageQuote = options.getBoolean('image_quote')
+            const pagination = options.getString('pagination')
             let inputtedAuthor = options.getString('author');
             const guildId = interaction.guildId;
             const queryObject = { guildId: guildId };
@@ -126,35 +132,41 @@ module.exports = {
                 throw new Error('Please add some filters. To get all quotes use /getallquotes.')
             }
 
-            const quotes = await QuoteSchema.find(queryObject).sort(sortObject).limit(limit).lean();
+            const quotes = await QuoteSchema.find(queryObject).sort(sortObject)
+            .limit(pagination == false ? Infinity : limit).lean();
 
             if (!quotes.length) {
                 throw new Error('No quotes match your specifications.')
             }
 
             await interaction.reply(basicEmbed('Started!'))
-            
-            await sendQuotes(quotes, interaction.channel)
 
-            if (quotes.length !== 10) {
-                // For some reason putting the message and return on the same line doesn't actually cause it to return.
+            // sendQuotes modifies quotes array so gotta use a copy.
+            await sendQuotes([...quotes], interaction.channel)
+
+            if (quotes.length < 10) {
+                // Putting the message and return on the same line doesn't actually cause it to return. Maybe because it's a promise? Idk.
                 await interaction.channel.send(basicEmbed('End of the line!'))
                 return
             }
 
-            const filterId = (await FilterSchema.create({ queryObject: queryObject, sortObject: sortObject }))._id
+            if (pagination !== false) {
+                const filterId = (await FilterSchema.create({ queryObject: queryObject, sortObject: sortObject }))._id
 
-            const row = new MessageActionRow()
-            .addComponents(
-                new MessageButton()
-                .setLabel('Next 10 Quotes ⏩')
-                .setCustomId(`10,${filterId},findQuotes`)
-                .setStyle('PRIMARY')
-            )
-            
-            await interaction.channel.send({
-                components: [row]
-            })
+                const row = new MessageActionRow()
+                .addComponents(
+                    new MessageButton()
+                    .setLabel('Next 10 Quotes ⏩')
+                    .setCustomId(`10,${filterId},findQuotes`)
+                    .setStyle('PRIMARY')
+                )
+                
+                await interaction.channel.send({
+                    components: [row]
+                })
+            } else {
+                await interaction.reply('Done!')
+            }
         } catch (err) {
             await interaction.reply(errorEmbed(err))
             .catch(_ => interaction.channel.send(errorEmbed(err)))
