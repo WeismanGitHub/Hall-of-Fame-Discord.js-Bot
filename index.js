@@ -37,13 +37,16 @@ client.on("ready", async () => {
             testServers: [process.env.TEST_GUILD_ID],
             botOwners: [process.env.MAIN_ACCOUNT_ID],
             mongoUri: process.env.MONGO_URI,
+            disabledDefaultCommands: [
+                "prefix",
+            ],
         });
 
 	console.log('logged in...');
 });
 
 process.on('uncaughtException', function (error) {
-    log(`Time: ${new Date}\n${error}\n\n`, 'error.log');
+    log(`Time: ${new Date}\n${error}\n`, 'error.log');
     console.log(new Date, error)
 });
 
