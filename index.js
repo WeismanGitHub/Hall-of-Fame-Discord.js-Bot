@@ -1,6 +1,4 @@
-const GuildSchema = require('./schemas/guild_schema');
 const { Client, Intents } = require('discord.js');
-const buttonHandler = require('./button_handler');
 const WOKCommands = require('wokcommands');
 const mongoose = require('mongoose');
 const express = require('express');
@@ -35,28 +33,14 @@ client.on("ready", async () => {
         client,
         {
             commandsDir: path.join(__dirname, './commands'),
+            featuresDir: path.join(__dirname, './features'),
             testServers: [process.env.TEST_GUILD_ID],
             botOwners: [process.env.MAIN_ACCOUNT_ID],
-            mongoUri: process.env.MONGO_URI
+            mongoUri: process.env.MONGO_URI,
         });
 
 	console.log('logged in...');
 });
-
-client.on('guildCreate', async (guild) => {
-    const guildId = guild.id;
-    const guildRegistered = await GuildSchema.exists({guildId: guildId})
-
-    if (!guildRegistered) {
-        await GuildSchema.create({guildId: guildId});
-    }
-});
-
-client.on('interactionCreate', async (interaction) => {
-    if (interaction.isButton()) {
-        buttonHandler(interaction)
-    }
-})
 
 process.on('uncaughtException', function (error) {
     log(`Time: ${new Date}\n${error}\n\n`, 'error.log');
