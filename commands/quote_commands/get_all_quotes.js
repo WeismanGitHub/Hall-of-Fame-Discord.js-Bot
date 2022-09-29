@@ -43,7 +43,7 @@ module.exports = {
             const guildId = interaction.guildId;
             const { options } = interaction;
             const date = options.getString('date') == '1' ? 1 : -1
-            const pagination = options.getString('pagination')
+            const pagination = options.getBoolean('pagination')
 
             const quotes = await QuoteSchema.find({ guildId: guildId }).sort({ createdAt: date })
             .limit(pagination == false ? Infinity : 10).lean();
