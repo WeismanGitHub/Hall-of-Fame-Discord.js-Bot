@@ -1,5 +1,6 @@
 const { errorEmbed, basicEmbed } = require('../../helpers/embeds');
 const GuildSchema = require('../../schemas/guild_schema');
+const QuoteSchema = require('../../schemas/quote_schema');
 const { Constants } = require('discord.js');
 
 module.exports = {
@@ -24,17 +25,17 @@ module.exports = {
             const guildId = interaction.guildId;
             const tag = options.getString('tag');
             
-            const guildDoc = await GuildSchema.findOneAndUpdate(
+            await GuildSchema.updateOne(
                 { guildId: guildId },
                 { $pull: { tags: tag }
             }).select('-_id tags').lean()
 
-            if (guildDoc.tags.includes(tag)) {
-                await interaction.reply(basicEmbed(`Deleted '${tag}' tag!`));
-                return;
-            }
+            await QuoteSchema.updateMany(
+                { guildId: guildId, tags: { $all: [tag] }},
+                { $pull: { 'tags': tag } }
+            )
 
-            await interaction.reply(basicEmbed(`Nothing Deleted.`));
+            await interaction.reply(basicEmbed(`Deleted '${tag}' tag!`));
         } catch(err) {
             interaction.reply(errorEmbed(err))
             .catch(_ => interaction.channel.send(errorEmbed(err)))
