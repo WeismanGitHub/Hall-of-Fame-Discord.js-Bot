@@ -5,8 +5,8 @@ const FilterSchema = require('../schemas/filter_schema');
 const sendQuotes = require('../helpers/send_quotes')
 
 module.exports = async (client) => {
-    try {
-        client.on('interactionCreate', async (interaction) => {
+    client.on('interactionCreate', async (interaction) => {
+        try {
             if (!interaction.isButton()) {
                 return
             }
@@ -65,11 +65,11 @@ module.exports = async (client) => {
             await interaction.channel.send({
                 components: [row]
             })
-        })
-    } catch(err) {
-        await interaction.reply(errorEmbed(err))
-        .catch(_ => interaction.channel.send(errorEmbed(err)))
-    }
+        } catch(err) {
+            await interaction.reply(errorEmbed(err))
+            .catch(_ => interaction.channel.send(errorEmbed(err)))
+        }
+    })
 }
 
 module.exports.config = {
