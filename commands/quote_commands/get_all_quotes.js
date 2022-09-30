@@ -1,6 +1,8 @@
 const { errorEmbed, basicEmbed } = require('../../helpers/embeds');
+const CoolDownSchema = require('../../schemas/cooldown_schema')
 const QuoteSchema = require('../../schemas/quote_schema');
 const sendQuotes = require('../../helpers/send_quotes')
+const moment = require('moment');
 
 const {
     Constants,
@@ -45,6 +47,15 @@ module.exports = {
             const date = options.getString('date') == '1' ? 1 : -1
             const pagination = options.getBoolean('pagination')
 
+            if (pagination == false) {
+                const cooldown = await CoolDownSchema.findOne({ _id: interaction.user.id })
+
+                if (cooldown?.command == 'pagination') {
+                    const timeFromNow = moment(cooldown.expirationDate).fromNow() 
+                    throw new Error(`You can only turn off pagination every twelve hours. Try again ${timeFromNow}.`)
+                }
+            }
+
             const quotes = await QuoteSchema.find({ guildId: guildId }).sort({ createdAt: date })
             .limit(pagination == false ? Infinity : 10).lean();
 
@@ -76,6 +87,7 @@ module.exports = {
                     components: [row]
                 })
             } else {
+                await CoolDownSchema.create({ _id: interaction.user.id, command: 'pagination' })
                 await interaction.channel.send(basicEmbed('Done!'))
             }
         } catch(err) {

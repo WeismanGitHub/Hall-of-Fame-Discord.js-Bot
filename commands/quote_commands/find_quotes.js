@@ -1,10 +1,12 @@
+const { Constants, MessageActionRow, MessageButton } = require('discord.js');
 const { errorEmbed, basicEmbed } = require('../../helpers/embeds');
 const { getAuthorByName } = require('../../helpers/get_author');
-const { Constants, MessageActionRow, MessageButton } = require('discord.js');
+const CoolDownSchema = require('../../schemas/cooldown_schema')
 const FilterSchema = require('../../schemas/filter_schema');
 const { checkTags } = require('../../helpers/check_tags');
 const QuoteSchema = require('../../schemas/quote_schema');
 const sendQuotes = require('../../helpers/send_quotes')
+const moment = require('moment');
 
 module.exports = {
     category:'Quotes',
@@ -132,6 +134,15 @@ module.exports = {
                 throw new Error('Please add some filters. To get all quotes use /getallquotes.')
             }
 
+            if (pagination == false) {
+                const cooldown = await CoolDownSchema.findOne({ _id: interaction.user.id })
+
+                if (cooldown?.command == 'pagination') {
+                    const timeFromNow = moment(cooldown.expirationDate).fromNow() 
+                    throw new Error(`You can only turn off pagination every twelve hours. Try again ${timeFromNow}.`)
+                }
+            }
+
             const quotes = await QuoteSchema.find(queryObject).sort(sortObject)
             .limit(pagination == false ? Infinity : limit).lean();
 
@@ -165,6 +176,7 @@ module.exports = {
                     components: [row]
                 })
             } else {
+                await CoolDownSchema.create({ _id: interaction.user.id, command: 'pagination' })
                 await interaction.channel.send(basicEmbed('Done!'))
             }
         } catch (err) {
