@@ -4,7 +4,7 @@ const QuoteSchema = require('../schemas/quote_schema');
 const FilterSchema = require('../schemas/filter_schema');
 const sendQuotes = require('../helpers/send_quotes')
 
-module.exports = async (client, instance) => { //see if you can remove instance
+module.exports = async (client) => {
     try {
         client.on('interactionCreate', async (interaction) => {
             if (!interaction.isButton()) {
