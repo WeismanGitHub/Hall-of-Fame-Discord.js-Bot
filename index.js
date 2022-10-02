@@ -36,10 +36,8 @@ client.on("ready", async () => {
             featuresDir: path.join(__dirname, './features'),
             testServers: [process.env.TEST_GUILD_ID],
             botOwners: [process.env.MAIN_ACCOUNT_ID],
+            disabledDefaultCommands: ['prefix', 'language'],
             mongoUri: process.env.MONGO_URI,
-            disabledDefaultCommands: [
-                "prefix",
-            ],
         });
 
 	console.log('logged in...');
