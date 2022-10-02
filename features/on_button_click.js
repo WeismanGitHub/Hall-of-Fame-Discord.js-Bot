@@ -1,10 +1,10 @@
-const { MessageActionRow, MessageButton } = require('discord.js');
+const { MessageActionRow, MessageButton, MessageEmbed } = require('discord.js');
 const { errorEmbed, basicEmbed } = require('../helpers/embeds');
 const QuoteSchema = require('../schemas/quote_schema');
 const FilterSchema = require('../schemas/filter_schema');
 const sendQuotes = require('../helpers/send_quotes')
 
-module.exports = async (client) => {
+module.exports = async (client, instance) => {
     client.on('interactionCreate', async (interaction) => {
         try {
             if (!interaction.isButton()) {
@@ -32,7 +32,7 @@ module.exports = async (client) => {
                     .setLabel('Next 10 Quotes ⏩')
                     .setStyle('PRIMARY')
                 )
-            } else {
+            } else if (type == 'findQuotes') {
                 const filterObject = await FilterSchema.findById(customId[1]).lean()
     
                 if (!filterObject) {
@@ -51,6 +51,21 @@ module.exports = async (client) => {
                     .setLabel('Next 10 Quotes ⏩')
                     .setStyle('PRIMARY')
                 )
+            } else if (type == 'getCommandDescriptions') {
+                //get instance or whatever, maybe come up with a less hacky solution for button type and buttons in general
+
+                const blackListedCommands = ['language', 'prefix', 'notify', 'slash'];
+                const commandsEmbed = new MessageEmbed()
+                .setColor('#5865F2')
+                .setTitle('Commands:');
+      
+                for await (let command of instance.commandHandler.commands) {
+                    if (!blackListedCommands.includes(command.names[0])) {
+                        commandsEmbed.addFields({ name: `${command.names[0]}:`, value: `${command.description}` });
+                    }
+                }
+
+                return await interaction.reply({ embeds: [commandsEmbed] });
             }
     
             await interaction.reply(basicEmbed('Started!'));
