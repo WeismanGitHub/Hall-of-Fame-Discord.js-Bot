@@ -1,5 +1,6 @@
 const { errorEmbed, quoteEmbed, basicEmbed } = require('../../helpers/embeds');
 const { getAuthorByName, getAuthorById } = require('../../helpers/get_author');
+const sendToQuotesChannel = require('../../helpers/send_to_quotes_channel')
 const { getLastImage } = require('../../helpers/get_last_attachment');
 const { checkTags } = require('../../helpers/check_tags');
 const QuoteSchema= require('../../schemas/quote_schema');
@@ -67,7 +68,7 @@ module.exports = {
         }
     ],
 
-    callback: async ({ interaction }) => {
+    callback: async ({ interaction, client }) => {
         try {
             const { options } = interaction;
             const guildId  = interaction.guildId;
@@ -143,8 +144,11 @@ module.exports = {
                 ).lean()
 
                 const author = await getAuthorById(updatedQuote.authorId, guildId);
-    
-                await interaction.reply(quoteEmbed(updatedQuote, author));
+
+                const embeddedQuote = quoteEmbed(updatedQuote, author)
+
+                await sendToQuotesChannel(embeddedQuote, guildId, client)
+                await interaction.reply(embeddedQuote);
             } else {
                 await interaction.reply(basicEmbed('Nothing Updated.'));
             }

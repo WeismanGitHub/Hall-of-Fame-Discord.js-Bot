@@ -1,5 +1,6 @@
 const { errorEmbed, quoteEmbed, basicEmbed } = require('../../helpers/embeds');
 const { getAuthorByName, getAuthorById } = require('../../helpers/get_author');
+const sendToQuotesChannel = require('../../helpers/send_to_quotes_channel')
 const { getLastAudio } = require('../../helpers/get_last_attachment');
 const audioQuoteSchema = require('../../schemas/audio_quote_schema');
 const { checkTags } = require('../../helpers/check_tags');
@@ -62,7 +63,7 @@ module.exports = {
         }
     ],
 
-    callback: async ({ interaction }) => {
+    callback: async ({ interaction, client }) => {
         try {
             const { options } = interaction;
             const guildId  = interaction.guildId;
@@ -132,9 +133,11 @@ module.exports = {
                 ).lean()
 
                 const author = await getAuthorById(updatedAudioQuote.authorId, guildId);
-    
-                await interaction.reply(quoteEmbed(updatedAudioQuote, author))
-    
+
+                const embeddedAudioQuote = quoteEmbed(updatedAudioQuote, author)
+
+                await sendToQuotesChannel(embeddedAudioQuote, guildId, client)
+                await interaction.reply(embeddedAudioQuote);
             } else {
                 await interaction.reply(basicEmbed('Nothing Updated.'));
             }

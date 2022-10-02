@@ -1,6 +1,7 @@
+const sendToQuotesChannel = require('../../helpers/send_to_quotes_channel')
+const { getLastImage } = require('../../helpers/get_last_attachment');
 const { errorEmbed, quoteEmbed } = require('../../helpers/embeds');
 const { getAuthorByName } = require('../../helpers/get_author');
-const { getLastImage } = require('../../helpers/get_last_attachment');
 const { checkTags } = require('../../helpers/check_tags');
 const QuoteSchema = require('../../schemas/quote_schema');
 const checkURL = require('../../helpers/check_url')
@@ -52,7 +53,7 @@ module.exports = {
         }
     ],
 
-    callback: async ({ interaction }) => {
+    callback: async ({ interaction, client }) => {
         try {
             const { options } = interaction;
             const guildId = interaction.guildId;
@@ -111,7 +112,10 @@ module.exports = {
                 });
             }
 
-            await interaction.reply(quoteEmbed(quote, checkedAuthor));
+            const embeddedQuote = quoteEmbed(quote, checkedAuthor)
+
+            await sendToQuotesChannel(embeddedQuote, guildId, client)
+            await interaction.reply(embeddedQuote);
         } catch(err) {
             interaction.reply(errorEmbed(err))
             .catch(_ => interaction.channel.send(errorEmbed(err)))

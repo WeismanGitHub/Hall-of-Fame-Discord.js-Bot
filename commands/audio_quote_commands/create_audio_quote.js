@@ -1,3 +1,4 @@
+const sendToQuotesChannel = require('../../helpers/send_to_quotes_channel')
 const { getLastAudio } = require('../../helpers/get_last_attachment');
 const AudioQuoteSchema = require('../../schemas/audio_quote_schema')
 const { errorEmbed, quoteEmbed } = require('../../helpers/embeds');
@@ -53,7 +54,7 @@ module.exports = {
         }
     ],
 
-    callback: async ({ interaction }) => {
+    callback: async ({ interaction, client }) => {
         try {
             const guildId = interaction.guildId;
             const { options } = interaction;
@@ -93,7 +94,10 @@ module.exports = {
                 tags: tags,
             });
 
-            await interaction.reply(quoteEmbed(audioQuote, checkedAuthor))
+            const embeddedAudioQuote = quoteEmbed(audioQuote, checkedAuthor)
+
+            await sendToQuotesChannel(embeddedAudioQuote, guildId, client)
+            await interaction.reply(embeddedAudioQuote);
         } catch(err) {
             interaction.reply(errorEmbed(err))
             .catch(_ => interaction.channel.send(errorEmbed(err)))
