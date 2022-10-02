@@ -34,6 +34,9 @@ const GuildSchema = new mongoose.Schema({
     notificationChannelId: {
         type: String
     },
+    quotesChannelId: {
+        type: String
+    }
 });
 
 GuildSchema.plugin(schema => {
