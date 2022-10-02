@@ -24,10 +24,10 @@ module.exports = {
             const _id = options.getString('id');
             const guildId = interaction.guildId;
     
-            const quoteData = await QuoteSchema.deleteOne({ _id: _id, guildId: guildId })
+            const quote = await QuoteSchema.findOneAndDelete({ _id: _id, guildId: guildId })
 
-            if (quoteData.deletedCount) {
-                await interaction.reply(basicEmbed('Deleted Quote!'));
+            if (quote) {
+                await interaction.reply(basicEmbed(`Deleted '${quote.text}'!`));
             } else {
                 throw new Error('Quote does not exist!')
             }
