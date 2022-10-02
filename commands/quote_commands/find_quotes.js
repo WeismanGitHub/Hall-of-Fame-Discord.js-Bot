@@ -135,7 +135,7 @@ module.exports = {
             }
 
             if (pagination == false) {
-                const cooldown = await CoolDownSchema.findOne({ _id: interaction.user.id })
+                const cooldown = await CoolDownSchema.findOne({ _id: interaction.user.id }).lean()
 
                 if (cooldown?.command == 'pagination') {
                     const timeFromNow = moment(cooldown.expirationDate).fromNow() 
