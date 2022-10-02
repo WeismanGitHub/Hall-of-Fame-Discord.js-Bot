@@ -8,10 +8,8 @@ async function updateQuotesChannel(quote, guildId, client) {
         const quotesChannel = await client.channels.fetch(quotesChannelId)
         .catch(err => { throw new Error('Problem sending quotes to quotes channel.') })
 
-        console.log(quotesChannel)
         await quotesChannel.send(quote)
     }
-
 }
 
 module.exports = updateQuotesChannel
