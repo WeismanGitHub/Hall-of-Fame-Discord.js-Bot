@@ -51,7 +51,7 @@ module.exports = {
             const guildId = interaction.guildId;
 
             if (!newName && !newImgUrl && !lastImageChannel && !deleteImage) {
-                throw new Error('Please provide an update.')
+                throw new Error('Please use at least one update parameter.')
             }
 
             if (newImgUrl && !checkURL(newImgUrl)) {
@@ -76,7 +76,8 @@ module.exports = {
                         ...newImgUrl && { "authors.$.imgUrl": newImgUrl },
                         ...newName && { "authors.$.name": newName }
                     }
-                }
+                },
+                { new: true }
             ).select('authors -_id').lean())?.authors
 
             if (!authors) {
