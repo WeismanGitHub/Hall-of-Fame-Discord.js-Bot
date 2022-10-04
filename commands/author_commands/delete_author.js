@@ -22,20 +22,19 @@ module.exports = {
         try {
             const { options } = interaction;
             const guildId = interaction.guildId;
-            const author = options.getString('author');
+            const authorName = options.getString('author');
     
             const guildDoc = await GuildSchema.findOneAndUpdate(
                 { guildId: guildId },
-                { $pull: { authors: { name: author } } },
-                { new: false }
+                { $pull: { authors: { name: authorName } } },
             ).select('-_id authors').lean()
-    
-            const isAnAuthor = guildDoc.authors.some(guildAuthor => {
-                return guildAuthor.name == author;
+            
+            const authorExists = guildDoc.authors.some(author => {
+                return author.name == authorName;
             });
     
-            if (isAnAuthor) {
-                await interaction.reply(basicEmbed(`Deleted '${author}' author!`));
+            if (authorExists) {
+                return await interaction.reply(basicEmbed(`Deleted '${authorName}' author!`));
             }
 
             await interaction.reply(basicEmbed(`Nothing Deleted.`));
