@@ -47,7 +47,7 @@ GuildSchema.plugin(schema => {
 });
 
 function setOptions() {
-    this.setOptions({ runValidators: true, new: true });
+    this.setOptions({ runValidators: true });
 }
 
 module.exports = mongoose.model('guilds', GuildSchema);
