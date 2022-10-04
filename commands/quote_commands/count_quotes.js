@@ -106,8 +106,12 @@ module.exports = {
             } else {
                 count = await QuoteSchema.estimatedDocumentCount()
             }
+            
+            if (count <= 0) {
+                return await interaction.reply(basicEmbed('No quotes match your specifications!'))
+            }
 
-            await interaction.reply(basicEmbed(`${count} quotes match your specifications!`))
+            await interaction.reply(basicEmbed(`${count} quote${count > 1 ? 's' : ''} match${count > 1 ? '' : 'es'} your specifications!`))
         } catch(err) {
             interaction.reply(errorEmbed(err))
             .catch(_ => interaction.channel.send(errorEmbed(err)))
