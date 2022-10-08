@@ -1,8 +1,8 @@
 const { errorEmbed, quoteEmbed, basicEmbed } = require('../../helpers/embeds');
 const { getAuthorByName, getAuthorById } = require('../../helpers/get_author');
 const sendToQuotesChannel = require('../../helpers/send_to_quotes_channel')
-const { getLastAudio } = require('../../helpers/get_last_attachment');
 const audioQuoteSchema = require('../../schemas/audio_quote_schema');
+const { getLastAudio } = require('../../helpers/get_last_item');
 const { checkTags } = require('../../helpers/check_tags');
 const checkURL = require('../../helpers/check_url')
 const { Constants } = require('discord.js');

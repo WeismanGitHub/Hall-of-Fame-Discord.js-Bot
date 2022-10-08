@@ -1,7 +1,7 @@
 const { errorEmbed, quoteEmbed, basicEmbed } = require('../../helpers/embeds');
 const { getAuthorByName, getAuthorById } = require('../../helpers/get_author');
 const sendToQuotesChannel = require('../../helpers/send_to_quotes_channel')
-const { getLastImage } = require('../../helpers/get_last_attachment');
+const { getLastImage } = require('../../helpers/get_last_item');
 const { checkTags } = require('../../helpers/check_tags');
 const QuoteSchema= require('../../schemas/quote_schema');
 const checkURL = require('../../helpers/check_url')
