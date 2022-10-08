@@ -1,8 +1,8 @@
 const { errorEmbed, quoteEmbed, basicEmbed } = require('../../helpers/embeds');
 const { getAuthorByName, getAuthorById } = require('../../helpers/get_author');
+const { getLastAudio, getLastQuote} = require('../../helpers/get_last_item');
 const sendToQuotesChannel = require('../../helpers/send_to_quotes_channel')
 const audioQuoteSchema = require('../../schemas/audio_quote_schema');
-const { getLastAudio } = require('../../helpers/get_last_item');
 const { checkTags } = require('../../helpers/check_tags');
 const checkURL = require('../../helpers/check_url')
 const { Constants } = require('discord.js');
@@ -18,7 +18,6 @@ module.exports = {
         {
             name: 'id',
             description: 'The id of the audio quote.',
-            required: true,
             type: Constants.ApplicationCommandOptionTypes.STRING
         },
         {
@@ -60,14 +59,24 @@ module.exports = {
             name: 'last_audio',
             description: 'Use the last audio file sent in a channel.',
             type: Constants.ApplicationCommandOptionTypes.CHANNEL
-        }
+        },
+        {
+            name: 'last_quote',
+            description: 'Use the last quote sent in a channel.',
+            type: Constants.ApplicationCommandOptionTypes.CHANNEL
+        },
     ],
 
     callback: async ({ interaction, client }) => {
         try {
             const { options } = interaction;
             const guildId  = interaction.guildId;
-            const _id = options.getString('id');
+            const lastQuoteChannel = options.getChannel('last_quote');
+            const _id = options.getString('id') ?? await getLastQuote(lastQuoteChannel)
+
+            if (!_id) {
+                throw new Error('Please provide a quote id or choose a channel to get the quote id from.')
+            }
 
             const audioQuote = await audioQuoteSchema.findOne({
                 _id: _id,
@@ -80,7 +89,7 @@ module.exports = {
             }
     
             let updateObject = {};
-    
+            
             const newAudioFileLink = options.getString('new_audio_file_link');
             const lastAudioChannel = options.getChannel('last_audio');
             const deleteTags = options.getBoolean('delete_tags');
