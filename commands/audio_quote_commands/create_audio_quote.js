@@ -1,5 +1,5 @@
 const sendToQuotesChannel = require('../../helpers/send_to_quotes_channel')
-const { getLastAudio } = require('../../helpers/get_last_attachment');
+const { getLastAudio } = require('../../helpers/get_last_item');
 const AudioQuoteSchema = require('../../schemas/audio_quote_schema')
 const { errorEmbed, quoteEmbed } = require('../../helpers/embeds');
 const { getAuthorByName } = require('../../helpers/get_author');
