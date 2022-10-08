@@ -45,6 +45,7 @@ async function getLastQuote(channel) {
         const _id = embed.fields[0]?.value
         
         if (ObjectId.isValid(_id)) {
+            firstQuoteId = _id
             return true
         }
     }))
