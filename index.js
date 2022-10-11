@@ -14,14 +14,18 @@ const client = new Client({
     ]
 });
 
+const app = express();
+const port = 5000;
+
+//The reason for making it a web app is because replit requires that.
+app.get('/', (req, res) => {
+    client.login(process.env.TOKEN);
+    res.send('Hall of Fame Bot is online.')
+});
+
+app.listen(port, () => console.log(`Started!`));
+
 client.on("ready", async () => {
-    const app = express();
-    const port = 5000;
-
-    //The reason for making it a web app is because replit requires that.
-    app.get('/', (req, res) => res.send('Hall of Fame Bot is online.'));
-    app.listen(port, () => console.log(`Started!`));
-
     client.user.setActivity('Use /help for help.');
 
     mongoose.connect(process.env.MONGO_URI, {
