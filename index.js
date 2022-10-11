@@ -19,7 +19,6 @@ const port = 5000;
 
 //The reason for making it a web app is because replit requires that.
 app.get('/', (req, res) => {
-    client.login(process.env.TOKEN);
     res.send('Hall of Fame Bot is online.')
 });
 
