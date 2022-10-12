@@ -18,6 +18,7 @@ const GuildSchema = new mongoose.Schema({
         type: String,
         required: [true, 'Must provide a name.\n(Probably a server error.)'],
         unique: true,
+        index: true,
     },
     authors: [AuthorSchema],
     tags: [{
