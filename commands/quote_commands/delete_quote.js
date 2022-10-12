@@ -1,4 +1,5 @@
 const { errorEmbed, basicEmbed } = require('../../helpers/embeds');
+const { getLastQuote } = require('../../helpers/get_last_item');
 const QuoteSchema = require('../../schemas/quote_schema');
 const { Constants } = require('discord.js');
 
@@ -13,15 +14,20 @@ module.exports = {
         {
             name: 'id',
             description: 'The id of the quote.',
-            required: true,
             type: Constants.ApplicationCommandOptionTypes.STRING,
+        },
+        {
+            name: 'last_quote',
+            description: 'Use the last quote sent in a channel.',
+            type: Constants.ApplicationCommandOptionTypes.CHANNEL
         },
     ],
 
     callback: async ({ interaction }) => {
         try {
             const { options } = interaction;
-            const _id = options.getString('id');
+            const lastQuoteChannel = options.getChannel('last_quote');
+            const _id = options.getString('id') ?? await getLastQuote(lastQuoteChannel)
             const guildId = interaction.guildId;
     
             const quote = await QuoteSchema.findOneAndDelete({ _id: _id, guildId: guildId }).select('-_id text').lean()
