@@ -68,7 +68,7 @@ module.exports = {
             // sendQuotes modifies quotes array so gotta use a copy.
             await sendQuotes([...quotes], interaction.channel)
             
-            if (quotes.length !== 10) {
+            if (quotes.length < 10) {
                 // Putting the message and return on the same line doesn't actually cause it to return. Maybe because it's a promise? Idk.
                 await interaction.channel.send(basicEmbed('Done!'))
                 return
@@ -87,7 +87,7 @@ module.exports = {
                     components: [row]
                 })
             } else {
-                await CoolDownSchema.create({ _id: interaction.user.id, command: 'pagination' })
+                console.log(await CoolDownSchema.create({ _id: interaction.user.id, command: 'pagination' }))
                 await interaction.channel.send(basicEmbed('Done!'))
             }
         } catch(err) {
