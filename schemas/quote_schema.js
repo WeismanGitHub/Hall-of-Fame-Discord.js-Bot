@@ -2,11 +2,13 @@ const mongoose = require('mongoose');
 
 const QuoteSchema = new mongoose.Schema({
     guildId: {
-        type: String
+        type: String,
+        index: true
     },
     authorId: {
         type: mongoose.Types.ObjectId,
         required: [true, 'Must provide a valid author.'],
+        index: true
     },
     tags: [{
         type: String,
@@ -28,7 +30,7 @@ const QuoteSchema = new mongoose.Schema({
         type: Boolean,
         default: false,
     }
-}, {timestamps: true});
+}, { timestamps: true });
 
 QuoteSchema.plugin(schema => {
     schema.pre('findOneAndUpdate', setOptions);
