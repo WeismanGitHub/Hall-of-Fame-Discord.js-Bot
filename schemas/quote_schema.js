@@ -41,6 +41,6 @@ function setOptions() {
     this.setOptions({ runValidators: true, new: true });
 }
 
-QuoteSchema.index({ guildId: 1, authorId: 1, tags: 1 });
+QuoteSchema.index({ guildId: 1, authorId: 1 });
 
 module.exports = mongoose.model('regular quotes', QuoteSchema, 'quotes');
