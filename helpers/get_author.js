@@ -4,10 +4,7 @@ const mongoose = require('mongoose');
 async function getAuthorByName(name, guildId) {
     try {
         return (await GuildSchema.findOne(
-            {
-                guildId : guildId, 
-                authors : {$elemMatch : { name: name }
-            }},
+            { guildId : guildId },
             { authors: {
                 "$filter": {
                     "input": "$authors",
@@ -28,10 +25,7 @@ async function getAuthorByName(name, guildId) {
 async function getAuthorById(id, guildId) {
     try {
         return (await GuildSchema.findOne(
-            {
-                guildId : guildId,
-                authors : { $elemMatch: { _id: new mongoose.Types.ObjectId(id) }
-            }},
+            { guildId : guildId },
             { authors: {
                 "$filter": {
                     "input": "$authors",
