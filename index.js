@@ -22,7 +22,7 @@ app.get('/', (req, res) => {
     res.send('Hall of Fame Bot is online.')
 });
 
-app.listen(port, () => console.log(`Started!`));
+app.listen(port, () => console.log(`server listening on port ${port}...`));
 
 client.on("ready", async () => {
     client.user.setActivity('Use /help for help.');
@@ -33,15 +33,14 @@ client.on("ready", async () => {
     }).then(console.log('connected to database...'));
     
 	new WOKCommands(
-        client,
-        {
+        client, {
             commandsDir: path.join(__dirname, './commands'),
             featuresDir: path.join(__dirname, './features'),
             testServers: [process.env.TEST_GUILD_ID],
             botOwners: [process.env.MAIN_ACCOUNT_ID],
             disabledDefaultCommands: ['prefix', 'language'],
             mongoUri: process.env.MONGO_URI,
-        });
+    });
 
 	console.log('logged in...');
 });
