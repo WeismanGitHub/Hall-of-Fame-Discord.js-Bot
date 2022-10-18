@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 
 async function getAuthorByName(name, guildId) {
     try {
-        return (await GuildSchema.findOne(
+        const author = (await GuildSchema.findOne(
             { guildId : guildId },
             { authors: {
                 "$filter": {
@@ -14,6 +14,12 @@ async function getAuthorByName(name, guildId) {
                 }
             }
         }).lean())['authors'][0]
+
+        if (!author) {
+            throw new Error('No author.')
+        }
+
+        return author
     } catch (err) {
         return {
             name: 'Deleted Author',
@@ -24,7 +30,7 @@ async function getAuthorByName(name, guildId) {
 
 async function getAuthorById(id, guildId) {
     try {
-        return (await GuildSchema.findOne(
+        const author = (await GuildSchema.findOne(
             { guildId : guildId },
             { authors: {
                 "$filter": {
@@ -35,6 +41,12 @@ async function getAuthorById(id, guildId) {
                 }
             }
         }).lean())['authors'][0]
+
+        if (!author) {
+            throw new Error('No author.')
+        }
+
+        return author
     } catch (err) {
         return {
             name: 'Deleted Author',
