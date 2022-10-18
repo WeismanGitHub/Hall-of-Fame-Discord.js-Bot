@@ -96,7 +96,7 @@ module.exports = {
             }
 
             if (searchPhrase) {
-                queryObject.text ={ $regex: searchPhrase, $options: 'i' }
+                queryObject.$text = { $search: searchPhrase }
             }
 
             let count;

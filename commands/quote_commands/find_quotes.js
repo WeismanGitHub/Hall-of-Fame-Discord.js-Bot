@@ -127,9 +127,9 @@ module.exports = {
             }
 
             if (searchPhrase) {
-                queryObject.text ={ $regex: searchPhrase, $options: 'i' }
+                queryObject.$text = { $search: searchPhrase }
             }
-
+            
             if (Object.keys(queryObject).length == 1) {
                 throw new Error('Please add some filters. To get all quotes use /getallquotes.')
             }
