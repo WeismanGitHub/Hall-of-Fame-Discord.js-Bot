@@ -19,7 +19,9 @@ const port = 5000;
 
 //The reason for making it a web app is because replit requires that.
 app.get('/', (req, res) => {
-    res.send('Hall of Fame Bot is online.')
+    const isOnline = client?.user?.presence?.status == 'online'
+    res.status(isOnline ? 200 : 500)
+    .send(isOnline ? 'ONLINE' : 'OFFLINE')
 });
 
 app.listen(port, () => console.log(`server listening on port ${port}...`));
