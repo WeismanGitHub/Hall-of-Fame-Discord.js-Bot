@@ -25,8 +25,8 @@ app.get('/', (req, res) => {
         client.login(process.env.TOKEN);
     }
 
-    res.status(200)
-    .send('online...')
+    res.status(isOnline ? 200 : 500)
+    .send(`${isOnline ? 'online' : 'offline'}...`)
 });
 
 app.listen(port, () => console.log(`server listening on port ${port}...`));
