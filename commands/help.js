@@ -11,12 +11,16 @@ module.exports = {
     callback: async ({ interaction }) => {
         try {
             const row = new MessageActionRow()
-            .addComponents(
+            .addComponents([
                 new MessageButton()
                 .setLabel('Command Descriptions')
                 .setCustomId(',,getCommandDescriptions')
-                .setStyle('PRIMARY')
-            )
+                .setStyle('PRIMARY'),
+                new MessageButton()
+                .setLabel('Source Code')
+                .setURL("https://github.com/WeismanGitHub/Hall-of-Fame-Discord.js-Bot")
+                .setStyle('LINK')
+            ])
 
             const descriptionEmbed = new MessageEmbed()
             .setColor('#5865F2')
