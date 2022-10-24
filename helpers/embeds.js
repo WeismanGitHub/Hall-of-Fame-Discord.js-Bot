@@ -43,14 +43,15 @@ const quoteEmbed = function(quote, author, color='#8A2BE2') {
 	return { embeds: [embed] };
 };
 
-const errorEmbed = function(error, title='Theres been an error!', color='#FF0000') {
+const errorEmbed = function(error, title='Theres been an error!', color='#FF0000', ephemeral=true) {
 	error = error.toString();
 	
 	return {
         embeds: [new MessageEmbed()
         .setColor(color)
         .setTitle(title)
-        .setDescription(error)]
+        .setDescription(error)],
+		ephemeral: ephemeral
     };
 };
 
