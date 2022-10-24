@@ -20,11 +20,7 @@ const port = 5000;
 //The reason for making it a web app is because replit requires that.
 app.get('/', (req, res) => {
     const isOnline = client?.user?.presence?.status == 'online'
-
-    if (!isOnline) {
-        client.login(process.env.TOKEN);
-    }
-
+    
     res.status(isOnline ? 200 : 500)
     .send(`${isOnline ? 'online' : 'offline'}...`)
 });
