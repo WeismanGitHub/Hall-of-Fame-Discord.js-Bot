@@ -18,7 +18,7 @@ module.exports = {
 
             let message = '';
             tags.forEach(tag => {
-                message += `${tag}\n\n`;
+                message += `${tag}\n`;
             });
             
             await interaction.reply(tags.length? basicEmbed('Server Tags:', message) : basicEmbed('There are no tags.'));
