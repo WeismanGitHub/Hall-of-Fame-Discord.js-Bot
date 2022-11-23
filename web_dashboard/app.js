@@ -1,6 +1,6 @@
 const rateLimit = require('express-rate-limit')
+const errorHandler = require('./error-handler')
 const compression = require('compression')
-const mongoose = require('mongoose')
 const apiRouter = require('./api')
 const express = require('express')
 const helmet = require('helmet')
@@ -30,5 +30,7 @@ app.get('/redirect', (req, res) => {
 });
 
 app.get('*', (req, res) => res.sendFile('index.html', { root: path.join(__dirname, './build') }))
+
+app.use(errorHandler)
 
 module.exports = app
