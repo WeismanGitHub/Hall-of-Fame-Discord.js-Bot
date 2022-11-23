@@ -14,7 +14,7 @@ const client = new Client({
     ]
 });
 
-app.listen(process.env.PORT, () => console.log(`server listening on port ${process.env.PORT}...`));
+app.listen(process.env.PORT, () => console.log(`listening on port ${process.env.PORT}...`));
 
 client.on("ready", async () => {
     client.user.setActivity('Use /help for help.');
