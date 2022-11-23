@@ -27,7 +27,7 @@ app.use(cors())
 app.use('/api/', apiRouter)
 
 app.get('/redirect', (req, res) => {
-	res.status(200).redirect(process.env.REDIRECT_LINK)
+	res.status(302).redirect(process.env.REDIRECT_LINK)
 });
 
 app.get('*', (req, res) => res.sendFile('index.html', { root: path.join(__dirname, './build') }))
