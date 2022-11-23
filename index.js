@@ -1,7 +1,7 @@
 const { Client, Intents } = require('discord.js');
 const WOKCommands = require('wokcommands');
+const app = require('./web_dashboard/app')
 const mongoose = require('mongoose');
-const express = require('express');
 const log = require('log-to-file');
 const path = require('path');
 require('dotenv').config();
@@ -14,18 +14,7 @@ const client = new Client({
     ]
 });
 
-const app = express();
-const port = 5000;
-
-//The reason for making it a web app is because replit requires that.
-app.get('/', (req, res) => {
-    const isOnline = client?.user?.presence?.status == 'online'
-    
-    res.status(isOnline ? 200 : 500)
-    .send(`${isOnline ? 'online' : 'offline'}...`)
-});
-
-app.listen(port, () => console.log(`server listening on port ${port}...`));
+app.listen(port, () => console.log(`server listening on port ${process.env.PORT}...`));
 
 client.on("ready", async () => {
     client.user.setActivity('Use /help for help.');
