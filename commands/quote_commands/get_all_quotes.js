@@ -44,7 +44,7 @@ module.exports = {
         try {
             const guildId = interaction.guildId;
             const { options } = interaction;
-            const date = options.getString('date') == '1' ? 1 : -1
+            const createdAtSort = options.getString('date') == '1' ? 1 : -1
             const pagination = options.getBoolean('pagination')
 
             if (pagination == false) {
@@ -56,7 +56,7 @@ module.exports = {
                 }
             }
 
-            const quotes = await QuoteSchema.find({ guildId: guildId }).sort({ createdAt: date })
+            const quotes = await QuoteSchema.find({ guildId: guildId }).sort({ createdAt: createdAtSort })
             .limit(pagination == false ? Infinity : 10).lean();
 
             if (!quotes.length) {
@@ -79,7 +79,7 @@ module.exports = {
                 .addComponents(
                     new MessageButton()
                     .setLabel('Next 10 Quotes ⏩')
-                    .setCustomId(`10,${date},all_quotes`)
+                    .setCustomId(`10,${createdAtSort},all_quotes`)
                     .setStyle('PRIMARY')
                     )
     

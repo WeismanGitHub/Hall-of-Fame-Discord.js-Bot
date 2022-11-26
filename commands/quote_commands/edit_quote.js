@@ -93,7 +93,7 @@ module.exports = {
                 throw new Error('Quote does not exist.')
             }
     
-            let updateObject = {};
+            let update = {};
     
             const lastImageChannel = options.getChannel('last_image');
             const newImageLink = options.getString('new_image_link');
@@ -111,7 +111,7 @@ module.exports = {
             tags = await checkTags(tags, guildId);
             
             if (tags.length) {
-                updateObject.tags = tags
+                update.tags = tags
             }
     
             if (newImageLink) {
@@ -119,17 +119,17 @@ module.exports = {
                     throw new Error('Please input a valid url.')
                 }
 
-                updateObject.attachment = newImageLink;
+                update.attachment = newImageLink;
             } else if (lastImageChannel) {
-                updateObject.attachment = await getLastImage(lastImageChannel)
+                update.attachment = await getLastImage(lastImageChannel)
             }
 
             if (deleteTags) {
-                updateObject['tags'] = [];
+                update['tags'] = [];
             }
     
             if (newText) {
-                updateObject['text'] = newText;
+                update['text'] = newText;
             }
             
             if (newAuthorName) {
@@ -139,17 +139,17 @@ module.exports = {
                     throw new Error('Author does not exist.')
                 }
     
-                updateObject['authorId'] = author._id;
+                update['authorId'] = author._id;
             }
             
             if (deleteImage) {
-                updateObject.$unset = {'attachment': '' }
+                update.$unset = {'attachment': '' }
             }
 
-            if (Object.keys(updateObject).length || deleteImage) {
+            if (Object.keys(update).length || deleteImage) {
                 const updatedQuote = await QuoteSchema.findOneAndUpdate(
                     { _id: _id, guildId: guildId },
-                    updateObject
+                    update
                 ).lean()
 
                 const author = await getAuthorById(updatedQuote.authorId, guildId);

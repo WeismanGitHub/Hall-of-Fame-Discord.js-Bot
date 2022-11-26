@@ -67,20 +67,20 @@ module.exports = {
             const isAudioQuote = options.getBoolean('is_audio_quote')
             let inputtedAuthor = options.getString('author');
             const guildId = interaction.guildId;
-            const queryObject = { guildId: guildId };
+            const query = { guildId: guildId };
         
             if (inputtedAuthor) {
                 inputtedAuthor = await getAuthorByName(inputtedAuthor, guildId);
 
                 if (inputtedAuthor.name !== 'Deleted Author') {
-                    queryObject.authorId = inputtedAuthor._id;
+                    query.authorId = inputtedAuthor._id;
                 } else {
                     throw new Error(`'${inputtedAuthor}' author does not exist.`)
                 }
             }
 
             if (isAudioQuote !== null) {
-                queryObject.isAudioQuote = isAudioQuote
+                query.isAudioQuote = isAudioQuote
             }
             
             let tags = [
@@ -92,17 +92,17 @@ module.exports = {
             tags = await checkTags(tags, guildId);
             
             if (tags.length) {
-                queryObject.tags = { $all: tags };
+                query.tags = { $all: tags };
             }
 
             if (searchPhrase) {
-                queryObject.$text = { $search: searchPhrase }
+                query.$text = { $search: searchPhrase }
             }
 
             let count;
 
-            if (Object.keys(queryObject).length) {
-                count = await QuoteSchema.countDocuments(queryObject)
+            if (Object.keys(query).length) {
+                count = await QuoteSchema.countDocuments(query)
             } else {
                 count = await QuoteSchema.estimatedDocumentCount()
             }

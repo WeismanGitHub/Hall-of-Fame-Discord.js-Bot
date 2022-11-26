@@ -1,7 +1,6 @@
 const { MessageActionRow, MessageButton } = require('discord.js');
 const { errorEmbed, basicEmbed } = require('../../helpers/embeds');
 const QuoteSchema = require('../../schemas/quote_schema');
-const FilterSchema = require('../../schemas/filter_schema');
 const sendQuotes = require('../../helpers/send_quotes')
 
 module.exports = async (client, instance) => {
@@ -10,10 +9,10 @@ module.exports = async (client, instance) => {
             if (!interaction.isButton()) {
                 return
             }
-            
+
             const customId = interaction.customId.split(',')
             const skipAmount = customId[0]
-            const date = customId[1]
+            const createdAtSort = customId[1]
             const type = customId[2]
 
             if (type !== 'all_quotes') {
@@ -21,7 +20,7 @@ module.exports = async (client, instance) => {
             }
 
             const quotes = await QuoteSchema.find({ guildId: interaction.guild.id })
-            .sort({ createdAt: date }).skip(skipAmount).limit(10).lean();
+            .sort({ createdAt: createdAtSort }).skip(skipAmount).limit(10).lean();
     
             if (!quotes.length) {
                 return await interaction.reply(basicEmbed('No more quotes!'))
@@ -30,7 +29,7 @@ module.exports = async (client, instance) => {
             const row = new MessageActionRow()
             .addComponents(
                 new MessageButton()
-                .setCustomId(`${Number(skipAmount) + 10},${date},all_quotes`)
+                .setCustomId(`${Number(skipAmount) + 10},${createdAtSort},all_quotes`)
                 .setLabel('Next 10 Quotes ⏩')
                 .setStyle('PRIMARY')
             )

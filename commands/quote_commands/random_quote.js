@@ -57,13 +57,13 @@ module.exports = {
             const isImageQuote = options.getBoolean('image_quote')
             let inputtedAuthor = options.getString('author');
             const guildId = interaction.guildId;
-            const queryObject = { guildId: guildId };
+            const query = { guildId: guildId };
             
             if (inputtedAuthor) {
                 inputtedAuthor = await getAuthorByName(inputtedAuthor, guildId);
             
                 if (inputtedAuthor.name !== 'Deleted Author') {
-                    queryObject.authorId = inputtedAuthor._id;
+                    query.authorId = inputtedAuthor._id;
                 } else {
                     throw new Error(`'${inputtedAuthor}' author does not exist.`)
                 }
@@ -78,31 +78,31 @@ module.exports = {
             tags = await checkTags(tags, guildId);
             
             if (tags.length) {
-                queryObject.tags = { $all: tags };
+                query.tags = { $all: tags };
             }
             
             if (searchPhrase) {
-                queryObject.$text = {
+                query.$text = {
                     '$search': searchPhrase
                 }
             }
             
             if (isAudioQuote !== null) {
-                queryObject.isAudioQuote = isAudioQuote
+                query.isAudioQuote = isAudioQuote
             }
             
             if (isImageQuote !== null) {
-                queryObject.attachment = { $exists: isImageQuote }
+                query.attachment = { $exists: isImageQuote }
             }
 
-            const amountOfDocuments = await QuoteSchema.countDocuments(queryObject)
+            const amountOfDocuments = await QuoteSchema.countDocuments(query)
 
             if (!amountOfDocuments) {
                 throw new Error('Your specifications provide no quotes.')
             }
 
             const randomNumber = Math.floor(Math.random() * amountOfDocuments);
-            const randomQuote = await QuoteSchema.findOne(queryObject).skip(randomNumber).lean()
+            const randomQuote = await QuoteSchema.findOne(query).skip(randomNumber).lean()
 
             const author = await getAuthorById(randomQuote.authorId, guildId);
             await interaction.reply(quoteEmbed(randomQuote, author));

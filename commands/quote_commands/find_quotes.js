@@ -81,7 +81,7 @@ module.exports = {
     callback: async ({ interaction }) => {
         try {
             const { options } = interaction;
-            const sortObject = options.getString('date') == null ? { createdAt: -1 } : { createdAt: options.getString('date') }
+            const sort = options.getString('date') == null ? { createdAt: -1 } : { createdAt: options.getString('date') }
             const limit = options.getInteger('limit') == null ? 10 : options.getInteger('limit')
             const searchPhrase = options.getString('search_phrase')
             const isAudioQuote = options.getBoolean('audio_quote')
@@ -89,7 +89,7 @@ module.exports = {
             const pagination = options.getBoolean('pagination')
             let inputtedAuthor = options.getString('author');
             const guildId = interaction.guildId;
-            const queryObject = { guildId: guildId };
+            const query = { guildId: guildId };
 
             // Don't lower limit to less than 10. Causes headaches.
             if ((limit < 1) || (10 < limit)) {
@@ -100,18 +100,18 @@ module.exports = {
                 inputtedAuthor = await getAuthorByName(inputtedAuthor, guildId);
 
                 if (inputtedAuthor.name !== 'Deleted Author') {
-                    queryObject.authorId = inputtedAuthor._id;
+                    query.authorId = inputtedAuthor._id;
                 } else {
                     throw new Error(`'${inputtedAuthor}' author does not exist.`)
                 }
             }
 
             if (isAudioQuote !== null) {
-                queryObject.isAudioQuote = isAudioQuote
+                query.isAudioQuote = isAudioQuote
             }
 
             if (isImageQuote !== null) {
-                queryObject.attachment = { $exists: isImageQuote }
+                query.attachment = { $exists: isImageQuote }
             }
 
             let tags = [
@@ -123,14 +123,14 @@ module.exports = {
             tags = await checkTags(tags, guildId);
             
             if (tags.length) {
-                queryObject.tags = { $all: tags };
+                query.tags = { $all: tags };
             }
 
             if (searchPhrase) {
-                queryObject.$text = { $search: searchPhrase }
+                query.$text = { $search: searchPhrase }
             }
             
-            if (Object.keys(queryObject).length == 1) {
+            if (Object.keys(query).length == 1) {
                 throw new Error('Please add some filters. To get all quotes use /getallquotes.')
             }
 
@@ -143,7 +143,7 @@ module.exports = {
                 }
             }
 
-            const quotes = await QuoteSchema.find(queryObject).sort(sortObject)
+            const quotes = await QuoteSchema.find(query).sort(sort)
             .limit(pagination == false ? Infinity : limit).lean();
 
             if (!quotes.length) {
@@ -162,7 +162,7 @@ module.exports = {
             }
 
             if (pagination !== false) {
-                const filterId = (await FilterSchema.create({ queryObject: queryObject, sortObject: sortObject }))._id
+                const filterId = (await FilterSchema.create({ query: query, sort: sort }))._id
 
                 const row = new MessageActionRow()
                 .addComponents(
