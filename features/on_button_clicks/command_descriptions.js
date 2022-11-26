@@ -12,7 +12,7 @@ module.exports = async (client, instance) => {
             const type = customId[2]
             // maybe come up with a less hacky solution for button type
             
-            if (type !== 'getCommandDescriptions') {
+            if (type !== 'command_descriptions') {
                 return
             }
 
