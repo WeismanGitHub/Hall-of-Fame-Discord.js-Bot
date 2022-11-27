@@ -13,8 +13,6 @@
     "log-to-file": "^3.0.0",
     "moment": "^2.29.4",
     "mongoose": "^6.3.2",
-    "react": "^18.2.0",
-    "react-router-dom": "^6.4.3",
     "supertest": "^6.3.1",
     "wokcommands": "^1.5.3"
   },
