@@ -25,11 +25,18 @@ app.use(helmet())
 app.use(cors())
 
 app.use('/api/', apiRouter)
-app.get('/redirect', (req, res) => {
-	res.status(302).redirect(process.env.REDIRECT_LINK)
-});
 
-app.get('*', (req, res) => res.sendFile('index.html', { root: path.join(__dirname, './build') }))
+app.get('/redirect', (req, res) => 
+	res.status(302).redirect(process.env.REDIRECT_LINK)
+);
+
+app.get('/', (req, res) =>
+	res.sendFile('index.html', { root: path.join(__dirname, './build') })
+)
+
+app.get('/*', (req, res) => 
+	res.status(404).send('Route does not exist.')
+);
 
 app.use(errorHandler)
 
