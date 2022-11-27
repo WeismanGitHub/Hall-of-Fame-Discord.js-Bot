@@ -88,7 +88,7 @@ module.exports = {
                 throw new Error('Quote does not exist.')
             }
     
-            let updateObject = {};
+            let update = {};
             
             const newAudioFileLink = options.getString('new_audio_file_link');
             const lastAudioChannel = options.getChannel('last_audio');
@@ -101,9 +101,9 @@ module.exports = {
                     throw new Error('Please input a valid url.')
                 }
 
-                updateObject.audioFileLink = newAudioFileLink;
+                update.audioFileLink = newAudioFileLink;
             } else if (lastAudioChannel) {
-                updateObject.audioFileLink = await getLastAudio(lastAudioChannel)
+                update.audioFileLink = await getLastAudio(lastAudioChannel)
             }
 
             let tags = [
@@ -115,15 +115,15 @@ module.exports = {
             tags = await checkTags(tags, guildId);
             
             if (tags.length) {
-                updateObject.tags = tags
+                update.tags = tags
             }
 
             if (deleteTags) {
-                updateObject['tags'] = [];
+                update['tags'] = [];
             }
     
             if (newTitle) {
-                updateObject['text'] = newTitle;
+                update['text'] = newTitle;
             }
             
             if (newAuthorName) {
@@ -132,13 +132,13 @@ module.exports = {
                     throw new Error('Author does not exist.')
                 }
     
-                updateObject['authorId'] = author._id;
+                update['authorId'] = author._id;
             }
             
-            if (Object.keys(updateObject).length) {
+            if (Object.keys(update).length) {
                 const updatedAudioQuote = await audioQuoteSchema.findOneAndUpdate(
                     { _id: _id },
-                    updateObject
+                    update
                 ).lean()
 
                 const author = await getAuthorById(updatedAudioQuote.authorId, guildId);

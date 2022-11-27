@@ -19,21 +19,21 @@ module.exports = async (client, instance) => {
                 return
             }
             
-            const filterObject = await FilterSchema.findById(customId[1]).lean()
+            const filter = await FilterSchema.findById(customId[1]).lean()
 
-            if (!filterObject) {
+            if (!filter) {
                 throw new Error('Please use the command again. This button is broken.')
             }
 
-            const { queryObject, sortObject } = filterObject
+            const { query, sort } = filter
 
-            const quotes = await QuoteSchema.find(queryObject)
-            .sort(sortObject).skip(skipAmount).limit(10).lean();
+            const quotes = await QuoteSchema.find(query)
+            .sort(sort).skip(skipAmount).limit(10).lean();
 
             const row = new MessageActionRow()
             .addComponents(
                 new MessageButton()
-                .setCustomId(`${Number(skipAmount) + 10},${filterObject._id},find_quotes`)
+                .setCustomId(`${Number(skipAmount) + 10},${filter._id},find_quotes`)
                 .setLabel('Next 10 Quotes ⏩')
                 .setStyle('PRIMARY')
             )

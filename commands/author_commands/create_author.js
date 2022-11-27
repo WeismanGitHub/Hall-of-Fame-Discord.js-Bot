@@ -50,14 +50,14 @@ module.exports = {
                 throw new Error('Please input a valid url.')
             }
             
-            const authorObject = { name: name, imgUrl: imgUrl }
+            const author = { name: name, imgUrl: imgUrl }
 
             await GuildSchema.updateOne(
                 { guildId: guildId },
-                { $addToSet: { authors: authorObject }
+                { $addToSet: { authors: author }
             })
 
-            await interaction.reply(authorEmbed(authorObject))
+            await interaction.reply(authorEmbed(author))
         } catch(err) {
             interaction.reply(errorEmbed(err))
             .catch(_ => interaction.channel.send(errorEmbed(err)))

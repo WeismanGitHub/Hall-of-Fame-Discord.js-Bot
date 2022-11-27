@@ -54,13 +54,13 @@ module.exports = {
 
             const searchPhrase = options.getString('search_phrase')
             let inputtedAuthor = options.getString('author');
-            const queryObject = { guildId: guildId, isAudioQuote: true };
+            const query = { guildId: guildId, isAudioQuote: true };
             
             if (inputtedAuthor) {
                 inputtedAuthor = await getAuthorByName(inputtedAuthor, guildId);
             
                 if (inputtedAuthor.name !== 'Deleted Author') {
-                    queryObject.authorId = inputtedAuthor._id;
+                    query.authorId = inputtedAuthor._id;
                 } else {
                     throw new Error(`'${inputtedAuthor}' author does not exist.`)
                 }
@@ -75,23 +75,23 @@ module.exports = {
             tags = await checkTags(tags, guildId);
             
             if (tags.length) {
-                queryObject.tags = { $all: tags };
+                query.tags = { $all: tags };
             }
 
             if (searchPhrase) {
-                queryObject.$text = {
+                query.$text = {
                     '$search': searchPhrase
                 }
             }
 
-            const amountOfDocuments = await AudioQuoteSchema.countDocuments(queryObject)
+            const amountOfDocuments = await AudioQuoteSchema.countDocuments(query)
 
             if (!amountOfDocuments) {
                 throw new Error('Your specifications provide no quotes.')
             }
 
             const randomNumber = Math.floor(Math.random() * amountOfDocuments);
-            const randomAudioQuote = await AudioQuoteSchema.findOne(queryObject).skip(randomNumber).lean()
+            const randomAudioQuote = await AudioQuoteSchema.findOne(query).skip(randomNumber).lean()
 
             const voiceChannel = interaction.member.voice.channel
 

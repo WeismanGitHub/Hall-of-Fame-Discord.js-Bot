@@ -37,21 +37,21 @@ module.exports = {
             const { options } = interaction;
             const preference = options.getString('preference')
             const notificationChannelId = (options.getChannel('notification_channel'))?.id
-            let updateObject = {}
+            let update = {}
             
             if (preference) {
-                updateObject.notifications = preference
+                update.notifications = preference
             }
             
             if (notificationChannelId) {
-                updateObject.notificationChannelId = notificationChannelId
+                update.notificationChannelId = notificationChannelId
             }
             
-            if (!Object.keys(updateObject).length) {
+            if (!Object.keys(update).length) {
                 throw new Error('Please update something.')
             }
 
-            await GuildSchema.updateOne({ guildId: interaction.guildId }, updateObject)
+            await GuildSchema.updateOne({ guildId: interaction.guildId }, update)
 
             await interaction.reply(basicEmbed('Updated notification preferences!'))
         } catch(err) {

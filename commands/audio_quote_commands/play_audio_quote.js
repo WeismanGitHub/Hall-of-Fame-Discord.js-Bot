@@ -43,12 +43,12 @@ module.exports = {
                 throw new Error('Enter either an id or title.')
             }
         
-            const searchObject = { ...title && { text: title }, ...id && { _id: id } }
+            const search = { ...title && { text: title }, ...id && { _id: id } }
 
             const audioQuote = await AudioQuoteSchema.findOne({
                 isAudioQuote: true,
                 guildId: guildId,
-                ...searchObject
+                ...search
             }).lean()
 
             if (!audioQuote) {
