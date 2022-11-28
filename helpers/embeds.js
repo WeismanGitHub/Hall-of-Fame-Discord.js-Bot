@@ -43,7 +43,7 @@ const quoteEmbed = function(quote, author, color='#8A2BE2') {
 	return { embeds: [embed] };
 };
 
-const errorEmbed = function(error, title='Theres been an error!', color='#FF0000', ephemeral=true) {
+const errorEmbed = function(error, title='Theres been an error!', color='#FF0000', ephemeral=false) {
 	error = error.toString();
 	
 	return {
