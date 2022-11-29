@@ -66,6 +66,12 @@ module.exports = {
                 newImgUrl = 'https://cdn.discordapp.com/avatars/973042179033415690/a6602f6209ef6546ee8d878e0022a4f3.webp?size=160'
             }
 
+            const authorNameExists = await GuildSchema.exists({ guildId: guildId, 'authors.name': newName })
+
+            if (authorNameExists) {
+                throw new Error('Author name must be unique.')
+            }
+
             const authors = (await GuildSchema.findOneAndUpdate(
                 { "$and": [
                     { "guildId": { "$eq": guildId } },
