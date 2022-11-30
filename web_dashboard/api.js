@@ -1,10 +1,13 @@
 const GuildSchema = require('../schemas/guild_schema')
+const { PermissionsBitField } = require('discord.js');
+const DiscordOauth2 = require("discord-oauth2");
 const { BadRequestError } = require('./errors')
 const { request } = require('undici');
 const { Router } = require('express')
 require('express-async-errors')
 
 const router = Router()
+const oauth = new DiscordOauth2();
 
 router.post('/login', async (req, res) => {
 	const { code } = req.body;
@@ -21,6 +24,7 @@ router.post('/login', async (req, res) => {
 			code,
 			grant_type: 'authorization_code',
 			redirect_uri: `http://localhost:5000/`,
+			scope: 'guilds'
 		}).toString(),
 		headers: {
 			'Content-Type': 'application/x-www-form-urlencoded',
@@ -32,17 +36,19 @@ router.post('/login', async (req, res) => {
 	if (oauthData.error) {
 		throw new BadRequestError('Problem with code. Try again.')
 	}
-	
-	console.log(oauthData)
 })
 
 router.get('/guilds', async (req, res) => {
-	let guilds = ['idk how to get these yet']
-	let guildIds = guilds.map(guild => guild.id)
+	// icon link = https://cdn.discordapp.com/icons/id/icon.png 
+	const guilds = (await oauth.getUserGuilds(req.accessToken)).filter(guild => {
+		const permissions = new PermissionsBitField(guild.permissions)
+		
+		return permissions.has(PermissionsBitField.Flags.USE_APPLICATION_COMMANDS)
+	}).map(guild => {
+		return { id: guild.id, icon: guild.icon }
+	})
 
-	guildIds = await GuildSchema.find({ guildId: { $in: guildIds }}).select('-_id guildId').lean()
-
-	res.status(200).send(guildsData)
+	res.status(200).send(guilds)
 });
 
 module.exports = router
