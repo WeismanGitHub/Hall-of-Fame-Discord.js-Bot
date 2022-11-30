@@ -2,6 +2,7 @@ const GuildSchema = require('../schemas/guild_schema')
 const { BadRequestError } = require('./errors')
 const { request } = require('undici');
 const { Router } = require('express')
+require('express-async-errors')
 
 const router = Router()
 
