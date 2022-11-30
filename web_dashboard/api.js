@@ -28,6 +28,10 @@ router.post('/login', async (req, res) => {
 
 	const oauthData = await tokenResponseData.body.json();
 
+	if (oauthData.error) {
+		throw new BadRequestError('Problem with code. Try again.')
+	}
+	
 	console.log(oauthData)
 })
 
