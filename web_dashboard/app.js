@@ -1,5 +1,6 @@
 const rateLimit = require('express-rate-limit')
 const errorHandler = require('./error-handler')
+const { NotFoundError } = require('./errors')
 const compression = require('compression')
 const apiRouter = require('./api')
 const express = require('express')
@@ -25,6 +26,10 @@ app.use(helmet())
 app.use(cors())
 
 app.use('/api', apiRouter)
+
+app.use('/api', (req, res, next) => {
+	throw new NotFoundError('Route does not exist.')
+})
 
 app.get('/*', (req, res) => {
 	res.status(200).sendFile('index.html', { root: path.join(__dirname, './build') })
