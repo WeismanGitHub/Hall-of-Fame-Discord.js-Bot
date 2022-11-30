@@ -23,7 +23,9 @@ app.use(express.static(path.resolve(__dirname, './build')))
 app.use(express.json())
 app.use(compression())
 app.use(helmet())
-app.use(cors())
+app.use(cors({
+    origin: ['http://localhost:5000'],
+}))
 
 app.use('/api', apiRouter)
 
