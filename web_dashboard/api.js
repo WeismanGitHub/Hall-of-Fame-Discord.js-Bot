@@ -41,16 +41,21 @@ router.post('/auth', async (req, res) => {
 })
 
 router.get('/guilds', async (req, res) => {
-	// icon link = https://cdn.discordapp.com/icons/id/icon.png 
-	const guilds = (await oauth.getUserGuilds(req.accessToken)).filter(guild => {
-		const permissions = new PermissionsBitField(guild.permissions)
+	try {
+		const guilds = (await oauth.getUserGuilds('req.accessToken')).filter(guild => {
+			const permissions = new PermissionsBitField(guild.permissions)
+			
+			return permissions.has(PermissionsBitField.Flags.USE_APPLICATION_COMMANDS)
+		}).map(guild => {
+			return { id: guild.id, icon: guild.icon }
+		})
 		
-		return permissions.has(PermissionsBitField.Flags.USE_APPLICATION_COMMANDS)
-	}).map(guild => {
-		return { id: guild.id, icon: guild.icon }
-	})
-
-	res.status(200).send(guilds)
+		// icon link = https://cdn.discordapp.com/icons/id/icon.png 
+	
+		res.status(200).send(guilds)
+	} catch(err) {
+		res.status(301).clearCookie('accessToken').send('Invalid Access Token')
+	}
 });
 
 module.exports = router
