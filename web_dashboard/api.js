@@ -36,6 +36,8 @@ router.post('/login', async (req, res) => {
 	if (oauthData.error) {
 		throw new BadRequestError('Problem with code. Try again.')
 	}
+
+	res.status(200).cookie('accessToken', oauthData.access_token).end()
 })
 
 router.get('/guilds', async (req, res) => {
