@@ -9,7 +9,7 @@ require('express-async-errors')
 const router = Router()
 const oauth = new DiscordOauth2();
 
-router.post('/login', async (req, res) => {
+router.post('/auth', async (req, res) => {
 	const { code } = req.body;
 
 	if (!code) {
