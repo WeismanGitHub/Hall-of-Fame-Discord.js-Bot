@@ -1,15 +1,7 @@
 const request = require('supertest');
 const app = require('../app');
 
-describe('app tests', () => {
-    describe('GET /redirect',  () => {
-        it('returns 302 because it redirected', () => {
-            return request(app)
-            .get('/redirect')
-            .expect(302)
-        })
-    });
-
+describe('Tests', () => {
     describe('API tests', () => {
         describe('GET /api/fake/route',  () => {
             it('return 404 because route is nonexistant', () => {
@@ -26,7 +18,7 @@ describe('app tests', () => {
                 .expect(200)
                 .then(res => {
                     res._body.forEach(guild => {
-                        expect(guild).toHaveProperty('imageURL')
+                        expect(guild).toHaveProperty('icon')
                         expect(guild).toHaveProperty('name')
                     })
                 })
