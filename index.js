@@ -3,6 +3,7 @@ const WOKCommands = require('wokcommands');
 const app = require('./web_dashboard/app')
 const mongoose = require('mongoose');
 const log = require('log-to-file');
+const axios = require('axios')
 const path = require('path');
 require('dotenv').config();
 
@@ -36,6 +37,24 @@ client.on("ready", async () => {
     });
 
 	console.log('logged in...');
+
+    // This is here because I need it and this is my only bot with 24/7 hosting.
+    let lastPost;
+    const approvedFlairs = ['JavaScript Help', 'Bot Request [Paid]']
+
+    setInterval(() => {
+        axios.get('https://www.reddit.com/r/Discord_Bots/new.json?limit=1&t=all')
+        .then(res => {
+            const post = res.data.data.children[0].data
+            const permalink = post.permalink
+
+            if (!approvedFlairs.includes(post.link_flair_text)) return
+            if (permalink == lastPost) return
+
+            client.channels.cache.get('987218625167519845').send('https://www.reddit.com' + permalink)
+            lastPost = permalink
+        })
+    }, 5000)
 });
 
 process.on('uncaughtException', function (error) {
