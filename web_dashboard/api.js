@@ -54,7 +54,7 @@ router.get('/guilds', async (req, res) => {
 	
 		res.status(200).send(guilds)
 	} catch(err) {
-		res.status(301).clearCookie('accessToken').send('Invalid Access Token')
+		res.status(401).clearCookie('accessToken').send('Invalid Access Token')
 	}
 });
 
