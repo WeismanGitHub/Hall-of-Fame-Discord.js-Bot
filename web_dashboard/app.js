@@ -27,9 +27,9 @@ app.use(cors({
     origin: ['http://localhost:5000'],
 }))
 
-app.use('/api', apiRouter)
+app.use('/api/v1', apiRouter)
 
-app.use('/api', (req, res, next) => {
+app.use('/api/v1', (req, res, next) => {
 	throw new NotFoundError('Route does not exist.')
 })
 
