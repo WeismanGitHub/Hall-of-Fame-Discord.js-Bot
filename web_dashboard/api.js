@@ -55,13 +55,12 @@ router.get('/guilds', async (req, res) => {
 	})
 
 	guilds = guilds.filter(guild => {
-		const userPerms = new PermissionsBitField(guild.permissions)
-		
-		return userPerms.has(PermissionsBitField.Flags.USE_APPLICATION_COMMANDS)
-	}).map(guild => {
-		return { id: guild.id, icon: guild.icon }
-	})
+		const guildPerms = new PermissionsBitField(guild.permissions)
 
+		return guildPerms.has(PermissionsBitField.Flags.UseApplicationCommands)
+	}).map(guild => {
+		return { id: guild.id, icon: guild.icon, name: guild.name}
+	})
 
 	const guildsJWT = jwt.sign(
         { guilds: guilds },
@@ -71,5 +70,12 @@ router.get('/guilds', async (req, res) => {
 
 	res.status(200).cookie('guilds', guildsJWT, { httpOnly: true, secure: true }).json(guilds)
 });
+
+router.get('/:guildId', async (req, res) => {
+	const payload = jwt.verify(token, process.env.JWT_SECRET)
+	const accessToken = payload.accessToken
+
+	console.log(accessToken)
+})
 
 module.exports = router
