@@ -59,7 +59,7 @@ router.get('/guilds', async (req, res) => {
 
 		return guildPerms.has(PermissionsBitField.Flags.UseApplicationCommands)
 	}).map(guild => {
-		return { id: guild.id, icon: guild.icon, name: guild.name}
+		return { id: guild.id, iconURL: `https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}.png`, name: guild.name }
 	})
 
 	const guildsJWT = jwt.sign(
