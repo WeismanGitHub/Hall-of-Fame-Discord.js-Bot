@@ -38,8 +38,6 @@ router.post('/auth', async (req, res) => {
 		throw new BadRequestError('Problem with code. Try again.')
 	}
 
-	console.log(oauthData.access_token)
-	
 	res.status(200).cookie('accessToken', oauthData.access_token, { httpOnly: true, secure: true }).end()
 })
 
