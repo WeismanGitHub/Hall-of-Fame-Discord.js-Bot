@@ -38,16 +38,20 @@ router.post('/auth', async (req, res) => {
 		throw new BadRequestError('Problem with code. Try again.')
 	}
 
-	res.status(200).cookie('accessToken', oauthData.access_token, { httpOnly: true, secure: true }).end()
+	res.status(200).cookie('accessToken', oauthData.access_token, { httpOnly: true, secure: true })
+	.cookie('loggedIn', true).end() // "loggedIn" cookie because client can't see if httpOnly accessToken cookie exists.
 })
 
 router.get('/guilds', async (req, res) => {
-	if (!req.accessToken) {
+	const accessToken = req.cookies.accessToken
+
+	if (!accessToken) {
 		throw new BadRequestError('No Access Token')
 	}
 
-	let guilds = await oauth.getUserGuilds(req.accessToken).catch(err => {
-		return res.status(401).clearCookie('accessToken').send('Invalid Access Token')
+	let guilds = await oauth.getUserGuilds(accessToken).catch(err => {
+		return res.status(401).clearCookie('accessToken')
+		.clearCookie('loggedIn').send('Invalid Access Token')
 	})
 
 	guilds = guilds.filter(guild => {
