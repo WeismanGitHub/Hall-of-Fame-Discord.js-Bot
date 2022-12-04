@@ -18,11 +18,13 @@ function Home() {
             axios.post('/api/v1/auth', { code: code })
             .then(res => axios.get('/api/v1/guilds')).then(res => setGuilds(res.data)).catch(err => setLoggedIn(false))
         }
+
+        setGuilds(guilds.unshift({ name: 'home', iconURL: '/icon.png' }))
     }, [])
 
     const Home = (<div>
         { guilds.map(guild => {
-            return <img class='guild_icon' src={`https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}.png`} alt="img" width="75" height="75" title={`${guild.name}`}></img>
+            return <img class='guild_icon' src={guild.iconURL} alt="img" width="75" height="75" title={`${guild.name}`}></img>
         }) }
     </div>)
 
