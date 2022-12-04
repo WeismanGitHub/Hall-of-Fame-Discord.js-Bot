@@ -1,28 +1,37 @@
 import { useState, useEffect } from 'react';
 import axios, * as others from 'axios'
+import Cookies from 'js-cookie';
 
 function Home() {
     const [loggedIn, setLoggedIn] = useState(false)
+    const [guilds, setGuilds] = useState([])
 
     useEffect(() => {
         const code = String(window.location).split('code=')[1]
         setLoggedIn(code)
 
+        if (Cookies.get('loggedIn')) {
+            return axios.get('/api/v1/guilds').then(res => setGuilds(res.data))
+        }
+        
         if (code) {
-            axios.post('/api/login', { code: code })
+            axios.post('/api/v1/auth', { code: code })
+            .then(res => axios.get('/api/v1/guilds')).then(res => setGuilds(res.data)).catch(err => setLoggedIn(false))
         }
     }, [])
-    
-    if (!loggedIn) {
-        return (<div>
-            <a href={ process.env.REACT_APP_REDIRECT_LINK }>
-                <button>Login to Discord</button>
-            </a>
-        </div>)
-    }
+
+    const Home = (<div>
+        { guilds.map(guild => {
+            return <img class='guild_icon' src={`https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}.png`} alt="img" width="75" height="75" title={`${guild.name}`}></img>
+        }) }
+    </div>)
 
     return (<div>
-        <h1>Home Page</h1>
+        {
+            !loggedIn ? <a href={ process.env.REACT_APP_REDIRECT_LINK }>
+                <button>Login to Discord</button>
+            </a> : Home
+        }
     </div>)
 }
 
