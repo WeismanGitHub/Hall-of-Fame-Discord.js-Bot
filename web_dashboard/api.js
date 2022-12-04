@@ -1,4 +1,4 @@
-const GuildSchema = require('../schemas/guild_schema');
+const GuildSchema = require('../schemas/guild-schema');
 const { PermissionsBitField } = require('discord.js');
 const DiscordOauth2 = require("discord-oauth2");
 const { BadRequestError } = require('./errors')
