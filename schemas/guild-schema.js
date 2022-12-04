@@ -14,11 +14,7 @@ const AuthorSchema = new mongoose.Schema({
 });
 
 const GuildSchema = new mongoose.Schema({
-    guildId: {
-        type: String,
-        required: [true, 'Must provide a guildId.\n(Probably a server error.)'],
-        unique: true,
-    },
+    _id: { type: String, required: true },
     authors: [AuthorSchema],
     tags: [{
         type: String,

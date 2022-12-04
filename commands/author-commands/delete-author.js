@@ -25,7 +25,7 @@ module.exports = {
             const authorName = options.getString('author');
     
             const guildDoc = await GuildSchema.findOneAndUpdate(
-                { guildId: guildId },
+                { _id: guildId },
                 { $pull: { authors: { name: authorName } } },
             ).select('-_id authors').lean()
             

@@ -48,10 +48,10 @@ module.exports = {
                     const title = interact.fields.getTextInputValue('title');
     
                     const guildDocs = await GuildSchema.find({ notifications: true })
-                    .select('-_id guildId notificationChannelId').lean()
+                    .select('notificationChannelId').lean()
         
                     for (let guildDoc of guildDocs) {
-                        const guild = await client.guilds.cache.get(guildDoc.guildId)
+                        const guild = await client.guilds.cache.get(guildDoc._id)
                         const notificationsChannel = await guild.channels.cache.get(guildDoc.notificationChannelId)
                         
                         //user set notification channel, guild system channel, or first channel in server

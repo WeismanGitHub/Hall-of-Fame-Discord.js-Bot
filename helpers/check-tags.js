@@ -1,7 +1,7 @@
 const GuildSchema = require('../schemas/guild-schema')
 
 async function checkTags(tags, guildId) {
-    const guildTags = (await GuildSchema.findOne({ guildId: guildId }).select('-_id tags').lean()).tags
+    const guildTags = (await GuildSchema.findOne({ _id: guildId }).select('-_id tags').lean()).tags
 
     tags = tags.filter(tag => {
         return (tag !== null)

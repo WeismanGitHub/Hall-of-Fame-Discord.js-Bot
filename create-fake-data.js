@@ -20,7 +20,7 @@ async function createFakeData(guildAmount = 5, authorsPerGuild = 10, tagsPerGuil
         }
 
         const guild = await GuildSchema.create({
-            guildId: faker.mersenne.rand(100000000000000, 999999999999999),
+            _id: faker.mersenne.rand(100000000000000, 999999999999999),
             tags: tags,
             authors: authors
         })
@@ -39,7 +39,7 @@ async function createFakeData(guildAmount = 5, authorsPerGuild = 10, tagsPerGuil
                 }
     
                 quotes.push({
-                    guildId: guild._id,
+                    _id: guild._id,
                     authorId: author._id,
                     ...attachment,
                     ...text,
@@ -51,7 +51,7 @@ async function createFakeData(guildAmount = 5, authorsPerGuild = 10, tagsPerGuil
                 const tagsNumber = Math.floor(Math.random() * tagsPerGuild + 1)
                 
                 audioQuotes.push({
-                    guildId: guild._id,
+                    _id: guild._id,
                     authorId: author._id,
                     audioFileLink: audioQuoteLink,
                     text: faker.lorem.sentence(),

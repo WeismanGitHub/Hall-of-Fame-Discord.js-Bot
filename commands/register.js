@@ -12,8 +12,8 @@ module.exports = {
         try {
             const guildId = interaction.guildId;
     
-            if (!await GuildSchema.findOne({ guildId: guildId }).select('_id').lean()) {
-                await GuildSchema.create({ guildId: guildId })
+            if (!await GuildSchema.findOne({ _id: guildId }).select('_id').lean()) {
+                await GuildSchema.create({ _id: guildId })
     
                 await interaction.reply(basicEmbed('Registered This Server!'));
             } else {

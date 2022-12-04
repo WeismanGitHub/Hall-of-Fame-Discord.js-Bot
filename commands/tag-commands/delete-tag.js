@@ -26,7 +26,7 @@ module.exports = {
             const tag = options.getString('tag');
             
             await GuildSchema.updateOne(
-                { guildId: guildId },
+                { _id: guildId },
                 { $pull: { tags: tag }
             }).select('-_id tags').lean()
 

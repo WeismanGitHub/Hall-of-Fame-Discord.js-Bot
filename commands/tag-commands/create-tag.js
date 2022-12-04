@@ -25,7 +25,7 @@ module.exports = {
             const tag = (options.getString('tag')).toLowerCase();
 
             await GuildSchema.updateOne(
-                { guildId: guildId },
+                { _id: guildId },
                 { $addToSet: { tags: tag } })
 
             await interaction.reply(basicEmbed(`Created '${tag}' tag!`));

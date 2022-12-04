@@ -51,7 +51,7 @@ module.exports = {
                 throw new Error('Please update something.')
             }
 
-            await GuildSchema.updateOne({ guildId: interaction.guildId }, update)
+            await GuildSchema.updateOne({ _id: interaction.guildId }, update)
 
             await interaction.reply(basicEmbed('Updated notification preferences!'))
         } catch(err) {

@@ -1,7 +1,7 @@
 const GuildSchema = require('../schemas/guild-schema');
 
 async function updateQuotesChannel(quote, guildId, client) {
-    const quotesChannelId = (await GuildSchema.findOne({ guildId: guildId })
+    const quotesChannelId = (await GuildSchema.findOne({ _id: guildId })
     .select('quotesChannelId').lean())?.quotesChannelId
 
     if (quotesChannelId) {

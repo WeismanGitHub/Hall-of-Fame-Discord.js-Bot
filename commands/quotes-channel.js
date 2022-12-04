@@ -38,7 +38,7 @@ module.exports = {
             }
 
             if (turnOff) {
-                await GuildSchema.updateOne({ guildId: guildId}, { $unset: { quotesChannelId: true } })
+                await GuildSchema.updateOne({ _id: guildId}, { $unset: { quotesChannelId: true } })
                 return await interaction.reply(basicEmbed('Removed quotes channel!'))
             }
             
@@ -50,7 +50,7 @@ module.exports = {
             }
 
             await CoolDownSchema.create({ _id: interaction.user.id, command: 'quotes_channel' })
-            await GuildSchema.updateOne({ guildId: guildId }, { quotesChannelId: quotesChannel.id })
+            await GuildSchema.updateOne({ _id: guildId }, { quotesChannelId: quotesChannel.id })
 
             await interaction.reply(basicEmbed(`All quotes will be in #${quotesChannel.name} now!`))
 

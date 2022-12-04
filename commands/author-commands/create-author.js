@@ -52,14 +52,14 @@ module.exports = {
             
             const author = { name: name, imgUrl: imgUrl }
 
-            const authorNameExists = await GuildSchema.exists({ guildId: guildId, 'authors.name': name })
+            const authorNameExists = await GuildSchema.exists({ _id: guildId, 'authors.name': name })
 
             if (authorNameExists) {
                 throw new Error('Author name must be unique.')
             }
 
             await GuildSchema.updateOne(
-                { guildId: guildId },
+                { _id: guildId },
                 { $addToSet: { authors: author }
             })
 

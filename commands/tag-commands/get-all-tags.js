@@ -13,7 +13,7 @@ module.exports = {
         try {
             const guildId = interaction.guildId;
         
-            const tags= (await GuildSchema.find({ guildId: guildId }).select('tags').lean())[0].tags
+            const tags= (await GuildSchema.find({ _id: guildId }).select('tags').lean())[0].tags
             .sort((firstTag, secondTag) => firstTag.localeCompare(secondTag, undefined, { sensitivity: 'base' }))
 
             let message = '';

@@ -3,10 +3,10 @@ const GuildSchema = require('../schemas/guild-schema');
 module.exports = (client) => {
     client.on('guildCreate', async (guild) => {
         const guildId = guild.id;
-        const guildRegistered = await GuildSchema.exists({guildId: guildId})
+        const guildRegistered = await GuildSchema.exists({ guildId: guildId })
     
         if (!guildRegistered) {
-            await GuildSchema.create({guildId: guildId});
+            await GuildSchema.create({_id: guildId });
         }
     });
 }
