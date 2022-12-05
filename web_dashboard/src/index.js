@@ -4,7 +4,7 @@ import './dist/output.css';
 import React from 'react';
 import './styles.css';
 
-import Home from './home';
+import Main from './main';
 import NotFound from './not-found'
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -12,7 +12,7 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(<>
     <Router>
         <Routes>
-            <Route exact path='/' element={<Home/>}/>
+            <Route exact path='/' element={<Main/>}/>
             <Route path='*' element={<NotFound/>}/>
         </Routes>
     </Router>

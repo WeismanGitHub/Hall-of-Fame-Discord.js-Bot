@@ -20,12 +20,13 @@ function Home() {
             axios.post('/api/v1/auth', { code: code })
             .then(res => axios.get('/api/v1/guilds')).then(res => setGuilds(guilds.concat(res.data))).catch(err => setLoggedIn(false))
         }
-
     }, [])
+
+    function onGuildClick()
     
     const Home = (<div>
         { guilds.map(guild => {
-            return <img class='guild_icon' src={guild.iconURL} alt="img" width="75" height="75" title={`${guild.name}`}></img>
+            return <a href={`${guild.id}`}><img class='guild_icon' src={guild.iconURL} alt="img" width="75" height="75" title={`${guild.name}`}></img></a>
         }) }
 
         { state !== 'home' ? <Guild guild={ guilds[state] }/> : <div class='guild'><h1>Home</h1></div> }
