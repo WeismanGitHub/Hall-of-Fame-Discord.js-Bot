@@ -12,7 +12,7 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(<>
     <Router>
         <Routes>
-            <Route exact path='/' element={<Main/>}/>
+            <Route exact path='/:guildId?' element={<Main/>}/>
             <Route path='*' element={<NotFound/>}/>
         </Routes>
     </Router>
