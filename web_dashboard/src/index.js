@@ -4,16 +4,19 @@ import './dist/output.css';
 import React from 'react';
 import './styles.css';
 
-import Main from './main';
-import NotFound from './not-found'
+import Guild from './guild';
+import Login from './login';
+import Home from './home';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 root.render(<>
     <Router>
         <Routes>
-            <Route exact path='/:guildId?' element={<Main/>}/>
-            <Route path='*' element={<NotFound/>}/>
+            <Route path='/login' element={<Login/>}/>
+            <Route path='/' element={<Home/>}>
+                <Route path=':guildId' element={<Guild/>}/>
+            </Route>
         </Routes>
     </Router>
 </>);
