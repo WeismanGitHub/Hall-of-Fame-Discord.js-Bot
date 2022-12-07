@@ -72,8 +72,8 @@ router.get('/guilds', async (req, res) => {
 	res.status(200).cookie('guilds', guildsJWT, { httpOnly: true, secure: true }).json(guilds)
 });
 
-router.get('/:guildId', async (req, res) => {
-	if (!ObjectId.isValid(req.parans.guildId)) {
+router.get('/authors/:guildId', async (req, res) => {
+	if (!ObjectId.isValid(req.params.guildId)) {
 		throw new BadRequestError('Invalid Guild Id')
 	}
 	
