@@ -1,5 +1,6 @@
 const GuildSchema = require('../schemas/guild-schema');
 const { PermissionsBitField } = require('discord.js');
+const ObjectId = require('mongoose').Types.ObjectId;
 const DiscordOauth2 = require("discord-oauth2");
 const { BadRequestError } = require('./errors')
 const { request } = require('undici');
@@ -72,10 +73,13 @@ router.get('/guilds', async (req, res) => {
 });
 
 router.get('/:guildId', async (req, res) => {
-	const payload = jwt.verify(token, process.env.JWT_SECRET)
-	const accessToken = payload.accessToken
+	if (!ObjectId.isValid(req.parans.guildId)) {
+		throw new BadRequestError('Invalid Guild Id')
+	}
+	
+	const payload = jwt.verify(req.cookies.guilds, process.env.JWT_SECRET)
 
-	console.log(accessToken)
+	console.log(payload)
 })
 
 module.exports = router
