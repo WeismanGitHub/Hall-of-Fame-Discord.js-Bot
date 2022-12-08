@@ -1,9 +1,10 @@
 const sendToQuotesChannel = require('../../helpers/send-to-quotes-channel');
 const AudioQuoteSchema = require('../../schemas/audio-quote-schema');
-const { errorEmbed, quoteEmbed } = require('../../helpers/embeds');
 const { getLastAudio } = require('../../helpers/get-last-item');
 const { getAuthorByName } = require('../../helpers/get-author');
+const errorHandler = require('../../helpers/error-handler');
 const { checkTags } = require('../../helpers/check-tags');
+const { quoteEmbed } = require('../../helpers/embeds');
 const checkURL = require('../../helpers/check-url')
 const { Constants } = require('discord.js');
 
@@ -54,53 +55,48 @@ module.exports = {
         }
     ],
 
-    callback: async ({ interaction, client }) => {
-        try {
-            const guildId = interaction.guildId;
-            const { options } = interaction;
-            
-            const inputtedAuthor = options.getString('author');
-            const checkedAuthor = await getAuthorByName(inputtedAuthor, guildId);
-            
-            if (checkedAuthor.name == 'Deleted Author') {
-                throw new Error(`Make sure that '${inputtedAuthor}' author exists.`)
-            }
-            
-            const lastAudioChannel = options.getChannel('last_audio');
-            const title = options.getString('title');
-            const audioFileLink = options.getString('audio_file_link');
-            
-            if (!lastAudioChannel && !audioFileLink) {
-                throw new Error('Please provide an audio file link or choose a channel to get the audio file from.')
-            }
-
-            if (audioFileLink && !checkURL(audioFileLink)) {
-                throw new Error('Please input a valid url.')
-            }
-
-            let tags = [
-                options.getString('first_tag'),
-                options.getString('second_tag'),
-                options.getString('third_tag'),
-            ];
-
-            tags = await checkTags(tags, guildId);
-
-            const audioQuote = await AudioQuoteSchema.create({
-                guildId: guildId,
-                authorId: checkedAuthor._id,
-                text: title,
-                audioFileLink: audioFileLink ?? await getLastAudio(lastAudioChannel),
-                tags: tags,
-            });
-
-            const embeddedAudioQuote = quoteEmbed(audioQuote, checkedAuthor)
-
-            await sendToQuotesChannel(embeddedAudioQuote, guildId, client)
-            await interaction.reply(embeddedAudioQuote);
-        } catch(err) {
-            interaction.reply(errorEmbed(err))
-            .catch(_ => interaction.channel.send(errorEmbed(err)))
+    callback: async ({ interaction, client }) => errorHandler(interaction, async () => {
+        const guildId = interaction.guildId;
+        const { options } = interaction;
+        
+        const inputtedAuthor = options.getString('author');
+        const checkedAuthor = await getAuthorByName(inputtedAuthor, guildId);
+        
+        if (checkedAuthor.name == 'Deleted Author') {
+            throw new Error(`Make sure that '${inputtedAuthor}' author exists.`)
         }
-    }
+        
+        const lastAudioChannel = options.getChannel('last_audio');
+        const title = options.getString('title');
+        const audioFileLink = options.getString('audio_file_link');
+        
+        if (!lastAudioChannel && !audioFileLink) {
+            throw new Error('Please provide an audio file link or choose a channel to get the audio file from.')
+        }
+
+        if (audioFileLink && !checkURL(audioFileLink)) {
+            throw new Error('Please input a valid url.')
+        }
+
+        let tags = [
+            options.getString('first_tag'),
+            options.getString('second_tag'),
+            options.getString('third_tag'),
+        ];
+
+        tags = await checkTags(tags, guildId);
+
+        const audioQuote = await AudioQuoteSchema.create({
+            guildId: guildId,
+            authorId: checkedAuthor._id,
+            text: title,
+            audioFileLink: audioFileLink ?? await getLastAudio(lastAudioChannel),
+            tags: tags,
+        });
+
+        const embeddedAudioQuote = quoteEmbed(audioQuote, checkedAuthor)
+
+        await sendToQuotesChannel(embeddedAudioQuote, guildId, client)
+        await interaction.reply(embeddedAudioQuote);
+    })
 };
