@@ -1,9 +1,10 @@
 const sendToQuotesChannel = require('../../helpers/send-to-quotes-channel')
-const { errorEmbed, quoteEmbed } = require('../../helpers/embeds');
 const { getAuthorByName } = require('../../helpers/get-author');
 const { getLastImage } = require('../../helpers/get-last-item');
+const errorHandler = require('../../helpers/error-handler');
 const { checkTags } = require('../../helpers/check-tags');
 const QuoteSchema = require('../../schemas/quote-schema');
+const { quoteEmbed } = require('../../helpers/embeds');
 const checkURL = require('../../helpers/check-url')
 const { Constants } = require('discord.js');
 
@@ -53,72 +54,67 @@ module.exports = {
         }
     ],
 
-    callback: async ({ interaction, client }) => {
-        try {
-            const { options } = interaction;
-            const guildId = interaction.guildId;
-    
-            const inputtedAuthor = options.getString('author');
-            const checkedAuthor = await getAuthorByName(inputtedAuthor, guildId);
+    callback: async ({ interaction, client }) => errorHandler(interaction, async () => {
+        const { options } = interaction;
+        const guildId = interaction.guildId;
 
-            if (checkedAuthor.name == 'Deleted Author') {
-                throw new Error(`Make sure that '${inputtedAuthor}' author exists.`)
-            }
+        const inputtedAuthor = options.getString('author');
+        const checkedAuthor = await getAuthorByName(inputtedAuthor, guildId);
 
-            const text = options.getString('text');
-            const lastImageChannel = options.getChannel('last_image');
-            const imageLink = options.getString('image_link');
-
-            if (!text && !imageLink && !lastImageChannel) {
-                throw new Error('Please provide text and or an image link.')
-            }
-
-            let tags = [
-                options.getString('first_tag'),
-                options.getString('second_tag'),
-                options.getString('third_tag'),
-            ];
-
-            tags = await checkTags(tags, guildId);
-            
-            if (imageLink) {
-                if (!checkURL(imageLink)) {
-                    throw new Error('Please input a valid url.')
-                }
-                
-                var quote = await QuoteSchema.create({
-                    guildId: guildId,
-                    authorId: checkedAuthor._id,
-                    tags: tags,
-                    text: text,
-                    attachment: imageLink
-                });
-            } else if (lastImageChannel) {
-                const firstImageUrl = await getLastImage(lastImageChannel)
-
-                var quote = await QuoteSchema.create({
-                    guildId: guildId,
-                    authorId: checkedAuthor._id,
-                    tags: tags,
-                    text: text,
-                    attachment: firstImageUrl
-                });
-            } else {
-                var quote = await QuoteSchema.create({
-                    guildId: guildId,
-                    authorId: checkedAuthor._id,
-                    tags: tags,
-                    text: text,
-                });
-            }
-
-            const embeddedQuote = quoteEmbed(quote, checkedAuthor)
-
-            await sendToQuotesChannel(embeddedQuote, guildId, client)
-            await interaction.reply(embeddedQuote);
-        } catch(err) {
-            interaction.reply(errorEmbed(err))
-            .catch(_ => interaction.channel.send(errorEmbed(err)))
+        if (checkedAuthor.name == 'Deleted Author') {
+            throw new Error(`Make sure that '${inputtedAuthor}' author exists.`)
         }
-    }
+
+        const text = options.getString('text');
+        const lastImageChannel = options.getChannel('last_image');
+        const imageLink = options.getString('image_link');
+
+        if (!text && !imageLink && !lastImageChannel) {
+            throw new Error('Please provide text and or an image link.')
+        }
+
+        let tags = [
+            options.getString('first_tag'),
+            options.getString('second_tag'),
+            options.getString('third_tag'),
+        ];
+
+        tags = await checkTags(tags, guildId);
+        
+        if (imageLink) {
+            if (!checkURL(imageLink)) {
+                throw new Error('Please input a valid url.')
+            }
+            
+            var quote = await QuoteSchema.create({
+                guildId: guildId,
+                authorId: checkedAuthor._id,
+                tags: tags,
+                text: text,
+                attachment: imageLink
+            });
+        } else if (lastImageChannel) {
+            const firstImageUrl = await getLastImage(lastImageChannel)
+
+            var quote = await QuoteSchema.create({
+                guildId: guildId,
+                authorId: checkedAuthor._id,
+                tags: tags,
+                text: text,
+                attachment: firstImageUrl
+            });
+        } else {
+            var quote = await QuoteSchema.create({
+                guildId: guildId,
+                authorId: checkedAuthor._id,
+                tags: tags,
+                text: text,
+            });
+        }
+
+        const embeddedQuote = quoteEmbed(quote, checkedAuthor)
+
+        await sendToQuotesChannel(embeddedQuote, guildId, client)
+        await interaction.reply(embeddedQuote);
+    })
 };

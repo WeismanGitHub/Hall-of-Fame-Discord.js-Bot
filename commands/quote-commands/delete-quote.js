@@ -1,5 +1,6 @@
-const { errorEmbed, basicEmbed } = require('../../helpers/embeds');
+const { basicEmbed } = require('../../helpers/embeds');
 const { getLastQuote } = require('../../helpers/get-last-item');
+const errorHandler = require('../../helpers/error-handler');
 const QuoteSchema = require('../../schemas/quote-schema');
 const { Constants } = require('discord.js');
 
@@ -23,24 +24,19 @@ module.exports = {
         },
     ],
 
-    callback: async ({ interaction }) => {
-        try {
-            const { options } = interaction;
-            const lastQuoteChannel = options.getChannel('last_quote');
-            const _id = options.getString('id') ?? await getLastQuote(lastQuoteChannel)
-            const guildId = interaction.guildId;
-    
-            const quote = await QuoteSchema.findOneAndDelete({ _id: _id, guildId: guildId }).select('-_id text').lean()
+    callback: async ({ interaction }) => errorHandler(interaction, async () => {
+        const { options } = interaction;
+        const lastQuoteChannel = options.getChannel('last_quote');
+        const _id = options.getString('id') ?? await getLastQuote(lastQuoteChannel)
+        const guildId = interaction.guildId;
 
-            if (quote) {
-                const text = quote.text ? `'${quote.text}'` : 'quote'
-                await interaction.reply(basicEmbed(`Deleted ${text}!`));
-            } else {
-                throw new Error('Quote does not exist!')
-            }
-        } catch(err) {
-            interaction.reply(errorEmbed(err))
-            .catch(_ => interaction.channel.send(errorEmbed(err)))
-        }
-    }
+        const quote = await QuoteSchema.findOneAndDelete({ _id: _id, guildId: guildId }).select('-_id text').lean()
+
+        if (!quote) {
+            throw new Error('Quote does not exist!')
+        } 
+
+        const text = quote.text ? `'${quote.text}'` : 'quote'
+        await interaction.reply(basicEmbed(`Deleted ${text}!`));
+    })
 };

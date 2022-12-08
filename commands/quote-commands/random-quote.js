@@ -1,7 +1,8 @@
 const { getAuthorByName, getAuthorById } = require('../../helpers/get-author');
-const { errorEmbed, quoteEmbed } = require('../../helpers/embeds');
+const errorHandler = require('../../helpers/error-handler');
 const { checkTags } = require('../../helpers/check-tags');
 const QuoteSchema = require('../../schemas/quote-schema');
+const { quoteEmbed } = require('../../helpers/embeds');
 const { Constants } = require('discord.js');
 
 module.exports = {
@@ -49,66 +50,61 @@ module.exports = {
         },
     ],
     
-    callback: async ({ interaction }) => {
-        try {
-            const { options } = interaction;
-            const searchPhrase = options.getString('search_phrase')
-            const isAudioQuote = options.getBoolean('audio_quote')
-            const isImageQuote = options.getBoolean('image_quote')
-            let inputtedAuthor = options.getString('author');
-            const guildId = interaction.guildId;
-            const query = { guildId: guildId };
-            
-            if (inputtedAuthor) {
-                inputtedAuthor = await getAuthorByName(inputtedAuthor, guildId);
-            
-                if (inputtedAuthor.name !== 'Deleted Author') {
-                    query.authorId = inputtedAuthor._id;
-                } else {
-                    throw new Error(`'${inputtedAuthor}' author does not exist.`)
-                }
+    callback: async ({ interaction }) => errorHandler(interaction, async () => {
+        const { options } = interaction;
+        const searchPhrase = options.getString('search_phrase')
+        const isAudioQuote = options.getBoolean('audio_quote')
+        const isImageQuote = options.getBoolean('image_quote')
+        let inputtedAuthor = options.getString('author');
+        const guildId = interaction.guildId;
+        const query = { guildId: guildId };
+        
+        if (inputtedAuthor) {
+            inputtedAuthor = await getAuthorByName(inputtedAuthor, guildId);
+        
+            if (inputtedAuthor.name !== 'Deleted Author') {
+                query.authorId = inputtedAuthor._id;
+            } else {
+                throw new Error(`'${inputtedAuthor}' author does not exist.`)
             }
-
-            let tags = [
-                options.getString('first_tag'),
-                options.getString('second_tag'),
-                options.getString('third_tag'),
-            ];
-
-            tags = await checkTags(tags, guildId);
-            
-            if (tags.length) {
-                query.tags = { $all: tags };
-            }
-            
-            if (searchPhrase) {
-                query.$text = {
-                    '$search': searchPhrase
-                }
-            }
-            
-            if (isAudioQuote !== null) {
-                query.isAudioQuote = isAudioQuote
-            }
-            
-            if (isImageQuote !== null) {
-                query.attachment = { $exists: isImageQuote }
-            }
-
-            const amountOfDocuments = await QuoteSchema.countDocuments(query)
-
-            if (!amountOfDocuments) {
-                throw new Error('Your specifications provide no quotes.')
-            }
-
-            const randomNumber = Math.floor(Math.random() * amountOfDocuments);
-            const randomQuote = await QuoteSchema.findOne(query).skip(randomNumber).lean()
-
-            const author = await getAuthorById(randomQuote.authorId, guildId);
-            await interaction.reply(quoteEmbed(randomQuote, author));
-        } catch(err) {
-            interaction.reply(errorEmbed(err))
-            .catch(_ => interaction.channel.send(errorEmbed(err)))
         }
-    }
+
+        let tags = [
+            options.getString('first_tag'),
+            options.getString('second_tag'),
+            options.getString('third_tag'),
+        ];
+
+        tags = await checkTags(tags, guildId);
+        
+        if (tags.length) {
+            query.tags = { $all: tags };
+        }
+        
+        if (searchPhrase) {
+            query.$text = {
+                '$search': searchPhrase
+            }
+        }
+        
+        if (isAudioQuote !== null) {
+            query.isAudioQuote = isAudioQuote
+        }
+        
+        if (isImageQuote !== null) {
+            query.attachment = { $exists: isImageQuote }
+        }
+
+        const amountOfDocuments = await QuoteSchema.countDocuments(query)
+
+        if (!amountOfDocuments) {
+            throw new Error('Your specifications provide no quotes.')
+        }
+
+        const randomNumber = Math.floor(Math.random() * amountOfDocuments);
+        const randomQuote = await QuoteSchema.findOne(query).skip(randomNumber).lean()
+
+        const author = await getAuthorById(randomQuote.authorId, guildId);
+        await interaction.reply(quoteEmbed(randomQuote, author));
+    })
 };

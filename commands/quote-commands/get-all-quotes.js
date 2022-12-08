@@ -1,7 +1,8 @@
-const { errorEmbed, basicEmbed } = require('../../helpers/embeds');
-const CoolDownSchema = require('../../schemas/cooldown-schema')
+const CoolDownSchema = require('../../schemas/cooldown-schema');
+const errorHandler = require('../../helpers/error-handler');
 const QuoteSchema = require('../../schemas/quote-schema');
 const sendQuotes = require('../../helpers/send-quotes')
+const { basicEmbed } = require('../../helpers/embeds');
 const moment = require('moment');
 
 const {
@@ -40,59 +41,54 @@ module.exports = {
         },
     ],
 
-    callback: (async ({ interaction }) => {
-        try {
-            const guildId = interaction.guildId;
-            const { options } = interaction;
-            const createdAtSort = options.getString('date') == '1' ? 1 : -1
-            const pagination = options.getBoolean('pagination')
+    callback: async ({ interaction }) => errorHandler(interaction, async () => {
+        const guildId = interaction.guildId;
+        const { options } = interaction;
+        const createdAtSort = options.getString('date') == '1' ? 1 : -1
+        const pagination = options.getBoolean('pagination')
 
-            if (pagination == false) {
-                const cooldown = await CoolDownSchema.findOne({ _id: interaction.user.id, command: 'pagination' }).lean()
+        if (pagination == false) {
+            const cooldown = await CoolDownSchema.findOne({ _id: interaction.user.id, command: 'pagination' }).lean()
 
-                if (cooldown?.command == 'pagination') {
-                    const timeFromNow = moment(cooldown.expirationDate).fromNow() 
-                    throw new Error(`You can only turn off pagination every twelve hours. Try again ${timeFromNow}.`)
-                }
+            if (cooldown?.command == 'pagination') {
+                const timeFromNow = moment(cooldown.expirationDate).fromNow() 
+                throw new Error(`You can only turn off pagination every twelve hours. Try again ${timeFromNow}.`)
             }
+        }
 
-            const quotes = await QuoteSchema.find({ guildId: guildId }).sort({ createdAt: createdAtSort })
-            .limit(pagination == false ? Infinity : 10).lean();
+        const quotes = await QuoteSchema.find({ guildId: guildId }).sort({ createdAt: createdAtSort })
+        .limit(pagination == false ? Infinity : 10).lean();
 
-            if (!quotes.length) {
-                throw new Error('This server has no quotes.')
-            }
+        if (!quotes.length) {
+            throw new Error('This server has no quotes.')
+        }
 
-            await interaction.reply(basicEmbed('Started!'))
+        await interaction.reply(basicEmbed('Started!'))
 
-            // sendQuotes modifies quotes array so gotta use a copy.
-            await sendQuotes([...quotes], interaction.channel)
-            
-            if (quotes.length < 10) {
-                // Putting the message and return on the same line doesn't actually cause it to return. Maybe because it's a promise? Idk.
-                await interaction.channel.send(basicEmbed('Done!'))
-                return
-            }
+        // sendQuotes modifies quotes array so gotta use a copy.
+        await sendQuotes([...quotes], interaction.channel)
+        
+        if (quotes.length < 10) {
+            // Putting the message and return on the same line doesn't actually cause it to return. Maybe because it's a promise? Idk.
+            await interaction.channel.send(basicEmbed('Done!'))
+            return
+        }
 
-            if (pagination !== false) {
-                const row = new MessageActionRow()
-                .addComponents(
-                    new MessageButton()
-                    .setLabel('Next 10 Quotes ⏩')
-                    .setCustomId(`10,${createdAtSort},all_quotes`)
-                    .setStyle('PRIMARY')
-                    )
-    
-                await interaction.channel.send({
-                    components: [row]
-                })
-            } else {
-                console.log(await CoolDownSchema.create({ _id: interaction.user.id, command: 'pagination' }))
-                await interaction.channel.send(basicEmbed('Done!'))
-            }
-        } catch(err) {
-            interaction.reply(errorEmbed(err))
-            .catch(_ => interaction.channel.send(errorEmbed(err)))
+        if (pagination !== false) {
+            const row = new MessageActionRow()
+            .addComponents(
+                new MessageButton()
+                .setLabel('Next 10 Quotes ⏩')
+                .setCustomId(`10,${createdAtSort},all_quotes`)
+                .setStyle('PRIMARY')
+                )
+
+            await interaction.channel.send({
+                components: [row]
+            })
+        } else {
+            await CoolDownSchema.create({ _id: interaction.user.id, command: 'pagination' })
+            await interaction.channel.send(basicEmbed('Done!'))
         }
     })
 };

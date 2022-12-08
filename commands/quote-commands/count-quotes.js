@@ -1,7 +1,8 @@
-const { errorEmbed, basicEmbed } = require('../../helpers/embeds');
 const { getAuthorByName } = require('../../helpers/get-author');
+const errorHandler = require('../../helpers/error-handler');
 const { checkTags } = require('../../helpers/check-tags');
 const QuoteSchema = require('../../schemas/quote-schema');
+const { basicEmbed } = require('../../helpers/embeds');
 const { Constants } = require('discord.js');
 
 
@@ -60,61 +61,56 @@ module.exports = {
         }
     ],
 
-    callback: async ({ interaction }) => {
-        try {
-            const { options } = interaction;
-            const searchPhrase = options.getString('search_phrase')
-            const isAudioQuote = options.getBoolean('is_audio_quote')
-            let inputtedAuthor = options.getString('author');
-            const guildId = interaction.guildId;
-            const query = { guildId: guildId };
-        
-            if (inputtedAuthor) {
-                inputtedAuthor = await getAuthorByName(inputtedAuthor, guildId);
+    callback: async ({ interaction }) => errorHandler(interaction, async () => {
+        const { options } = interaction;
+        const searchPhrase = options.getString('search_phrase')
+        const isAudioQuote = options.getBoolean('is_audio_quote')
+        let inputtedAuthor = options.getString('author');
+        const guildId = interaction.guildId;
+        const query = { guildId: guildId };
+    
+        if (inputtedAuthor) {
+            inputtedAuthor = await getAuthorByName(inputtedAuthor, guildId);
 
-                if (inputtedAuthor.name !== 'Deleted Author') {
-                    query.authorId = inputtedAuthor._id;
-                } else {
-                    throw new Error(`'${inputtedAuthor}' author does not exist.`)
-                }
-            }
-
-            if (isAudioQuote !== null) {
-                query.isAudioQuote = isAudioQuote
-            }
-            
-            let tags = [
-                options.getString('first_tag'),
-                options.getString('second_tag'),
-                options.getString('third_tag'),
-            ];
-
-            tags = await checkTags(tags, guildId);
-            
-            if (tags.length) {
-                query.tags = { $all: tags };
-            }
-
-            if (searchPhrase) {
-                query.$text = { $search: searchPhrase }
-            }
-
-            let count;
-
-            if (Object.keys(query).length) {
-                count = await QuoteSchema.countDocuments(query)
+            if (inputtedAuthor.name !== 'Deleted Author') {
+                query.authorId = inputtedAuthor._id;
             } else {
-                count = await QuoteSchema.estimatedDocumentCount()
+                throw new Error(`'${inputtedAuthor}' author does not exist.`)
             }
-            
-            if (count <= 0) {
-                return await interaction.reply(basicEmbed('No quotes match your specifications!'))
-            }
-
-            await interaction.reply(basicEmbed(`${count} quote${count > 1 ? 's' : ''} match${count > 1 ? '' : 'es'} your specifications!`))
-        } catch(err) {
-            interaction.reply(errorEmbed(err))
-            .catch(_ => interaction.channel.send(errorEmbed(err)))
         }
-    }
+
+        if (isAudioQuote !== null) {
+            query.isAudioQuote = isAudioQuote
+        }
+        
+        let tags = [
+            options.getString('first_tag'),
+            options.getString('second_tag'),
+            options.getString('third_tag'),
+        ];
+
+        tags = await checkTags(tags, guildId);
+        
+        if (tags.length) {
+            query.tags = { $all: tags };
+        }
+
+        if (searchPhrase) {
+            query.$text = { $search: searchPhrase }
+        }
+
+        let count;
+
+        if (Object.keys(query).length) {
+            count = await QuoteSchema.countDocuments(query)
+        } else {
+            count = await QuoteSchema.estimatedDocumentCount()
+        }
+        
+        if (count <= 0) {
+            return await interaction.reply(basicEmbed('No quotes match your specifications!'))
+        }
+
+        await interaction.reply(basicEmbed(`${count} quote${count > 1 ? 's' : ''} match${count > 1 ? '' : 'es'} your specifications!`))
+    })
 };

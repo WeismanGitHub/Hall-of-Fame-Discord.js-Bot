@@ -1,11 +1,12 @@
 const { Constants, MessageActionRow, MessageButton } = require('discord.js');
-const { errorEmbed, basicEmbed } = require('../../helpers/embeds');
 const { getAuthorByName } = require('../../helpers/get-author');
-const CoolDownSchema = require('../../schemas/cooldown-schema')
+const CoolDownSchema = require('../../schemas/cooldown-schema');
 const FilterSchema = require('../../schemas/filter-schema');
+const errorHandler = require('../../helpers/error-handler');
 const { checkTags } = require('../../helpers/check-tags');
 const QuoteSchema = require('../../schemas/quote-schema');
-const sendQuotes = require('../../helpers/send-quotes')
+const sendQuotes = require('../../helpers/send-quotes');
+const { basicEmbed } = require('../../helpers/embeds');
 const moment = require('moment');
 
 module.exports = {
@@ -78,110 +79,105 @@ module.exports = {
         },
     ],
 
-    callback: async ({ interaction }) => {
-        try {
-            const { options } = interaction;
-            const sort = options.getString('date') == null ? { createdAt: -1 } : { createdAt: options.getString('date') }
-            const limit = options.getInteger('limit') == null ? 10 : options.getInteger('limit')
-            const searchPhrase = options.getString('search_phrase')
-            const isAudioQuote = options.getBoolean('audio_quote')
-            const isImageQuote = options.getBoolean('image_quote')
-            const pagination = options.getBoolean('pagination')
-            let inputtedAuthor = options.getString('author');
-            const guildId = interaction.guildId;
-            const query = { guildId: guildId };
+    callback: async ({ interaction }) => errorHandler(interaction, async () => {
+        const { options } = interaction;
+        const sort = options.getString('date') == null ? { createdAt: -1 } : { createdAt: options.getString('date') }
+        const limit = options.getInteger('limit') == null ? 10 : options.getInteger('limit')
+        const searchPhrase = options.getString('search_phrase')
+        const isAudioQuote = options.getBoolean('audio_quote')
+        const isImageQuote = options.getBoolean('image_quote')
+        const pagination = options.getBoolean('pagination')
+        let inputtedAuthor = options.getString('author');
+        const guildId = interaction.guildId;
+        const query = { guildId: guildId };
 
-            // Don't lower limit to less than 10. Causes headaches.
-            if ((limit < 1) || (10 < limit)) {
-                throw new Error('Limit must be between 1 and 10.')
-            }
-
-            if (inputtedAuthor) {
-                inputtedAuthor = await getAuthorByName(inputtedAuthor, guildId);
-
-                if (inputtedAuthor.name !== 'Deleted Author') {
-                    query.authorId = inputtedAuthor._id;
-                } else {
-                    throw new Error(`'${inputtedAuthor}' author does not exist.`)
-                }
-            }
-
-            if (isAudioQuote !== null) {
-                query.isAudioQuote = isAudioQuote
-            }
-
-            if (isImageQuote !== null) {
-                query.attachment = { $exists: isImageQuote }
-            }
-
-            let tags = [
-                options.getString('first_tag'),
-                options.getString('second_tag'),
-                options.getString('third_tag'),
-            ];
-
-            tags = await checkTags(tags, guildId);
-            
-            if (tags.length) {
-                query.tags = { $all: tags };
-            }
-
-            if (searchPhrase) {
-                query.$text = { $search: searchPhrase }
-            }
-            
-            if (Object.keys(query).length == 1) {
-                throw new Error('Please add some filters. To get all quotes use /getallquotes.')
-            }
-
-            if (pagination == false) {
-                const cooldown = await CoolDownSchema.findOne({ _id: interaction.user.id, command: 'pagination' }).lean()
-
-                if (cooldown?.command == 'pagination') {
-                    const timeFromNow = moment(cooldown.expirationDate).fromNow() 
-                    throw new Error(`You can only turn off pagination every twelve hours. Try again ${timeFromNow}.`)
-                }
-            }
-
-            const quotes = await QuoteSchema.find(query).sort(sort)
-            .limit(pagination == false ? Infinity : limit).lean();
-
-            if (!quotes.length) {
-                throw new Error('No quotes match your specifications.')
-            }
-
-            await interaction.reply(basicEmbed('Started!'))
-
-            // sendQuotes modifies quotes array so gotta use a copy.
-            await sendQuotes([...quotes], interaction.channel)
-
-            if (quotes.length < 10) {
-                // Putting the message and return on the same line doesn't actually cause it to return. Maybe because it's a promise? Idk.
-                await interaction.channel.send(basicEmbed('Done!'))
-                return
-            }
-
-            if (pagination !== false) {
-                const filterId = (await FilterSchema.create({ query: query, sort: sort }))._id
-
-                const row = new MessageActionRow()
-                .addComponents(
-                    new MessageButton()
-                    .setLabel('Next 10 Quotes ⏩')
-                    .setCustomId(`10,${filterId},find_quotes`)
-                    .setStyle('PRIMARY')
-                )
-                
-                await interaction.channel.send({
-                    components: [row]
-                })
-            } else {
-                await CoolDownSchema.create({ _id: interaction.user.id, command: 'pagination' })
-                await interaction.channel.send(basicEmbed('Done!'))
-            }
-        } catch (err) {
-            await interaction.reply(errorEmbed(err))
-            .catch(_ => interaction.channel.send(errorEmbed(err)))
+        // Don't lower limit to less than 10. Causes headaches.
+        if ((limit < 1) || (10 < limit)) {
+            throw new Error('Limit must be between 1 and 10.')
         }
-    }
+
+        if (inputtedAuthor) {
+            inputtedAuthor = await getAuthorByName(inputtedAuthor, guildId);
+
+            if (inputtedAuthor.name !== 'Deleted Author') {
+                query.authorId = inputtedAuthor._id;
+            } else {
+                throw new Error(`'${inputtedAuthor}' author does not exist.`)
+            }
+        }
+
+        if (isAudioQuote !== null) {
+            query.isAudioQuote = isAudioQuote
+        }
+
+        if (isImageQuote !== null) {
+            query.attachment = { $exists: isImageQuote }
+        }
+
+        let tags = [
+            options.getString('first_tag'),
+            options.getString('second_tag'),
+            options.getString('third_tag'),
+        ];
+
+        tags = await checkTags(tags, guildId);
+        
+        if (tags.length) {
+            query.tags = { $all: tags };
+        }
+
+        if (searchPhrase) {
+            query.$text = { $search: searchPhrase }
+        }
+        
+        if (Object.keys(query).length == 1) {
+            throw new Error('Please add some filters. To get all quotes use /getallquotes.')
+        }
+
+        if (pagination == false) {
+            const cooldown = await CoolDownSchema.findOne({ _id: interaction.user.id, command: 'pagination' }).lean()
+
+            if (cooldown?.command == 'pagination') {
+                const timeFromNow = moment(cooldown.expirationDate).fromNow() 
+                throw new Error(`You can only turn off pagination every twelve hours. Try again ${timeFromNow}.`)
+            }
+        }
+
+        const quotes = await QuoteSchema.find(query).sort(sort)
+        .limit(pagination == false ? Infinity : limit).lean();
+
+        if (!quotes.length) {
+            throw new Error('No quotes match your specifications.')
+        }
+
+        await interaction.reply(basicEmbed('Started!'))
+
+        // sendQuotes modifies quotes array so gotta use a copy.
+        await sendQuotes([...quotes], interaction.channel)
+
+        if (quotes.length < 10) {
+            // Putting the message and return on the same line doesn't actually cause it to return. Maybe because it's a promise? Idk.
+            await interaction.channel.send(basicEmbed('Done!'))
+            return
+        }
+
+        if (pagination !== false) {
+            const filterId = (await FilterSchema.create({ query: query, sort: sort }))._id
+
+            const row = new MessageActionRow()
+            .addComponents(
+                new MessageButton()
+                .setLabel('Next 10 Quotes ⏩')
+                .setCustomId(`10,${filterId},find_quotes`)
+                .setStyle('PRIMARY')
+            )
+            
+            await interaction.channel.send({
+                components: [row]
+            })
+        } else {
+            await CoolDownSchema.create({ _id: interaction.user.id, command: 'pagination' })
+            await interaction.channel.send(basicEmbed('Done!'))
+        }
+    })
 };
