@@ -1,5 +1,6 @@
-const { basicEmbed, errorEmbed } = require('../../helpers/embeds');
+const errorHandler = require('../../helpers/error-handler');
 const GuildSchema = require('../../schemas/guild-schema');
+const { basicEmbed } = require('../../helpers/embeds');
 const { Constants } = require('discord.js');
 
 module.exports = {
@@ -18,29 +19,24 @@ module.exports = {
         }
     ],
 
-    callback: async ({ interaction }) => {
-        try {
-            const { options } = interaction;
-            const guildId = interaction.guildId;
-            const authorName = options.getString('author');
-    
-            const guildDoc = await GuildSchema.findOneAndUpdate(
-                { _id: guildId },
-                { $pull: { authors: { name: authorName } } },
-            ).select('-_id authors').lean()
-            
-            const authorExists = guildDoc.authors.some(author => {
-                return author.name == authorName;
-            });
-    
-            if (authorExists) {
-                return await interaction.reply(basicEmbed(`Deleted '${authorName}' author!`));
-            }
+    callback: async ({ interaction }) => errorHandler(interaction, async () => {
+        const { options } = interaction;
+        const guildId = interaction.guildId;
+        const authorName = options.getString('author');
 
-            await interaction.reply(basicEmbed(`Nothing Deleted.`));
-        } catch(err) {
-            interaction.reply(errorEmbed(err))
-            .catch(_ => interaction.channel.send(errorEmbed(err)))
+        const guildDoc = await GuildSchema.findOneAndUpdate(
+            { _id: guildId },
+            { $pull: { authors: { name: authorName } } },
+        ).select('-_id authors').lean()
+        
+        const authorExists = guildDoc.authors.some(author => {
+            return author.name == authorName;
+        });
+
+        if (authorExists) {
+            return await interaction.reply(basicEmbed(`Deleted '${authorName}' author!`));
         }
-    }
+
+        await interaction.reply(basicEmbed(`Nothing Deleted.`));
+    })
 };

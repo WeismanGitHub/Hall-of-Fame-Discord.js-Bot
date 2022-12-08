@@ -1,6 +1,7 @@
-const { errorEmbed, authorEmbed } = require('../../helpers/embeds');
 const { getLastImage } = require('../../helpers/get-last-item');
+const errorHandler = require('../../helpers/error-handler');
 const GuildSchema = require('../../schemas/guild-schema');
+const { authorEmbed } = require('../../helpers/embeds');
 const checkURL = require('../../helpers/check-url')
 const { Constants } = require('discord.js');
 
@@ -40,62 +41,57 @@ module.exports = {
         }
     ],
 
-    callback: async ({ interaction }) => {
-        try {
-            const { options } = interaction;
-            const lastImageChannel = options.getChannel('last_image');
-            const deleteImage = options.getBoolean('delete_image')
-            let newImgUrl = options.getString('image_link')
-            const newName = options.getString('new_name');
-            const oldName = options.getString('name');
-            const guildId = interaction.guildId;
+    callback: async ({ interaction }) => errorHandler(interaction, async () => {
+        const { options } = interaction;
+        const lastImageChannel = options.getChannel('last_image');
+        const deleteImage = options.getBoolean('delete_image')
+        let newImgUrl = options.getString('image_link')
+        const newName = options.getString('new_name');
+        const oldName = options.getString('name');
+        const guildId = interaction.guildId;
 
-            if (!newName && !newImgUrl && !lastImageChannel && !deleteImage) {
-                throw new Error('Please use at least one update parameter.')
-            }
-
-            if (newImgUrl && !checkURL(newImgUrl)) {
-                throw new Error('Please input a valid url.')
-            }
-
-            if (lastImageChannel) {
-                newImgUrl = await getLastImage(lastImageChannel)
-            }
-
-            if (deleteImage) {
-                newImgUrl = 'https://cdn.discordapp.com/avatars/973042179033415690/a6602f6209ef6546ee8d878e0022a4f3.webp?size=160'
-            }
-
-            const authorNameExists = await GuildSchema.exists({ _id: guildId, 'authors.name': newName })
-
-            if (authorNameExists) {
-                throw new Error('Author name must be unique.')
-            }
-
-            const authors = (await GuildSchema.findOneAndUpdate(
-                { "$and": [
-                    { "_id": { "$eq": guildId } },
-                    { "authors": { "$elemMatch": { "name": { "$eq": oldName } } } }
-                ]},
-                {
-                    "$set": {
-                        ...newImgUrl && { "authors.$.imgUrl": newImgUrl },
-                        ...newName && { "authors.$.name": newName }
-                    }
-                },
-                { new: true }
-            ).select('authors -_id').lean())?.authors
-
-            if (!authors) {
-                throw new Error(`No author named '${oldName}'.`)
-            }
-
-            const author = authors.find(author => author.name == (newName ?? oldName))
-
-            await interaction.reply(authorEmbed(author));
-        } catch(err) {
-            interaction.reply(errorEmbed(err))
-            .catch(_ => interaction.channel.send(errorEmbed(err)))
+        if (!newName && !newImgUrl && !lastImageChannel && !deleteImage) {
+            throw new Error('Please use at least one update parameter.')
         }
-    }
+
+        if (newImgUrl && !checkURL(newImgUrl)) {
+            throw new Error('Please input a valid url.')
+        }
+
+        if (lastImageChannel) {
+            newImgUrl = await getLastImage(lastImageChannel)
+        }
+
+        if (deleteImage) {
+            newImgUrl = 'https://cdn.discordapp.com/avatars/973042179033415690/a6602f6209ef6546ee8d878e0022a4f3.webp?size=160'
+        }
+
+        const authorNameExists = await GuildSchema.exists({ _id: guildId, 'authors.name': newName })
+
+        if (authorNameExists) {
+            throw new Error('Author name must be unique.')
+        }
+
+        const authors = (await GuildSchema.findOneAndUpdate(
+            { "$and": [
+                { "_id": { "$eq": guildId } },
+                { "authors": { "$elemMatch": { "name": { "$eq": oldName } } } }
+            ]},
+            {
+                "$set": {
+                    ...newImgUrl && { "authors.$.imgUrl": newImgUrl },
+                    ...newName && { "authors.$.name": newName }
+                }
+            },
+            { new: true }
+        ).select('authors -_id').lean())?.authors
+
+        if (!authors) {
+            throw new Error(`No author named '${oldName}'.`)
+        }
+
+        const author = authors.find(author => author.name == (newName ?? oldName))
+
+        await interaction.reply(authorEmbed(author));
+    })
 };
