@@ -1,4 +1,5 @@
-const { basicEmbed, errorEmbed, notificationEmbed } = require('../../helpers/embeds');
+const { basicEmbed, notificationEmbed } = require('../../helpers/embeds');
+const errorHandler = require('../../helpers/error-handler');
 const GuildSchema = require('../../schemas/guild-schema');
 
 const {
@@ -17,57 +18,52 @@ module.exports = {
     testOnly: true,
     slash: true,
 
-    callback: async ({ interaction, client }) => {
-        try {
-            const modal = new Modal()
-			.setCustomId('notifyId')
-			.setTitle('Notification');
+    callback: async ({ interaction, client }) => errorHandler(interaction, async () => {
+        const modal = new Modal()
+        .setCustomId('notifyId')
+        .setTitle('Notification');
 
-            const titleInput = new TextInputComponent()
-			.setCustomId('title')
-			.setLabel('Title of the notification.')
-			.setStyle('SHORT');
+        const titleInput = new TextInputComponent()
+        .setCustomId('title')
+        .setLabel('Title of the notification.')
+        .setStyle('SHORT');
 
-		    const bodyInput = new TextInputComponent()
-			.setCustomId('body')
-			.setLabel('Body of the notification.')
-			.setStyle('PARAGRAPH');
+        const bodyInput = new TextInputComponent()
+        .setCustomId('body')
+        .setLabel('Body of the notification.')
+        .setStyle('PARAGRAPH');
 
-            const firstActionRow = new MessageActionRow().addComponents(titleInput);
-            const secondActionRow = new MessageActionRow().addComponents(bodyInput);
+        const firstActionRow = new MessageActionRow().addComponents(titleInput);
+        const secondActionRow = new MessageActionRow().addComponents(bodyInput);
 
-		    modal.addComponents(firstActionRow, secondActionRow);
+        modal.addComponents(firstActionRow, secondActionRow);
 
-		    await interaction.showModal(modal);
+        await interaction.showModal(modal);
 
-            const modalCollector = new InteractionCollector(client, { max: 1 })
+        const modalCollector = new InteractionCollector(client, { max: 1 })
 
-            modalCollector.on('collect', async interact => {
-                if (interact.isModalSubmit()) {
-                    const body = interact.fields.getTextInputValue('body');
-                    const title = interact.fields.getTextInputValue('title');
+        modalCollector.on('collect', async interact => {
+            if (interact.isModalSubmit()) {
+                const body = interact.fields.getTextInputValue('body');
+                const title = interact.fields.getTextInputValue('title');
+
+                const guildDocs = await GuildSchema.find({ notifications: true })
+                .select('notificationChannelId').lean()
     
-                    const guildDocs = await GuildSchema.find({ notifications: true })
-                    .select('notificationChannelId').lean()
-        
-                    for (let guildDoc of guildDocs) {
-                        const guild = await client.guilds.cache.get(guildDoc._id)
-                        const notificationsChannel = await guild.channels.cache.get(guildDoc.notificationChannelId)
-                        
-                        //user set notification channel, guild system channel, or first channel in server
-                        await (
-                            notificationsChannel ?? guild.systemChannel ?? (guild.channels
-                            .filter(chx => chx.type === 'text')
-                            .find(x => x.position === 0))
-                        ).send(notificationEmbed(title, body))
-                    }
-
-                    await interaction.reply(basicEmbed('Notification sent!'))
+                for (let guildDoc of guildDocs) {
+                    const guild = await client.guilds.cache.get(guildDoc._id)
+                    const notificationsChannel = await guild.channels.cache.get(guildDoc.notificationChannelId)
+                    
+                    //user set notification channel, guild system channel, or first channel in server
+                    await (
+                        notificationsChannel ?? guild.systemChannel ?? (guild.channels
+                        .filter(chx => chx.type === 'text')
+                        .find(x => x.position === 0))
+                    ).send(notificationEmbed(title, body))
                 }
-            })
-        } catch(err) {
-            interaction.reply(errorEmbed(err))
-            .catch(_ => interaction.channel.send(errorEmbed(err)))
-        }
-    }
+
+                await interaction.reply(basicEmbed('Notification sent!'))
+            }
+        })
+    })
 };

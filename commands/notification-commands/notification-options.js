@@ -1,4 +1,5 @@
-const { errorEmbed, basicEmbed } = require('../../helpers/embeds');
+const { basicEmbed } = require('../../helpers/embeds');
+const errorHandler = require('../../helpers/error-handler');
 const GuildSchema = require('../../schemas/guild-schema');
 const { Constants } = require('discord.js');
 
@@ -32,31 +33,26 @@ module.exports = {
         }
     ],
     
-    callback: async ( { interaction } ) => {
-        try {
-            const { options } = interaction;
-            const preference = options.getString('preference')
-            const notificationChannelId = (options.getChannel('notification_channel'))?.id
-            let update = {}
-            
-            if (preference) {
-                update.notifications = preference
-            }
-            
-            if (notificationChannelId) {
-                update.notificationChannelId = notificationChannelId
-            }
-            
-            if (!Object.keys(update).length) {
-                throw new Error('Please update something.')
-            }
-
-            await GuildSchema.updateOne({ _id: interaction.guildId }, update)
-
-            await interaction.reply(basicEmbed('Updated notification preferences!'))
-        } catch(err) {
-            interaction.reply(errorEmbed(err))
-            .catch(_ => interaction.channel.send(errorEmbed(err)))
+    callback: async ({ interaction }) => errorHandler(interaction, async () => {
+        const { options } = interaction;
+        const onOrOff = options.getString('on_or_off')
+        const notificationChannelId = (options.getChannel('notification_channel'))?.id
+        let update = {}
+        
+        if (onOrOff) {
+            update.notifications = onOrOff
         }
-    }
+        
+        if (notificationChannelId) {
+            update.notificationChannelId = notificationChannelId
+        }
+        
+        if (!Object.keys(update).length) {
+            throw new Error('Please update something.')
+        }
+
+        await GuildSchema.updateOne({ _id: interaction.guildId }, update)
+
+        await interaction.reply(basicEmbed('Updated notification preferences!'))
+    })
 };
