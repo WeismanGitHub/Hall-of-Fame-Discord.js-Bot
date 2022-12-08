@@ -4,6 +4,7 @@ import './dist/output.css';
 import React from 'react';
 import './styles.css';
 
+import NotFound from './not-found';
 import Guild from './guild';
 import Login from './login';
 import Home from './home';
@@ -14,9 +15,9 @@ root.render(<>
     <Router>
         <Routes>
             <Route path='/login' element={<Login/>}/>
-            <Route path='/' element={<Home/>}>
-                <Route path=':guildId' element={<Guild/>}/>
-            </Route>
+            <Route path='/' element={<Home/>}/>
+            <Route path='/:guildId' element={<Guild/>}/>
+            <Route path='*' element={<NotFound/>}/>
         </Routes>
     </Router>
 </>);
