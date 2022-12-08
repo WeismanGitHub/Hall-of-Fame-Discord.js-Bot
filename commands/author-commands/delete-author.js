@@ -33,10 +33,10 @@ module.exports = {
             return author.name == authorName;
         });
 
-        if (authorExists) {
-            return await interaction.reply(basicEmbed(`Deleted '${authorName}' author!`));
+        if (!authorExists) {
+            throw new Error(`No author named '${authorName}'.`)
         }
-
-        await interaction.reply(basicEmbed(`Nothing Deleted.`));
+        
+        interaction.reply(basicEmbed(`Deleted '${authorName}' author!`));
     })
 };
