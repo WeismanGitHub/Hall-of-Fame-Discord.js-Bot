@@ -1,5 +1,6 @@
-const { basicEmbed, errorEmbed } = require('../helpers/embeds');
+const errorHandler = require('../helpers/error-handler');
 const GuildSchema = require('../schemas/guild-schema');
+const { basicEmbed } = require('../helpers/embeds');
 
 module.exports = {
     category:'Register',
@@ -8,20 +9,15 @@ module.exports = {
     guildOnly: true,
     slash: true,
 
-    callback: async ({interaction}) => {
-        try {
-            const guildId = interaction.guildId;
-    
-            if (!await GuildSchema.findOne({ _id: guildId }).select('_id').lean()) {
-                await GuildSchema.create({ _id: guildId })
-    
-                await interaction.reply(basicEmbed('Registered This Server!'));
-            } else {
-                await interaction.reply(basicEmbed('Already Registered!'));
-            }
-        } catch(err) {
-            interaction.reply(errorEmbed(err))
-            .catch(_ => interaction.channel.send(errorEmbed(err)))
+    callback: async ({ interaction }) => errorHandler(interaction, async () => {
+        const guildId = interaction.guildId;
+
+        if (!await GuildSchema.findOne({ _id: guildId }).select('_id').lean()) {
+            await GuildSchema.create({ _id: guildId })
+
+            await interaction.reply(basicEmbed('Registered This Server!'));
+        } else {
+            await interaction.reply(basicEmbed('Already Registered!'));
         }
-    }
+    })
 };

@@ -1,6 +1,7 @@
-const { errorEmbed, basicEmbed } = require('../../helpers/embeds');
+const errorHandler = require('../../helpers/error-handler');
 const GuildSchema = require('../../schemas/guild-schema');
 const QuoteSchema = require('../../schemas/quote-schema');
+const { basicEmbed } = require('../../helpers/embeds');
 const { Constants } = require('discord.js');
 
 module.exports = {
@@ -25,31 +26,26 @@ module.exports = {
         }
     ],
 
-    callback: async ({ interaction }) => {
-        try {
-            const { options } = interaction;
-            const guildId = interaction.guildId;
-            const tag = options.getString('tag');
-            const newName = options.getString('new_name');
-            
-            const res = await GuildSchema.updateOne(
-                { _id: guildId, tags: tag },
-                { $set: { 'tags.$': newName }
-            })
+    callback: async ({ interaction }) => errorHandler(interaction, async () => {
+        const { options } = interaction;
+        const guildId = interaction.guildId;
+        const tag = options.getString('tag');
+        const newName = options.getString('new_name');
+        
+        const res = await GuildSchema.updateOne(
+            { _id: guildId, tags: tag },
+            { $set: { 'tags.$': newName }
+        })
 
-            if (!res.modifiedCount) {
-                throw new Error('No tag with that name.')
-            }
-            
-            await QuoteSchema.updateMany(
-                { guildId: guildId, tags: tag },
-                { $set: { 'tags.$': newName } }
-            )
-
-            await interaction.reply(basicEmbed(`Changed '${tag}' to ${newName}!`));
-        } catch(err) {
-            interaction.reply(errorEmbed(err))
-            .catch(_ => interaction.channel.send(errorEmbed(err)))
+        if (!res.modifiedCount) {
+            throw new Error('No tag with that name.')
         }
-    }
+        
+        await QuoteSchema.updateMany(
+            { guildId: guildId, tags: tag },
+            { $set: { 'tags.$': newName } }
+        )
+
+        await interaction.reply(basicEmbed(`Changed '${tag}' to ${newName}!`));
+    })
 };
