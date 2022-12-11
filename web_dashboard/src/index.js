@@ -17,7 +17,7 @@ root.render(<>
             <Route path='/login' element={<Login/>}/>
             <Route path='/' element={<Home/>}/>
             <Route path='/:guildId' element={<Guild/>}/>
-            <Route path='*' element={<NotFound/>}/>
+            <Route path='/*' element={<NotFound/>}/>
         </Routes>
     </Router>
 </>);
