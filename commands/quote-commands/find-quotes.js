@@ -129,10 +129,6 @@ module.exports = {
         if (searchPhrase) {
             query.$text = { $search: searchPhrase }
         }
-        
-        if (Object.keys(query).length == 1) {
-            throw new Error('Please add some filters. To get all quotes use /getallquotes.')
-        }
 
         if (pagination == false) {
             const cooldown = await CoolDownSchema.findOne({ _id: interaction.user.id, command: 'pagination' }).lean()
