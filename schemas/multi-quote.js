@@ -1,19 +1,25 @@
 const mongoose = require('mongoose');
 
-const MultiAuthorQuote = new mongoose.Schema({
+const Fragment = new mongoose.Schema({
+    text: {
+        type: String,
+        minLength: 1,
+        maxLength: 256
+    },
+    authorId: {
+        type: mongoose.Types.ObjectId,
+        required: [true, 'Must provide a valid author.'],
+    },
+})
+
+const MultiQuote = new mongoose.Schema({
     guildId: {
         type: String,
     },
     fragments: [{
-        text: {
-            type: String,
-            minLength: 1,
-            maxLength: 256
-        },
-        authorId: {
-            type: mongoose.Types.ObjectId,
-            required: [true, 'Must provide a valid author.'],
-        },
+        type: Fragment,
+        min: 2,
+        max: 10
     }],
     tags: [{
         type: String,
@@ -23,7 +29,7 @@ const MultiAuthorQuote = new mongoose.Schema({
     }],
 }, { timestamps: true });
 
-MultiAuthorQuote.plugin(schema => {
+MultiQuote.plugin(schema => {
     schema.pre('findOneAndUpdate', setOptions);
     schema.pre('updateMany', setOptions);
     schema.pre('updateOne', setOptions);
@@ -34,6 +40,6 @@ function setOptions() {
     this.setOptions({ runValidators: true, new: true });
 }
 
-MultiAuthorQuote.index({ guildId: 1 });
+MultiQuote.index({ guildId: 1 });
 
-module.exports = mongoose.model('multi_author_quotes', MultiAuthorQuote);
+module.exports = mongoose.model('multi_author_quotes', MultiQuote);
