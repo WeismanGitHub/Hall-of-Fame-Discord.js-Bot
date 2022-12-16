@@ -24,7 +24,7 @@ const router = createBrowserRouter([
         element: <Login/>,
     },
     {
-        path: '/:guildId',
+        path: 'guilds/:guildId',
         element: <Guild/>
     },
     {
