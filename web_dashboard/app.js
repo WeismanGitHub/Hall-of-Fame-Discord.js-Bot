@@ -35,6 +35,10 @@ app.use('/api/v1', (req, res, next) => {
 	throw new NotFoundError('Route does not exist.')
 })
 
+app.get('/*', (req, res) => {
+	res.status(200).sendFile(path.resolve(__dirname, './build/index.html'))
+})
+
 app.use(errorHandler)
 
 module.exports = app
