@@ -1,4 +1,3 @@
-const CoolDownSchema = require('../schemas/cooldown-schema')
 const QuoteSchema = require('../schemas/quote-schema');
 const GuildSchema = require('../schemas/guild-schema');
 const sendQuotes = require('../helpers/send-quotes');
@@ -16,7 +15,7 @@ module.exports = {
     options: [
         {
             name: 'quotes_channel',
-            description: 'Choose a channel to have all the quotes in. It will be updated with new quotes. 12 hour cooldown.',
+            description: 'Choose a channel to have all the quotes in. It will be updated with new quotes.',
             type: Constants.ApplicationCommandOptionTypes.CHANNEL,
         },
         {
@@ -40,15 +39,7 @@ module.exports = {
             await GuildSchema.updateOne({ _id: guildId}, { $unset: { quotesChannelId: true } })
             return await interaction.reply(basicEmbed('Removed quotes channel!'))
         }
-        
-        const cooldown = await CoolDownSchema.findOne({ _id: interaction.user.id, command: 'quotes_channel' }).lean()
 
-        if (cooldown?.command == 'quotes_channel') {
-            const timeFromNow = moment(cooldown.expirationDate).fromNow()
-            throw new Error(`You can only change the quotes channel every twelve hours. Try again ${timeFromNow}.`)
-        }
-
-        await CoolDownSchema.create({ _id: interaction.user.id, command: 'quotes_channel' })
         await GuildSchema.updateOne({ _id: guildId }, { quotesChannelId: quotesChannel.id })
 
         await interaction.reply(basicEmbed(`All quotes will be in #${quotesChannel.name} now!`))

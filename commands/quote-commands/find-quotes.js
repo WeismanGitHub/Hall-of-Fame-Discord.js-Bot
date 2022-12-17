@@ -1,6 +1,5 @@
 const { Constants, MessageActionRow, MessageButton } = require('discord.js');
 const { getAuthorByName } = require('../../helpers/get-author');
-const CoolDownSchema = require('../../schemas/cooldown-schema');
 const FilterSchema = require('../../schemas/filter-schema');
 const errorHandler = require('../../helpers/error-handler');
 const { checkTags } = require('../../helpers/check-tags');
@@ -130,15 +129,6 @@ module.exports = {
             query.$text = { $search: searchPhrase }
         }
 
-        if (pagination == false) {
-            const cooldown = await CoolDownSchema.findOne({ _id: interaction.user.id, command: 'pagination' }).lean()
-
-            if (cooldown?.command == 'pagination') {
-                const timeFromNow = moment(cooldown.expirationDate).fromNow() 
-                throw new Error(`You can only turn off pagination every twelve hours. Try again ${timeFromNow}.`)
-            }
-        }
-
         const quotes = await QuoteSchema.find(query).sort(sort)
         .limit(pagination == false ? Infinity : limit).lean();
 
@@ -172,7 +162,6 @@ module.exports = {
                 components: [row]
             })
         } else {
-            await CoolDownSchema.create({ _id: interaction.user.id, command: 'pagination' })
             await interaction.channel.send(basicEmbed('Done!'))
         }
     })
