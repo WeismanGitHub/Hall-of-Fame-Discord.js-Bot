@@ -10,7 +10,6 @@
     "helmet": "^6.0.0",
     "libsodium-wrappers": "^0.7.10",
     "log-to-file": "^3.0.0",
-    "moment": "^2.29.4",
     "mongoose": "^6.3.2",
     "supertest": "^6.3.1",
     "wokcommands": "^1.5.3"

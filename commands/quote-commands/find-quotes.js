@@ -6,7 +6,6 @@ const { checkTags } = require('../../helpers/check-tags');
 const QuoteSchema = require('../../schemas/quote-schema');
 const sendQuotes = require('../../helpers/send-quotes');
 const { basicEmbed } = require('../../helpers/embeds');
-const moment = require('moment');
 
 module.exports = {
     category:'Quotes',

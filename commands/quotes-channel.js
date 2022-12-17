@@ -1,9 +1,9 @@
+const errorHandler = require('../helpers/error-handler')
 const QuoteSchema = require('../schemas/quote-schema');
 const GuildSchema = require('../schemas/guild-schema');
 const sendQuotes = require('../helpers/send-quotes');
 const { basicEmbed } = require('../helpers/embeds');
 const { Constants } = require('discord.js');
-const moment = require('moment');
 
 module.exports = {
     category:'Quotes',
