@@ -1,3 +1,4 @@
+const TagSchema = require('./tag-schema')
 const mongoose = require('mongoose');
 
 const AuthorSchema = new mongoose.Schema({
@@ -7,7 +8,7 @@ const AuthorSchema = new mongoose.Schema({
         minlength: 1,
         maxlength: 50,
     },
-    imgUrl: {
+    iconURL: {
         type: String,
         required: [true, 'Must provide a url.\n(Probably a server error.)']
     }
@@ -16,13 +17,7 @@ const AuthorSchema = new mongoose.Schema({
 const GuildSchema = new mongoose.Schema({
     _id: { type: String, required: true },
     authors: [AuthorSchema],
-    tags: [{
-        type: String,
-        trim: true,
-        minLength: 1,
-        maxLength: 50,
-        collation: { locale: 'en', strength: 2 },
-    }],
+    tags: [TagSchema],
     notifications: {
         type: Boolean,
         default: true,
