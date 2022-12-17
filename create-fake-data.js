@@ -4,7 +4,7 @@ const GuildSchema = require('./schemas/guild-schema')
 const { faker } = require('@faker-js/faker');
 
 async function createFakeData(guildAmount = 5, authorsPerGuild = 10, tagsPerGuild = 10, regQuotesPerAuthor = 10, audioQuotesPerAuthor = 2) {
-    const authorImgLink = 'https://cdn.discordapp.com/avatars/973042179033415690/a6602f6209ef6546ee8d878e0022a4f3.png?size=4096'
+    const authorIconURL = 'https://cdn.discordapp.com/avatars/973042179033415690/a6602f6209ef6546ee8d878e0022a4f3.png?size=4096'
     const audioQuoteLink = 'https://media.discordapp.net/attachments/1025999685787336725/1031490055946129408/futurama-zoidberg-1.mp4'
 
     for (let i = 0; i < guildAmount; i++) {
@@ -16,7 +16,7 @@ async function createFakeData(guildAmount = 5, authorsPerGuild = 10, tagsPerGuil
         }
 
         for (let k = 0; k < authorsPerGuild; k++) {
-            authors.push({ name: `${faker.name.firstName()} ${faker.name.lastName()}`, imgUrl: authorImgLink })
+            authors.push({ name: `${faker.name.firstName()} ${faker.name.lastName()}`, iconURL: authorIconURL })
         }
 
         const guild = await GuildSchema.create({
@@ -30,7 +30,7 @@ async function createFakeData(guildAmount = 5, authorsPerGuild = 10, tagsPerGuil
             const quotes = []
             
             for (let l = 0; l < regQuotesPerAuthor; l++) {
-                const attachment = Math.floor(Math.random() * 10) % 2 ? { attachment: authorImgLink } : null
+                const attachment = Math.floor(Math.random() * 10) % 2 ? { attachment: authorIconURL } : null
                 const tagsNumber = Math.floor(Math.random() * tagsPerGuild + 1)
                 let text = null;
                 
