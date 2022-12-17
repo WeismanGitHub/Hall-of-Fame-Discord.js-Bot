@@ -36,21 +36,21 @@ module.exports = {
         const guildId = interaction.guildId;
         const name = options.getString('name');
         const lastImageChannel = options.getChannel('last_image');
-        let imgUrl = options.getString('icon_url')
+        let iconURL = options.getString('icon_url')
         
-        if (!lastImageChannel && !imgUrl) {
-            imgUrl = 'https://cdn.discordapp.com/avatars/973042179033415690/a6602f6209ef6546ee8d878e0022a4f3.webp?size=160'
+        if (!lastImageChannel && !iconURL) {
+            iconURL = 'https://cdn.discordapp.com/avatars/973042179033415690/a6602f6209ef6546ee8d878e0022a4f3.webp?size=160'
         }
 
         if (lastImageChannel) {
-            imgUrl = await getLastImage(lastImageChannel)
+            iconURL = await getLastImage(lastImageChannel)
         }
 
-        if (!checkURL(imgUrl)) {
+        if (!checkURL(iconURL)) {
             throw new Error('Please input a valid url.')
         }
         
-        const author = { name: name, imgUrl: imgUrl }
+        const author = { name: name, iconURL: iconURL }
 
         const authorNameExists = await GuildSchema.exists({ _id: guildId, 'authors.name': name })
 

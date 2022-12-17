@@ -30,7 +30,7 @@ const quoteEmbed = function(quote, author, color='#8A2BE2') {
 	let embed = new MessageEmbed()
 	.setColor(color)
 	.setTitle(quote.text ?? '(No Text)')
-	.setAuthor({ name: author.name, iconURL: author.imgUrl })
+	.setAuthor({ name: author.name, iconURL: author.iconURL })
 	.addFields({ name: 'Id:', value: `${quote._id}` })
 	.addFields({ name: 'Tags:', value: tags.join(', ') })
 	.setTimestamp(quote.createdAt)
@@ -59,7 +59,7 @@ const authorEmbed = function(author, color='#5865F2') {
 	return {
         embeds: [new MessageEmbed()
 		.setColor(color)
-		.setAuthor({ name: author.name, iconURL: author.imgUrl })
+		.setAuthor({ name: author.name, iconURL: author.iconURL })
 	]}
 }
 
