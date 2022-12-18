@@ -1,3 +1,4 @@
+const TagSchema = require('./tag-schema')
 const mongoose = require('mongoose');
 
 const AudioQuoteSchema = new mongoose.Schema({
@@ -12,21 +13,17 @@ const AudioQuoteSchema = new mongoose.Schema({
         type: String,
         required: [true, 'Must provide a title.']
     },
-    audioFileLink: {
+    audioURL: {
         type: String,
         required: [true, 'Must provide an audio file link.']
     },
-    tags: [{
+    tags: [TagSchema],
+    type: {
         type: String,
-        minLength: 1,
-        maxLength: 50,
-        collation: { locale: 'en', strength: 2 },
-    }],
-    isAudioQuote: {
-        type: Boolean,
-        default: true,
+        required: [true, 'Must provide a type.'],
+        enum: ['regular quote', 'multi-quote', 'audio quote']
     }
-}, {timestamps: true});
+}, { timestamps: { createdAt: true, updatedAt: false } });
 
 AudioQuoteSchema.plugin(schema => {
     schema.pre('findOneAndUpdate', setOptions);
