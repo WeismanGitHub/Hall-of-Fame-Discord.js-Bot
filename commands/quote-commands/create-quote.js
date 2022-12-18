@@ -55,21 +55,20 @@ module.exports = {
     ],
 
     callback: async ({ interaction, client }) => errorHandler(interaction, async () => {
-        const { options } = interaction;
         const guildId = interaction.guildId;
+        const { options } = interaction;
 
-        const inputtedAuthor = options.getString('author');
-        const checkedAuthor = await getAuthorByName(inputtedAuthor, guildId);
+        const author = await getAuthorByName(options.getString('author'), guildId);
 
-        if (checkedAuthor.name == 'Deleted Author') {
-            throw new Error(`Make sure that '${inputtedAuthor}' author exists.`)
+        if (author.name == 'Deleted Author') {
+            throw new Error(`Make sure that '${options.getString('author')}' author exists.`)
         }
 
-        const text = options.getString('text');
         const lastImageChannel = options.getChannel('last_image');
-        const imageLink = options.getString('image_link');
+        let attachmentURL = options.getString('image_link');
+        const text = options.getString('text');
 
-        if (!text && !imageLink && !lastImageChannel) {
+        if (!text && !attachmentURL && !lastImageChannel) {
             throw new Error('Please provide text and or an image link.')
         }
 
@@ -81,38 +80,22 @@ module.exports = {
 
         tags = await checkTags(tags, guildId);
         
-        if (imageLink) {
-            if (!checkURL(imageLink)) {
-                throw new Error('Please input a valid url.')
-            }
-            
-            var quote = await QuoteSchema.create({
-                guildId: guildId,
-                authorId: checkedAuthor._id,
-                tags: tags,
-                text: text,
-                attachment: imageLink
-            });
+        if (attachmentURL && !checkURL(attachmentURL)) {
+            throw new Error('Please input a valid url.')
         } else if (lastImageChannel) {
-            const firstImageUrl = await getLastImage(lastImageChannel)
-
-            var quote = await QuoteSchema.create({
-                guildId: guildId,
-                authorId: checkedAuthor._id,
-                tags: tags,
-                text: text,
-                attachment: firstImageUrl
-            });
-        } else {
-            var quote = await QuoteSchema.create({
-                guildId: guildId,
-                authorId: checkedAuthor._id,
-                tags: tags,
-                text: text,
-            });
+            attachmentURL = await getLastImage(lastImageChannel)
         }
 
-        const embeddedQuote = quoteEmbed(quote, checkedAuthor)
+        const quote = await QuoteSchema.create({
+            guildId: guildId,
+            type: 'regular quote',
+            authorId: author._id,
+            tags: tags,
+            text: text,
+            attachmentURL: attachmentURL
+        });
+
+        const embeddedQuote = quoteEmbed(quote, author)
 
         await sendToQuotesChannel(embeddedQuote, guildId, client)
         await interaction.reply(embeddedQuote);

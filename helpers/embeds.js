@@ -2,10 +2,12 @@ const { MessageEmbed } = require('discord.js');
 require('dotenv').config();
 
 const basicEmbed = function (title, body='', color='#3826ff') {
-	return { embeds: [new MessageEmbed()
+	return { embeds: [
+		new MessageEmbed()
 		.setTitle(title.substring(0, 256))
-		.setDescription(body.substring(0, 4096))] }
+		.setDescription(body.substring(0, 4096))
 		.setColor(color)
+	]}
 };
 
 const notificationEmbed = function(title, body, color='#ffff00') {
