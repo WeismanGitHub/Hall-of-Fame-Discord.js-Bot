@@ -26,17 +26,18 @@ module.exports = {
 
     callback: async ({ interaction }) => errorHandler(interaction, async () => {
         const { options } = interaction;
+        const id = options.getString('id') ?? await getLastQuote(lastQuoteChannel)
         const lastQuoteChannel = options.getChannel('last_quote');
-        const _id = options.getString('id') ?? await getLastQuote(lastQuoteChannel)
         const guildId = interaction.guildId;
 
-        const quote = await QuoteSchema.findOneAndDelete({ _id: _id, guildId: guildId }).select('-_id text').lean()
+        const quote = await QuoteSchema.findOneAndDelete({ _id: id, guildId: guildId }).select('-_id text').lean()
+        // Get quote so users can know what was deleted.
 
         if (!quote) {
             throw new Error('Quote does not exist!')
         } 
 
-        const text = quote.text ? `'${quote.text}'` : 'quote'
+        const text = quote.text ? `'${quote.text.substring(0, 245)}'` : 'quote' // substring to fit 256 char title limit.
         await interaction.reply(basicEmbed(`Deleted ${text}!`));
     })
 };
