@@ -1,7 +1,7 @@
 const { MessageEmbed } = require('discord.js');
 require('dotenv').config();
 
-const basicEmbed = function (title, body='', color='#3826ff') {
+const basicEmbed = function (title, body='', color='#000EFF') {
 	return { embeds: [
 		new MessageEmbed()
 		.setTitle(title.substring(0, 256))
@@ -10,7 +10,7 @@ const basicEmbed = function (title, body='', color='#3826ff') {
 	]}
 };
 
-const notificationEmbed = function(title, body, color='#ffff00') {
+const notificationEmbed = function(title, body, color='#FFFE00') {
 	return { embeds: [new MessageEmbed()
 		.setTitle(title.substring(0, 256))
 		.setDescription(body.substring(0, 4015) + '\n\n`/notification_options` to unsubscribe or change the notifications channel.')
@@ -19,18 +19,18 @@ const notificationEmbed = function(title, body, color='#ffff00') {
    ]}
 }
 
-const quoteEmbed = function(quote, author, color='#8A2BE2') {
+const quoteEmbed = function(quote, author, color='#8F00FF') {
 	let tags = quote.tags.filter(x => x !== null).map(tag => tag.substring(0, 85))
     tags = tags.length ? tags : ['no tags']
 
     if (quote.type == 'audio quote') {
-        color = color == '#8A2BE2' ? '#287e29' : color
+        color = color == '#8F00FF' ? '#00A64A' : color
     } else if (quote.type == 'multi-quote') {
-		color = 'd3657f'
+		color = '#FF6388'
 	}
 
 	if (quote.attachmentURL) {
-		color = '#ff9915'
+		color = '#FF7B00'
 	}
 	
 	let embed = new MessageEmbed()
@@ -60,7 +60,7 @@ const errorEmbed = function(error, title='Theres been an error!', color='#FF0000
     };
 };
 
-const authorEmbed = function(author, color='#5865F2') {
+const authorEmbed = function(author, color='#00EEFF') {
 	return {
         embeds: [new MessageEmbed()
 		.setColor(color)
