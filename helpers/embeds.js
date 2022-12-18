@@ -31,6 +31,7 @@ const quoteEmbed = function(quote, author, color='#8F00FF') {
 
 	if (quote.attachmentURL) {
 		color = '#FF7B00'
+		quote.type = 'image'
 	}
 	
 	let embed = new MessageEmbed()
