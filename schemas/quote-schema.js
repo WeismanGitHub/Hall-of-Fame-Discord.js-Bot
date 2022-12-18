@@ -1,34 +1,34 @@
+const TagSchema = require('./tag-schema')
 const mongoose = require('mongoose');
 
 const QuoteSchema = new mongoose.Schema({
     guildId: {
         type: String,
+        required: [true, 'Must provide a guild id.'],
     },
     authorId: {
         type: mongoose.Types.ObjectId,
         required: [true, 'Must provide a valid author.'],
     },
-    tags: [{
-        type: String,
-        minLength: 1,
-        maxLength: 50,
-        collation: { locale: 'en', strength: 2 },
-    }],
+    tags: [TagSchema],
     text: {
         type: String,
         minLength: 1,
-        maxLength: 256
+        maxLength: 256,
+        default: null
     },
-    attachment: {
+    attachmentURL: {
         type: String,
         minLength: 1,
         maxLength: 256,
+        default: null
     },
-    isAudioQuote: {
-        type: Boolean,
-        default: false,
+    type: {
+        type: String,
+        required: [true, 'Must provide a type.'],
+        enum: ['regular quote', 'multi-quote', 'audio quote']
     }
-}, { timestamps: true });
+}, { timestamps: { createdAt: true, updatedAt: false } });
 
 QuoteSchema.plugin(schema => {
     schema.pre('findOneAndUpdate', setOptions);
@@ -41,6 +41,13 @@ function setOptions() {
     this.setOptions({ runValidators: true, new: true });
 }
 
+QuoteSchema.pre('save', async function() {
+    // check tag validity
+})
+
+QuoteSchema.pre('updateOne', async function(next) {
+    // check tag validity
+})
 QuoteSchema.index({ guildId: 1, text: 'text' });
 
 module.exports = mongoose.model('regular quotes', QuoteSchema, 'quotes');
