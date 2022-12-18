@@ -35,14 +35,20 @@ const quoteEmbed = function(quote, author, color='#8F00FF') {
 	}
 	
 	let embed = new MessageEmbed()
-	.setTitle(quote.text?.substring(0, 256) ?? '[No Text]')
+	.setDescription(quote.text?.substring(0, 4096) ?? '[No Text]')
 	.setAuthor({ name: author.name.substring(0, 256), iconURL: author.iconURL })
-	.addFields({ name: 'ID:', value: `${quote._id}` })
 	.addFields({ name: 'Tags:', value: tags.join(', ') })
+	.addFields({ name: 'ID:', value: `${quote._id}` })
 	.setImage(quote.attachmentURL)
 	.setTimestamp(quote.createdAt)
 	.setFooter({ text: quote.type })
 	.setColor(color)
+	
+	const embedCharacters = embed.author.name + embed.description + embed.footer.text + embed.title ?? '' + (embed.fields.map(field => field.name + field.value).join(''))
+
+	if (embedCharacters.length > 6000) {
+		throw new Error('Embed size cannot be greater than 6000.')
+	}
 
 	return { embeds: [embed] };
 };
