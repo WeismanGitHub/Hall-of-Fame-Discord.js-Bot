@@ -24,7 +24,8 @@ async function getLastAudio(channel) {
     (await channel.messages.fetch({ limit: 25 }))
     .find(message => message.attachments.find(attachment => {
         const contentType = attachment.contentType
-        if (contentType.startsWith('audio' || contentType.startsWith('video'))) {
+
+        if (contentType.startsWith('audio') || contentType.startsWith('video')) {
             firstAudioUrl = attachment.proxyURL
             return true
         }
