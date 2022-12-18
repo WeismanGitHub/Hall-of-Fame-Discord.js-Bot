@@ -13,8 +13,9 @@ const basicEmbed = function (title, body='', color='#000EFF') {
 const notificationEmbed = function(title, body, color='#FFFE00') {
 	return { embeds: [new MessageEmbed()
 		.setTitle(title.substring(0, 256))
-		.setDescription(body.substring(0, 4015) + '\n\n`/notification_options` to unsubscribe or change the notifications channel.')
+		.setDescription(body.substring(0, 4096))
 		.addFields({ name: 'Contact the Creator:', value: `<@${process.env.MAIN_ACCOUNT_ID}>` })
+		.addFooter({ text: '`/notification_options` to unsubscribe or change the notifications channel.' })
 		.setColor(color)
    ]}
 }

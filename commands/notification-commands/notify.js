@@ -50,7 +50,7 @@ module.exports = {
             const body = interact.fields.getTextInputValue('body');
             const title = interact.fields.getTextInputValue('title');
 
-            if (body.length > 4015 || body.length <= 0) { // Max description size is 4096 and 81 characters are already used.
+            if (body.length > 4096 || body.length <= 0) { // Max description size is 4096.
                 throw new Error('Body length must be less than 4015.')
             }
 
