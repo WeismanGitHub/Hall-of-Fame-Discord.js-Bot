@@ -34,7 +34,7 @@ const quoteEmbed = function(quote, author, color='#8A2BE2') {
 	}
 	
 	let embed = new MessageEmbed()
-	.setTitle(quote.text.substring(0, 256) ?? '[No Text]')
+	.setTitle(quote.text?.substring(0, 256) ?? '[No Text]')
 	.setAuthor({ name: author.name.substring(0, 256), iconURL: author.iconURL })
 	.addFields({ name: 'ID:', value: `${quote._id}` })
 	.addFields({ name: 'Tags:', value: tags.join(', ') })
