@@ -40,14 +40,14 @@ module.exports = {
         const title = options.getString('title');
 
         if (!title && !id) {
-            throw new Error('Enter either an id or title.')
+            throw new Error('Enter an id or title.')
         }
     
         const search = { ...title && { text: title }, ...id && { _id: id } }
 
         const audioQuote = await AudioQuoteSchema.findOne({
-            isAudioQuote: true,
             guildId: guildId,
+            type: 'audio quote',
             ...search
         }).lean()
 
@@ -78,7 +78,7 @@ module.exports = {
 
         // Originally I wanted it to just queue the next audio quote, but I couldn't figure it out. I've opted to have it just check if the bot is already playing an audio quote and tell the user you have to wait till the audio quote is done playing.
         interaction.member.voice.channel.members.forEach(member => {
-            if (member.id == '973042179033415690') {
+            if (member.id == process.env.CLIENT_ID) {
                 throw new Error('You must wait for the current audio quote to stop playing.')
             }
         })
