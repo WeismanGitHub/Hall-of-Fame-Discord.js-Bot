@@ -24,19 +24,15 @@ module.exports = {
         const guildId = interaction.guildId;
         const authorName = options.getString('author');
 
-        const guildDoc = await GuildSchema.findOneAndUpdate(
+        const result = await GuildSchema.updateOne(
             { _id: guildId },
             { $pull: { authors: { name: authorName } } },
-        ).select('-_id authors').lean()
+        )
         
-        const authorExists = guildDoc.authors.some(author => {
-            return author.name == authorName;
-        });
-
-        if (!authorExists) {
-            throw new Error(`No author named '${authorName}'.`)
+        if (!result.modifiedCount) {
+            throw new Error('Author could not be found.')
         }
-        
+
         interaction.reply(basicEmbed(`Deleted '${authorName}' author!`));
     })
 };
