@@ -20,7 +20,7 @@ const QuoteSchema = new mongoose.Schema({
     attachmentURL: {
         type: String,
         minLength: 1,
-        maxLength: 256,
+        maxLength: 512,
         default: null
     },
     type: {
