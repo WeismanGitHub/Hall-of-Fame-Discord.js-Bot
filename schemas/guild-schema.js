@@ -6,7 +6,7 @@ const AuthorSchema = new mongoose.Schema({
         type: String,
         required: [true, 'Must provide a name.'],
         minlength: 1,
-        maxlength: 50,
+        maxlength: 256,
     },
     iconURL: {
         type: String,
