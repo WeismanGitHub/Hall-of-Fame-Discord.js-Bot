@@ -11,7 +11,8 @@ const AudioQuoteSchema = new mongoose.Schema({
     },
     text: {
         type: String,
-        required: [true, 'Must provide a title.']
+        required: [true, 'Must provide a title.'],
+        maxLength: 4096,
     },
     audioURL: {
         type: String,

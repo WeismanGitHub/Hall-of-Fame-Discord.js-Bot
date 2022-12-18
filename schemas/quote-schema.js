@@ -13,8 +13,7 @@ const QuoteSchema = new mongoose.Schema({
     tags: [TagSchema],
     text: {
         type: String,
-        minLength: 1,
-        maxLength: 256,
+        maxLength: 4096,
         default: null
     },
     attachmentURL: {
