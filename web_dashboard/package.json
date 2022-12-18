@@ -8,6 +8,7 @@
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.2.0",
     "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
     "discord-oauth2": "^2.10.1",
     "discord.js": "^14.7.1",
     "express": "^4.18.2",
