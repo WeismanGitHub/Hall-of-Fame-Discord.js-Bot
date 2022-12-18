@@ -50,7 +50,7 @@ module.exports = {
         const oldName = options.getString('name');
         const guildId = interaction.guildId;
 
-        if (!newName && !newIconURL && !lastImageChannel && !deleteImage) {
+        if (!newName && !newIconURL && !lastImageChannel && !deleteImage) { // Kinda awkward, but you can't change it easily.
             throw new Error('Please use at least one update parameter.')
         }
 
@@ -58,14 +58,12 @@ module.exports = {
             throw new Error('Please input a valid url.')
         }
 
-        if (lastImageChannel) {
-            newIconURL = await getLastImage(lastImageChannel)
-        }
-
         if (deleteImage) {
             newIconURL = 'https://cdn.discordapp.com/avatars/973042179033415690/a6602f6209ef6546ee8d878e0022a4f3.webp?size=160'
+        } else if (lastImageChannel) {
+            newIconURL = await getLastImage(lastImageChannel)
         }
-
+        
         const authorNameExists = await GuildSchema.exists({ _id: guildId, 'authors.name': newName })
 
         if (authorNameExists) {
