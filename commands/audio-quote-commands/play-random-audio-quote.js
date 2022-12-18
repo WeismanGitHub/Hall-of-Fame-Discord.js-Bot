@@ -54,7 +54,7 @@ module.exports = {
 
         const searchPhrase = options.getString('search_phrase')
         let inputtedAuthor = options.getString('author');
-        const query = { guildId: guildId, isAudioQuote: true };
+        const query = { guildId: guildId, type: 'audio quote' };
         
         if (inputtedAuthor) {
             inputtedAuthor = await getAuthorByName(inputtedAuthor, guildId);
@@ -92,7 +92,7 @@ module.exports = {
 
         const randomNumber = Math.floor(Math.random() * amountOfDocuments);
         const randomAudioQuote = await AudioQuoteSchema.findOne(query).skip(randomNumber).lean()
-
+        
         const voiceChannel = interaction.member.voice.channel
 
         if (!voiceChannel) {
@@ -101,7 +101,7 @@ module.exports = {
 
         const player = createAudioPlayer({ behaviors: { noSubscriber: NoSubscriberBehavior.Stop } });
         
-        const audioQuoteResource = createAudioResource(randomAudioQuote.audioFileLink)
+        const audioQuoteResource = createAudioResource(randomAudioQuote.audioURL)
         
         const connection = joinVoiceChannel({
             selfDeaf: false,
@@ -116,7 +116,7 @@ module.exports = {
 
         // Originally I wanted it to just queue the next audio quote, but I couldn't figure it out. I've opted to have it just check if the bot is already playing an audio quote and tell the user you have to wait till the audio quote is done playing.
         interaction.member.voice.channel.members.forEach(member => {
-            if (member.id == '973042179033415690') {
+            if (member.id == process.env.CLIENT_ID) {
                 throw new Error('You must wait for the current audio quote to stop playing.')
             }
         })

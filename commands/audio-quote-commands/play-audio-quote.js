@@ -44,7 +44,12 @@ module.exports = {
         }
     
         const search = { ...title && { text: title }, ...id && { _id: id } }
-
+        const voiceChannel = interaction.member.voice.channel
+        
+        if (!voiceChannel) {
+            throw new Error('You must be in a voice channel.')
+        }
+        
         const audioQuote = await AudioQuoteSchema.findOne({
             guildId: guildId,
             type: 'audio quote',
@@ -55,15 +60,9 @@ module.exports = {
             throw new Error('Could not find audio quote.')
         }
 
-        const voiceChannel = interaction.member.voice.channel
-
-        if (!voiceChannel) {
-            throw new Error('You must be in a voice channel.')
-        }
-
         const player = createAudioPlayer({ behaviors: { noSubscriber: NoSubscriberBehavior.Stop } });
         
-        const audioQuoteResource = createAudioResource(audioQuote.audioFileLink)
+        const audioQuoteResource = createAudioResource(audioQuote.audioURL)
         
         const connection = joinVoiceChannel({
             selfDeaf: false,
