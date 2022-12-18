@@ -57,7 +57,7 @@ module.exports = {
             type: Constants.ApplicationCommandOptionTypes.STRING
         },
         {
-            name: 'last_audio',
+            name: 'last_audio_file',
             description: 'Use the last audio file sent in a channel.',
             type: Constants.ApplicationCommandOptionTypes.CHANNEL
         },
@@ -81,17 +81,17 @@ module.exports = {
         const audioQuote = await audioQuoteSchema.findOne({
             _id: _id,
             guildId: guildId,
-            isAudioQuote: true,
+            type: 'audio quote',
         }).select('_id').lean()
 
         if (!audioQuote) {
-            throw new Error('Quote does not exist.')
+            throw new Error('Audio quote does not exist.')
         }
 
-        let update = {};
+        const update = {};
         
         const newAudioFileLink = options.getString('new_audio_file_link');
-        const lastAudioChannel = options.getChannel('last_audio');
+        const lastAudioChannel = options.getChannel('last_audio_file');
         const deleteTags = options.getBoolean('delete_tags');
         const newAuthorName = options.getString('new_author');
         const newTitle = options.getString('new_title');
@@ -135,20 +135,20 @@ module.exports = {
             update['authorId'] = author._id;
         }
         
-        if (Object.keys(update).length) {
-            const updatedAudioQuote = await audioQuoteSchema.findOneAndUpdate(
-                { _id: _id },
-                update
-            ).lean()
-
-            const author = await getAuthorById(updatedAudioQuote.authorId, guildId);
-
-            const embeddedAudioQuote = quoteEmbed(updatedAudioQuote, author)
-
-            await sendToQuotesChannel(embeddedAudioQuote, guildId, client)
-            await interaction.reply(embeddedAudioQuote);
-        } else {
-            await interaction.reply(basicEmbed('Nothing Updated.'));
+        if (!Object.keys(update).length) {
+            return await interaction.reply(basicEmbed('Nothing Updated.'));
         }
+
+        const updatedAudioQuote = await audioQuoteSchema.findOneAndUpdate(
+            { _id: _id },
+            update
+        ).lean()
+
+        const author = await getAuthorById(updatedAudioQuote.authorId, guildId);
+
+        const embeddedAudioQuote = quoteEmbed(updatedAudioQuote, author)
+
+        await sendToQuotesChannel(embeddedAudioQuote, guildId, client)
+        await interaction.reply(embeddedAudioQuote);
     })
 };
