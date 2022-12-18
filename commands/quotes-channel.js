@@ -19,9 +19,19 @@ module.exports = {
             type: Constants.ApplicationCommandOptionTypes.CHANNEL,
         },
         {
-            name: 'turn_off',
+            name: 'remove_channel',
             description: 'Remove the quotes channel.',
-            type: Constants.ApplicationCommandOptionTypes.BOOLEAN,
+            type: Constants.ApplicationCommandOptionTypes.STRING,
+            choices: [
+                {
+                    name: 'remove',
+                    value: 'true'
+                },
+                {
+                    name: 'keep',
+                    value: 'false'
+                },
+            ]
         }
     ],
 
@@ -29,14 +39,14 @@ module.exports = {
         const { options } = interaction;
         const guildId = interaction.guildId;
         const quotesChannel = options.getChannel('quotes_channel');
-        const turnOff = options.getBoolean('turn_off');
+        const removeChannel = options.getBoolean('remove_channel');
 
-        if (turnOff == null && !quotesChannel) {
+        if (removeChannel == null && !quotesChannel) {
             throw new Error('Please use a parameter.')
         }
 
-        if (turnOff) {
-            await GuildSchema.updateOne({ _id: guildId}, { $unset: { quotesChannelId: true } })
+        if (removeChannel) {
+            await GuildSchema.updateOne({ _id: guildId }, { $unset: { quotesChannelId: true } })
             return await interaction.reply(basicEmbed('Removed quotes channel!'))
         }
 
