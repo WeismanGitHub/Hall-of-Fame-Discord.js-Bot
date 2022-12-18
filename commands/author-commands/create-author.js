@@ -21,7 +21,7 @@ module.exports = {
         },
         {
             name: 'icon_url',
-            description: 'This will be the image displayed with the author.',
+            description: "This will be the author's icon.",
             type: Constants.ApplicationCommandOptionTypes.STRING,
         },
         {
