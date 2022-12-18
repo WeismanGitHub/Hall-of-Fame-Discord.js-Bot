@@ -90,20 +90,20 @@ module.exports = {
 
         const update = {};
         
-        const newAudioFileLink = options.getString('new_audio_file_link');
+        const newAudioURL = options.getString('new_audio_file_link');
         const lastAudioChannel = options.getChannel('last_audio_file');
         const deleteTags = options.getBoolean('delete_tags');
         const newAuthorName = options.getString('new_author');
         const newTitle = options.getString('new_title');
 
-        if (newAudioFileLink) {
-            if (!checkURL(newAudioFileLink)) {
+        if (newAudioURL) {
+            if (!checkURL(newAudioURL)) {
                 throw new Error('Please input a valid url.')
             }
 
-            update.audioFileLink = newAudioFileLink;
+            update.audioURL = newAudioURL;
         } else if (lastAudioChannel) {
-            update.audioFileLink = await getLastAudio(lastAudioChannel)
+            update.audioURL = await getLastAudio(lastAudioChannel)
         }
 
         let tags = [
@@ -136,7 +136,7 @@ module.exports = {
         }
         
         if (!Object.keys(update).length) {
-            return await interaction.reply(basicEmbed('Nothing Updated.'));
+            throw new Error('No updates.')
         }
 
         const updatedAudioQuote = await audioQuoteSchema.findOneAndUpdate(
