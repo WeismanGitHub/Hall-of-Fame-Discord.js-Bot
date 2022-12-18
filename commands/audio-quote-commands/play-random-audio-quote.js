@@ -54,7 +54,7 @@ module.exports = {
 
         const searchPhrase = options.getString('search_phrase')
         let inputtedAuthor = options.getString('author');
-        const query = { guildId: guildId, type: 'audio quote' };
+        const query = { guildId: guildId, type: 'audio' };
         
         if (inputtedAuthor) {
             inputtedAuthor = await getAuthorByName(inputtedAuthor, guildId);

@@ -23,9 +23,9 @@ const quoteEmbed = function(quote, author, color='#8F00FF') {
 	let tags = quote.tags.filter(x => x !== null).map(tag => tag.substring(0, 85))
     tags = tags.length ? tags : ['no tags']
 
-    if (quote.type == 'audio quote') {
+    if (quote.type == 'audio') {
         color = color == '#8F00FF' ? '#00A64A' : color
-    } else if (quote.type == 'multi-quote') {
+    } else if (quote.type == 'multi') {
 		color = '#FF6388'
 	}
 

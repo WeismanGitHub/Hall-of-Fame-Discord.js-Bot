@@ -126,6 +126,7 @@ module.exports = {
             text: title,
             audioFileLink: audioFileLink ?? await getLastAudio(lastAudioChannel),
             tags: tags,
+            type: 'multi'
         });
 
         const embeddedMultiQuote = multiQuoteEmbed()

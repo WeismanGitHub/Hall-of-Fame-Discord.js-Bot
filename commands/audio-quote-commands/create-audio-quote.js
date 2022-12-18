@@ -92,7 +92,7 @@ module.exports = {
             text: title,
             audioURL: audioURL ?? await getLastAudio(lastAudioChannel),
             tags: tags,
-            type: 'audio quote'
+            type: 'audio'
         });
 
         const embeddedAudioQuote = quoteEmbed(audioQuote, checkedAuthor)

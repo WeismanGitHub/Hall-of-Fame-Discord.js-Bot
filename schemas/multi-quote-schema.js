@@ -29,7 +29,7 @@ const MultiQuoteSchema = new mongoose.Schema({
     type: {
         type: String,
         required: [true, 'Must provide a type.'],
-        enum: ['regular quote', 'multi-quote', 'audio quote']
+        enum: ['regular', 'multi', 'audio']
     }
 }, { timestamps: { createdAt: true, updatedAt: false } });
 
@@ -44,4 +44,4 @@ function setOptions() {
     this.setOptions({ runValidators: true, new: true });
 }
 
-module.exports = mongoose.model('multi-quotes', MultiQuoteSchema, 'quotes');
+module.exports = mongoose.model('multi', MultiQuoteSchema, 'quotes');

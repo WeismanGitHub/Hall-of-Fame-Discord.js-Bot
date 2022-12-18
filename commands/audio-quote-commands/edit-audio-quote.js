@@ -81,7 +81,7 @@ module.exports = {
         const audioQuote = await audioQuoteSchema.findOne({
             _id: _id,
             guildId: guildId,
-            type: 'audio quote',
+            type: 'audio',
         }).select('_id').lean()
 
         if (!audioQuote) {

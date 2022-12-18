@@ -52,7 +52,7 @@ module.exports = {
         
         const audioQuote = await AudioQuoteSchema.findOne({
             guildId: guildId,
-            type: 'audio quote',
+            type: 'audio',
             ...search
         }).lean()
 
