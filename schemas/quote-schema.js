@@ -49,5 +49,6 @@ QuoteSchema.pre('updateOne', async function(next) {
     // check tag validity
 })
 QuoteSchema.index({ guildId: 1, text: 'text' });
+QuoteSchema.index({ guildId: 1 });
 
 module.exports = mongoose.model('regular quotes', QuoteSchema, 'quotes');
