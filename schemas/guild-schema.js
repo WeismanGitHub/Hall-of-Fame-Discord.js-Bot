@@ -4,13 +4,13 @@ const mongoose = require('mongoose');
 const AuthorSchema = new mongoose.Schema({
     name: {
         type: String,
-        required: [true, 'Must provide a name.\n(Probably a server error.)'],
+        required: [true, 'Must provide a name.'],
         minlength: 1,
         maxlength: 50,
     },
     iconURL: {
         type: String,
-        required: [true, 'Must provide a url.\n(Probably a server error.)']
+        required: [true, 'Must provide a url.']
     }
 });
 
