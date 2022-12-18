@@ -68,13 +68,13 @@ module.exports = {
         
         const lastAudioChannel = options.getChannel('last_audio');
         const title = options.getString('title');
-        const audioFileLink = options.getString('audio_file_link');
+        const audioURL = options.getString('audio_file_link');
         
-        if (!lastAudioChannel && !audioFileLink) {
+        if (!lastAudioChannel && !audioURL) {
             throw new Error('Please provide an audio file link or choose a channel to get the audio file from.')
         }
 
-        if (audioFileLink && !checkURL(audioFileLink)) {
+        if (audioURL && !checkURL(audioURL)) {
             throw new Error('Please input a valid url.')
         }
 
@@ -90,7 +90,7 @@ module.exports = {
             guildId: guildId,
             authorId: checkedAuthor._id,
             text: title,
-            audioFileLink: audioFileLink ?? await getLastAudio(lastAudioChannel),
+            audioURL: audioURL ?? await getLastAudio(lastAudioChannel),
             tags: tags,
         });
 
