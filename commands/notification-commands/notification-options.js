@@ -12,7 +12,7 @@ module.exports = {
 
     options: [
         {
-            name: 'on_or_off',
+            name: 'notifications',
             description: 'Turn notifications on or off.',
             type: Constants.ApplicationCommandOptionTypes.STRING,
             choices: [
@@ -35,12 +35,12 @@ module.exports = {
     
     callback: async ({ interaction }) => errorHandler(interaction, async () => {
         const { options } = interaction;
-        const onOrOff = options.getString('on_or_off')
+        const notifications = options.getString('notifications')
         const notificationChannelId = (options.getChannel('notification_channel'))?.id
         let update = {}
         
-        if (onOrOff) {
-            update.notifications = onOrOff
+        if (notifications) {
+            update.notifications = notifications
         }
         
         if (notificationChannelId) {
