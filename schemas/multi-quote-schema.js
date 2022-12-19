@@ -21,6 +21,7 @@ const MultiQuoteSchema = new mongoose.Schema({
     },
     text: { // The title of the quote.
         type: String,
+        minLength: 1,
         maxLength: 256,
         required: [true, 'Must provide a title.'],
     },

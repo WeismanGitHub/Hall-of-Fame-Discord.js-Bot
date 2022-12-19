@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const QuoteSchema = new mongoose.Schema({
     guildId: {
         type: String,
+        minLength: 1,
         required: [true, 'Must provide a guild id.'],
     },
     authorId: {
@@ -13,6 +14,7 @@ const QuoteSchema = new mongoose.Schema({
     tags: [TagSchema],
     text: {
         type: String,
+        minLength: 1,
         maxLength: 4096,
         default: null
     },

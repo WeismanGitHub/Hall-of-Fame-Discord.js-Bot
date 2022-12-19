@@ -10,6 +10,7 @@ const AuthorSchema = new mongoose.Schema({
     },
     iconURL: {
         type: String,
+        minLength: 1,
         required: [true, 'Must provide a url.']
     }
 });
@@ -26,7 +27,7 @@ const GuildSchema = new mongoose.Schema({
         type: String
     },
     quotesChannelId: {
-        type: String
+        type: String,
     }
 });
 
