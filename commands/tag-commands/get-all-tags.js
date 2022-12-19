@@ -15,12 +15,15 @@ module.exports = {
     
         const tags= (await GuildSchema.find({ _id: guildId }).select('tags').lean())[0].tags
         .sort((firstTag, secondTag) => firstTag.localeCompare(secondTag, undefined, { sensitivity: 'base' }))
-
         let message = '';
         tags.forEach(tag => {
             message += `${tag}\n`;
         });
         
-        await interaction.reply(tags.length? basicEmbed('Server Tags:', message) : basicEmbed('There are no tags.'));
+        if (!tags.length) {
+            throw new Error('There are no tags.')
+        }
+
+        await interaction.reply(basicEmbed('Server Tags:', message))
     })
 };
