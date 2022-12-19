@@ -6,7 +6,7 @@
   <hr class="rounded">
   
   ### Description
-  A hall of fame bot with 27 commands that allow you save text, images, and audio. To create quotes you must first create authors, which have an image and name. Every type of quote (audio, image, regular, and multi) has an author, text, and up to three tags. Use /help for more information.
+  A hall of fame bot with 28 commands that allow you save text, images, and audio. To create quotes you must first create authors, which have an image and name. Every type of quote (audio, image, regular, and multi) has an author, text, and up to three tags. Use /help for more information.
   <hr class="rounded">
   
   ### Quotes Explanation
