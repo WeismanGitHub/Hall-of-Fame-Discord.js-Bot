@@ -39,33 +39,54 @@ module.exports = {
             type: Constants.ApplicationCommandOptionTypes.STRING,
         },
         {
-            name: 'audio_quote',
-            description: 'Sorts by if quote is audio quote or not.',
-            type: Constants.ApplicationCommandOptionTypes.BOOLEAN,
-        },
-        {
-            name: 'image_quote',
-            description: 'Sorts by if the quote has an image.',
-            type: Constants.ApplicationCommandOptionTypes.BOOLEAN,
-        },
+            name: 'type',
+            description: 'Filter by type of quote.',
+            type: Constants.ApplicationCommandOptionTypes.STRING,
+            choices: [
+                {
+                    name: 'regular quote',
+                    value: 'regular'
+                },
+                {
+                    name: 'audio quote',
+                    value: 'audio'
+                },
+                {
+                    name: 'multi-quote',
+                    value: 'multi'
+                },
+                {
+                    name: 'image quote',
+                    value: 'image'
+                }
+            ]
+        }
     ],
     
     callback: async ({ interaction }) => errorHandler(interaction, async () => {
         const { options } = interaction;
         const searchPhrase = options.getString('search_phrase')
-        const isAudioQuote = options.getBoolean('audio_quote')
-        const isImageQuote = options.getBoolean('image_quote')
-        let inputtedAuthor = options.getString('author');
+        let author = options.getString('author');
+        const type = options.getString('type')
+
         const guildId = interaction.guildId;
         const query = { guildId: guildId };
-        
-        if (inputtedAuthor) {
-            inputtedAuthor = await getAuthorByName(inputtedAuthor, guildId);
-        
-            if (inputtedAuthor.name !== 'Deleted Author') {
-                query.authorId = inputtedAuthor._id;
+
+        if (author) {
+            author = await getAuthorByName(author, guildId);
+            query.authorId = author._id;
+
+            if (author.name == 'Deleted Author') {
+                throw new Error(`'${options.getString('author')}' author does not exist.`)
+            }
+        }
+
+        if (type) {
+            if (type == 'image') {
+                query.attachmentURL = { $ne: null }
             } else {
-                throw new Error(`'${inputtedAuthor}' author does not exist.`)
+                query.type = type
+                query.attachmentURL = null
             }
         }
 
@@ -82,17 +103,7 @@ module.exports = {
         }
         
         if (searchPhrase) {
-            query.$text = {
-                '$search': searchPhrase
-            }
-        }
-        
-        if (isAudioQuote !== null) {
-            query.isAudioQuote = isAudioQuote
-        }
-        
-        if (isImageQuote !== null) {
-            query.attachment = { $exists: isImageQuote }
+            query.$text = { $search: searchPhrase }
         }
 
         const amountOfDocuments = await QuoteSchema.countDocuments(query)
@@ -104,7 +115,10 @@ module.exports = {
         const randomNumber = Math.floor(Math.random() * amountOfDocuments);
         const randomQuote = await QuoteSchema.findOne(query).skip(randomNumber).lean()
 
-        const author = await getAuthorById(randomQuote.authorId, guildId);
+        if (!author) {
+            author = await getAuthorById(randomQuote.authorId, guildId)
+        }
+
         await interaction.reply(quoteEmbed(randomQuote, author));
     })
 };
