@@ -110,7 +110,7 @@ module.exports = {
         const plural = count > 1
         
         if (count <= 0) {
-            return await interaction.reply(basicEmbed('No quotes match your specifications!'))
+            throw new Error('No quotes match your specifications!')
         }
 
         await interaction.reply(basicEmbed(`${count} quote${plural ? 's' : ''} match${plural ? '' : 'es'} your specifications!`))
