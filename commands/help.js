@@ -18,12 +18,16 @@ module.exports = {
             new MessageButton()
             .setLabel('Source Code')
             .setURL("https://github.com/WeismanGitHub/Hall-of-Fame-Discord.js-Bot")
+            .setStyle('LINK'),
+            new MessageButton()
+            .setLabel('In-Depth Explanation')
+            .setURL("https://github.com/WeismanGitHub/Hall-of-Fame-Discord.js-Bot/blob/master/README.md")
             .setStyle('LINK')
         ])
 
         const descriptionEmbed = new MessageEmbed()
         .setColor('#5865F2')
-        .setDescription('A hall of fame bot with 26 commands that allow you save text, images, and audio. To create quotes you must first create authors, which have an image and name. Regular quotes have an author and text or an image. Audio quotes have an author, audio/video file, and a title. Play audio quotes in a voice channel with /play_quote! You can upload a file to Discord and copy the link or use the last_attachment parameter to get the most recent file sent in a channel.')
+        .setDescription('A hall of fame bot with 27 commands that allow you save text, images, and audio. To create quotes you must first create authors, which have an image and name. Every type of quote (audio, image, regular, and multi) has an author, text, and up to three tags. I strongly recommend you check the Github readme for a more in depth explanation.')
         .addFields({ name: 'Contact the Creator:', value: `<@${process.env.MAIN_ACCOUNT_ID}>` })
     
         await interaction.reply({ embeds: [descriptionEmbed], components: [row] });
