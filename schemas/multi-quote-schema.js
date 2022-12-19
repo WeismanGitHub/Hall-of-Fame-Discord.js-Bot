@@ -5,7 +5,8 @@ const Fragment = new mongoose.Schema({
     text: {
         type: String,
         minLength: 1,
-        maxLength: 256
+        maxLength: 819, // A fifth of 4096, the desciption limit of embeds.
+        required: [true, 'Must provide text.']
     },
     authorId: {
         type: mongoose.Types.ObjectId,
@@ -20,12 +21,10 @@ const MultiQuoteSchema = new mongoose.Schema({
     },
     text: { // The title of the quote.
         type: String,
-        maxLength: 4096,
+        maxLength: 256,
         required: [true, 'Must provide a title.'],
     },
-    fragments: [{
-        type: Fragment,
-    }],
+    fragments: [Fragment],
     tags: [TagSchema],
     type: {
         type: String,
