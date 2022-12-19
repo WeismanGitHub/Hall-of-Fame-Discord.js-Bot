@@ -84,7 +84,7 @@ module.exports = {
             attachmentURL = await getLastImage(lastImageChannel)
         }
         
-        if (!checkURL(attachmentURL)) {
+        if (attachmentURL && !checkURL(attachmentURL)) {
             throw new Error('Please input a valid url.')
         }
 
