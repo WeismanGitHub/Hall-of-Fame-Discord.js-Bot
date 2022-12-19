@@ -16,7 +16,7 @@ module.exports = {
     options: [
         {
             name: 'title',
-            description: 'Title of the audio quote.',
+            description: 'Title of the multi-quote.',
             required: true,
             type: Constants.ApplicationCommandOptionTypes.STRING
         },
