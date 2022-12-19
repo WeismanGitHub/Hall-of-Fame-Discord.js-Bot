@@ -40,32 +40,45 @@ module.exports = {
             type: Constants.ApplicationCommandOptionTypes.STRING,
         },
         {
-            name: 'is_audio_quote',
-            description: 'Sorts by if quote is audio quote or not.',
-            type: Constants.ApplicationCommandOptionTypes.BOOLEAN,
+            name: 'type',
+            description: 'Filter by type of quote.',
+            type: Constants.ApplicationCommandOptionTypes.STRING,
+            choices: [
+                {
+                    name: 'regular quote',
+                    value: 'regular'
+                },
+                {
+                    name: 'audio quote',
+                    value: 'audio'
+                },
+                {
+                    name: 'multi-quote',
+                    value: 'multi'
+                }
+            ]
         }
     ],
 
     callback: async ({ interaction }) => errorHandler(interaction, async () => {
         const { options } = interaction;
         const searchPhrase = options.getString('search_phrase')
-        const isAudioQuote = options.getBoolean('is_audio_quote')
         let inputtedAuthor = options.getString('author');
+        const type = options.getBoolean('type')
         const guildId = interaction.guildId;
         const query = { guildId: guildId };
     
         if (inputtedAuthor) {
             inputtedAuthor = await getAuthorByName(inputtedAuthor, guildId);
+            query.authorId = inputtedAuthor._id;
 
             if (inputtedAuthor.name !== 'Deleted Author') {
-                query.authorId = inputtedAuthor._id;
-            } else {
                 throw new Error(`'${inputtedAuthor}' author does not exist.`)
             }
         }
 
-        if (isAudioQuote !== null) {
-            query.isAudioQuote = isAudioQuote
+        if (type) {
+            query.type = type
         }
         
         let tags = [
@@ -84,18 +97,13 @@ module.exports = {
             query.$text = { $search: searchPhrase }
         }
 
-        let count;
-
-        if (Object.keys(query).length) {
-            count = await QuoteSchema.countDocuments(query)
-        } else {
-            count = await QuoteSchema.estimatedDocumentCount()
-        }
+        const count = await QuoteSchema.countDocuments(query)
+        const plural = count > 1
         
         if (count <= 0) {
             return await interaction.reply(basicEmbed('No quotes match your specifications!'))
         }
 
-        await interaction.reply(basicEmbed(`${count} quote${count > 1 ? 's' : ''} match${count > 1 ? '' : 'es'} your specifications!`))
+        await interaction.reply(basicEmbed(`${count} quote${plural ? 's' : ''} match${plural ? '' : 'es'} your specifications!`))
     })
 };
