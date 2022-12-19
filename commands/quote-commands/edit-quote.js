@@ -68,7 +68,7 @@ module.exports = {
         },
         {
             name: 'last_quote',
-            description: 'Use the last quote sent in a channel.',
+            description: "Use the last quote sent in a channel. Will grab any type of quote.",
             type: Constants.ApplicationCommandOptionTypes.CHANNEL
         },
     ],
