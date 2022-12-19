@@ -55,6 +55,10 @@ module.exports = {
                 {
                     name: 'multi-quote',
                     value: 'multi'
+                },
+                {
+                    name: 'image quote',
+                    value: 'image'
                 }
             ]
         }
@@ -63,22 +67,27 @@ module.exports = {
     callback: async ({ interaction }) => errorHandler(interaction, async () => {
         const { options } = interaction;
         const searchPhrase = options.getString('search_phrase')
-        let inputtedAuthor = options.getString('author');
+        let author = options.getString('author');
         const type = options.getBoolean('type')
         const guildId = interaction.guildId;
         const query = { guildId: guildId };
     
-        if (inputtedAuthor) {
-            inputtedAuthor = await getAuthorByName(inputtedAuthor, guildId);
-            query.authorId = inputtedAuthor._id;
+        if (author) {
+            author = await getAuthorByName(author, guildId);
+            query.authorId = author._id;
 
-            if (inputtedAuthor.name !== 'Deleted Author') {
-                throw new Error(`'${inputtedAuthor}' author does not exist.`)
+            if (author.name == 'Deleted Author') {
+                throw new Error(`'${options.getString('author')}' author does not exist.`)
             }
         }
 
         if (type) {
-            query.type = type
+            if (type == 'image') {
+                query.attachmentURL = { $ne: null }
+            } else {
+                query.type = type
+                query.attachmentURL = null
+            }
         }
         
         let tags = [
