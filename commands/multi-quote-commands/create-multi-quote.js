@@ -2,8 +2,8 @@ const sendToQuotesChannel = require('../../helpers/send-to-quotes-channel');
 const MultiQuoteSchema = require('../../schemas/audio-quote-schema');
 const { getAuthorByName } = require('../../helpers/get-author');
 const errorHandler = require('../../helpers/error-handler');
-const { multiQuoteEmbed } = require('../../helpers/embeds');
 const { checkTags } = require('../../helpers/check-tags');
+const { quoteEmbed } = require('../../helpers/embeds');
 const { Constants } = require('discord.js');
 
 module.exports = {
@@ -94,42 +94,47 @@ module.exports = {
     callback: async ({ interaction, client }) => errorHandler(interaction, async () => {
         const guildId = interaction.guildId;
         const { options } = interaction;
-        
-        const title = options.getString('title');
+
         let tags = [
             options.getString('first_tag'),
             options.getString('second_tag'),
             options.getString('third_tag'),
         ];
-
-        const fragments = [
-            { text: options.getString('first_text'), author: options.getString('first_author') },
-            { text: options.getString('second_text'), author: options.getString('second_author') },
-            { text: options.getString('third_text'), author: options.getString('third_author') },
-            { text: options.getString('fourth_text'), author: options.getString('fourth_author') },
-            { text: options.getString('fifth_text'), author: options.getString('fifth_author') },
-        ]
         
         tags = await checkTags(tags, guildId);
 
-        const checkedFragments = fragments.map(async (fragment) => {
-            let checkedAuthor = await getAuthorByName(fragment.name)
+        const fragments = [
+            { text: options.getString('first_text'), authorName: options.getString('first_author') },
+            { text: options.getString('second_text'), authorName: options.getString('second_author') },
+            { text: options.getString('third_text'), authorName: options.getString('third_author') },
+            { text: options.getString('fourth_text'), authorName: options.getString('fourth_author') },
+            { text: options.getString('fifth_text'), authorName: options.getString('fifth_author') },
+        ]
+        
+        const checkedFragments = []
 
-            if (checkedAuthor.name == 'Deleted Author') {
-                
+        fragments.forEach(async (fragment) => {
+            const author = await getAuthorByName(fragment.authorName)
+
+            if (author.name == 'Deleted Author') {
+                throw new Error(`Make sure that '${fragment.authorName}' author exists.`)
+            }
+
+            if (!Object.values(fragment).includes(null)) {
+                fragment.authorId = author._id
+                checkedFragments.push(fragment)
             }
         })
 
         const multiQuote = await MultiQuoteSchema.create({
             guildId: guildId,
-            authorId: checkedAuthor._id,
-            text: title,
-            audioFileLink: audioFileLink ?? await getLastAudio(lastAudioChannel),
+            text: options.getString('title'),
+            fragments: checkedFragments,
             tags: tags,
             type: 'multi'
         });
 
-        const embeddedMultiQuote = multiQuoteEmbed()
+        const embeddedMultiQuote = quoteEmbed(multiQuote, checkedFragments) // checkedFragments
 
         await sendToQuotesChannel(embeddedMultiQuote, guildId, client)
         await interaction.reply(embeddedMultiQuote);
