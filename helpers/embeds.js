@@ -6,7 +6,7 @@ const basicEmbed = function (title, body='', color='#000EFF') {
 		new MessageEmbed()
 		.setTitle(title.substring(0, 256))
 		.setDescription(body.substring(0, 4096))
-		.setColor(color)
+		.setColor(color) // blue
 	]}
 };
 
@@ -16,28 +16,27 @@ const notificationEmbed = function(title, body, color='#FFFE00') {
 		.setDescription(body.substring(0, 4096))
 		.addFields({ name: 'Contact the Creator:', value: `<@${process.env.MAIN_ACCOUNT_ID}>` })
 		.addFooter({ text: '`/notification_options` to unsubscribe or change the notifications channel.' })
-		.setColor(color)
+		.setColor(color) // yellow
    ]}
 }
 
-const quoteEmbed = function(quote, author, color='#8F00FF') {
+// Multi-quote isn't separate embed because easier to determine what to do here than anywhere there could be a multi-quote.
+const quoteEmbed = function(quote, author, color='#8F00FF') { // color == purple
 	let tags = quote.tags.filter(x => x !== null).map(tag => tag.substring(0, 85))
     tags = tags.length ? tags : ['no tags']
 
-    if (quote.type == 'audio') {
-        color = color == '#8F00FF' ? '#00A64A' : color
-    } else if (quote.type == 'multi') {
-		color = '#FF6388'
-	}
+	const colorChange = (color == '#8F00FF')
+	const inputtedColor = color
 
-	if (quote.attachmentURL) {
-		color = '#FF7B00'
+    if (quote.type == 'audio') {
+        color = color == '#00A64A'  // green
+    } else if (quote.attachmentURL) {
+		color = '#FF7B00' // orange
 		quote.type = 'image'
 	}
 	
-	let embed = new MessageEmbed()
+	const embed = new MessageEmbed()
 	.setDescription(quote.text?.substring(0, 4096) ?? '[No Text]')
-	.setAuthor({ name: author.name.substring(0, 256), iconURL: author.iconURL })
 	.addFields({ name: 'Tags:', value: tags.join(', ') })
 	.addFields({ name: 'ID:', value: `${quote._id}` })
 	.setImage(quote.attachmentURL)
@@ -45,7 +44,28 @@ const quoteEmbed = function(quote, author, color='#8F00FF') {
 	.setFooter({ text: quote.type })
 	.setColor(color)
 	
-	const embedCharacters = embed.author.name + embed.description + embed.footer.text + embed.title ?? '' + (embed.fields.map(field => field.name + field.value).join(''))
+	if (quote.type == 'multi') {
+		const formattedFragments = author.map(fragment => {
+			return `${fragment.authorName}: ${fragment.text}`
+		}).join('\n')
+
+		embed.setTitle(quote.text)
+		embed.setDescription(formattedFragments)
+		embed.setColor('#ff2e95') // pink
+	} else {
+		embed.setAuthor({ name: author.name.substring(0, 256), iconURL: author.iconURL })
+	}
+
+	if (colorChange) {
+		embed.setColor(inputtedColor)
+	}
+	
+	const embedCharacters =
+		embed.author.name
+		+ embed.description
+		+ embed.footer.text
+		+ embed.title ?? ''
+		+ (embed.fields.map(field => field.name + field.value).join(''))
 
 	if (embedCharacters.length > 6000) {
 		throw new Error('Embed size cannot be greater than 6000.')
@@ -62,7 +82,7 @@ const errorEmbed = function(error, title='Theres been an error!', color='#FF0000
 			new MessageEmbed()
 			.setTitle(title.substring(0, 256))
 			.setDescription(error.substring(0, 4096))
-			.setColor(color)
+			.setColor(color) // red
 		],
 		ephemeral: ephemeral
     };
@@ -71,7 +91,7 @@ const errorEmbed = function(error, title='Theres been an error!', color='#FF0000
 const authorEmbed = function(author, color='#00EEFF') {
 	return {
         embeds: [new MessageEmbed()
-		.setColor(color)
+		.setColor(color) // cyan
 		.setAuthor({ name: author.name.substring(0, 256), iconURL: author.iconURL })
 	]}
 }
