@@ -77,23 +77,23 @@ module.exports = {
         const { options } = interaction;
         const guildId  = interaction.guildId;
         const lastQuoteChannel = options.getChannel('last_quote');
-        const _id = options.getString('id') ?? await getLastQuote(lastQuoteChannel)
+        const id = options.getString('id') ?? await getLastQuote(lastQuoteChannel)
 
-        if (!_id) {
+        if (!id) {
             throw new Error('Please provide a quote id or choose a channel to get the quote id from.')
         }
 
         const quote = await QuoteSchema.findOne({
-            _id: _id,
             guildId: guildId,
-            isAudioQuote: false
+            _id: id,
+            type: 'regular'
         }).select('_id').lean()
 
         if (!quote) {
-            throw new Error('Quote does not exist.')
+            throw new Error('Regular Quote does not exist. Use `/edit_audio_quote` or `/edit_multi_quote` for audio and multi quotes.')
         }
 
-        let update = {};
+        const update = {};
 
         const lastImageChannel = options.getChannel('last_image');
         const newImageLink = options.getString('new_image_link');
@@ -143,23 +143,23 @@ module.exports = {
         }
         
         if (deleteImage) {
-            update.$unset = {'attachment': '' }
+            update.attachmentURL = null
         }
 
-        if (Object.keys(update).length || deleteImage) {
-            const updatedQuote = await QuoteSchema.findOneAndUpdate(
-                { _id: _id, guildId: guildId },
-                update
-            ).lean()
-
-            const author = await getAuthorById(updatedQuote.authorId, guildId);
-
-            const embeddedQuote = quoteEmbed(updatedQuote, author)
-
-            await sendToQuotesChannel(embeddedQuote, guildId, client)
-            await interaction.reply(embeddedQuote);
-        } else {
-            await interaction.reply(basicEmbed('Nothing Updated.'));
+        if (!Object.keys(update).length) {
+            throw new Error('No updates.')
         }
+
+        const updatedQuote = await QuoteSchema.findOneAndUpdate(
+            { _id: id, guildId: guildId },
+            update
+        ).lean()
+
+        const author = await getAuthorById(updatedQuote.authorId, guildId);
+
+        const embeddedQuote = quoteEmbed(updatedQuote, author)
+
+        await sendToQuotesChannel(embeddedQuote, guildId, client)
+        await interaction.reply(embeddedQuote);
     })
 };
