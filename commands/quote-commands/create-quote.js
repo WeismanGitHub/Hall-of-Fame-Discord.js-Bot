@@ -49,7 +49,7 @@ module.exports = {
         },
         {
             name: 'last_image',
-            description: 'Add the last image sent in a channel to the quote.',
+            description: 'Use the last image sent in a channel to the quote.',
             type: Constants.ApplicationCommandOptionTypes.CHANNEL
         }
     ],
@@ -80,15 +80,17 @@ module.exports = {
 
         tags = await checkTags(tags, guildId);
         
-        if (attachmentURL && !checkURL(attachmentURL)) {
-            throw new Error('Please input a valid url.')
-        } else if (lastImageChannel) {
+        if (!attachmentURL && lastImageChannel) {
             attachmentURL = await getLastImage(lastImageChannel)
+        }
+        
+        if (!checkURL(attachmentURL)) {
+            throw new Error('Please input a valid url.')
         }
 
         const quote = await QuoteSchema.create({
             guildId: guildId,
-            type: 'regular quote',
+            type: 'regular',
             authorId: author._id,
             tags: tags,
             text: text,
