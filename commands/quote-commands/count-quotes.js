@@ -40,21 +40,6 @@ module.exports = {
             type: Constants.ApplicationCommandOptionTypes.STRING,
         },
         {
-            name: 'date',
-            description: 'Sort by newest/oldest.',
-            type: Constants.ApplicationCommandOptionTypes.STRING,
-            choices: [
-                {
-                    name: 'newest',
-                    value: '-1'
-                },
-                {
-                    name: 'oldest',
-                    value: '1'
-                },
-            ]
-        },
-        {
             name: 'is_audio_quote',
             description: 'Sorts by if quote is audio quote or not.',
             type: Constants.ApplicationCommandOptionTypes.BOOLEAN,
