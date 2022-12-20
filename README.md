@@ -34,8 +34,9 @@
   <hr class="rounded">
   
   ### Tags
-    Tags are just text. Tags are created with `/create_tag`, edited with `/edit_tag`, and deleted with `/delete_tag`. Editing a tag updates the tag in all quotes and so does deleting a tag. See all your tags with `/get_tags`.
+  Tags are just text. Tags are created with `/create_tag`, edited with `/edit_tag`, and deleted with `/delete_tag`. Editing a tag updates the tag in all quotes and so does deleting a tag. See all your tags with `/get_tags`.
   
-    ![All Tags](https://user-images.githubusercontent.com/102398620/208617187-2f2215fa-5c28-4849-b869-2483ae37333c.png)
+  ![All Tags](https://user-images.githubusercontent.com/102398620/208617527-385b0bbc-dc85-4403-ad51-e68f52ec41ed.png)
+
   <hr class="rounded">
 </div>
