@@ -10,7 +10,7 @@
   <hr class="rounded">
   
   ### Authors
-  Authors have a title and an optional image. The default image is the Hall of Fame Bot's icon. Authors are created with `/create_author` and edited with `/edit_author`. Use the `last_image` parameter of the command to use the latest image sent in a channel. You can also upload an image to Discord or somewhere else, copy the link, and input that into the `image_link` parameter. Deleting an author with `/delete_author` will make any of those author's quotes display "Deleted Author".
+  Authors have a title and an optional image. The default image is the Hall of Fame Bot's icon. Authors are created with `/create_author` and edited with `/edit_author`. Use the `last_image` parameter of the command to use the latest image sent in a channel. You can also upload an image to Discord or somewhere else, copy the link, and input that into the `image_link` parameter. Deleting an author with `/delete_author` will make any of those author's quotes display "Deleted Author". See all your authors with `/get_authors`.
   
   ![image](https://user-images.githubusercontent.com/102398620/208613726-60eaee16-0410-4bc2-895d-a8a79b69fab0.png)
    <hr class="rounded">
@@ -31,5 +31,11 @@
   Multi-quotes have between 2 and 5 authors, a required title, and up to 3 tags. They are created with `/create_multi_quote`, edited with `/edit_multi_quote`, and deleted with `/delete_quote`. Multi-quotes are color coded pink.
   
   ![image](https://user-images.githubusercontent.com/102398620/208615647-233779c1-efac-498a-af08-f20782f35e0f.png)
+  <hr class="rounded">
+  
+  ### Tags
+    Tags are just text. Tags are created with `/create_tag`, edited with `/edit_tag`, and deleted with `/delete_tag`. Editing a tag updates the tag in all quotes and so does deleting a tag. See all your tags with `/get_tags`.
+  
+    ![All Tags](https://user-images.githubusercontent.com/102398620/208617187-2f2215fa-5c28-4849-b869-2483ae37333c.png)
   <hr class="rounded">
 </div>
