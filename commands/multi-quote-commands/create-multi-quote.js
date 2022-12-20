@@ -1,5 +1,5 @@
 const sendToQuotesChannel = require('../../helpers/send-to-quotes-channel');
-const MultiQuoteSchema = require('../../schemas/audio-quote-schema');
+const MultiQuoteSchema = require('../../schemas/multi-quote-schema');
 const { getAuthorByName } = require('../../helpers/get-author');
 const errorHandler = require('../../helpers/error-handler');
 const { checkTags } = require('../../helpers/check-tags');
@@ -113,18 +113,20 @@ module.exports = {
         
         const checkedFragments = []
 
-        fragments.forEach(async (fragment) => {
-            const author = await getAuthorByName(fragment.authorName)
+        for (let fragment of fragments) {
+            if ([fragment.text, fragment.authorName].includes(null)) {
+                continue
+            }
 
+            const author = await getAuthorByName(fragment.authorName, guildId)
+            
             if (author.name == 'Deleted Author') {
                 throw new Error(`Make sure that '${fragment.authorName}' author exists.`)
             }
 
-            if (!Object.values(fragment).includes(null)) {
-                fragment.authorId = author._id
-                checkedFragments.push(fragment)
-            }
-        })
+            fragment.authorId = author._id
+            checkedFragments.push(fragment)
+        }
 
         const multiQuote = await MultiQuoteSchema.create({
             guildId: guildId,
