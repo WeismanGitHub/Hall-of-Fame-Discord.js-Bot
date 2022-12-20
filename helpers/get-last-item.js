@@ -55,7 +55,7 @@ async function getLastQuote(channel) {
     
     (await channel.messages.fetch({ limit: 25 }))
     .find(message => message.embeds.find(embed => {
-        const _id = embed.fields[0]?.value
+        const _id = embed.fields[1]?.value
         
         if (ObjectId.isValid(_id)) {
             firstQuoteId = _id
