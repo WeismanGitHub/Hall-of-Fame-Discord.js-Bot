@@ -1,5 +1,6 @@
-const { quoteEmbed, errorEmbed } = require('./embeds');
 const { getAuthorById } = require('../helpers/get-author');
+const { quoteEmbed, errorEmbed } = require('./embeds');
+const GuildSchema = require('../schemas/guild-schema')
 
 async function sendQuotes(quotes, channel) {
     const quoteGroups = [];
@@ -12,8 +13,23 @@ async function sendQuotes(quotes, channel) {
         const quoteEmbeds = []
 
         for (let quote of quoteGroup) {
-            const quoteAuthor = await getAuthorById(quote.authorId, channel.guild.id);
-            quoteEmbeds.push(...quoteEmbed(quote, quoteAuthor).embeds)
+            let author = null;
+            const checkedFragments = [];
+
+            if (quote.type == 'multi') {
+                const guildAuthors = (await GuildSchema.findById(quote.guildId).select('-_id authors').lean()).authors
+
+                for (let fragment of quote.fragments) {
+                    const authorName = (guildAuthors.find(({ _id }) => _id?.equals(fragment.authorId) ))?.name
+                    fragment.authorName = authorName ?? 'Deleted Author'
+
+                    checkedFragments.push(fragment)
+                }
+            } else {
+                author = await getAuthorById(quote.authorId, channel.guild.id);
+            }
+
+            quoteEmbeds.push(...quoteEmbed(quote, author ?? checkedFragments).embeds)
         }
 
         await channel.send({ embeds: quoteEmbeds })
