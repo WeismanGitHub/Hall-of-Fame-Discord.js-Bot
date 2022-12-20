@@ -17,12 +17,14 @@ module.exports = {
             name: 'name',
             description: 'The name of the author you want to edit. (case sensitive)',
             required: true,
-            type: Constants.ApplicationCommandOptionTypes.STRING
+            type: Constants.ApplicationCommandOptionTypes.STRING,
+            maxLength: 256
         },
         {
             name: 'new_name',
             description: 'The name you want to change the author to. (case sensitive)',
-            type: Constants.ApplicationCommandOptionTypes.STRING
+            type: Constants.ApplicationCommandOptionTypes.STRING,
+            maxLength: 256
         },
         {
             name: 'image_link',

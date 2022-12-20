@@ -19,17 +19,21 @@ module.exports = {
         {
             name: 'id',
             description: 'The id of the quote.',
-            type: Constants.ApplicationCommandOptionTypes.STRING
+            type: Constants.ApplicationCommandOptionTypes.STRING,
+            minLength: 24,
+            maxLength: 24,
         },
         {
             name: 'new_author',
             description: 'Name of the new author. You must create an author beforehand.',
-            type: Constants.ApplicationCommandOptionTypes.STRING
+            type: Constants.ApplicationCommandOptionTypes.STRING,
+            maxLength: 256
         },
         {
             name: 'new_text',
             description: 'New quote text.',
-            type: Constants.ApplicationCommandOptionTypes.STRING
+            type: Constants.ApplicationCommandOptionTypes.STRING,
+            maxLength: 4096
         },
         {
             name: 'new_image_link',
@@ -49,17 +53,20 @@ module.exports = {
         {
             name: 'first_tag',
             description: 'Tags are used for filtering. You must create a tag beforehand. New tags will overwrite the old ones.',
-            type: Constants.ApplicationCommandOptionTypes.STRING
+            type: Constants.ApplicationCommandOptionTypes.STRING,
+            maxLength: 339
         },
         {
             name: 'second_tag',
             description: 'Tags are used for filtering. You must create a tag beforehand. New tags will overwrite the old ones.',
-            type: Constants.ApplicationCommandOptionTypes.STRING
+            type: Constants.ApplicationCommandOptionTypes.STRING,
+            maxLength: 339
         },
         {
             name: 'third_tag',
             description: 'Tags are used for filtering. You must create a tag beforehand. New tags will overwrite the old ones.',
-            type: Constants.ApplicationCommandOptionTypes.STRING
+            type: Constants.ApplicationCommandOptionTypes.STRING,
+            maxLength: 339
         },
         {
             name: 'last_image',

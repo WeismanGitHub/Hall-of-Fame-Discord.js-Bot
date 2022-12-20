@@ -21,11 +21,13 @@ module.exports = {
             description: 'The name of who said the quote. You must first register an author with /createauthor.',
             required: true,
             type: Constants.ApplicationCommandOptionTypes.STRING,
+            maxLength: 256
         },
         {
             name: 'text',
             description: 'What was said by the person.',
-            type: Constants.ApplicationCommandOptionTypes.STRING
+            type: Constants.ApplicationCommandOptionTypes.STRING,
+            maxLength: 4096
         },
         {
             name: 'image_link',
@@ -36,16 +38,19 @@ module.exports = {
             name: 'first_tag',
             description: 'Tags are used for filtering.',
             type: Constants.ApplicationCommandOptionTypes.STRING,
+            maxLength: 339
         },
         {
             name: 'second_tag',
             description: 'Tags are used for filtering.',
-            type: Constants.ApplicationCommandOptionTypes.STRING
+            type: Constants.ApplicationCommandOptionTypes.STRING,
+            maxLength: 339
         },
         {
             name: 'third_tag',
             description: 'Tags are used for filtering.',
             type: Constants.ApplicationCommandOptionTypes.STRING,
+            maxLength: 339
         },
         {
             name: 'last_image',
@@ -59,7 +64,7 @@ module.exports = {
         const { options } = interaction;
 
         const author = await getAuthorByName(options.getString('author'), guildId);
-
+        
         if (author.name == 'Deleted Author') {
             throw new Error(`Make sure that '${options.getString('author')}' author exists.`)
         }
@@ -67,10 +72,6 @@ module.exports = {
         const lastImageChannel = options.getChannel('last_image');
         let attachmentURL = options.getString('image_link');
         const text = options.getString('text');
-
-        if (!text && !attachmentURL && !lastImageChannel) {
-            throw new Error('Please provide text and or an image link.')
-        }
 
         let tags = [
             options.getString('first_tag'),

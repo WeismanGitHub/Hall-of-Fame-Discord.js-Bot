@@ -16,6 +16,7 @@ module.exports = {
             name: 'tag',
             description: 'The tag you want to delete.',
             required: true,
+            maxLength: 339,
             type: Constants.ApplicationCommandOptionTypes.STRING
         }
     ],

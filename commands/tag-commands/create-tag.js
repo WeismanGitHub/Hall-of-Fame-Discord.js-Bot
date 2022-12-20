@@ -15,7 +15,8 @@ module.exports = {
             name: 'tag',
             description: 'The name of the tag you want to create.',
             required: true,
-            type: Constants.ApplicationCommandOptionTypes.STRING
+            type: Constants.ApplicationCommandOptionTypes.STRING,
+            maxLength: 339,
         }
     ],
 

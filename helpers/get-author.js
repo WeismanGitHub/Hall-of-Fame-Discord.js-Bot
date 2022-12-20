@@ -2,6 +2,10 @@ const GuildSchema = require('../schemas/guild-schema');
 const mongoose = require('mongoose');
 
 async function getAuthorByName(name, guildId) {
+    if (!guildId || !name) {
+        throw new Error('Missing parameters.')
+    }
+
     try {
         const author = (await GuildSchema.findOne(
             { _id : guildId },
@@ -30,7 +34,7 @@ async function getAuthorByName(name, guildId) {
 
 async function getAuthorById(id, guildId) {
     if (!guildId || !id) {
-        throw new Error('Missing parameters')
+        throw new Error('Missing parameters.')
     }
     
     try {

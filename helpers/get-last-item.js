@@ -3,6 +3,10 @@ const ObjectId = require('mongoose').Types.ObjectId;
 async function getLastImage(channel) {
     let firstImageUrl;
 
+    if (channel.type !== 'GUILD_TEXT') {
+        throw new Error('Channel must be text channel.')
+    }
+
     (await channel.messages.fetch({ limit: 25 }))
     .find(message => message.attachments.find(attachment => {
         if (attachment.contentType.startsWith('image')) {
@@ -20,6 +24,10 @@ async function getLastImage(channel) {
 
 async function getLastAudio(channel) {
     let firstAudioUrl;
+
+    if (channel.type !== 'GUILD_TEXT') {
+        throw new Error('Channel must be text channel.')
+    }
 
     (await channel.messages.fetch({ limit: 25 }))
     .find(message => message.attachments.find(attachment => {
@@ -41,6 +49,10 @@ async function getLastAudio(channel) {
 async function getLastQuote(channel) {
     let firstQuoteId;
 
+    if (channel.type !== 'GUILD_TEXT') {
+        throw new Error('Channel must be text channel.')
+    }
+    
     (await channel.messages.fetch({ limit: 25 }))
     .find(message => message.embeds.find(embed => {
         const _id = embed.fields[0]?.value

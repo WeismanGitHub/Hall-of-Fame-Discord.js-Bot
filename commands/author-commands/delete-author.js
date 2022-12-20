@@ -15,7 +15,8 @@ module.exports = {
             name: 'author',
             description: 'The name of the author you want to delete.',
             required: true,
-            type: Constants.ApplicationCommandOptionTypes.STRING
+            type: Constants.ApplicationCommandOptionTypes.STRING,
+            maxLength: 256
         }
     ],
 

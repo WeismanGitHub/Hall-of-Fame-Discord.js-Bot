@@ -16,6 +16,8 @@ module.exports = {
             name: 'id',
             description: 'The id of the quote.',
             type: Constants.ApplicationCommandOptionTypes.STRING,
+            minLength: 24,
+            maxLength: 24
         },
         {
             name: 'last_quote',
@@ -26,8 +28,8 @@ module.exports = {
 
     callback: async ({ interaction }) => errorHandler(interaction, async () => {
         const { options } = interaction;
-        const id = options.getString('id') ?? await getLastQuote(lastQuoteChannel)
         const lastQuoteChannel = options.getChannel('last_quote');
+        const id = options.getString('id') ?? await getLastQuote(lastQuoteChannel)
         const guildId = interaction.guildId;
 
         const quote = await QuoteSchema.findOneAndDelete({ _id: id, guildId: guildId }).select('-_id text').lean()

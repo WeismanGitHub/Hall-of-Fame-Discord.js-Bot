@@ -21,12 +21,14 @@ module.exports = {
             description: 'The name of who said the quote. You must first register an author with /createauthor.',
             required: true,
             type: Constants.ApplicationCommandOptionTypes.STRING,
+            maxLength: 256
         },
         {
             name: 'title',
             description: 'Title of the audio quote.',
             required: true,
-            type: Constants.ApplicationCommandOptionTypes.STRING
+            type: Constants.ApplicationCommandOptionTypes.STRING,
+            maxLength: 4096
         },
         {
             name: 'audio_file_link',
@@ -37,16 +39,19 @@ module.exports = {
             name: 'first_tag',
             description: 'Tags are used for filtering.',
             type: Constants.ApplicationCommandOptionTypes.STRING,
+            maxLength: 339
         },
         {
             name: 'second_tag',
             description: 'Tags are used for filtering.',
-            type: Constants.ApplicationCommandOptionTypes.STRING
+            type: Constants.ApplicationCommandOptionTypes.STRING,
+            maxLength: 339
         },
         {
             name: 'third_tag',
             description: 'Tags are used for filtering.',
             type: Constants.ApplicationCommandOptionTypes.STRING,
+            maxLength: 339
         },
         {
             name: 'last_audio',

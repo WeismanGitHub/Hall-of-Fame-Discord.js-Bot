@@ -16,12 +16,14 @@ module.exports = {
             name: 'tag',
             description: 'The tag you want to edit.',
             required: true,
+            maxLength: 339,
             type: Constants.ApplicationCommandOptionTypes.STRING
         },
         {
             name: 'new_name',
             description: 'What you want to rename the tag to.',
             required: true,
+            maxLength: 339,
             type: Constants.ApplicationCommandOptionTypes.STRING
         }
     ],

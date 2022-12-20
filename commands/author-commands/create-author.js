@@ -18,6 +18,7 @@ module.exports = {
             description: 'The name of the author you want to create.',
             type: Constants.ApplicationCommandOptionTypes.STRING,
             required: true,
+            maxLength: 256
         },
         {
             name: 'icon_url',

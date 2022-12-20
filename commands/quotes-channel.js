@@ -39,7 +39,7 @@ module.exports = {
         const { options } = interaction;
         const guildId = interaction.guildId;
         const quotesChannel = options.getChannel('quotes_channel');
-        const removeChannel = options.getBoolean('remove_channel');
+        const removeChannel = options.getString('remove_channel');
 
         if (removeChannel == null && !quotesChannel) {
             throw new Error('Please use a parameter.')
@@ -48,6 +48,10 @@ module.exports = {
         if (removeChannel) {
             await GuildSchema.updateOne({ _id: guildId }, { $unset: { quotesChannelId: true } })
             return await interaction.reply(basicEmbed('Removed quotes channel!'))
+        }
+        
+        if (quotesChannel.type !== 'GUILD_TEXT') {
+            throw new Error('Channel must be text channel.')
         }
 
         await GuildSchema.updateOne({ _id: guildId }, { quotesChannelId: quotesChannel.id })

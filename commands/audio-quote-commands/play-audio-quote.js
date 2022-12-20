@@ -23,12 +23,15 @@ module.exports = {
         {
             name: 'title',
             description: 'Play quote with either an id or title.',
-            type: Constants.ApplicationCommandOptionTypes.STRING
+            type: Constants.ApplicationCommandOptionTypes.STRING,
+            maxLength: 4096
         },
         {
             name: 'id',
             description: 'Play quote with either an id or title.',
-            type: Constants.ApplicationCommandOptionTypes.STRING
+            type: Constants.ApplicationCommandOptionTypes.STRING,
+            minLength: 24,
+            maxLength: 24,
         }
     ],
 
