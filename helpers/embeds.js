@@ -24,17 +24,13 @@ const notificationEmbed = function(title, body, color='#FFFE00') {
 const quoteEmbed = function(quote, author, color='#8F00FF') { // color == purple
 	let tags = quote.tags.filter(x => x !== null).map(tag => tag.substring(0, 85))
     tags = tags.length ? tags : ['no tags']
-
-	const colorChange = (color == '#8F00FF')
-	const inputtedColor = color
-
-    if (quote.type == 'audio') {
-        color = color == '#00A64A'  // green
-    } else if (quote.attachmentURL) {
-		color = '#FF7B00' // orange
+	let embedCharacters = ''
+	const colorChange = (color !== '#8F00FF')
+	
+	if (quote.attachmentURL) {
 		quote.type = 'image'
 	}
-	
+
 	const embed = new MessageEmbed()
 	.setDescription(quote.text?.substring(0, 4096) ?? '[No Text]')
 	.addFields({ name: 'Tags:', value: tags.join(', ') })
@@ -42,7 +38,6 @@ const quoteEmbed = function(quote, author, color='#8F00FF') { // color == purple
 	.setImage(quote.attachmentURL)
 	.setTimestamp(quote.createdAt)
 	.setFooter({ text: quote.type })
-	.setColor(color)
 	
 	if (quote.type == 'multi') {
 		const formattedFragments = author.map(fragment => {
@@ -51,21 +46,35 @@ const quoteEmbed = function(quote, author, color='#8F00FF') { // color == purple
 
 		embed.setTitle(quote.text)
 		embed.setDescription(formattedFragments)
-		embed.setColor('#ff2e95') // pink
 	} else {
 		embed.setAuthor({ name: author.name.substring(0, 256), iconURL: author.iconURL })
+		embedCharacters += embed.author.name
 	}
 
-	if (colorChange) {
-		embed.setColor(inputtedColor)
+	if (!colorChange) {
+		switch (quote.type) {
+			case 'multi':
+				color = '#ff2e95' // pink
+				break;
+
+				case 'audio':
+				color = '#00A64A'// green
+				break;
+
+				case 'image':
+				color = '#FF7B00'// orange
+				break;
+		}
 	}
+
+	embed.setColor(color)
 	
-	const embedCharacters =
-		embed.author.name
-		+ embed.description
+	embedCharacters += (
+		embed.description
 		+ embed.footer.text
 		+ embed.title ?? ''
 		+ (embed.fields.map(field => field.name + field.value).join(''))
+	)
 
 	if (embedCharacters.length > 6000) {
 		throw new Error('Embed size cannot be greater than 6000.')
