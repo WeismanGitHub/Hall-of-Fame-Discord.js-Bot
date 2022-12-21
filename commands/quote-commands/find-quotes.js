@@ -2,10 +2,10 @@ const { Constants, MessageActionRow, MessageButton } = require('discord.js');
 const { getAuthorByName } = require('../../helpers/get-author');
 const FilterSchema = require('../../schemas/filter-schema');
 const errorHandler = require('../../helpers/error-handler');
-const { checkTags } = require('../../helpers/check-tags');
 const QuoteSchema = require('../../schemas/quote-schema');
 const sendQuotes = require('../../helpers/send-quotes');
 const { basicEmbed } = require('../../helpers/embeds');
+const checkTags = require('../../helpers/check-tags');
 
 module.exports = {
     category:'Quotes',
