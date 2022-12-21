@@ -21,7 +21,7 @@ const notificationEmbed = function(title, body, color='#FFFE00') {
 }
 
 // Multi-quote isn't separate embed because easier to determine what to do here than anywhere there could be a multi-quote.
-const quoteEmbed = function(quote, author, color='#8F00FF') { // color == purple
+const quoteEmbed = function(quote, extraData, color='#8F00FF') { // color == purple
 	let tags = quote.tags.filter(x => x !== null).map(tag => tag.substring(0, 85))
     tags = tags.length ? tags : ['no tags']
 	let embedCharacters = ''
@@ -40,14 +40,14 @@ const quoteEmbed = function(quote, author, color='#8F00FF') { // color == purple
 	.setFooter({ text: quote.type })
 	
 	if (quote.type == 'multi') {
-		const formattedFragments = author.map(fragment => {
+		const formattedFragments = extraData.map(fragment => { // Extra data is fragments.
 			return `${fragment.authorName}: ${fragment.text}`
 		}).join('\n')
 
 		embed.setTitle(quote.text)
 		embed.setDescription(formattedFragments)
 	} else {
-		embed.setAuthor({ name: author.name.substring(0, 256), iconURL: author.iconURL })
+		embed.setAuthor({ name: extraData.name.substring(0, 256), iconURL: extraData.iconURL }) // Extra data is author.
 		embedCharacters += embed.author.name
 	}
 
