@@ -41,6 +41,35 @@ MultiQuoteSchema.plugin(schema => {
     schema.pre('update', setOptions);
 });
 
+MultiQuoteSchema.pre('save', async function() {
+    const length = this.fragments.length
+
+    if (length < 2 || length > 5) {
+        throw new Error('Must have between 2 and 5 fragments.')
+    }
+})
+
+MultiQuoteSchema.pre('updateOne', async function(next) {
+    const multiQuote = this.getUpdate()
+    const length = multiQuote.fragments.length
+
+    if (length < 2 || length > 5) {
+        throw new Error('Must have between 2 and 5 fragments.')
+    }
+    
+    next()
+})
+
+MultiQuoteSchema.pre('findOneAndUpdate', async function(next) {
+    const multiQuote = this.getUpdate()
+    const length = multiQuote.fragments.length
+
+    if (length < 2 || length > 5) {
+        throw new Error('Must have between 2 and 5 fragments.')
+    }
+    
+    next()
+})
 function setOptions() {
     this.setOptions({ runValidators: true, new: true });
 }
