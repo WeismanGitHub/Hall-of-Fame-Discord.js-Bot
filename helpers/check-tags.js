@@ -16,6 +16,4 @@ async function checkTags(tags, guildId) {
     })
 }
 
-module.exports = {
-    checkTags,
-};
+module.exports = checkTags
