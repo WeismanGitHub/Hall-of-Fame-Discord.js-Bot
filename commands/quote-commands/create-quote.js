@@ -2,7 +2,6 @@ const sendToQuotesChannel = require('../../helpers/send-to-quotes-channel')
 const { getAuthorByName } = require('../../helpers/get-author');
 const { getLastImage } = require('../../helpers/get-last-item');
 const errorHandler = require('../../helpers/error-handler');
-const { checkTags } = require('../../helpers/check-tags');
 const QuoteSchema = require('../../schemas/quote-schema');
 const { quoteEmbed } = require('../../helpers/embeds');
 const checkURL = require('../../helpers/check-url')
@@ -62,6 +61,11 @@ module.exports = {
     callback: async ({ interaction, client }) => errorHandler(interaction, async () => {
         const guildId = interaction.guildId;
         const { options } = interaction;
+        const tags = [
+            options.getString('first_tag'),
+            options.getString('second_tag'),
+            options.getString('third_tag'),
+        ];
 
         const author = await getAuthorByName(options.getString('author'), guildId);
         
@@ -72,14 +76,6 @@ module.exports = {
         const lastImageChannel = options.getChannel('last_image');
         let attachmentURL = options.getString('image_link');
         const text = options.getString('text');
-
-        let tags = [
-            options.getString('first_tag'),
-            options.getString('second_tag'),
-            options.getString('third_tag'),
-        ];
-
-        tags = await checkTags(tags, guildId);
         
         if (!attachmentURL && lastImageChannel) {
             attachmentURL = await getLastImage(lastImageChannel)

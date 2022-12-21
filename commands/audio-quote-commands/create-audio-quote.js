@@ -3,7 +3,6 @@ const AudioQuoteSchema = require('../../schemas/audio-quote-schema');
 const { getLastAudio } = require('../../helpers/get-last-item');
 const { getAuthorByName } = require('../../helpers/get-author');
 const errorHandler = require('../../helpers/error-handler');
-const { checkTags } = require('../../helpers/check-tags');
 const { quoteEmbed } = require('../../helpers/embeds');
 const checkURL = require('../../helpers/check-url')
 const { Constants } = require('discord.js');
@@ -63,6 +62,11 @@ module.exports = {
     callback: async ({ interaction, client }) => errorHandler(interaction, async () => {
         const guildId = interaction.guildId;
         const { options } = interaction;
+        const tags = [
+            options.getString('first_tag'),
+            options.getString('second_tag'),
+            options.getString('third_tag'),
+        ];
         
         const inputtedAuthor = options.getString('author');
         const checkedAuthor = await getAuthorByName(inputtedAuthor, guildId);
@@ -82,14 +86,6 @@ module.exports = {
         if (audioURL && !checkURL(audioURL)) {
             throw new Error('Please input a valid url.')
         }
-
-        let tags = [
-            options.getString('first_tag'),
-            options.getString('second_tag'),
-            options.getString('third_tag'),
-        ];
-
-        tags = await checkTags(tags, guildId);
 
         const audioQuote = await AudioQuoteSchema.create({
             guildId: guildId,

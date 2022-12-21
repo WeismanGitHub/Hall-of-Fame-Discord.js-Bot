@@ -1,10 +1,9 @@
 const { getAuthorByName, getAuthorById } = require('../../helpers/get-author');
 const { getLastImage, getLastQuote } = require('../../helpers/get-last-item');
 const sendToQuotesChannel = require('../../helpers/send-to-quotes-channel')
-const { quoteEmbed, basicEmbed } = require('../../helpers/embeds');
 const errorHandler = require('../../helpers/error-handler');
-const { checkTags } = require('../../helpers/check-tags');
 const QuoteSchema= require('../../schemas/quote-schema');
+const { quoteEmbed } = require('../../helpers/embeds');
 const checkURL = require('../../helpers/check-url')
 const { Constants } = require('discord.js');
 
@@ -85,7 +84,12 @@ module.exports = {
         const guildId  = interaction.guildId;
         const lastQuoteChannel = options.getChannel('last_quote');
         const id = options.getString('id') ?? await getLastQuote(lastQuoteChannel)
-
+        const tags = [
+            options.getString('first_tag'),
+            options.getString('second_tag'),
+            options.getString('third_tag'),
+        ];
+        
         if (!id) {
             throw new Error('Please provide a quote id or choose a channel to get the quote id from.')
         }
@@ -108,14 +112,6 @@ module.exports = {
         const deleteTags = options.getBoolean('delete_tags');
         const newAuthorName = options.getString('new_author');
         const newText = options.getString('new_text');
-
-        let tags = [
-            options.getString('first_tag'),
-            options.getString('second_tag'),
-            options.getString('third_tag'),
-        ];
-
-        tags = await checkTags(tags, guildId);
         
         if (tags.length) {
             update.tags = tags

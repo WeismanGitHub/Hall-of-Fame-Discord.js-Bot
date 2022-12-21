@@ -4,7 +4,6 @@ const sendToQuotesChannel = require('../../helpers/send-to-quotes-channel')
 const audioQuoteSchema = require('../../schemas/audio-quote-schema');
 const { quoteEmbed, basicEmbed } = require('../../helpers/embeds');
 const errorHandler = require('../../helpers/error-handler');
-const { checkTags } = require('../../helpers/check-tags');
 const checkURL = require('../../helpers/check-url')
 const { Constants } = require('discord.js');
 
@@ -80,7 +79,12 @@ module.exports = {
         const guildId  = interaction.guildId;
         const lastQuoteChannel = options.getChannel('last_quote');
         const _id = options.getString('id') ?? await getLastQuote(lastQuoteChannel)
-
+        const tags = [
+            options.getString('first_tag'),
+            options.getString('second_tag'),
+            options.getString('third_tag'),
+        ];
+        
         if (!_id) {
             throw new Error('Please provide a quote id or choose a channel to get the quote id from.')
         }
@@ -112,14 +116,6 @@ module.exports = {
         } else if (lastAudioChannel) {
             update.audioURL = await getLastAudio(lastAudioChannel)
         }
-
-        let tags = [
-            options.getString('first_tag'),
-            options.getString('second_tag'),
-            options.getString('third_tag'),
-        ];
-
-        tags = await checkTags(tags, guildId);
         
         if (tags.length) {
             update.tags = tags

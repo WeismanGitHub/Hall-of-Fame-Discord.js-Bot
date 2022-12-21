@@ -2,7 +2,6 @@ const sendToQuotesChannel = require('../../helpers/send-to-quotes-channel');
 const MultiQuoteSchema = require('../../schemas/audio-quote-schema');
 const { getAuthorByName } = require('../../helpers/get-author');
 const errorHandler = require('../../helpers/error-handler');
-const { checkTags } = require('../../helpers/check-tags');
 const { quoteEmbed } = require('../../helpers/embeds');
 const { Constants } = require('discord.js');
 
@@ -105,7 +104,12 @@ module.exports = {
         const guildId = interaction.guildId;
         const { options } = interaction;
         const update = {};
-        
+        const tags = [
+            options.getString('first_tag'),
+            options.getString('second_tag'),
+            options.getString('third_tag'),
+        ];
+
         const id = options.getString('id') ?? await getLastQuote(lastQuoteChannel)
         const lastQuoteChannel = options.getChannel('last_quote');
         const newTitle = options.getString('new_title')
@@ -123,14 +127,6 @@ module.exports = {
         if (!multiQuote) {
             throw new Error('Multi-quote does not exist.')
         }
-
-        let tags = [
-            options.getString('first_tag'),
-            options.getString('second_tag'),
-            options.getString('third_tag'),
-        ];
-        
-        tags = await checkTags(tags, guildId);
 
         if (tags.length) {
             update.tags = tags

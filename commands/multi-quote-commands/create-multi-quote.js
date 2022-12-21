@@ -2,7 +2,6 @@ const sendToQuotesChannel = require('../../helpers/send-to-quotes-channel');
 const MultiQuoteSchema = require('../../schemas/multi-quote-schema');
 const { getAuthorByName } = require('../../helpers/get-author');
 const errorHandler = require('../../helpers/error-handler');
-const { checkTags } = require('../../helpers/check-tags');
 const { quoteEmbed } = require('../../helpers/embeds');
 const { Constants } = require('discord.js');
 
@@ -94,14 +93,11 @@ module.exports = {
     callback: async ({ interaction, client }) => errorHandler(interaction, async () => {
         const guildId = interaction.guildId;
         const { options } = interaction;
-
-        let tags = [
+        const tags = [
             options.getString('first_tag'),
             options.getString('second_tag'),
             options.getString('third_tag'),
         ];
-        
-        tags = await checkTags(tags, guildId);
 
         const fragments = [
             { text: options.getString('first_text'), authorName: options.getString('first_author') },
