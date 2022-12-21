@@ -1,9 +1,9 @@
+const { Constants, MessageActionRow, MessageButton } = require('discord.js');
 const errorHandler = require('../helpers/error-handler')
 const QuoteSchema = require('../schemas/quote-schema');
 const GuildSchema = require('../schemas/guild-schema');
 const sendQuotes = require('../helpers/send-quotes');
 const { basicEmbed } = require('../helpers/embeds');
-const { Constants } = require('discord.js');
 
 module.exports = {
     category:'Quotes',
@@ -40,6 +40,7 @@ module.exports = {
         const guildId = interaction.guildId;
         const quotesChannel = options.getChannel('quotes_channel');
         const removeChannel = options.getString('remove_channel');
+        const channelId = quotesChannel.id
 
         if (removeChannel == null && !quotesChannel) {
             throw new Error('Please use a parameter.')
@@ -54,11 +55,19 @@ module.exports = {
             throw new Error('Channel must be text channel.')
         }
 
-        await GuildSchema.updateOne({ _id: guildId }, { quotesChannelId: quotesChannel.id })
+        await GuildSchema.updateOne({ _id: guildId }, { quotesChannelId: channelId })
 
-        await interaction.reply(basicEmbed(`All quotes will be in #${quotesChannel.name} now!`))
+        const row = new MessageActionRow()
+        .addComponents(
+            new MessageButton()
+            .setLabel(`Forward All Quotes`)
+            .setCustomId(`,${channelId},quotes-channel`)
+            .setStyle('PRIMARY')
+        )
 
-        const quotes = await QuoteSchema.find({ guildId: guildId }).sort({ createdAt: 1 }).lean()
-        await sendQuotes(quotes, quotesChannel)
+        await interaction.reply({
+            ...basicEmbed(`New quotes will be forwarded to \`#${quotesChannel.name}\` from now on.`),
+                components: [row]
+        })
     })
 };
