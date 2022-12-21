@@ -1,8 +1,8 @@
 const { getAuthorByName, getAuthorById } = require('../../helpers/get-author');
 const AudioQuoteSchema = require('../../schemas/audio-quote-schema')
 const errorHandler = require('../../helpers/error-handler');
-const { checkTags } = require('../../helpers/check-tags');
 const { quoteEmbed } = require('../../helpers/embeds');
+const checkTags = require('../../helpers/check-tags');
 const { Constants } = require('discord.js');
 
 const {
