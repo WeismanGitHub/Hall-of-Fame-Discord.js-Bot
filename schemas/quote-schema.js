@@ -43,12 +43,31 @@ function setOptions() {
 }
 
 QuoteSchema.pre('save', async function() {
-    // check tag validity
+    if (!this.attachmentURL && !this.text) {
+        throw new Error('Must have text or an attachment URL or both.')
+    }
 })
 
 QuoteSchema.pre('updateOne', async function(next) {
-    // check tag validity
+    const quote = this.getUpdate()
+
+    if (!quote.attachmentURL && !quote.text) {
+        throw new Error('Must have text or an attachment URL or both.')
+    }
+    
+    next()
 })
+
+QuoteSchema.pre('findOneAndUpdate', async function(next) {
+    const quote = this.getUpdate()
+    
+    if (!quote.attachmentURL && !quote.text) {
+        throw new Error('Must have text or an attachment URL or both.')
+    }
+    
+    next()
+})
+
 QuoteSchema.index({ guildId: 1, text: 'text' });
 QuoteSchema.index({ guildId: 1 });
 
