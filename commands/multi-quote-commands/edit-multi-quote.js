@@ -1,5 +1,6 @@
 const sendToQuotesChannel = require('../../helpers/send-to-quotes-channel');
 const MultiQuoteSchema = require('../../schemas/audio-quote-schema');
+const { getLastQuoteId } = require('../../helpers/get-last-item')
 const { getAuthorByName } = require('../../helpers/get-author');
 const errorHandler = require('../../helpers/error-handler');
 const { quoteEmbed } = require('../../helpers/embeds');
@@ -110,7 +111,7 @@ module.exports = {
             options.getString('third_tag'),
         ];
 
-        const id = options.getString('id') ?? await getLastQuote(lastQuoteChannel)
+        const id = options.getString('id') ?? await getLastQuoteId(lastQuoteChannel)
         const lastQuoteChannel = options.getChannel('last_quote');
         const newTitle = options.getString('new_title')
 

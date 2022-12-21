@@ -1,4 +1,5 @@
 const AudioQuoteSchema = require('../../schemas/audio-quote-schema')
+const { getLastQuoteId } = require('../../helpers/get-last-item')
 const { getAuthorById } = require('../../helpers/get-author');
 const errorHandler = require('../../helpers/error-handler');
 const { quoteEmbed } = require('../../helpers/embeds');
@@ -45,11 +46,11 @@ module.exports = {
         const guildId = interaction.guildId;
         const { options } = interaction;
 
-        const id = options.getString('id') ?? await getLastQuote(lastQuoteChannel)
+        const id = options.getString('id') ?? await getLastQuoteId(lastQuoteChannel)
         const title = options.getString('title');
 
         if (!title && !id) {
-            throw new Error('Enter provide a quote id or choose a channel to get the quote id from.')
+            throw new Error('Enter a quote id or choose a channel to get the quote id from.')
         }
     
         const search = { ...title && { text: title }, ...id && { _id: id } }

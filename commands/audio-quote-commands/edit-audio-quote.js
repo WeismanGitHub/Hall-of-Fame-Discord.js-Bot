@@ -1,9 +1,9 @@
 const { getAuthorByName, getAuthorById } = require('../../helpers/get-author');
-const { getLastAudio, getLastQuote} = require('../../helpers/get-last-item');
+const { getLastAudio, getLastQuoteId } = require('../../helpers/get-last-item');
 const sendToQuotesChannel = require('../../helpers/send-to-quotes-channel')
 const audioQuoteSchema = require('../../schemas/audio-quote-schema');
-const { quoteEmbed, basicEmbed } = require('../../helpers/embeds');
 const errorHandler = require('../../helpers/error-handler');
+const { quoteEmbed } = require('../../helpers/embeds');
 const checkURL = require('../../helpers/check-url')
 const { Constants } = require('discord.js');
 
@@ -78,19 +78,19 @@ module.exports = {
         const { options } = interaction;
         const guildId  = interaction.guildId;
         const lastQuoteChannel = options.getChannel('last_quote');
-        const _id = options.getString('id') ?? await getLastQuote(lastQuoteChannel)
+        const id = options.getString('id') ?? await getLastQuoteId(lastQuoteChannel)
         const tags = [
             options.getString('first_tag'),
             options.getString('second_tag'),
             options.getString('third_tag'),
         ];
         
-        if (!_id) {
-            throw new Error('Please provide a quote id or choose a channel to get the quote id from.')
+        if (!id) {
+            throw new Error('Please provide a quote id, quote channel, or title.')
         }
 
         const audioQuote = await audioQuoteSchema.findOne({
-            _id: _id,
+            _id: id,
             guildId: guildId,
             type: 'audio',
         }).select('_id').lean()
@@ -143,7 +143,7 @@ module.exports = {
         }
 
         const updatedAudioQuote = await audioQuoteSchema.findOneAndUpdate(
-            { _id: _id },
+            { _id: id },
             update
         ).lean()
 

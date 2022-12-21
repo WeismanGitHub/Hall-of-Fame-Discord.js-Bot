@@ -1,5 +1,5 @@
+const { getLastImage, getLastQuoteId } = require('../../helpers/get-last-item');
 const { getAuthorByName, getAuthorById } = require('../../helpers/get-author');
-const { getLastImage, getLastQuote } = require('../../helpers/get-last-item');
 const sendToQuotesChannel = require('../../helpers/send-to-quotes-channel')
 const errorHandler = require('../../helpers/error-handler');
 const QuoteSchema= require('../../schemas/quote-schema');
@@ -83,7 +83,7 @@ module.exports = {
         const { options } = interaction;
         const guildId  = interaction.guildId;
         const lastQuoteChannel = options.getChannel('last_quote');
-        const id = options.getString('id') ?? await getLastQuote(lastQuoteChannel)
+        const id = options.getString('id') ?? await getLastQuoteId(lastQuoteChannel)
         const tags = [
             options.getString('first_tag'),
             options.getString('second_tag'),

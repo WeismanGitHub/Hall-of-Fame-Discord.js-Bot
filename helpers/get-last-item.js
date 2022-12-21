@@ -46,7 +46,7 @@ async function getLastAudio(channel) {
     return firstAudioUrl
 }
 
-async function getLastQuote(channel) {
+async function getLastQuoteId(channel) {
     let firstQuoteId;
 
     if (channel.type !== 'GUILD_TEXT') {
@@ -70,4 +70,4 @@ async function getLastQuote(channel) {
     return firstQuoteId
 }
 
-module.exports = { getLastImage, getLastAudio, getLastQuote }
+module.exports = { getLastImage, getLastAudio, getLastQuoteId }

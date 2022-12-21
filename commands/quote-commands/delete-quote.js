@@ -1,7 +1,7 @@
-const { basicEmbed } = require('../../helpers/embeds');
-const { getLastQuote } = require('../../helpers/get-last-item');
+const { getLastQuoteId } = require('../../helpers/get-last-item');
 const errorHandler = require('../../helpers/error-handler');
 const QuoteSchema = require('../../schemas/quote-schema');
+const { basicEmbed } = require('../../helpers/embeds');
 const { Constants } = require('discord.js');
 
 module.exports = {
@@ -29,7 +29,7 @@ module.exports = {
     callback: async ({ interaction }) => errorHandler(interaction, async () => {
         const { options } = interaction;
         const lastQuoteChannel = options.getChannel('last_quote');
-        const id = options.getString('id') ?? await getLastQuote(lastQuoteChannel)
+        const id = options.getString('id') ?? await getLastQuoteId(lastQuoteChannel)
         const guildId = interaction.guildId;
 
         const quote = await QuoteSchema.findOneAndDelete({ _id: id, guildId: guildId }).select('-_id text').lean()
