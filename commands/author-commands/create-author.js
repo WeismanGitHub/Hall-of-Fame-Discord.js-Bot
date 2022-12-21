@@ -21,7 +21,7 @@ module.exports = {
             maxLength: 256
         },
         {
-            name: 'icon_url',
+            name: 'image_link',
             description: "This will be the author's icon.",
             type: Constants.ApplicationCommandOptionTypes.STRING,
         },
@@ -37,7 +37,7 @@ module.exports = {
         const guildId = interaction.guildId;
         const name = options.getString('name');
         const lastImageChannel = options.getChannel('last_image');
-        let iconURL = options.getString('icon_url')
+        let iconURL = options.getString('image_link')
         
         if (!lastImageChannel && !iconURL) {
             iconURL = 'https://cdn.discordapp.com/avatars/973042179033415690/a6602f6209ef6546ee8d878e0022a4f3.webp?size=160'
