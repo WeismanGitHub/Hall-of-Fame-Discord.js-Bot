@@ -11,15 +11,13 @@ module.exports = async (client, instance) => {
                 return
             }
 
-            const customId = interaction.customId.split(',')
-            const skipAmount = customId[0]
-            const type = customId[2]
+            const { type, skipAmount, filterId } = JSON.parse(interaction.customId)
 
             if (type !== 'find-quotes') {
                 return
             }
             
-            const filter = await FilterSchema.findById(customId[1]).lean()
+            const filter = await FilterSchema.findById(filterId).lean()
 
             if (!filter) {
                 throw new Error('Please use the command again. This button is broken.')
@@ -30,10 +28,12 @@ module.exports = async (client, instance) => {
             const quotes = await QuoteSchema.find(query)
             .sort(sort).skip(skipAmount).limit(10).lean();
 
+            const customId = JSON.stringify({ type: 'find-quotes', filterId: filterId, skipAmount: Number(skipAmount) + 10 })
+
             const row = new MessageActionRow()
             .addComponents(
                 new MessageButton()
-                .setCustomId(`${Number(skipAmount) + 10},${filter._id},find-quotes`)
+                .setCustomId(`${customId}`)
                 .setLabel('Next 10 Quotes ⏩')
                 .setStyle('PRIMARY')
             )

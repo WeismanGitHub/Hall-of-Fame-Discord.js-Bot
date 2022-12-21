@@ -8,9 +8,7 @@ module.exports = async (client, instance) => {
                 return
             }
 
-            const customId = interaction.customId.split(',')
-            const type = customId[2]
-            // maybe come up with a less hacky solution for button type
+            const { type } = JSON.parse(interaction.customId)
             
             if (type !== 'help') {
                 return

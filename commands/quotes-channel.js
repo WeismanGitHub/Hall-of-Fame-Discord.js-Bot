@@ -56,12 +56,13 @@ module.exports = {
         }
 
         await GuildSchema.updateOne({ _id: guildId }, { quotesChannelId: channelId })
+        const customId = JSON.stringify({ type: 'quotes-channel', channelId: channelId })
 
         const row = new MessageActionRow()
         .addComponents(
             new MessageButton()
             .setLabel(`Forward All Quotes`)
-            .setCustomId(`,${channelId},quotes-channel`)
+            .setCustomId(`${customId}`)
             .setStyle('PRIMARY')
         )
 

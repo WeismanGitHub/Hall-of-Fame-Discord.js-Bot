@@ -170,12 +170,13 @@ module.exports = {
         }
 
         const filterId = (await FilterSchema.create({ query: query, sort: sort }))._id
+        const customId = JSON.stringify({ type: 'find-quotes', filterId: filterId, skipAmount: 10 })
 
         const row = new MessageActionRow()
         .addComponents(
             new MessageButton()
             .setLabel('Next 10 Quotes ⏩')
-            .setCustomId(`10,${filterId},find-quotes`)
+            .setCustomId(`${customId}`)
             .setStyle('PRIMARY')
         )
         

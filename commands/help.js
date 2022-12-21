@@ -9,11 +9,13 @@ module.exports = {
     category:'Help',
 
     callback: async ({ interaction }) => errorHandler(interaction, async () => {
+        const customId = JSON.stringify({ type: 'help' })
+
         const row = new MessageActionRow()
         .addComponents([
             new MessageButton()
             .setLabel('Command Descriptions')
-            .setCustomId(',,help')
+            .setCustomId(`${customId}`)
             .setStyle('PRIMARY'),
             new MessageButton()
             .setLabel('Source Code')
