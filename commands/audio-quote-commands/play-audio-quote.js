@@ -32,18 +32,24 @@ module.exports = {
             type: Constants.ApplicationCommandOptionTypes.STRING,
             minLength: 24,
             maxLength: 24,
-        }
+        },
+        {
+            name: 'last_quote',
+            description: "Use the last quote sent in a channel. Will grab any type of quote.",
+            type: Constants.ApplicationCommandOptionTypes.CHANNEL
+        },
     ],
 
     callback: async ({ interaction }) => errorHandler(interaction, async () => {
+        const lastQuoteChannel = options.getChannel('last_quote');
         const guildId = interaction.guildId;
         const { options } = interaction;
 
-        const id = options.getString('id');
+        const id = options.getString('id') ?? await getLastQuote(lastQuoteChannel)
         const title = options.getString('title');
 
         if (!title && !id) {
-            throw new Error('Enter an id or title.')
+            throw new Error('Enter provide a quote id or choose a channel to get the quote id from.')
         }
     
         const search = { ...title && { text: title }, ...id && { _id: id } }
