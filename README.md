@@ -3,7 +3,6 @@
   # Hall-of-Fame Discord.js Bot
 
   ## [Bot Invite Link](https://discord.com/api/oauth2/authorize?client_id=973042179033415690&permissions=423054793728&scope=bot%20applications.commands)
-  <hr class="rounded">
   
   ## Description
   A hall of fame bot with 28 commands that allow you save text, images, and audio. The bot is geared towards smaller, close-knit communities. It's purpose is to allow users to organize memorable moments so they can be easily accessed with authors, tags, types, dates, and more. To create quotes you must first create an author for the quote. An author has a name and optionally an image. You can also add tags to quotes, which need to be created before hand. Every type of quote (audio, image, regular, and multi) has an author, text, and up to three tags. Use /help for more information.
