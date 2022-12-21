@@ -40,7 +40,7 @@ module.exports = {
         const guildId = interaction.guildId;
         const quotesChannel = options.getChannel('quotes_channel');
         const removeChannel = options.getString('remove_channel');
-        const channelId = quotesChannel.id
+        const channelId = quotesChannel?.id
 
         if (removeChannel == null && !quotesChannel) {
             throw new Error('Please use a parameter.')
