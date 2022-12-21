@@ -13,7 +13,7 @@ module.exports = {
         .addComponents([
             new MessageButton()
             .setLabel('Command Descriptions')
-            .setCustomId(',,command_descriptions')
+            .setCustomId(',,help')
             .setStyle('PRIMARY'),
             new MessageButton()
             .setLabel('Source Code')

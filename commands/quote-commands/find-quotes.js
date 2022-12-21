@@ -175,7 +175,7 @@ module.exports = {
         .addComponents(
             new MessageButton()
             .setLabel('Next 10 Quotes ⏩')
-            .setCustomId(`10,${filterId},find_quotes`)
+            .setCustomId(`10,${filterId},find-quotes`)
             .setStyle('PRIMARY')
         )
         
