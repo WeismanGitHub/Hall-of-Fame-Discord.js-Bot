@@ -1,3 +1,4 @@
+const checkTags = require('../helpers/check-tags')
 const TagSchema = require('./tag-schema')
 const mongoose = require('mongoose');
 
@@ -32,6 +33,26 @@ AudioQuoteSchema.plugin(schema => {
     schema.pre('updateOne', setOptions);
     schema.pre('update', setOptions);
 });
+
+AudioQuoteSchema.pre('save', async function() {
+    this.tags = await checkTags(this.tags, this.guildId);
+})
+
+AudioQuoteSchema.pre('updateOne', async function(next) {
+    const audioQuote = this.getUpdate()
+    
+    audioQuote.tags = await checkTags(audioQuote.tags, audioQuote.guildId);
+
+    next()
+})
+
+AudioQuoteSchema.pre('findOneAndUpdate', async function(next) {
+    const audioQuote = this.getUpdate()
+
+    audioQuote.tags = await checkTags(audioQuote.tags, audioQuote.guildId);
+    
+    next()
+})
 
 function setOptions() {
     this.setOptions({ runValidators: true, new: true });

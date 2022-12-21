@@ -1,3 +1,4 @@
+const checkTags = require('../helpers/check-tags')
 const TagSchema = require('./tag-schema')
 const mongoose = require('mongoose');
 
@@ -46,6 +47,8 @@ QuoteSchema.pre('save', async function() {
     if (!this.attachmentURL && !this.text) {
         throw new Error('Must have text or an attachment URL or both.')
     }
+
+    this.tags = await checkTags(this.tags, this.guildId);
 })
 
 QuoteSchema.pre('updateOne', async function(next) {
@@ -55,6 +58,8 @@ QuoteSchema.pre('updateOne', async function(next) {
         throw new Error('Must have text or an attachment URL or both.')
     }
     
+    quote.tags = await checkTags(quote.tags, quote.guildId);
+
     next()
 })
 
@@ -64,6 +69,8 @@ QuoteSchema.pre('findOneAndUpdate', async function(next) {
     if (!quote.attachmentURL && !quote.text) {
         throw new Error('Must have text or an attachment URL or both.')
     }
+
+    quote.tags = await checkTags(quote.tags, quote.guildId);
     
     next()
 })
