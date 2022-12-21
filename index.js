@@ -28,7 +28,7 @@ client.on("ready", async () => {
 	new WOKCommands(
         client, {
             commandsDir: path.join(__dirname, './commands'),
-            featuresDir: path.join(__dirname, './features'),
+            featuresDir: path.join(__dirname, './events'),
             testServers: [process.env.TEST_GUILD_ID],
             botOwners: [process.env.MAIN_ACCOUNT_ID],
             disabledDefaultCommands: ['prefix', 'language'],
