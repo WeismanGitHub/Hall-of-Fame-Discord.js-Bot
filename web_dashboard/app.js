@@ -1,6 +1,6 @@
 const rateLimit = require('express-rate-limit')
 const errorHandler = require('./error-handler')
-const { NotFoundError } = require('../errors')
+const { NotFoundError } = require('./errors')
 const cookieParser = require('cookie-parser')
 const compression = require('compression')
 const apiRouter = require('./api-router')
