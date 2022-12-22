@@ -115,7 +115,7 @@ module.exports = {
 
         if (author) {
             author = await getAuthorByName(author, guildId);
-            query.authorId = author._id;
+            query.$or = [{ authorId: author._id }, { fragments: { $elemMatch: { authorId: author._id } }  }]
 
             if (author.name == 'Deleted Author') {
                 throw new Error(`'${options.getString('author')}' author does not exist.`)
