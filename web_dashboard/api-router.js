@@ -1,8 +1,8 @@
 const GuildSchema = require('../schemas/guild-schema');
 const { PermissionsBitField } = require('discord.js');
 const ObjectId = require('mongoose').Types.ObjectId;
+const { BadRequestError } = require('../errors');
 const DiscordOauth2 = require("discord-oauth2");
-const { BadRequestError } = require('./errors')
 const { request } = require('undici');
 const { Router } = require('express')
 const jwt = require('jsonwebtoken')
