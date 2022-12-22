@@ -129,7 +129,6 @@ module.exports = {
             text: options.getString('title'),
             fragments: checkedFragments,
             tags: tags,
-            type: 'multi'
         });
 
         const embeddedMultiQuote = quoteEmbed(multiQuote, checkedFragments) // checkedFragments

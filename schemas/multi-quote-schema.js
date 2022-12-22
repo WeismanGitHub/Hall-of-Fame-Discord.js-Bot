@@ -30,8 +30,8 @@ const MultiQuoteSchema = new mongoose.Schema({
     tags: [TagSchema],
     type: {
         type: String,
-        required: [true, 'Must provide a type.'],
-        enum: ['regular', 'multi', 'audio']
+        default: 'multi',
+        enum: ['multi']
     }
 }, { timestamps: { createdAt: true, updatedAt: false } });
 

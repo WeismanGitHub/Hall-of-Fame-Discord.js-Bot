@@ -27,8 +27,8 @@ const QuoteSchema = new mongoose.Schema({
     },
     type: {
         type: String,
-        required: [true, 'Must provide a type.'],
-        enum: ['regular', 'multi', 'audio']
+        default: 'regular',
+        enum: ['regular']
     }
 }, { timestamps: { createdAt: true, updatedAt: false } });
 

@@ -87,7 +87,6 @@ module.exports = {
 
         const quote = await QuoteSchema.create({
             guildId: guildId,
-            type: 'regular',
             authorId: author._id,
             tags: tags,
             text: text,
