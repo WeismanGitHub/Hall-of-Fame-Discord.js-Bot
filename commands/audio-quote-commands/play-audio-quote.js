@@ -45,8 +45,8 @@ module.exports = {
         const guildId = interaction.guildId;
         const { options } = interaction;
         
-        const id = options.getString('id') ?? await getLastQuoteId(lastQuoteChannel)
         const lastQuoteChannel = options.getChannel('last_quote');
+        const id = options.getString('id') ?? await getLastQuoteId(lastQuoteChannel)
         const title = options.getString('title');
 
         if (!title && !id) {
@@ -71,7 +71,6 @@ module.exports = {
         }
 
         const player = createAudioPlayer({ behaviors: { noSubscriber: NoSubscriberBehavior.Stop } });
-        
         const audioQuoteResource = createAudioResource(audioQuote.audioURL)
         
         const connection = joinVoiceChannel({
