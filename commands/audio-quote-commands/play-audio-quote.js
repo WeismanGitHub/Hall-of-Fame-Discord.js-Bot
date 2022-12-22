@@ -42,11 +42,11 @@ module.exports = {
     ],
 
     callback: async ({ interaction }) => errorHandler(interaction, async () => {
-        const lastQuoteChannel = options.getChannel('last_quote');
         const guildId = interaction.guildId;
         const { options } = interaction;
-
+        
         const id = options.getString('id') ?? await getLastQuoteId(lastQuoteChannel)
+        const lastQuoteChannel = options.getChannel('last_quote');
         const title = options.getString('title');
 
         if (!title && !id) {
