@@ -13,7 +13,7 @@ module.exports = {
     guildOnly: true,
     slash: true,
 
-    options: [ // 16 total options
+    options: [
         {
             name: 'id',
             description: 'The id of the quote.',
@@ -104,7 +104,6 @@ module.exports = {
     callback: async ({ interaction, client }) => errorHandler(interaction, async () => {
         const guildId = interaction.guildId;
         const { options } = interaction;
-        const update = {};
         const tags = [
             options.getString('first_tag'),
             options.getString('second_tag'),
@@ -123,22 +122,22 @@ module.exports = {
             guildId: guildId,
             _id: id,
             type: 'multi'
-        }).select('_id').lean()
+        }).select('_id')
 
         if (!multiQuote) {
             throw new Error('Multi-quote does not exist.')
         }
 
         if (tags.length) {
-            update.tags = tags
+            multiQuote.tags = tags
         }
         
         if (options.getString('delete_tags')) {
-            update['tags'] = [];
+            multiQuote.tags = [];
         }
 
         if (newTitle) {
-            update['text'] = newTitle;
+            multiQuote.text = newTitle;
         }
 
         // const fragments = [
@@ -168,12 +167,7 @@ module.exports = {
             throw new Error('No updates.')
         }
 
-        const updatedMultiQuote = await MultiQuoteSchema.findOneAndUpdate(
-            { _id: id, guildId: guildId, type: 'multi' },
-            update
-        ).lean()
-
-        const embeddedMultiQuote = quoteEmbed(updatedMultiQuote, checkedFragments) // checkedFragments
+        const embeddedMultiQuote = quoteEmbed(multiQuote, checkedFragments) // checkedFragments
 
         await sendToQuotesChannel(embeddedMultiQuote, guildId, client)
         await interaction.reply(embeddedMultiQuote);
