@@ -46,7 +46,7 @@ module.exports = {
         const { options } = interaction;
         
         const lastQuoteChannel = options.getChannel('last_quote');
-        const id = options.getString('id') ?? await getLastQuoteId(lastQuoteChannel)
+        const id = options.getString('id') ?? await getLastQuoteId(lastQuoteChannel).catch(err =>  { throw new Error('No Id.') })
         const title = options.getString('title');
 
         if (!title && !id) {
