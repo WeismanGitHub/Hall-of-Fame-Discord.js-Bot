@@ -1,8 +1,6 @@
 const { Constants, MessageActionRow, MessageButton } = require('discord.js');
 const errorHandler = require('../helpers/error-handler')
-const QuoteSchema = require('../schemas/quote-schema');
 const GuildSchema = require('../schemas/guild-schema');
-const sendQuotes = require('../helpers/send-quotes');
 const { basicEmbed } = require('../helpers/embeds');
 
 module.exports = {
