@@ -29,7 +29,8 @@ module.exports = {
         {
             name: 'image_link',
             description: 'This will be the author icon.',
-            type: Constants.ApplicationCommandOptionTypes.STRING
+            type: Constants.ApplicationCommandOptionTypes.STRING,
+            maxLength: 512
         },
         {
             name: 'last_image',

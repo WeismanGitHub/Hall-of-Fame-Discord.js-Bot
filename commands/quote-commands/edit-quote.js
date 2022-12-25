@@ -37,7 +37,8 @@ module.exports = {
         {
             name: 'new_image_link',
             description: 'Image attachment link. Upload an image to Discord and copy the link to that image.',
-            type: Constants.ApplicationCommandOptionTypes.STRING
+            type: Constants.ApplicationCommandOptionTypes.STRING,
+            maxLength: 512
         },
         {
             name: 'delete_tags',

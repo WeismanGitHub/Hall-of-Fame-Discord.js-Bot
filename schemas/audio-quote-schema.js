@@ -17,7 +17,8 @@ const AudioQuoteSchema = new mongoose.Schema({
     },
     audioURL: {
         type: String,
-        required: [true, 'Must provide an audio file link.']
+        required: [true, 'Must provide an audio file link.'],
+        maxLength: 512
     },
     tags: [TagSchema],
     type: {

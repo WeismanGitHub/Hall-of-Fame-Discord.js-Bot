@@ -37,7 +37,8 @@ module.exports = {
         {
             name: 'new_audio_file_link',
             description: 'New audio file link.',
-            type: Constants.ApplicationCommandOptionTypes.STRING
+            type: Constants.ApplicationCommandOptionTypes.STRING,
+            maxLength: 512
         },
         {
             name: 'delete_tags',

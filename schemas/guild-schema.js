@@ -11,6 +11,7 @@ const AuthorSchema = new mongoose.Schema({
     iconURL: {
         type: String,
         minLength: 1,
+        maxLength: 512,
         required: [true, 'Must provide a url.']
     }
 });

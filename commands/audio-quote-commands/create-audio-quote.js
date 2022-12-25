@@ -33,6 +33,7 @@ module.exports = {
             name: 'audio_file_link',
             description: 'Must be a link to an audio file. You can upload the audio file to discord and copy that link.',
             type: Constants.ApplicationCommandOptionTypes.STRING,
+            maxLength: 512
         },
         {
             name: 'first_tag',
