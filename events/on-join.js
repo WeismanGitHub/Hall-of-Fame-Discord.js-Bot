@@ -1,4 +1,5 @@
 const GuildSchema = require('../schemas/guild-schema');
+const { helpEmbed } = require('../helpers/embeds')
 
 module.exports = (client) => {
     client.on('guildCreate', async (guild) => {
@@ -8,7 +9,13 @@ module.exports = (client) => {
         if (!guildRegistered) {
             await GuildSchema.create({_id: guildId });
         }
-    });
+
+        const channel = guild.systemChannelID ?? guild.channels.cache.find(channel => 
+            channel.type == 'GUILD_TEXT' && channel.permissionsFor(guild.me).has('SEND_MESSAGES')
+        )
+        
+        await channel.send(helpEmbed())
+    })
 }
 
 module.exports.config = {
