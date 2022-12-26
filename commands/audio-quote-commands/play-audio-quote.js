@@ -1,3 +1,4 @@
+const { InvalidInputError, NotFoundError, InvalidActionError } = require('../../errors')
 const AudioQuoteSchema = require('../../schemas/audio-quote-schema')
 const { getLastQuoteId } = require('../../helpers/get-last-item')
 const { getAuthorById } = require('../../helpers/get-author');
@@ -46,18 +47,18 @@ module.exports = {
         const { options } = interaction;
         
         const lastQuoteChannel = options.getChannel('last_quote');
-        const id = options.getString('id') ?? await getLastQuoteId(lastQuoteChannel).catch(err =>  { throw new Error('No Id.') })
+        const id = options.getString('id') ?? await getLastQuoteId(lastQuoteChannel)
         const title = options.getString('title');
 
         if (!title && !id) {
-            throw new Error('Enter a quote id or choose a channel to get the quote id from.')
+            throw new InvalidInputError('ID/Title')
         }
     
         const search = { ...title && { text: title }, ...id && { _id: id } }
         const voiceChannel = interaction.member.voice.channel
         
         if (!voiceChannel) {
-            throw new Error('You must be in a voice channel.')
+            throw new InvalidActionError('Join a voice channel.')
         }
         
         const audioQuote = await AudioQuoteSchema.findOne({
@@ -67,7 +68,7 @@ module.exports = {
         }).lean()
 
         if (!audioQuote) {
-            throw new Error('Could not find audio quote.')
+            throw new NotFoundError('Audio Quote')
         }
 
         const player = createAudioPlayer({ behaviors: { noSubscriber: NoSubscriberBehavior.Stop } });
@@ -87,7 +88,7 @@ module.exports = {
         // Originally I wanted it to just queue the next audio quote, but I couldn't figure it out. I've opted to have it just check if the bot is already playing an audio quote and tell the user you have to wait till the audio quote is done playing.
         interaction.member.voice.channel.members.forEach(member => {
             if (member.id == process.env.CLIENT_ID) {
-                throw new Error('You must wait for the current audio quote to stop playing.')
+                throw new InvalidActionError('Audio quote already playing.')
             }
         })
 

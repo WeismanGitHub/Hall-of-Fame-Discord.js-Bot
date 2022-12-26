@@ -1,4 +1,5 @@
 const sendToQuotesChannel = require('../../helpers/send-to-quotes-channel');
+const { InvalidInputError, NotFoundError } = require('../../errors');
 const AudioQuoteSchema = require('../../schemas/audio-quote-schema');
 const { getLastAudio } = require('../../helpers/get-last-item');
 const { getAuthorByName } = require('../../helpers/get-author');
@@ -73,19 +74,19 @@ module.exports = {
         const checkedAuthor = await getAuthorByName(inputtedAuthor, guildId);
         
         if (checkedAuthor.name == 'Deleted Author') {
-            throw new Error(`Make sure that '${inputtedAuthor}' author exists.`)
+            throw new NotFoundError(inputtedAuthor)
         }
         
         const lastAudioChannel = options.getChannel('last_audio');
-        const title = options.getString('title');
         const audioURL = options.getString('audio_file_link');
+        const title = options.getString('title');
         
         if (!lastAudioChannel && !audioURL) {
-            throw new Error('Please provide an audio file link or choose a channel to get the audio file from.')
+            throw new InvalidInputError('Audio')
         }
 
         if (audioURL && !checkURL(audioURL)) {
-            throw new Error('Please input a valid url.')
+            throw new InvalidInputError('URL')
         }
 
         const audioQuote = await AudioQuoteSchema.create({

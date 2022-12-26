@@ -1,3 +1,4 @@
+const { InvalidInputError, NotFoundError, InvalidActionError } = require('../../errors')
 const { getAuthorByName, getAuthorById } = require('../../helpers/get-author');
 const AudioQuoteSchema = require('../../schemas/audio-quote-schema')
 const errorHandler = require('../../helpers/error-handler');
@@ -58,17 +59,17 @@ module.exports = {
         const { options } = interaction;
 
         const searchPhrase = options.getString('search_phrase')
-        let inputtedAuthor = options.getString('author');
+        const inputtedAuthor = options.getString('author');
         const query = { guildId: guildId, type: 'audio' };
         
         if (inputtedAuthor) {
-            inputtedAuthor = await getAuthorByName(inputtedAuthor, guildId);
+            const author = await getAuthorByName(inputtedAuthor, guildId);
         
-            if (inputtedAuthor.name !== 'Deleted Author') {
-                query.authorId = inputtedAuthor._id;
-            } else {
-                throw new Error(`'${inputtedAuthor}' author does not exist.`)
+            if (author.name == 'Deleted Author') {
+                throw new NotFoundError(inputtedAuthor)
             }
+
+            query.authorId = author._id;
         }
 
         let tags = [
@@ -84,15 +85,13 @@ module.exports = {
         }
 
         if (searchPhrase) {
-            query.$text = {
-                '$search': searchPhrase
-            }
+            query.$text = { '$search': searchPhrase }
         }
 
         const amountOfDocuments = await AudioQuoteSchema.countDocuments(query)
 
         if (!amountOfDocuments) {
-            throw new Error('Your specifications provide no quotes.')
+            throw new NotFoundError('Audio Quote')
         }
 
         const randomNumber = Math.floor(Math.random() * amountOfDocuments);
@@ -101,7 +100,7 @@ module.exports = {
         const voiceChannel = interaction.member.voice.channel
 
         if (!voiceChannel) {
-            throw new Error('You must be in a voice channel.')
+            throw new InvalidActionError('Join a voice channel.')
         }
 
         const player = createAudioPlayer({ behaviors: { noSubscriber: NoSubscriberBehavior.Stop } });
@@ -109,7 +108,7 @@ module.exports = {
         const audioQuoteResource = createAudioResource(randomAudioQuote.audioURL)
         
         const connection = joinVoiceChannel({
-            selfDeaf: false,
+            selfDeaf: true,
             channelId: voiceChannel.id,
             guildId: interaction.guild.id,
             adapterCreator: interaction.guild.voiceAdapterCreator
@@ -122,7 +121,7 @@ module.exports = {
         // Originally I wanted it to just queue the next audio quote, but I couldn't figure it out. I've opted to have it just check if the bot is already playing an audio quote and tell the user you have to wait till the audio quote is done playing.
         interaction.member.voice.channel.members.forEach(member => {
             if (member.id == process.env.CLIENT_ID) {
-                throw new Error('You must wait for the current audio quote to stop playing.')
+                throw new InvalidActionError('Audio quote already playing.')
             }
         })
 
