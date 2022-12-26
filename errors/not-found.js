@@ -1,6 +1,6 @@
 class NotFoundError extends Error {
     constructor(message) {
-        super(`Not Found: \`${message}\`.`);
+        super(`Not Found: \`${message}\``);
     }
 }
 

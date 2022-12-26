@@ -1,6 +1,6 @@
 class InvalidActionError extends Error {
     constructor(message) {
-        super(`Invalid Action: \`${message}\`.`);
+        super(`Invalid Action: \`${message}\``);
     }
 }
 

@@ -1,6 +1,6 @@
 class InvalidInputError extends Error {
     constructor(message) {
-        super(`Invalid Input: \`${message}\`.`);
+        super(`Invalid Input: \`${message}\``);
     }
 }
 
