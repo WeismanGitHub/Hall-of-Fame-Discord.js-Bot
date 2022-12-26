@@ -1,6 +1,7 @@
-const checkTags = require('../helpers/check-tags')
+const { InvalidInputError } = require('../errors');
+const checkTags = require('../helpers/check-tags');
 const TagSchema = require('./tag-schema')
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
 
 const Fragment = new mongoose.Schema({
     text: {
@@ -46,7 +47,7 @@ MultiQuoteSchema.pre('save', async function() {
     const length = this.fragments.length
 
     if (length < 2 || length > 5) {
-        throw new Error('Must have between 2 and 5 fragments.')
+        throw new InvalidInputError('Must have between 2 and 5 fragments.')
     }
 
     this.tags = await checkTags(this.tags, this.guildId);
@@ -57,7 +58,7 @@ MultiQuoteSchema.pre('updateOne', async function(next) {
     const length = multiQuote.fragments.length
 
     if (length < 2 || length > 5) {
-        throw new Error('Must have between 2 and 5 fragments.')
+        throw new InvalidInputError('Must have between 2 and 5 fragments.')
     }
     
     multiQuote.tags = await checkTags(multiQuote.tags, multiQuote.guildId);
@@ -70,7 +71,7 @@ MultiQuoteSchema.pre('findOneAndUpdate', async function(next) {
     const length = multiQuote.fragments.length
 
     if (length < 2 || length > 5) {
-        throw new Error('Must have between 2 and 5 fragments.')
+        throw new InvalidInputError('Must have between 2 and 5 fragments.')
     }
     
     multiQuote.tags = await checkTags(multiQuote.tags, multiQuote.guildId);

@@ -142,7 +142,7 @@ module.exports = {
         ];
 
         const lastQuoteChannel = options.getChannel('last_quote');
-        const id = options.getString('id') ?? await getLastQuoteId(lastQuoteChannel).catch(err =>  { throw new Error('No Id.') })
+        const id = options.getString('id') ?? await getLastQuoteId(lastQuoteChannel)
         const newTitle = options.getString('new_title')
 
         if (!id) {
