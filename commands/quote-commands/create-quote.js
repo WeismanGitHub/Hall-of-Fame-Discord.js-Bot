@@ -1,4 +1,5 @@
 const sendToQuotesChannel = require('../../helpers/send-to-quotes-channel')
+const { NotFoundError, InvalidInputError } = require('../../errors') ;
 const { getAuthorByName } = require('../../helpers/get-author');
 const { getLastImage } = require('../../helpers/get-last-item');
 const errorHandler = require('../../helpers/error-handler');
@@ -62,16 +63,17 @@ module.exports = {
     callback: async ({ interaction, client }) => errorHandler(interaction, async () => {
         const guildId = interaction.guildId;
         const { options } = interaction;
+        const inputtedAuthor = options.getString('author')
         const tags = [
             options.getString('first_tag'),
             options.getString('second_tag'),
             options.getString('third_tag'),
         ];
 
-        const author = await getAuthorByName(options.getString('author'), guildId);
+        const author = await getAuthorByName(inputtedAuthor, guildId);
         
         if (author.name == 'Deleted Author') {
-            throw new Error(`Make sure that '${options.getString('author')}' author exists.`)
+            throw new NotFoundError(inputtedAuthor)
         }
 
         const lastImageChannel = options.getChannel('last_image');
@@ -83,7 +85,7 @@ module.exports = {
         }
         
         if (attachmentURL && !checkURL(attachmentURL)) {
-            throw new Error('Please input a valid url.')
+            throw new InvalidInputError('URL')
         }
 
         const quote = await QuoteSchema.create({

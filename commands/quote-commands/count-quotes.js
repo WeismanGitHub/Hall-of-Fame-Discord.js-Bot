@@ -3,6 +3,7 @@ const errorHandler = require('../../helpers/error-handler');
 const QuoteSchema = require('../../schemas/quote-schema');
 const { basicEmbed } = require('../../helpers/embeds');
 const checkTags = require('../../helpers/check-tags');
+const { NotFoundError } = require('../../errors')
 const { Constants } = require('discord.js');
 
 
@@ -72,17 +73,17 @@ module.exports = {
     callback: async ({ interaction }) => errorHandler(interaction, async () => {
         const { options } = interaction;
         const searchPhrase = options.getString('search_phrase')
-        let author = options.getString('author');
+        const inputtedAuthor = options.getString('author');
         const type = options.getBoolean('type')
         const guildId = interaction.guildId;
         const query = { guildId: guildId };
     
-        if (author) {
-            author = await getAuthorByName(author, guildId);
+        if (inputtedAuthor) {
+            const author = await getAuthorByName(inputtedAuthor, guildId);
             query.$or = [{ authorId: author._id }, { fragments: { $elemMatch: { authorId: author._id } }  }]
 
             if (author.name == 'Deleted Author') {
-                throw new Error(`'${options.getString('author')}' author does not exist.`)
+                throw new NotFoundError(inputtedAuthor)
             }
         }
 
@@ -114,8 +115,8 @@ module.exports = {
         const count = await QuoteSchema.countDocuments(query)
         const plural = count > 1
         
-        if (count <= 0) {
-            throw new Error('No quotes match your specifications!')
+        if (!count) {
+            throw new NotFoundError('Quotes')
         }
 
         await interaction.reply(basicEmbed(`${count} quote${plural ? 's' : ''} match${plural ? '' : 'es'} your specifications!`))

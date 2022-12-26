@@ -2,6 +2,7 @@ const { getLastQuoteId } = require('../../helpers/get-last-item');
 const errorHandler = require('../../helpers/error-handler');
 const QuoteSchema = require('../../schemas/quote-schema');
 const { basicEmbed } = require('../../helpers/embeds');
+const { NotFoundError } = require('../../errors');
 const { Constants } = require('discord.js');
 
 module.exports = {
@@ -29,14 +30,13 @@ module.exports = {
     callback: async ({ interaction }) => errorHandler(interaction, async () => {
         const { options } = interaction;
         const lastQuoteChannel = options.getChannel('last_quote');
-        const id = options.getString('id') ?? await getLastQuoteId(lastQuoteChannel).catch(err =>  { throw new Error('No Id.') })
+        const id = options.getString('id') ?? await getLastQuoteId(lastQuoteChannel)
         const guildId = interaction.guildId;
 
         const quote = await QuoteSchema.findOneAndDelete({ _id: id, guildId: guildId }).select('-_id text').lean()
-        // Get quote so users can know what was deleted.
 
         if (!quote) {
-            throw new Error('Quote does not exist!')
+            throw new NotFoundError('Quote')
         } 
 
         const text = quote.text ? `'${quote.text.substring(0, 245)}'` : 'quote' // substring to fit 256 char title limit.

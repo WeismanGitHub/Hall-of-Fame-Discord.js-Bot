@@ -1,6 +1,7 @@
 const { getLastImage, getLastQuoteId } = require('../../helpers/get-last-item');
 const { getAuthorByName, getAuthorById } = require('../../helpers/get-author');
 const sendToQuotesChannel = require('../../helpers/send-to-quotes-channel')
+const { InvalidInputError, NotFoundError } = require('../../errors');
 const errorHandler = require('../../helpers/error-handler');
 const QuoteSchema= require('../../schemas/quote-schema');
 const { quoteEmbed } = require('../../helpers/embeds');
@@ -84,7 +85,7 @@ module.exports = {
         const { options } = interaction;
         const guildId  = interaction.guildId;
         const lastQuoteChannel = options.getChannel('last_quote');
-        const id = options.getString('id') ?? await getLastQuoteId(lastQuoteChannel).catch(err =>  { throw new Error('No Id.') })
+        const id = options.getString('id') ?? await getLastQuoteId(lastQuoteChannel)
         const tags = [
             options.getString('first_tag'),
             options.getString('second_tag'),
@@ -92,17 +93,7 @@ module.exports = {
         ];
         
         if (!id) {
-            throw new Error('Please provide a quote id or choose a channel to get the quote id from.')
-        }
-
-        const quote = await QuoteSchema.findOne({
-            guildId: guildId,
-            _id: id,
-            type: 'regular'
-        }).select('_id').lean()
-
-        if (!quote) {
-            throw new Error('Regular Quote does not exist. Use `/edit_audio_quote` or `/edit_multi_quote` for audio and multi quotes.')
+            throw new InvalidInputError('ID')
         }
 
         const update = {};
@@ -120,7 +111,7 @@ module.exports = {
 
         if (newImageLink) {
             if (!checkURL(newImageLink)) {
-                throw new Error('Please input a valid url.')
+                throw new InvalidInputError('URL')
             }
 
             update.attachment = newImageLink;
@@ -140,7 +131,7 @@ module.exports = {
             const author = await getAuthorByName(newAuthorName, guildId);
 
             if (author.name == 'Deleted Author') {
-                throw new Error('Author does not exist.')
+                throw new NotFoundError(newAuthorName)
             }
 
             update['authorId'] = author._id;
@@ -151,17 +142,21 @@ module.exports = {
         }
 
         if (!Object.keys(update).length) {
-            throw new Error('No updates.')
+            throw new InvalidInputError('No Changes')
         }
 
-        const updatedQuote = await QuoteSchema.findOneAndUpdate(
-            { _id: id, guildId: guildId },
+        const quote = await QuoteSchema.findOneAndUpdate(
+            { _id: id, guildId: guildId, type: 'regular' },
             update
         ).lean()
 
-        const author = await getAuthorById(updatedQuote.authorId, guildId);
+        if (!quote) {
+            throw new NotFoundError('Quote')
+        }
 
-        const embeddedQuote = quoteEmbed(updatedQuote, author)
+        const author = await getAuthorById(quote.authorId, guildId);
+
+        const embeddedQuote = quoteEmbed(quote, author)
 
         await sendToQuotesChannel(embeddedQuote, guildId, client)
         await interaction.reply(embeddedQuote);

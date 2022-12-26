@@ -3,6 +3,7 @@ const errorHandler = require('../../helpers/error-handler');
 const QuoteSchema = require('../../schemas/quote-schema');
 const { quoteEmbed } = require('../../helpers/embeds');
 const checkTags = require('../../helpers/check-tags');
+const { NotFoundError } = require('../../errors');
 const { Constants } = require('discord.js');
 
 module.exports = {
@@ -71,18 +72,18 @@ module.exports = {
     callback: async ({ interaction }) => errorHandler(interaction, async () => {
         const { options } = interaction;
         const searchPhrase = options.getString('search_phrase')
-        let author = options.getString('author');
+        const inputtedAuthor = options.getString('author');
         const type = options.getString('type')
 
         const guildId = interaction.guildId;
         const query = { guildId: guildId };
 
-        if (author) {
-            author = await getAuthorByName(author, guildId);
+        if (inputtedAuthor) {
+            const author = await getAuthorByName(inputtedAuthor, guildId);
             query.$or = [{ authorId: author._id }, { fragments: { $elemMatch: { authorId: author._id } }  }]
 
             if (author.name == 'Deleted Author') {
-                throw new Error(`'${options.getString('author')}' author does not exist.`)
+                throw new NotFoundError(inputtedAuthor)
             }
         }
 
@@ -114,15 +115,12 @@ module.exports = {
         const amountOfDocuments = await QuoteSchema.countDocuments(query)
 
         if (!amountOfDocuments) {
-            throw new Error('Your specifications provide no quotes.')
+            throw new NotFoundError('Quotes')
         }
 
         const randomNumber = Math.floor(Math.random() * amountOfDocuments);
         const randomQuote = await QuoteSchema.findOne(query).skip(randomNumber).lean()
-
-        if (!author) {
-            author = await getAuthorById(randomQuote.authorId, guildId)
-        }
+        const author = await getAuthorById(randomQuote.authorId, guildId)
 
         await interaction.reply(quoteEmbed(randomQuote, author));
     })

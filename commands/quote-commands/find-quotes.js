@@ -6,6 +6,7 @@ const QuoteSchema = require('../../schemas/quote-schema');
 const sendQuotes = require('../../helpers/send-quotes');
 const { basicEmbed } = require('../../helpers/embeds');
 const checkTags = require('../../helpers/check-tags');
+const { NotFoundError } = require('../../errors');
 
 module.exports = {
     category:'Quotes',
@@ -103,22 +104,17 @@ module.exports = {
         const limit = options.getInteger('limit') == null ? 10 : options.getInteger('limit')
         const searchPhrase = options.getString('search_phrase')
         const pagination = options.getBoolean('pagination')
-        let author = options.getString('author');
+        const inputtedAuthor = options.getString('author');
         const type = options.getString('type')
         const guildId = interaction.guildId;
         const query = { guildId: guildId };
-        
-        // Increasing limit doesn't make sense because they could just press the next button.
-        if ((limit < 1) || (10 < limit)) {
-            throw new Error('The limit is between 1 and 10.')
-        }
 
-        if (author) {
-            author = await getAuthorByName(author, guildId);
+        if (inputtedAuthor) {
+            const author = await getAuthorByName(inputtedAuthor, guildId);
             query.$or = [{ authorId: author._id }, { fragments: { $elemMatch: { authorId: author._id } }  }]
 
             if (author.name == 'Deleted Author') {
-                throw new Error(`'${options.getString('author')}' author does not exist.`)
+                throw new NotFoundError(inputtedAuthor)
             }
         }
 
@@ -151,7 +147,7 @@ module.exports = {
         .limit(pagination == false ? Infinity : limit).lean();
 
         if (!quotes.length) {
-            throw new Error('No quotes match your specifications.')
+            throw new NotFoundError('Quotes')
         }
 
         await interaction.reply(basicEmbed('Started!'))
