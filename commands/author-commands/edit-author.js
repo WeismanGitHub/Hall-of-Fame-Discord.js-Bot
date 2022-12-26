@@ -1,9 +1,8 @@
+const { InvalidInputError, NotFoundError } = require('../../errors');
 const { getLastImage } = require('../../helpers/get-last-item');
 const errorHandler = require('../../helpers/error-handler');
 const GuildSchema = require('../../schemas/guild-schema');
 const { authorEmbed } = require('../../helpers/embeds');
-const { InvalidInputError, NotFoundError } = require('../../errors');
-const checkURL = require('../../helpers/check-url')
 const { Constants } = require('discord.js');
 
 module.exports = {
@@ -58,11 +57,6 @@ module.exports = {
         const newName = options.getString('new_name');
         const oldName = options.getString('name');
         const guildId = interaction.guildId;
-
-
-        if (newIconURL && !checkURL(newIconURL)) {
-            throw new InvalidInputError('URL')
-        }
 
         if (deleteImage) {
             newIconURL = process.env.DEFAULT_ICON_URL

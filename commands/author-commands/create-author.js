@@ -1,9 +1,8 @@
-const { InvalidInputError, NotFoundError } = require('../../errors');
 const { getLastImage } = require('../../helpers/get-last-item');
 const errorHandler = require('../../helpers/error-handler');
 const GuildSchema = require('../../schemas/guild-schema');
 const { authorEmbed } = require('../../helpers/embeds');
-const checkURL = require('../../helpers/check-url')
+const { InvalidInputError } = require('../../errors');
 const { Constants } = require('discord.js');
 
 module.exports = {
@@ -47,10 +46,6 @@ module.exports = {
 
         if (lastImageChannel) {
             iconURL = await getLastImage(lastImageChannel)
-        }
-
-        if (!checkURL(iconURL)) {
-            throw new InvalidInputError('URL')
         }
         
         const author = { name: name, iconURL: iconURL }

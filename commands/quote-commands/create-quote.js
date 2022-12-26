@@ -5,7 +5,6 @@ const { getLastImage } = require('../../helpers/get-last-item');
 const errorHandler = require('../../helpers/error-handler');
 const QuoteSchema = require('../../schemas/quote-schema');
 const { quoteEmbed } = require('../../helpers/embeds');
-const checkURL = require('../../helpers/check-url')
 const { Constants } = require('discord.js');
 
 module.exports = {
@@ -82,10 +81,6 @@ module.exports = {
         
         if (!attachmentURL && lastImageChannel) {
             attachmentURL = await getLastImage(lastImageChannel)
-        }
-        
-        if (attachmentURL && !checkURL(attachmentURL)) {
-            throw new InvalidInputError('URL')
         }
 
         const quote = await QuoteSchema.create({

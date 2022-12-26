@@ -5,7 +5,6 @@ const AudioQuoteSchema = require('../../schemas/audio-quote-schema');
 const { InvalidInputError, NotFoundError } = require('../../errors');
 const errorHandler = require('../../helpers/error-handler');
 const { quoteEmbed } = require('../../helpers/embeds');
-const checkURL = require('../../helpers/check-url')
 const { Constants } = require('discord.js');
 
 module.exports = {
@@ -99,10 +98,6 @@ module.exports = {
         const update = {};
         
         if (newAudioURL) {
-            if (!checkURL(newAudioURL)) {
-                throw new InvalidInputError('URL')
-            }
-
             update.audioURL = newAudioURL;
         } else if (lastAudioChannel) {
             update.audioURL = await getLastAudio(lastAudioChannel)

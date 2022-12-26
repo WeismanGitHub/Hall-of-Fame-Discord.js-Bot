@@ -5,7 +5,6 @@ const { InvalidInputError, NotFoundError } = require('../../errors');
 const errorHandler = require('../../helpers/error-handler');
 const QuoteSchema= require('../../schemas/quote-schema');
 const { quoteEmbed } = require('../../helpers/embeds');
-const checkURL = require('../../helpers/check-url')
 const { Constants } = require('discord.js');
 
 module.exports = {
@@ -110,10 +109,6 @@ module.exports = {
         }
 
         if (newImageLink) {
-            if (!checkURL(newImageLink)) {
-                throw new InvalidInputError('URL')
-            }
-
             update.attachment = newImageLink;
         } else if (lastImageChannel) {
             update.attachment = await getLastImage(lastImageChannel)
