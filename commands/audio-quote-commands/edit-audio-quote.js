@@ -1,7 +1,8 @@
 const { getAuthorByName, getAuthorById } = require('../../helpers/get-author');
 const { getLastAudio, getLastQuoteId } = require('../../helpers/get-last-item');
 const sendToQuotesChannel = require('../../helpers/send-to-quotes-channel')
-const audioQuoteSchema = require('../../schemas/audio-quote-schema');
+const AudioQuoteSchema = require('../../schemas/audio-quote-schema');
+const { InvalidInputError, NotFoundError } = require('../../errors');
 const errorHandler = require('../../helpers/error-handler');
 const { quoteEmbed } = require('../../helpers/embeds');
 const checkURL = require('../../helpers/check-url')
@@ -79,7 +80,7 @@ module.exports = {
         const { options } = interaction;
         const guildId  = interaction.guildId;
         const lastQuoteChannel = options.getChannel('last_quote');
-        const id = options.getString('id') ?? await getLastQuoteId(lastQuoteChannel).catch(err =>  { throw new Error('No Id.') })
+        const id = options.getString('id') ?? await getLastQuoteId(lastQuoteChannel)
         const tags = [
             options.getString('first_tag'),
             options.getString('second_tag'),
@@ -87,30 +88,19 @@ module.exports = {
         ];
         
         if (!id) {
-            throw new Error('Please provide a quote id, quote channel, or title.')
+            throw new InvalidInputError('ID')
         }
 
-        const audioQuote = await audioQuoteSchema.findOne({
-            _id: id,
-            guildId: guildId,
-            type: 'audio',
-        }).select('_id').lean()
-
-        if (!audioQuote) {
-            throw new Error('Audio quote does not exist.')
-        }
-
-        const update = {};
-        
         const newAudioURL = options.getString('new_audio_file_link');
         const lastAudioChannel = options.getChannel('last_audio_file');
         const deleteTags = options.getBoolean('delete_tags');
         const newAuthorName = options.getString('new_author');
         const newTitle = options.getString('new_title');
-
+        const update = {};
+        
         if (newAudioURL) {
             if (!checkURL(newAudioURL)) {
-                throw new Error('Please input a valid url.')
+                throw new InvalidInputError('URL')
             }
 
             update.audioURL = newAudioURL;
@@ -132,25 +122,31 @@ module.exports = {
         
         if (newAuthorName) {
             const author = await getAuthorByName(newAuthorName, guildId);
+
             if (author.name == 'Deleted Author') {
-                throw new Error('Author does not exist.')
+                throw new NotFoundError(newAuthorName)
             }
 
             update['authorId'] = author._id;
         }
         
         if (!Object.keys(update).length) {
-            throw new Error('No updates.')
+            throw new InvalidInputError('No Parameters')
         }
 
-        const updatedAudioQuote = await audioQuoteSchema.findOneAndUpdate(
-            { _id: id },
+        
+        const audioQuote = await AudioQuoteSchema.findOneAndUpdate(
+            { _id: id, guildId: guildId, type: 'audio' },
             update
         ).lean()
+            
+        if (!audioQuote) {
+            throw new NotFoundError('Audio Quote')
+        }
 
-        const author = await getAuthorById(updatedAudioQuote.authorId, guildId);
+        const author = await getAuthorById(audioQuote.authorId, guildId);
 
-        const embeddedAudioQuote = quoteEmbed(updatedAudioQuote, author)
+        const embeddedAudioQuote = quoteEmbed(audioQuote, author)
 
         await sendToQuotesChannel(embeddedAudioQuote, guildId, client)
         await interaction.reply(embeddedAudioQuote);
