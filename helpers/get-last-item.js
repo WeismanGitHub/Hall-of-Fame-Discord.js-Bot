@@ -1,10 +1,11 @@
+const { InvalidInputError, NotFoundError } = require('../errors');
 const ObjectId = require('mongoose').Types.ObjectId;
 
 async function getLastImage(channel) {
     let firstImageUrl;
 
     if (channel.type !== 'GUILD_TEXT') {
-        throw new Error('Channel must be text channel.')
+        throw new InvalidInputError('Channel')
     }
 
     (await channel.messages.fetch({ limit: 25 }))
@@ -16,7 +17,7 @@ async function getLastImage(channel) {
     }))
 
     if (!firstImageUrl) {
-        throw new Error('No image could be found in the last 25 messages.')
+        throw new NotFoundError('Image')
     }
 
     return firstImageUrl
@@ -26,7 +27,7 @@ async function getLastAudio(channel) {
     let firstAudioUrl;
 
     if (channel.type !== 'GUILD_TEXT') {
-        throw new Error('Channel must be text channel.')
+        throw new InvalidInputError('Channel')
     }
 
     (await channel.messages.fetch({ limit: 25 }))
@@ -40,7 +41,7 @@ async function getLastAudio(channel) {
     }))
 
     if (!firstAudioUrl) {
-        throw new Error('No audio or video could be found in the last 25 messages.')
+        throw new NotFoundError('Audio/Video')
     }
 
     return firstAudioUrl
@@ -50,7 +51,7 @@ async function getLastQuoteId(channel) {
     let firstQuoteId;
 
     if (channel.type !== 'GUILD_TEXT') {
-        throw new Error('Channel must be text channel.')
+        throw new InvalidInputError('Channel')
     }
     
     (await channel.messages.fetch({ limit: 25 }))
@@ -64,7 +65,7 @@ async function getLastQuoteId(channel) {
     }))
 
     if (!firstQuoteId) {
-        throw new Error('No quote could be found in the last 25 messages.')
+        throw new NotFoundError('Quote')
     }
 
     return firstQuoteId
