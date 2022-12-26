@@ -1,6 +1,7 @@
-const { basicEmbed } = require('../../helpers/embeds');
 const errorHandler = require('../../helpers/error-handler');
 const GuildSchema = require('../../schemas/guild-schema');
+const { basicEmbed } = require('../../helpers/embeds');
+const { InvalidInputError } = require('../../errors');
 const { Constants } = require('discord.js');
 
 module.exports = {
@@ -48,7 +49,7 @@ module.exports = {
         }
         
         if (!Object.keys(update).length) {
-            throw new Error('Please update something.')
+            throw new InvalidInputError('No Changes')
         }
 
         await GuildSchema.updateOne({ _id: interaction.guildId }, update)

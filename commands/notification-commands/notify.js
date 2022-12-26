@@ -1,21 +1,20 @@
 const { basicEmbed, notificationEmbed } = require('../../helpers/embeds');
 const errorHandler = require('../../helpers/error-handler');
 const GuildSchema = require('../../schemas/guild-schema');
-
 const {
     InteractionCollector,
     TextInputComponent,
     MessageActionRow,
     Modal,
 } = require('discord.js');
+const { InvalidInputError } = require('../../errors');
 
 module.exports = {
     category:'Notifications',
     name: 'notify',
     description: 'Notify servers.',
-    //This just makes it available to my private server.
     guildOnly: true,
-    testOnly: true,
+    testOnly: true, //This just makes it available to my private server.
     slash: true,
 
     callback: async ({ interaction, client }) => errorHandler(interaction, async () => {
@@ -51,11 +50,11 @@ module.exports = {
             const title = interact.fields.getTextInputValue('title');
 
             if (body.length > 4096 || body.length <= 0) { // Max description size is 4096.
-                throw new Error('Body length must be less than 4015.')
+                throw new InvalidInputError('Body length must be less than 4015.')
             }
 
             if (title.length > 256 || title.length <= 0) { // Max title size is 256.
-                throw new Error('Title length must be less than or equal to 256.')
+                throw new InvalidInputError('Title length must be less than or equal to 256.')
             }
 
             const guildDocs = await GuildSchema.find({ notifications: true })
@@ -68,8 +67,8 @@ module.exports = {
                 //user set notification channel, guild system channel, or first channel in server
                 await (
                     notificationsChannel ?? guild.systemChannel ?? (guild.channels
-                    .filter(chx => chx.type === 'text')
-                    .find(x => x.position === 0))
+                    .filter(channel => channel.type === 'GUILD_TEXT')
+                    .find(channel => channel.position === 0))
                 ).send(notificationEmbed(title, body))
             }
 
