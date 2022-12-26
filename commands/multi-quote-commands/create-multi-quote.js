@@ -1,5 +1,6 @@
 const sendToQuotesChannel = require('../../helpers/send-to-quotes-channel');
 const MultiQuoteSchema = require('../../schemas/multi-quote-schema');
+const { NotFoundError } = require('../../errors');
 const { getAuthorByName } = require('../../helpers/get-author');
 const errorHandler = require('../../helpers/error-handler');
 const { quoteEmbed } = require('../../helpers/embeds');
@@ -117,7 +118,7 @@ module.exports = {
             const author = await getAuthorByName(fragment.authorName, guildId)
             
             if (author.name == 'Deleted Author') {
-                throw new Error(`Make sure that '${fragment.authorName}' author exists.`)
+                throw new NotFoundError(fragment.authorName)
             }
 
             fragment.authorId = author._id
@@ -131,7 +132,7 @@ module.exports = {
             tags: tags,
         });
 
-        const embeddedMultiQuote = quoteEmbed(multiQuote, checkedFragments) // checkedFragments
+        const embeddedMultiQuote = quoteEmbed(multiQuote, checkedFragments)
 
         await sendToQuotesChannel(embeddedMultiQuote, guildId, client)
         await interaction.reply(embeddedMultiQuote);

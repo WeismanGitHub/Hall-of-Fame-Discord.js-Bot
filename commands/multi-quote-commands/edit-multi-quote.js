@@ -1,6 +1,7 @@
 const { getAuthorByName, getAuthorById } = require('../../helpers/get-author');
 const sendToQuotesChannel = require('../../helpers/send-to-quotes-channel');
 const MultiQuoteSchema = require('../../schemas/multi-quote-schema');
+const { NotFoundError, InvalidInputError } = require('../../errors');
 const { getLastQuoteId } = require('../../helpers/get-last-item')
 const errorHandler = require('../../helpers/error-handler');
 const { quoteEmbed } = require('../../helpers/embeds');
@@ -131,7 +132,7 @@ module.exports = {
         const { options } = interaction;
 
         if (!options._hoistedOptions) {
-            throw new Error('Cannot be empty.')
+            throw new InvalidInputError('No Changes')
         }
 
         const tags = [
@@ -145,7 +146,7 @@ module.exports = {
         const newTitle = options.getString('new_title')
 
         if (!id) {
-            throw new Error('Please provide a quote id or choose a channel to get the quote id from.')
+            throw new InvalidInputError('ID')
         }
 
         const multiQuote = await MultiQuoteSchema.findOne({
@@ -155,7 +156,7 @@ module.exports = {
         })
 
         if (!multiQuote) {
-            throw new Error('Multi-quote does not exist.')
+            throw new NotFoundError('Multi-Quote')
         }
 
         if (tags.length) {
@@ -202,7 +203,7 @@ module.exports = {
                 updatedFragment.authorName = newFragment.authorName
 
                 if (author.name == 'Deleted Author') {
-                    throw new Error(`Make sure that '${newFragment.authorName}' author exists.`)
+                    throw new NotFoundError(newFragment.authorName)
                 }
 
                 updatedFragment.authorId = author._id
