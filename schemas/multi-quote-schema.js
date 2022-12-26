@@ -50,7 +50,10 @@ MultiQuoteSchema.pre('save', async function() {
         throw new InvalidInputError('Must have between 2 and 5 fragments.')
     }
 
-    this.tags = await checkTags(this.tags, this.guildId);
+    if (this.tags.length) {
+        this.tags = await checkTags(this.tags, this.guildId);
+    }
+
 })
 
 MultiQuoteSchema.pre('updateOne', async function(next) {
@@ -61,7 +64,9 @@ MultiQuoteSchema.pre('updateOne', async function(next) {
         throw new InvalidInputError('Must have between 2 and 5 fragments.')
     }
     
-    multiQuote.tags = await checkTags(multiQuote.tags, multiQuote.guildId);
+    if (multiQuote.tags.length) {
+        multiQuote.tags = await checkTags(multiQuote.tags, multiQuote.guildId);
+    }
 
     next()
 })
@@ -74,7 +79,9 @@ MultiQuoteSchema.pre('findOneAndUpdate', async function(next) {
         throw new InvalidInputError('Must have between 2 and 5 fragments.')
     }
     
-    multiQuote.tags = await checkTags(multiQuote.tags, multiQuote.guildId);
+    if (multiQuote.tags.length) {
+        multiQuote.tags = await checkTags(multiQuote.tags, multiQuote.guildId);
+    }
 
     next()
 })

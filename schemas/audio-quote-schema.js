@@ -41,13 +41,17 @@ AudioQuoteSchema.plugin(schema => {
 });
 
 AudioQuoteSchema.pre('save', async function() {
-    this.tags = await checkTags(this.tags, this.guildId);
+    if (this.tags.length) {
+        this.tags = await checkTags(this.tags, this.guildId);
+    }
 })
 
 AudioQuoteSchema.pre('updateOne', async function(next) {
     const audioQuote = this.getUpdate()
     
-    audioQuote.tags = await checkTags(audioQuote.tags, audioQuote.guildId);
+    if (audioQuote.tags.length) {
+        audioQuote.tags = await checkTags(audioQuote.tags, audioQuote.guildId);
+    }
 
     next()
 })
@@ -55,7 +59,9 @@ AudioQuoteSchema.pre('updateOne', async function(next) {
 AudioQuoteSchema.pre('findOneAndUpdate', async function(next) {
     const audioQuote = this.getUpdate()
 
-    audioQuote.tags = await checkTags(audioQuote.tags, audioQuote.guildId);
+    if (audioQuote.tags.length) {
+        audioQuote.tags = await checkTags(audioQuote.tags, audioQuote.guildId);
+    }
     
     next()
 })

@@ -53,7 +53,9 @@ QuoteSchema.pre('save', async function() {
         throw new InvalidInputError('Must have text or an attachment URL or both.')
     }
 
-    this.tags = await checkTags(this.tags, this.guildId);
+    if (this.tags.length) {
+        this.tags = await checkTags(this.tags, this.guildId);
+    }
 })
 
 QuoteSchema.pre('updateOne', async function(next) {
@@ -63,7 +65,9 @@ QuoteSchema.pre('updateOne', async function(next) {
         throw new InvalidInputError('Must have text or an attachment URL or both.')
     }
     
-    quote.tags = await checkTags(quote.tags, quote.guildId);
+    if (quote.tags.length) {
+        quote.tags = await checkTags(quote.tags, quote.guildId);
+    }
 
     next()
 })
@@ -75,7 +79,9 @@ QuoteSchema.pre('findOneAndUpdate', async function(next) {
         throw new InvalidInputError('Must have text or an attachment URL or both.')
     }
 
-    quote.tags = await checkTags(quote.tags, quote.guildId);
+    if (quote.tags.length) {
+        quote.tags = await checkTags(quote.tags, quote.guildId);
+    }
     
     next()
 })
