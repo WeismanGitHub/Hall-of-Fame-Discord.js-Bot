@@ -1,6 +1,7 @@
 const errorHandler = require('../../helpers/error-handler');
 const GuildSchema = require('../../schemas/guild-schema');
 const { basicEmbed } = require('../../helpers/embeds');
+const { NotFoundError } = require('../../errors');
 require('dotenv').config();
 
 module.exports = {
@@ -21,7 +22,7 @@ module.exports = {
         });
         
         if (!tags.length) {
-            throw new Error('There are no tags.')
+            throw new NotFoundError('Tags')
         }
 
         await interaction.reply(basicEmbed('Server Tags:', message))

@@ -2,6 +2,7 @@ const errorHandler = require('../../helpers/error-handler');
 const GuildSchema = require('../../schemas/guild-schema');
 const QuoteSchema = require('../../schemas/quote-schema');
 const { basicEmbed } = require('../../helpers/embeds');
+const { NotFoundError } = require('../../errors');
 const { Constants } = require('discord.js');
 
 module.exports = {
@@ -40,7 +41,7 @@ module.exports = {
         })
 
         if (!res.modifiedCount) {
-            throw new Error('No tag with that name.')
+            throw new NotFoundError('Tag')
         }
         
         await QuoteSchema.updateMany(

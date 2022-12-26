@@ -2,6 +2,7 @@ const { Constants, MessageActionRow, MessageButton } = require('discord.js');
 const errorHandler = require('../helpers/error-handler')
 const GuildSchema = require('../schemas/guild-schema');
 const { basicEmbed } = require('../helpers/embeds');
+const { InvalidInputError } = require('../errors')
 
 module.exports = {
     category:'Quotes',
@@ -41,7 +42,7 @@ module.exports = {
         const channelId = quotesChannel?.id
 
         if (removeChannel == null && !quotesChannel) {
-            throw new Error('Please use a parameter.')
+            throw new InvalidInputError('No Changes')
         }
 
         if (removeChannel) {
@@ -50,7 +51,7 @@ module.exports = {
         }
         
         if (quotesChannel.type !== 'GUILD_TEXT') {
-            throw new Error('Channel must be text channel.')
+            throw new InvalidInputError('Channel')
         }
 
         await GuildSchema.updateOne({ _id: guildId }, { quotesChannelId: channelId })
