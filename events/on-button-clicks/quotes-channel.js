@@ -18,7 +18,7 @@ module.exports =  (client) => {
             const channel = await client.channels.fetch(channelId)
             const quotes = await QuoteSchema.find({ guildId: channel.guildId }).sort({ createdAt: 1 }).lean()
             
-            await interaction.reply(basicEmbed(`Designated Quotes Channel`))
+            await interaction.reply(basicEmbed('Designated Quotes Channel'))
             await sendQuotes(quotes, channel)
         } catch(err) {
             await interaction.reply(errorEmbed(err))

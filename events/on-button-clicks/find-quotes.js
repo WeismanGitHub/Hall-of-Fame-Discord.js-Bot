@@ -2,7 +2,8 @@ const { MessageActionRow, MessageButton } = require('discord.js');
 const { errorEmbed, basicEmbed } = require('../../helpers/embeds');
 const QuoteSchema = require('../../schemas/quote-schema');
 const FilterSchema = require('../../schemas/filter-schema');
-const sendQuotes = require('../../helpers/send-quotes')
+const sendQuotes = require('../../helpers/send-quotes');
+const { InvalidActionError } = require('../../errors');
 
 module.exports = async (client, instance) => {
     client.on('interactionCreate', async (interaction) => {
@@ -20,7 +21,7 @@ module.exports = async (client, instance) => {
             const filter = await FilterSchema.findById(filterId).lean()
 
             if (!filter) {
-                throw new Error('Please use the command again. This button is broken.')
+                throw new InvalidActionError('Retry Command')
             }
 
             const { query, sort } = filter

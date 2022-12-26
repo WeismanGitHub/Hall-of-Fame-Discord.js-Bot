@@ -3,18 +3,22 @@ const { helpEmbed } = require('../helpers/embeds')
 
 module.exports = (client) => {
     client.on('guildCreate', async (guild) => {
-        const guildId = guild.id;
-        const guildRegistered = await GuildSchema.exists({ _id: guildId })
-    
-        if (!guildRegistered) {
-            await GuildSchema.create({_id: guildId });
-        }
-
-        const channel = guild.systemChannelID ?? guild.channels.cache.find(channel => 
-            channel.type == 'GUILD_TEXT' && channel.permissionsFor(guild.me).has('SEND_MESSAGES')
-        )
+        try {
+            const guildId = guild.id;
+            const guildRegistered = await GuildSchema.exists({ _id: guildId })
         
-        await channel.send(helpEmbed())
+            if (!guildRegistered) {
+                await GuildSchema.create({_id: guildId });
+            }
+
+            const channel = guild.systemChannelID ?? guild.channels.cache.find(channel => 
+                channel.type == 'GUILD_TEXT' && channel.permissionsFor(guild.me).has('SEND_MESSAGES')
+            )
+            
+            await channel.send(helpEmbed())
+        } catch(err) {
+            console.log(err)
+        }
     })
 }
 
