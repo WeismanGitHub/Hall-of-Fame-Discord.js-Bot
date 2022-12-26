@@ -1,4 +1,5 @@
 const checkTags = require('../helpers/check-tags')
+const checkURL = require('../helpers/check-url')
 const TagSchema = require('./tag-schema')
 const mongoose = require('mongoose');
 
@@ -18,7 +19,11 @@ const AudioQuoteSchema = new mongoose.Schema({
     audioURL: {
         type: String,
         required: [true, 'Must provide an audio file link.'],
-        maxLength: 512
+        maxLength: 512,
+        validate: {
+            validator: function(URL) { return (URL == null || checkURL(URL)) },
+            message: props => `Invalid Input: \`${props.value}\``
+        },
     },
     tags: [TagSchema],
     type: {

@@ -1,4 +1,5 @@
 const checkTags = require('../helpers/check-tags')
+const checkURL = require('../helpers/check-url')
 const TagSchema = require('./tag-schema')
 const mongoose = require('mongoose');
 
@@ -23,7 +24,11 @@ const QuoteSchema = new mongoose.Schema({
         type: String,
         minLength: 1,
         maxLength: 512,
-        default: null
+        default: null,
+        validate: {
+            validator: function(URL) { return (URL == null || checkURL(URL)) },
+            message: props => `Invalid Input: \`${props.value}\``
+        },
     },
     type: {
         type: String,

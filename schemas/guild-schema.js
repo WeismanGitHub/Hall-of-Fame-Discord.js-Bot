@@ -1,3 +1,4 @@
+const checkURL = require('../helpers/check-url')
 const TagSchema = require('./tag-schema')
 const mongoose = require('mongoose');
 
@@ -12,7 +13,11 @@ const AuthorSchema = new mongoose.Schema({
         type: String,
         minLength: 1,
         maxLength: 512,
-        required: [true, 'Must provide a url.']
+        required: [true, 'Must provide a url.'],
+        validate: {
+            validator: function(URL) { return (URL == null || checkURL(URL)) },
+            message: props => `Invalid Input: \`${props.value}\``
+        },
     }
 });
 
