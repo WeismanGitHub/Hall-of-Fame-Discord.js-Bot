@@ -1,4 +1,5 @@
 const { MessageEmbed, MessageActionRow, MessageButton } = require('discord.js');
+const { InvalidInputError } = require('../errors');
 require('dotenv').config();
 
 const basicEmbed = function (title, body='', color='#000EFF') {
@@ -77,7 +78,7 @@ const quoteEmbed = function(quote, extraData, color='#8F00FF') { // color == pur
 	)
 
 	if (embedCharacters.length > 6000) {
-		throw new Error('Embed size cannot be greater than 6000.')
+		throw new InvalidInputError('Embed size cannot be greater than 6000.')
 	}
 
 	return { embeds: [embed] };

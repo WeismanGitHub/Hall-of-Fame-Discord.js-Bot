@@ -1,9 +1,10 @@
 const GuildSchema = require('../schemas/guild-schema');
+const { InvalidInputError, NotFoundError } = require('../errors');
 const mongoose = require('mongoose');
 
 async function getAuthorByName(name, guildId) {
     if (!guildId || !name) {
-        throw new Error('Missing parameters.')
+        throw new InvalidInputError('Name/Guild ID')
     }
 
     try {
@@ -20,7 +21,7 @@ async function getAuthorByName(name, guildId) {
         }).lean())['authors'][0]
 
         if (!author) {
-            throw new Error('No author.')
+            throw new NotFoundError(author)
         }
 
         return author
@@ -34,7 +35,7 @@ async function getAuthorByName(name, guildId) {
 
 async function getAuthorById(id, guildId) {
     if (!guildId || !id) {
-        throw new Error('Missing parameters.')
+        throw new InvalidInputError('ID/Guild ID')
     }
     
     try {
@@ -51,7 +52,7 @@ async function getAuthorById(id, guildId) {
         }).lean())['authors'][0]
 
         if (!author) {
-            throw new Error('No author.')
+            throw new NotFoundError(author)
         }
 
         return author

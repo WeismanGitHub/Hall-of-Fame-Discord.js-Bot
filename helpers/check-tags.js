@@ -1,4 +1,5 @@
 const GuildSchema = require('../schemas/guild-schema')
+const { NotFoundError } = require('../errors')
 
 async function checkTags(tags, guildId) {
     const guildTags = (await GuildSchema.findOne({ _id: guildId }).select('-_id tags').lean()).tags
@@ -9,7 +10,7 @@ async function checkTags(tags, guildId) {
     
     return tags.map(tag => {
         if (!guildTags.includes(tag.toLowerCase())) {
-            throw new Error(`Please make sure '${tag}' tag exists.`)
+            throw new NotFoundError(tag)
         }
         
         return tag.toLowerCase()
