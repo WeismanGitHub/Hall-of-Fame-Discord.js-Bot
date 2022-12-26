@@ -41,7 +41,7 @@ module.exports = {
         })
 
         if (!res.modifiedCount) {
-            throw new NotFoundError('Tag')
+            throw new NotFoundError(tag)
         }
         
         await QuoteSchema.updateMany(
