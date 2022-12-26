@@ -1,6 +1,7 @@
 const { errorEmbed, authorEmbed, basicEmbed } = require('../../helpers/embeds');
 const errorHandler = require('../../helpers/error-handler');
 const GuildSchema = require('../../schemas/guild-schema');
+const { NotFoundError } = require('../../errors');
 
 module.exports = {
     category:'Authors',
@@ -15,7 +16,7 @@ module.exports = {
         let authors = (await GuildSchema.findOne({ _id: guildId }).select('-_id authors').lean()).authors;
 
         if (!authors.length) {
-            throw new Error('This server has no authors.')
+            throw new NotFoundError('Authors')
         }
 
         await interaction.reply(basicEmbed(`Started!\nAmount: ${authors.length}`))

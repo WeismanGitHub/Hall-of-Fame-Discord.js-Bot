@@ -1,3 +1,4 @@
+const { InvalidInputError, NotFoundError } = require('../../errors');
 const { getLastImage } = require('../../helpers/get-last-item');
 const errorHandler = require('../../helpers/error-handler');
 const GuildSchema = require('../../schemas/guild-schema');
@@ -41,7 +42,7 @@ module.exports = {
         let iconURL = options.getString('image_link')
         
         if (!lastImageChannel && !iconURL) {
-            iconURL = 'https://cdn.discordapp.com/avatars/973042179033415690/a6602f6209ef6546ee8d878e0022a4f3.webp?size=160'
+            iconURL = process.env.DEFAULT_ICON_URL
         }
 
         if (lastImageChannel) {
@@ -49,7 +50,7 @@ module.exports = {
         }
 
         if (!checkURL(iconURL)) {
-            throw new Error('Please input a valid url.')
+            throw new InvalidInputError('URL')
         }
         
         const author = { name: name, iconURL: iconURL }
@@ -57,7 +58,7 @@ module.exports = {
         const authorNameExists = await GuildSchema.exists({ _id: guildId, 'authors.name': name })
 
         if (authorNameExists) {
-            throw new Error('Author name must be unique.')
+            throw new InvalidInputError('Author Exists')
         }
 
         await GuildSchema.updateOne(

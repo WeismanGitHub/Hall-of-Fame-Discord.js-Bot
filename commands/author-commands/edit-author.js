@@ -2,6 +2,7 @@ const { getLastImage } = require('../../helpers/get-last-item');
 const errorHandler = require('../../helpers/error-handler');
 const GuildSchema = require('../../schemas/guild-schema');
 const { authorEmbed } = require('../../helpers/embeds');
+const { InvalidInputError, NotFoundError } = require('../../errors');
 const checkURL = require('../../helpers/check-url')
 const { Constants } = require('discord.js');
 
@@ -46,6 +47,11 @@ module.exports = {
 
     callback: async ({ interaction }) => errorHandler(interaction, async () => {
         const { options } = interaction;
+
+        if (!options._hoistedOptions <= 1) {
+            throw new InvalidInputError('No Changes')
+        }
+
         const lastImageChannel = options.getChannel('last_image');
         const deleteImage = options.getBoolean('delete_image')
         let newIconURL = options.getString('image_link')
@@ -53,16 +59,13 @@ module.exports = {
         const oldName = options.getString('name');
         const guildId = interaction.guildId;
 
-        if (!newName && !newIconURL && !lastImageChannel && !deleteImage) { // Kinda awkward, but you can't change it easily.
-            throw new Error('Please use at least one update parameter.')
-        }
 
         if (newIconURL && !checkURL(newIconURL)) {
-            throw new Error('Please input a valid url.')
+            throw new InvalidInputError('URL')
         }
 
         if (deleteImage) {
-            newIconURL = 'https://cdn.discordapp.com/avatars/973042179033415690/a6602f6209ef6546ee8d878e0022a4f3.webp?size=160'
+            newIconURL = process.env.DEFAULT_ICON_URL
         } else if (lastImageChannel) {
             newIconURL = await getLastImage(lastImageChannel)
         }
@@ -70,7 +73,7 @@ module.exports = {
         const authorNameExists = await GuildSchema.exists({ _id: guildId, 'authors.name': newName })
 
         if (authorNameExists) {
-            throw new Error('Author name must be unique.')
+            throw new InvalidInputError('Author Exists')
         }
 
         const authors = (await GuildSchema.findOneAndUpdate(
@@ -88,7 +91,7 @@ module.exports = {
         ).select('authors -_id').lean())?.authors
 
         if (!authors) {
-            throw new Error(`No author named '${oldName}'.`)
+            throw new NotFoundError(oldName)
         }
 
         const author = authors.find(author => author.name == (newName ?? oldName))

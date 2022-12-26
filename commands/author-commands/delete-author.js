@@ -1,6 +1,7 @@
 const errorHandler = require('../../helpers/error-handler');
 const GuildSchema = require('../../schemas/guild-schema');
 const { basicEmbed } = require('../../helpers/embeds');
+const { NotFoundError } = require('../../errors');
 const { Constants } = require('discord.js');
 
 module.exports = {
@@ -31,7 +32,7 @@ module.exports = {
         )
         
         if (!result.modifiedCount) {
-            throw new Error('Author could not be found.')
+            throw new NotFoundError(authorName)
         }
 
         interaction.reply(basicEmbed(`Deleted '${authorName}' author!`));
