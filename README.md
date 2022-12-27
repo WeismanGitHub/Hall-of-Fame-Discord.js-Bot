@@ -5,11 +5,11 @@
   ## [Bot Invite Link](https://discord.com/api/oauth2/authorize?client_id=973042179033415690&permissions=423054793728&scope=bot%20applications.commands)
   
   ## Description
-  A hall of fame bot with 28 commands that allow you save text, images, and audio. The bot is geared towards smaller, close-knit communities. It's purpose is to allow users to organize memorable moments so they can be easily accessed with authors, tags, types, dates, and more. To create quotes you must first create an author for the quote. An author has a name and optionally an image. You can also add tags to quotes, which need to be created before hand. Every type of quote (audio, image, regular, and multi) has an author, text, and up to three tags.
+  A hall of fame bot with 28 commands that allow you save text, images, and audio. The bot is geared towards smaller, close-knit servers. It's purpose is to allow users to organize memorable moments so they can be easily accessed with authors, tags, types, dates, and more. To create quotes you must first create an author for the quote. An author has a name and optionally an image. You can also add tags to quotes, which need to be created before hand. Every type of quote (audio, image, regular, and multi) has an author, text, and up to three tags.
   <hr class="rounded">
   
   ## Authors
-  Authors have a title and an optional image. The default image is the Hall of Fame Bot's icon. Authors are created with `/create_author` and edited with `/edit_author`. Use the `last_image` parameter of the command to use the latest image sent in a channel. You can also upload an image to Discord or somewhere else, copy the link, and input that into the `image_link` parameter. Deleting an author with `/delete_author` will make any of those author's quotes display "Deleted Author". See a server's authors with `/get_authors`.
+  Authors have a name and an optional image. The default image is the Hall of Fame Bot's icon. Authors are created with `/create_author` and edited with `/edit_author`. Use the `last_image` parameter of the command to use the latest image sent in a channel. You can also upload an image to Discord or somewhere else, copy the link, and input that into the `image_link` parameter. Deleting an author with `/delete_author` will make any of those author's quotes display "Deleted Author". See a server's authors with `/get_authors`.
   
   ![image](https://user-images.githubusercontent.com/102398620/208613726-60eaee16-0410-4bc2-895d-a8a79b69fab0.png)
    <hr class="rounded">
