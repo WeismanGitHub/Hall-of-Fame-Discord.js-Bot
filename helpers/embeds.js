@@ -85,8 +85,8 @@ const quoteEmbed = function(quote, extraData, color='#8F00FF') { // color == pur
 };
 
 const errorEmbed = function(error, title='Theres been an error!', color='#FF0000', ephemeral=false) {
-	error = error.toString();
-	
+	error = error.toString().replace('Error: ', '');
+
 	return {
         embeds: [
 			new MessageEmbed()
