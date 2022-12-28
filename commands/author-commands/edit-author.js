@@ -47,7 +47,7 @@ module.exports = {
     callback: async ({ interaction }) => errorHandler(interaction, async () => {
         const { options } = interaction;
 
-        if (!options._hoistedOptions <= 1) {
+        if (options._hoistedOptions <= 1) {
             throw new InvalidInputError('No Changes')
         }
 
