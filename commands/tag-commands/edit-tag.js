@@ -49,6 +49,6 @@ module.exports = {
             { $set: { 'tags.$': newName } }
         )
 
-        await interaction.reply(basicEmbed(`Changed '${tag}' to ${newName}!`));
+        await interaction.reply(basicEmbed(`Changed '${tag}' to '${newName}'!`));
     })
 };
