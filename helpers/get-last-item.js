@@ -8,7 +8,7 @@ async function getLastImage(channel) {
         throw new InvalidInputError('Channel')
     }
 
-    (await channel.messages.fetch({ limit: 25 }))
+    (await channel.messages.fetch({ limit: 50 }))
     .find(message => message.attachments.find(attachment => {
         if (attachment.contentType.startsWith('image')) {
             firstImageUrl = attachment.proxyURL
@@ -30,7 +30,7 @@ async function getLastAudio(channel) {
         throw new InvalidInputError('Channel')
     }
 
-    (await channel.messages.fetch({ limit: 25 }))
+    (await channel.messages.fetch({ limit: 50 }))
     .find(message => message.attachments.find(attachment => {
         const contentType = attachment.contentType
 
@@ -54,7 +54,7 @@ async function getLastQuoteId(channel) {
         throw new InvalidInputError('Channel')
     }
     
-    (await channel.messages.fetch({ limit: 25 }))
+    (await channel.messages.fetch({ limit: 50 }))
     .find(message => message.embeds.find(embed => {
         const _id = embed.fields[1]?.value
         
