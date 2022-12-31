@@ -8,7 +8,6 @@ function GuildsSideBar() {
     const home = { name: 'home', iconURL: '/icon.png' }
     const [guilds, setGuilds] = useState([home])
     const navigate = useNavigate();
-    const { guildId } = useParams()
 
     useEffect(() => {
         const code = String(window.location).split('code=')[1]
