@@ -10,22 +10,21 @@ import {
 } from "react-router-dom";
 
 import NotFound from './not-found';
-import Guild from './guild';
 import Login from './login';
-import Home from './home';
+import Main from './main';
 
 const router = createBrowserRouter([
     {
+        path: '/:guildId',
+        element: <Main/>
+    },
+    {
         path: '/',
-        element: <Home/>,
+        element: <Main/>
     },
     {
         path: '/login',
         element: <Login/>,
-    },
-    {
-        path: 'guilds/:guildId',
-        element: <Guild/>
     },
     {
         path: '*',
