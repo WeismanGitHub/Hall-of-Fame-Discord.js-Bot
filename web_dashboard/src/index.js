@@ -5,8 +5,6 @@ import './styles.css';
 import {
     createBrowserRouter,
     RouterProvider,
-    Route,
-    Link,
 } from "react-router-dom";
 
 import NotFound from './not-found';
