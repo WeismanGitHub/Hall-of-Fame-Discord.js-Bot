@@ -13,10 +13,6 @@ import Main from './main';
 
 const router = createBrowserRouter([
     {
-        path: '/:guildId',
-        element: <Main/>
-    },
-    {
         path: '/',
         element: <Main/>
     },
