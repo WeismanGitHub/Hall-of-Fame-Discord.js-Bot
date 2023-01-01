@@ -4,7 +4,8 @@
 }
 
 .guild_icon {
-    border-radius: 50%
+    border-radius: 50%;
+    cursor: pointer;
 }
 
 .guilds {
