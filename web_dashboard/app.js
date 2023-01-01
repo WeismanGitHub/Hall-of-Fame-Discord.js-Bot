@@ -24,17 +24,8 @@ app.use(express.static(path.resolve(__dirname, './build')))
 app.use(cookieParser())
 app.use(express.json())
 app.use(compression())
-app.use(helmet({
-	directives: {
-		imgSrc: [
-			"'self'",
-			"'https://cdn.discordapp.com/'",
-		],
-	},
-}))
-app.use(cors({
-    origin: ['http://localhost:5000'],
-}))
+app.use(cors({ origin: ['http://localhost:5000'] }))
+app.use(helmet())
 
 app.use('/api/v1', apiRouter)
 
