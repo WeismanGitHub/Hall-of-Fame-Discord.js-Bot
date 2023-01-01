@@ -8,10 +8,10 @@ import Home from './home'
 
 function Main() {
     const [loggedIn, setLoggedIn] = useState(Cookies.get('loggedIn'))
-    const home = { name: 'home', iconURL: '/icon.png', id: '' }
+    const home = { name: 'home', iconURL: '/icon.png', id: null }
     const [guilds, setGuilds] = useState([home])
+    const [guildId, setGuildId] = useState(null)
     const navigate = useNavigate()
-    const [guildId, setGuildId] = useState(useParams().guildId)
 
     useEffect(() => {
         const code = String(window.location).split('code=')[1]
@@ -32,7 +32,6 @@ function Main() {
     }, [])
     
     function guildIconClick(id) {
-        window.history.replaceState(null, '', `/${id}`);
         setGuildId(id)
     }
 
