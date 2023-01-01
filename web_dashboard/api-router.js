@@ -1,7 +1,6 @@
+const { BadRequestError, NotFoundError } = require('./errors');
 const GuildSchema = require('../schemas/guild-schema');
 const { PermissionsBitField } = require('discord.js');
-const ObjectId = require('mongoose').Types.ObjectId;
-const { BadRequestError } = require('./errors');
 const DiscordOauth2 = require("discord-oauth2");
 const { request } = require('undici');
 const { Router } = require('express')
@@ -45,26 +44,25 @@ router.post('/auth', async (req, res) => {
 
 router.get('/guilds', async (req, res) => {
 	const accessToken = req.cookies.accessToken
+	const client = req.app.get('client')
+	const clientGuilds = client.guilds.cache.map(guild => guild.id)
 
 	if (!accessToken) {
 		throw new BadRequestError('No Access Token')
 	}
 
-	let guilds = await oauth.getUserGuilds(accessToken).catch(err => {
+	const guilds = (await oauth.getUserGuilds(accessToken).catch(err => {
 		return res.status(401).clearCookie('accessToken')
 		.clearCookie('loggedIn').send('Invalid Access Token')
-	})
-
-	guilds = guilds.filter(guild => {
+	})).filter(guild => {
 		const guildPerms = new PermissionsBitField(guild.permissions)
-
-		return guildPerms.has(PermissionsBitField.Flags.UseApplicationCommands)
+		return guildPerms.has(PermissionsBitField.Flags.UseApplicationCommands) && clientGuilds.includes(guild.id)
 	}).map(guild => {
 		return { id: guild.id, iconURL: `https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}.png`, name: guild.name }
 	})
 
 	const guildsJWT = jwt.sign(
-        { guilds: guilds },
+        { guilds: guilds.map(guild => guild.id) },
         process.env.JWT_SECRET,
         { expiresIn: process.env.JWT_LIFETIME },
     )
@@ -73,13 +71,20 @@ router.get('/guilds', async (req, res) => {
 });
 
 router.get('/authors/:guildId', async (req, res) => {
-	if (!ObjectId.isValid(req.params.guildId)) {
+	const guilds = jwt.verify(req.cookies.guilds, process.env.JWT_SECRET).guilds
+	const guildId = req.params.guildId
+
+	if (!guilds.includes(guildId)) {
 		throw new BadRequestError('Invalid Guild Id')
 	}
-	
-	const payload = jwt.verify(req.cookies.guilds, process.env.JWT_SECRET)
 
-	console.log(payload)
+	const guild = await GuildSchema.findOne({ _id: guildId }).select('-_id authors').lean()
+
+	if (!guild) {
+		throw new NotFoundError('Guild Not Found')
+	}
+
+	res.status(200).json(guild.authors ?? [])
 })
 
 module.exports = router
