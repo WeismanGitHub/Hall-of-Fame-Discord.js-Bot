@@ -1,4 +1,4 @@
-const { BadRequestError, NotFoundError } = require('./errors');
+const { BadRequestError, NotFoundError, UnauthorizedError } = require('./errors');
 const GuildSchema = require('../schemas/guild-schema');
 const { PermissionsBitField } = require('discord.js');
 const DiscordOauth2 = require("discord-oauth2");
@@ -51,9 +51,9 @@ router.get('/guilds', async (req, res) => {
 		throw new BadRequestError('No Access Token')
 	}
 
-	const guilds = (await oauth.getUserGuilds(accessToken).catch(err => {
-		return res.status(401).clearCookie('accessToken')
-		.clearCookie('loggedIn').send('Invalid Access Token')
+	const guilds = (await oauth.getUserGuilds(accessToken)
+	.catch(err => {
+		throw new UnauthorizedError('Invalid Access Token')
 	})).filter(guild => {
 		const guildPerms = new PermissionsBitField(guild.permissions)
 		return guildPerms.has(PermissionsBitField.Flags.UseApplicationCommands) && clientGuilds.includes(guild.id)
