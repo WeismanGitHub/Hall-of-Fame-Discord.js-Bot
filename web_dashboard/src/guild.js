@@ -1,25 +1,41 @@
-import { useNavigate, useParams } from 'react-router-dom';
-import GuildsSideBar from './guilds-sidebar';
 import { useState, useEffect } from 'react';
+import { toast } from 'react-toastify'
 import axios, * as others from 'axios'
+import CreateQuote from './create-quote'
 
-function Guild() {
+function Guild({ guildId, setGuildId }) {
     const [authors, setAuthors] = useState([])
-    const navigate = useNavigate();
-    const { guildId } = useParams()
 
     useEffect(() => {
         if (!guildId) {
-            navigate('/')
+            return
         }
+        
+        axios.get(`/api/v1/authors/${guildId}`)
+        .then(res => setAuthors(res.data))
+        .catch(err => {
+            setGuildId(null)
 
-        axios.get(`/api/v1/authors/${guildId}`).then(res => setAuthors(res.data))
-    }, [])
+            toast.error('Guild Not Found.\nRegister with /register.', {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: true,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+            });
+        })
+    }, [guildId])
+
+    if (!guildId) {
+        return <CreateQuote/>
+    }
 
     return (<div>
-        <GuildsSideBar/>
         <div class='authors'>
-            { authors.forEach(author => author.name) }
+            { authors.map(author => <h1>{ author.name }</h1>) }
         </div>
     </div>)
 }

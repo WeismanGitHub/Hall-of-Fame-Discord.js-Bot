@@ -1,15 +1,16 @@
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import axios, * as others from 'axios'
 import Cookies from 'js-cookie';
 
 import Guild from './guild'
-import Home from './home'
 
 function Main() {
     const [loggedIn, setLoggedIn] = useState(Cookies.get('loggedIn'))
-    const home = { name: 'home', iconURL: '/icon.png', id: null }
-    const [guilds, setGuilds] = useState([home])
+    const createQuote = { name: 'create quote', iconURL: '/icon.png', id: null }
+    const [guilds, setGuilds] = useState([createQuote])
     const [guildId, setGuildId] = useState(null)
     const navigate = useNavigate()
 
@@ -35,26 +36,42 @@ function Main() {
         setGuildId(id)
     }
 
-    return (<div>
-        {
-            !loggedIn ?
-                <a href={ process.env.REACT_APP_REDIRECT_LINK }><button>Discord Login</button></a>
-            :
-                <div>
-                    <div class='guilds'>
-                        { guilds.map(guild =>
-                            <img class='guild_icon'
-                                src={ guild.iconURL }
-                                alt="icon" width="75" height="75"
-                                title={ guild.name }
-                                onClick={ () => guildIconClick(guild.id) }>
-                            </img>
-                        ) }
-                    </div>
+    return (<>
+        <body>
+            {
+                !loggedIn ?
+                    <a href={ process.env.REACT_APP_REDIRECT_LINK }><button>Discord Login</button></a>
+                :
+                    <div>
+                        <div class='guilds'>
+                            { guilds.map(guild =>
+                                <img class='guild_icon'
+                                    src={ guild.iconURL }
+                                    alt="icon" width="75" height="75"
+                                    title={ guild.name }
+                                    onClick={ () => guildIconClick(guild.id) }>
+                                </img>
+                            ) }
+                        </div>
                 </div>
-        }
-        { guildId ? <Guild guildId={ guildId }/> : <Home/> }
-    </div>)
+            }
+
+            { <Guild guildId={ guildId } setGuildId={ setGuildId }/> }
+        </body>
+
+        <ToastContainer
+            position="top-right"
+            autoClose={3000}
+            hideProgressBar
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="colored"
+        />
+    </>)
 }
 
 export default Main;
