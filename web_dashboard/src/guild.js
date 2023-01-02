@@ -8,6 +8,7 @@ function Guild({ guildId, setGuildId }) {
 
     useEffect(() => {
         if (!guildId) {
+            setAuthors([])
             return
         }
         
@@ -15,8 +16,9 @@ function Guild({ guildId, setGuildId }) {
         .then(res => setAuthors(res.data))
         .catch(err => {
             setGuildId(null)
+            setAuthors([])
 
-            toast.error('Guild Not Found.\nRegister with /register.', {
+            toast.error('Guild Not Found.Register with /register.', {
                 position: "top-right",
                 autoClose: 3000,
                 hideProgressBar: true,
@@ -35,7 +37,27 @@ function Guild({ guildId, setGuildId }) {
 
     return (<div>
         <div class='authors'>
-            { authors.map(author => <h1>{ author.name }</h1>) }
+            <div class='authors_header'>Authors - { authors.length }</div>
+            <hr class="authors_divider"/>
+            
+            { authors.map(author => <div class='author'>
+                <table>
+                    <tr>
+                        <td> <img
+                                class='author_icon'
+                                src={ author.iconURL }
+                                alt="author icon"
+                                width = "40"
+                                height = "40"
+                                onError={({ currentTarget }) => {
+                                    currentTarget.onerror = null; // prevents looping
+                                    currentTarget.src="/icon.png";
+                                }}
+                        /> </td>
+                        <td> { author.name } </td>
+                    </tr>
+                </table>
+            </div>) }
         </div>
     </div>)
 }
