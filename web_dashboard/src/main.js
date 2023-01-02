@@ -48,7 +48,7 @@ function Main() {
                                 <div>
                                     <img class='guild_icon'
                                         src={ guild.iconURL }
-                                        alt="icon"
+                                        alt="server icon"
                                         width = "60"
                                         height = "60"
                                         title = { guild.name }
