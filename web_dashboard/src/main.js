@@ -9,7 +9,7 @@ import Guild from './guild'
 
 function Main() {
     const [loggedIn, setLoggedIn] = useState(Cookies.get('loggedIn'))
-    const createQuote = { name: 'create quote', iconURL: '/icon.png', id: null }
+    const createQuote = { name: 'create quote', iconURL: '/create-quote.png', id: null }
     const [guilds, setGuilds] = useState([createQuote])
     const [guildId, setGuildId] = useState(null)
     const navigate = useNavigate()
@@ -44,14 +44,20 @@ function Main() {
                 :
                     <div>
                         <div class='guilds'>
-                            { guilds.map(guild =>
-                                <img class='guild_icon'
-                                    src={ guild.iconURL }
-                                    alt="icon" width="75" height="75"
-                                    title={ guild.name }
-                                    onClick={ () => guildIconClick(guild.id) }>
-                                </img>
-                            ) }
+                            { guilds.map(guild => 
+                                <div>
+                                    <img class='guild_icon'
+                                        src={ guild.iconURL }
+                                        alt="icon"
+                                        width = "60"
+                                        height = "60"
+                                        title = { guild.name }
+                                        onClick={ () => guildIconClick(guild.id) }>
+                                    </img>
+                                    
+                                    { !guilds.indexOf(guild) && <hr class="guilds_divider"/>}
+                                </div>)
+                            }
                         </div>
                 </div>
             }
@@ -62,7 +68,7 @@ function Main() {
         <ToastContainer
             position="top-right"
             autoClose={3000}
-            hideProgressBar
+            hideProgressBar={false}
             newestOnTop={false}
             closeOnClick
             rtl={false}

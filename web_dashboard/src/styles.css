@@ -9,16 +9,26 @@ body {
 .guild_icon {
     border-radius: 50%;
     cursor: pointer;
+    transition: all 125ms ease-in-out;
+    margin-top: 5px;
+}
+
+.guild_icon:hover {
+    border-radius: 25%;
+    transition: all 125ms ease-in;
 }
 
 .guilds {
-    align-items: center;
+    align-content: center;
     padding: 11px 0;
     max-height: 100vh;
+    min-height: 100vh;
     overflow-y: scroll;
     scrollbar-width: none;
     float: left;
-    width: 10%;
+    width: 5%;
+    background-color: #d5dee6;
+    padding: 10px;
 }
 
 .authors {
@@ -29,4 +39,14 @@ body {
     scrollbar-width: none;
     float: right;
     width: 10%;
+}
+
+.guilds_divider {
+    width: 100%;
+    align-content: center;
+	background-color: black;
+	height: 5px;
+	border-radius: 20%;
+	opacity: .2;
+    margin-top: 5px;
 }
