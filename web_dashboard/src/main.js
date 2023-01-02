@@ -40,7 +40,7 @@ function Main() {
         <body>
             {
                 !loggedIn ?
-                    <a href={ process.env.REACT_APP_REDIRECT_LINK }><button>Discord Login</button></a>
+                    <a href={ process.env.REACT_APP_LOCALHOST_LINK }><button>Discord Login</button></a>
                 :
                     <div>
                         <div class='guilds'>
