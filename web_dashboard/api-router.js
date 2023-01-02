@@ -24,7 +24,7 @@ router.post('/auth', async (req, res) => {
 			client_secret: process.env.CLIENT_SECRET,
 			code,
 			grant_type: 'authorization_code',
-			redirect_uri: `http://localhost:5000/`,
+			redirect_uri: process.env.LOCALHOST_REDIRECT_URI,
 			scope: 'guilds'
 		}).toString(),
 		headers: {
