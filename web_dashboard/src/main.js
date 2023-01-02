@@ -29,7 +29,7 @@ function Main() {
 
         axios.get('/api/v1/guilds').then(res => {
             setGuilds(guilds.concat(res.data))
-        })
+        }).catch(err => err.statusCode == 401 && setLoggedIn(false))
     }, [])
     
     function guildIconClick(id) {
