@@ -36,6 +36,11 @@ function Main() {
         setGuildId(id)
     }
 
+    function logout() {
+        axios.post('/api/v1/logout')
+        .then(navigate('/login'))
+    }
+
     return (<>
         <body>
             {
@@ -58,6 +63,15 @@ function Main() {
                                     { !guilds.indexOf(guild) && <hr class="guilds_divider"/>}
                                 </div>)
                             }
+
+                            <img class='guild_icon'
+                                src='/logout.png'
+                                alt="logout button"
+                                width = "60"
+                                height = "60"
+                                title = 'logout'
+                                onClick={ logout }>
+                            </img>
                         </div>
                 </div>
             }
