@@ -87,4 +87,8 @@ router.get('/authors/:guildId', async (req, res) => {
 	res.status(200).json(guild.authors ?? [])
 })
 
+router.post('/logout', (req, res) => {
+	res.status(200).clearCookie('guilds').clearCookie('accessToken').clearCookie('loggedIn').end()
+})
+
 module.exports = router
