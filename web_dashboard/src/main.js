@@ -6,6 +6,7 @@ import axios, * as others from 'axios'
 import Cookies from 'js-cookie';
 
 import Guild from './guild'
+import Login from './login'
 
 function Main() {
     const [loggedIn, setLoggedIn] = useState(Cookies.get('loggedIn'))
@@ -29,7 +30,7 @@ function Main() {
 
         axios.get('/api/v1/guilds').then(res => {
             setGuilds(guilds.concat(res.data))
-        }).catch(err => err.statusCode == 401 && setLoggedIn(false))
+        }).catch(err => setLoggedIn(false))
     }, [])
     
     function guildIconClick(id) {
@@ -37,15 +38,17 @@ function Main() {
     }
 
     function logout() {
-        axios.post('/api/v1/logout')
-        .then(navigate('/login'))
+        if (window.confirm('Are you sure you want to logout?')) {
+            axios.post('/api/v1/logout')
+            .then(navigate('/login'))
+        }
     }
 
     return (<>
         <body>
             {
                 !loggedIn ?
-                    <a href={ process.env.REACT_APP_LOCALHOST_LINK }><button>Discord Login</button></a>
+                    <Login/>
                 :
                     <div>
                         <div class='guilds'>
@@ -67,16 +70,15 @@ function Main() {
                             <img class='guild_icon'
                                 src='/logout.png'
                                 alt="logout button"
-                                width = "60"
-                                height = "60"
+                                width = "70"
+                                height = "70"
                                 title = 'logout'
                                 onClick={ logout }>
                             </img>
                         </div>
+                    <Guild guildId={ guildId } setGuildId={ setGuildId }/>
                 </div>
             }
-
-            { <Guild guildId={ guildId } setGuildId={ setGuildId }/> }
         </body>
 
         <ToastContainer
