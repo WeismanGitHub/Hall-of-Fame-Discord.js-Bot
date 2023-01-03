@@ -172,11 +172,11 @@ module.exports = {
         }
 
         const deleteFragmentOptions = [
-            options.getString('delete_first_fragment'),
-            options.getString('delete_second_fragment'),
-            options.getString('delete_third_fragment'),
-            options.getString('delete_fourth_fragment'),
-            options.getString('delete_fifth_fragment'),
+            options.getBoolean('delete_first_fragment'),
+            options.getBoolean('delete_second_fragment'),
+            options.getBoolean('delete_third_fragment'),
+            options.getBoolean('delete_fourth_fragment'),
+            options.getBoolean('delete_fifth_fragment'),
         ]
 
         const newFragments = [
