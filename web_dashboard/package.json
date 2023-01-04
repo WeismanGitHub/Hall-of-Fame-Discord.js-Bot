@@ -17,6 +17,7 @@
     "express-rate-limit": "^6.7.0",
     "js-cookie": "^3.0.1",
     "jsonwebtoken": "^9.0.0",
+    "markdown-to-jsx": "^7.1.8",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.4.3",
