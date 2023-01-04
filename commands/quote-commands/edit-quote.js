@@ -109,9 +109,9 @@ module.exports = {
         }
 
         if (newImageLink) {
-            update.attachment = newImageLink;
+            update.attachmentURL = newImageLink;
         } else if (lastImageChannel) {
-            update.attachment = await getLastImage(lastImageChannel)
+            update.attachmentURL = await getLastImage(lastImageChannel)
         }
 
         if (deleteTags) {
