@@ -68,6 +68,14 @@ function Main() {
                             }
 
                             <img class='guild_icon'
+                                src='/question-mark.png'
+                                alt="readme button"
+                                width = "70"
+                                height = "70"
+                                title = 'readme'
+                                onClick={ () => navigate('/readme') }>
+                            </img>
+                            <img class='guild_icon'
                                 src='/logout.png'
                                 alt="logout button"
                                 width = "70"
