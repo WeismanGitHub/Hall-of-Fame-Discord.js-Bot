@@ -6,6 +6,7 @@ const { request } = require('undici');
 const { Router } = require('express')
 const jwt = require('jsonwebtoken')
 require('express-async-errors')
+const path = require('path')
 
 const router = Router()
 const oauth = new DiscordOauth2();
