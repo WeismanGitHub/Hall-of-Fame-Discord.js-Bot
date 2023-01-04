@@ -7,7 +7,6 @@ import {
     RouterProvider,
 } from "react-router-dom";
 
-import Readme from './readme';
 import NotFound from './not-found';
 import Login from './login';
 import Main from './main';
@@ -20,10 +19,6 @@ const router = createBrowserRouter([
     {
         path: '/login',
         element: <Login/>,
-    },
-    {
-        path: '/readme',
-        element: <Readme/>
     },
     {
         path: '*',

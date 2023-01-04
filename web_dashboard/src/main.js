@@ -66,15 +66,16 @@ function Main() {
                                     { !guilds.indexOf(guild) && <hr class="guilds_divider"/>}
                                 </div>)
                             }
-
-                            <img class='guild_icon'
-                                src='/question-mark.png'
-                                alt="readme button"
-                                width = "70"
-                                height = "70"
-                                title = 'readme'
-                                onClick={ () => navigate('/readme') }>
-                            </img>
+                            
+                            <a href="https://github.com/WeismanGitHub/Hall-of-Fame-Discord.js-Bot#readme">
+                                <img class='guild_icon'
+                                    src='/question-mark.png'
+                                    alt="readme button"
+                                    width = "70"
+                                    height = "70"
+                                    title = 'readme'
+                                />
+                            </a>
                             <img class='guild_icon'
                                 src='/logout.png'
                                 alt="logout button"
