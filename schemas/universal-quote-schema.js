@@ -38,6 +38,25 @@ const UniversalQuoteSchema = new mongoose.Schema({
         type: mongoose.Types.ObjectId,
         required: [true, 'Must provide a valid author.'],
     },
+    attachmentURL: {
+        type: String,
+        minLength: 1,
+        maxLength: 512,
+        default: null,
+        validate: {
+            validator: function(URL) { return (URL == null || checkURL(URL)) },
+            message: props => `Invalid Input: \`${props.value}\``
+        },
+    },
+    audioURL: {
+        type: String,
+        required: [true, 'Must provide an audio file link.'],
+        maxLength: 512,
+        validate: {
+            validator: function(URL) { return (URL == null || checkURL(URL)) },
+            message: props => `Invalid Input: \`${props.value}\``
+        },
+    },
 }, { timestamps: { createdAt: true, updatedAt: false } });
 
 module.exports = mongoose.model('universal', UniversalQuoteSchema, 'quotes');
