@@ -1,8 +1,8 @@
 const { getAuthorByName, getAuthorById } = require('../../helpers/get-author');
+const { getLastQuoteId, getLastImage } = require('../../helpers/get-last-item');
 const sendToQuotesChannel = require('../../helpers/send-to-quotes-channel');
 const MultiQuoteSchema = require('../../schemas/multi-quote-schema');
 const { NotFoundError, InvalidInputError } = require('../../errors');
-const { getLastQuoteId } = require('../../helpers/get-last-item')
 const errorHandler = require('../../helpers/error-handler');
 const { quoteEmbed } = require('../../helpers/embeds');
 const { Constants } = require('discord.js');
@@ -125,6 +125,22 @@ module.exports = {
             description: 'Remove a text/author pair.',
             type: Constants.ApplicationCommandOptionTypes.BOOLEAN
         },
+        {
+            name: 'new_image_link',
+            description: 'Image attachment link. Upload an image to Discord and copy the link to that image.',
+            type: Constants.ApplicationCommandOptionTypes.STRING,
+            maxLength: 512
+        },
+        {
+            name: 'last_image',
+            description: 'Add the last image sent in a channel to the quote.',
+            type: Constants.ApplicationCommandOptionTypes.CHANNEL
+        },
+        {
+            name: 'delete_image',
+            description: 'Removes image from quote.',
+            type: Constants.ApplicationCommandOptionTypes.BOOLEAN
+        },
     ],
 
     callback: async ({ interaction, client }) => errorHandler(interaction, async () => {
@@ -144,6 +160,9 @@ module.exports = {
         const lastQuoteChannel = options.getChannel('last_quote');
         const id = options.getString('id') ?? await getLastQuoteId(lastQuoteChannel)
         const newTitle = options.getString('new_title')
+        const lastImageChannel = options.getChannel('last_image');
+        const newImageLink = options.getString('new_image_link');
+        const deleteImage = options.getBoolean('delete_image');
 
         if (!id) {
             throw new InvalidInputError('ID')
@@ -169,6 +188,14 @@ module.exports = {
 
         if (newTitle) {
             multiQuote.text = newTitle;
+        }
+
+        if (deleteImage) {
+            multiQuote.attachmentURL = null
+        } else if (newImageLink) {
+            multiQuote.attachmentURL = newImageLink;
+        } else if (lastImageChannel) {
+            multiQuote.attachmentURL = await getLastImage(lastImageChannel)
         }
 
         const deleteFragmentOptions = [
