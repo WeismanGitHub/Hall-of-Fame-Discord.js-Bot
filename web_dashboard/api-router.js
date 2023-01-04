@@ -91,4 +91,8 @@ router.post('/logout', (req, res) => {
 	res.status(200).clearCookie('guilds').clearCookie('accessToken').clearCookie('loggedIn').end()
 })
 
+router.get('/readme', (req, res) => {
+	res.status(200).sendFile(path.resolve(__dirname, '../README.md'))
+})
+
 module.exports = router
