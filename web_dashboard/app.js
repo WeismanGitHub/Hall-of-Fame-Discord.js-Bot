@@ -20,6 +20,7 @@ const limiter = rateLimit({
 
 app.use(limiter)
 app.use(express.urlencoded({ extended: true }))
+app.use('/images', express.static(path.resolve(__dirname, '../images')))
 app.use(express.static(path.resolve(__dirname, './build')))
 app.use(cookieParser())
 app.use(express.json())
