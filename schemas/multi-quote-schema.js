@@ -14,7 +14,7 @@ const Fragment = new mongoose.Schema({
         type: mongoose.Types.ObjectId,
         required: [true, 'Must provide a valid author.'],
     },
-})
+}, { _id : false })
 
 const MultiQuoteSchema = new mongoose.Schema({
     guildId: {
