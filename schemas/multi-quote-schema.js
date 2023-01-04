@@ -1,5 +1,6 @@
 const { InvalidInputError } = require('../errors');
 const checkTags = require('../helpers/check-tags');
+const checkURL = require('../helpers/check-url')
 const TagSchema = require('./tag-schema')
 const mongoose = require('mongoose');
 
@@ -33,7 +34,17 @@ const MultiQuoteSchema = new mongoose.Schema({
         type: String,
         default: 'multi',
         enum: ['multi']
-    }
+    },
+    attachmentURL: {
+        type: String,
+        minLength: 1,
+        maxLength: 512,
+        default: null,
+        validate: {
+            validator: function(URL) { return (URL == null || checkURL(URL)) },
+            message: props => `Invalid Input: \`${props.value}\``
+        },
+    },
 }, { timestamps: { createdAt: true, updatedAt: false } });
 
 MultiQuoteSchema.plugin(schema => {
