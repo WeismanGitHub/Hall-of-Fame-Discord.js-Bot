@@ -1,6 +1,6 @@
+const UniversalQuoteSchema = require('../../schemas/universal-quote-schema');
 const { getAuthorByName } = require('../../helpers/get-author');
 const errorHandler = require('../../helpers/error-handler');
-const QuoteSchema = require('../../schemas/quote-schema');
 const { basicEmbed } = require('../../helpers/embeds');
 const checkTags = require('../../helpers/check-tags');
 const { NotFoundError } = require('../../errors')
@@ -74,13 +74,13 @@ module.exports = {
         const { options } = interaction;
         const searchPhrase = options.getString('search_phrase')
         const inputtedAuthor = options.getString('author');
-        const type = options.getBoolean('type')
+        const type = options.getString('type')
         const guildId = interaction.guildId;
         const query = { guildId: guildId };
     
         if (inputtedAuthor) {
             const author = await getAuthorByName(inputtedAuthor, guildId);
-            query.$or = [{ authorId: author._id }, { fragments: { $elemMatch: { authorId: author._id } }  }]
+            query.$or = [{ authorId: author._id }, { 'fragments.authorId': author._id }]
 
             if (author.name == 'Deleted Author') {
                 throw new NotFoundError(inputtedAuthor)
@@ -112,7 +112,7 @@ module.exports = {
             query.$text = { $search: searchPhrase }
         }
 
-        const count = await QuoteSchema.countDocuments(query)
+        const count = await UniversalQuoteSchema.countDocuments(query)
         const plural = count > 1
         
         if (!count) {
