@@ -1,9 +1,10 @@
 const sendToQuotesChannel = require('../../helpers/send-to-quotes-channel');
 const MultiQuoteSchema = require('../../schemas/multi-quote-schema');
-const { NotFoundError } = require('../../errors');
 const { getAuthorByName } = require('../../helpers/get-author');
+const { getLastImage } = require('../../helpers/get-last-item');
 const errorHandler = require('../../helpers/error-handler');
 const { quoteEmbed } = require('../../helpers/embeds');
+const { NotFoundError } = require('../../errors');
 const { Constants } = require('discord.js');
 
 module.exports = {
@@ -89,6 +90,17 @@ module.exports = {
             description: 'The fifth part of the multi-quote.',
             type: Constants.ApplicationCommandOptionTypes.STRING,
         },
+        {
+            name: 'image_link',
+            description: 'Image attachment link. Upload an image to Discord and copy the link to that image.',
+            type: Constants.ApplicationCommandOptionTypes.STRING,
+            maxLength: 512
+        },
+        {
+            name: 'last_image',
+            description: 'Use the last image sent in a channel to the quote.',
+            type: Constants.ApplicationCommandOptionTypes.CHANNEL
+        }
     ],
 
     callback: async ({ interaction, client }) => errorHandler(interaction, async () => {
@@ -124,12 +136,20 @@ module.exports = {
             fragment.authorId = author._id
             checkedFragments.push(fragment)
         }
+        
+        const lastImageChannel = options.getChannel('last_image');
+        let attachmentURL = options.getString('image_link');
+
+        if (!attachmentURL && lastImageChannel) {
+            attachmentURL = await getLastImage(lastImageChannel)
+        }
 
         const multiQuote = await MultiQuoteSchema.create({
             guildId: guildId,
             text: options.getString('title'),
             fragments: checkedFragments,
             tags: tags,
+            attachmentURL: attachmentURL
         });
 
         const embeddedMultiQuote = quoteEmbed(multiQuote, checkedFragments)
