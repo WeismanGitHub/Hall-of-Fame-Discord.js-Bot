@@ -23,17 +23,17 @@ const notificationEmbed = function(title, body, color='#FFFE00') {
 
 // Multi-quote isn't separate embed because easier to determine what to do here than anywhere there could be a multi-quote.
 const quoteEmbed = function(quote, extraData, color='#8F00FF') { // color == purple
-	let tags = quote.tags.filter(x => x !== null).map(tag => tag.substring(0, 85))
+	let tags = quote.tags.filter(x => x !== null).map(tag => tag)
     tags = tags.length ? tags : ['no tags']
 	let embedCharacters = ''
 	const colorChange = (color !== '#8F00FF')
 	
-	if (quote.attachmentURL) {
+	if (quote.type == 'regular' && quote.attachmentURL) {
 		quote.type = 'image'
 	}
 
 	const embed = new MessageEmbed()
-	.setDescription(quote.text?.substring(0, 4096) ?? '[No Text]')
+	.setDescription(quote.text ?? '[No Text]')
 	.addFields({ name: 'Tags:', value: tags.join(', ') })
 	.addFields({ name: 'ID:', value: `${quote._id}` })
 	.setImage(quote.attachmentURL)
@@ -48,7 +48,7 @@ const quoteEmbed = function(quote, extraData, color='#8F00FF') { // color == pur
 		embed.setTitle(quote.text)
 		embed.setDescription(formattedFragments)
 	} else {
-		embed.setAuthor({ name: extraData.name.substring(0, 256), iconURL: extraData.iconURL }) // Extra data is author.
+		embed.setAuthor({ name: extraData.name, iconURL: extraData.iconURL }) // Extra data is author.
 		embedCharacters += embed.author.name
 	}
 
