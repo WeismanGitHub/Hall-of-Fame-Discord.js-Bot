@@ -1,5 +1,5 @@
 const { getAuthorByName, getAuthorById } = require('../../helpers/get-author');
-const UniversalQuoteSchema = require('../../schemas/universal-schema');
+const UniversalQuoteSchema = require('../../schemas/universal-quote-schema');
 const errorHandler = require('../../helpers/error-handler');
 const GuildSchema = require('../../schemas/guild-schema');
 const { quoteEmbed } = require('../../helpers/embeds');

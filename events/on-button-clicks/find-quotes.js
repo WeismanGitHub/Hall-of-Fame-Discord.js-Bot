@@ -1,6 +1,6 @@
+const UniversalQuoteSchema = require('../../schemas/universal-quote-schema');
 const { MessageActionRow, MessageButton } = require('discord.js');
 const { errorEmbed, basicEmbed } = require('../../helpers/embeds');
-const QuoteSchema = require('../../schemas/quote-schema');
 const FilterSchema = require('../../schemas/filter-schema');
 const sendQuotes = require('../../helpers/send-quotes');
 const { InvalidActionError } = require('../../errors');
@@ -26,7 +26,7 @@ module.exports = async (client, instance) => {
 
             const { query, sort } = filter
 
-            const quotes = await QuoteSchema.find(query)
+            const quotes = await UniversalQuoteSchema.find(query)
             .sort(sort).skip(skipAmount).limit(10).lean();
 
             const customId = JSON.stringify({ type: 'find-quotes', filterId: filterId, skipAmount: Number(skipAmount) + 10 })

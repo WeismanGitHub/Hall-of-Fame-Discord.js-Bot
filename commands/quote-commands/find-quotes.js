@@ -1,8 +1,8 @@
 const { Constants, MessageActionRow, MessageButton } = require('discord.js');
+const UniversalQuoteSchema = require('../../schemas/universal-quote-schema');
 const { getAuthorByName } = require('../../helpers/get-author');
 const FilterSchema = require('../../schemas/filter-schema');
 const errorHandler = require('../../helpers/error-handler');
-const QuoteSchema = require('../../schemas/quote-schema');
 const sendQuotes = require('../../helpers/send-quotes');
 const { basicEmbed } = require('../../helpers/embeds');
 const checkTags = require('../../helpers/check-tags');
@@ -111,7 +111,7 @@ module.exports = {
 
         if (inputtedAuthor) {
             const author = await getAuthorByName(inputtedAuthor, guildId);
-            query.$or = [{ authorId: author._id }, { fragments: { $elemMatch: { authorId: author._id } }  }]
+            query.$or = [{ authorId: author._id }, { 'fragments.authorId': author._id }]
 
             if (author.name == 'Deleted Author') {
                 throw new NotFoundError(inputtedAuthor)
@@ -143,7 +143,7 @@ module.exports = {
             query.$text = { $search: searchPhrase }
         }
 
-        const quotes = await QuoteSchema.find(query).sort(sort)
+        const quotes = await UniversalQuoteSchema.find(query).sort(sort)
         .limit(pagination == false ? Infinity : limit).lean();
 
         if (!quotes.length) {
