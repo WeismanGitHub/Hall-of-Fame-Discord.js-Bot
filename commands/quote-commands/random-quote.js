@@ -1,6 +1,7 @@
 const { getAuthorByName, getAuthorById } = require('../../helpers/get-author');
+const UniversalQuoteSchema = require('../../schemas/universal-schema');
 const errorHandler = require('../../helpers/error-handler');
-const QuoteSchema = require('../../schemas/quote-schema');
+const GuildSchema = require('../../schemas/guild-schema');
 const { quoteEmbed } = require('../../helpers/embeds');
 const checkTags = require('../../helpers/check-tags');
 const { NotFoundError } = require('../../errors');
@@ -80,7 +81,7 @@ module.exports = {
 
         if (inputtedAuthor) {
             const author = await getAuthorByName(inputtedAuthor, guildId);
-            query.$or = [{ authorId: author._id }, { fragments: { $elemMatch: { authorId: author._id } }  }]
+            query.$or = [{ authorId: author._id }, { 'fragments.authorId': author._id }]
 
             if (author.name == 'Deleted Author') {
                 throw new NotFoundError(inputtedAuthor)
@@ -112,16 +113,29 @@ module.exports = {
             query.$text = { $search: searchPhrase }
         }
 
-        const amountOfDocuments = await QuoteSchema.countDocuments(query)
+        const amountOfDocuments = await UniversalQuoteSchema.countDocuments(query)
 
         if (!amountOfDocuments) {
             throw new NotFoundError('Quotes')
         }
-
+        
         const randomNumber = Math.floor(Math.random() * amountOfDocuments);
-        const randomQuote = await QuoteSchema.findOne(query).skip(randomNumber).lean()
-        const author = await getAuthorById(randomQuote.authorId, guildId)
+        const randomQuote = await UniversalQuoteSchema.findOne(query).skip(randomNumber).lean()
 
-        await interaction.reply(quoteEmbed(randomQuote, author));
+        if (randomQuote.type == 'multi') {
+            const guildAuthors = (await GuildSchema.findById(guildId).select('-_id authors').lean()).authors
+            var checkedFragments = []
+
+            for (let fragment of randomQuote.fragments) {
+                const authorName = (guildAuthors.find(({ _id }) => _id?.equals(fragment.authorId) ))?.name
+                fragment.authorName = authorName ?? 'Deleted Author'
+
+                checkedFragments.push(fragment)
+            }
+        } else {
+            var author = await getAuthorById(randomQuote.authorId, guildId);
+        }
+
+        await interaction.reply(quoteEmbed(randomQuote, author ?? checkedFragments));
     })
 };
