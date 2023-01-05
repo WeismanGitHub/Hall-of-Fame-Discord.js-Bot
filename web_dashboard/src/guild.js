@@ -13,7 +13,13 @@ function Guild({ guildId, setGuildId }) {
         }
         
         axios.get(`/api/v1/authors/${guildId}`)
-        .then(res => setAuthors(res.data))
+        .then(res => {
+            const sortedAuthors = res.data.sort((firstAuthor, secondAuthor) =>
+                firstAuthor.name.localeCompare(secondAuthor.name, undefined, { sensitivity: 'base' })
+            )
+
+            setAuthors(sortedAuthors)
+        })
         .catch(err => {
             setGuildId(null)
             setAuthors([])
