@@ -35,9 +35,9 @@
   ![Audio Quote Example](/images/Audio%20Quote%20Example.png)
   
   #### Multi Quote
-  Multi quotes require at least 2 authors and a title, and optionally up to 3 tags. They are created with `/create_multi_quote`, edited with `/edit_multi_quote`, and deleted with `/delete_quote`.
+  Multi quotes require between two and five fragments and a title, and optionally up to 3 tags and an image. A fragment is an author/text pair. Multi quotes are created with `/create_multi_quote`, edited with `/edit_multi_quote`, and deleted with `/delete_quote`. You can optionally add an image with the `last_image` parameter of the command to use the latest image sent in a channel. You can also upload an image to Discord or somewhere else, copy the link, and input that into the `image_link` parameter. Make sure not to copy the link to the message.
   
-  ![Multi Quote Example]()
+  ![Multi Quote Example](/images/Multi%20Quote%20Example.png)
   <hr class="rounded">
   
   ## Tags
