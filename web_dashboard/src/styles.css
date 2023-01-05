@@ -72,10 +72,16 @@ body {
     display: inline;
     position: relative;
     object-fit: cover;
+    left: 5%;
     cursor: pointer;
     font-size: 125%;
 }
 
 .author_icon {
     border-radius: 50%;
+    float: left;
+}
+
+.author_name {
+    padding-left: 5px;
 }

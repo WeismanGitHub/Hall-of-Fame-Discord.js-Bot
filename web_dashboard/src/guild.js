@@ -39,24 +39,22 @@ function Guild({ guildId, setGuildId }) {
         <div class='authors'>
             <div class='authors_header'>Authors - { authors.length }</div>
             <hr class="authors_divider"/>
-            
+            <br/>
+
             { authors.map(author => <div class='author'>
-                <table>
-                    <tr>
-                        <td> <img
-                                class='author_icon'
-                                src={ author.iconURL }
-                                alt="author icon"
-                                width = "40"
-                                height = "40"
-                                onError={({ currentTarget }) => {
-                                    currentTarget.onerror = null; // prevents looping
-                                    currentTarget.src="/icon.png";
-                                }}
-                        /> </td>
-                        <td> { author.name } </td>
-                    </tr>
-                </table>
+                    <img
+                        class='author_icon'
+                        src={ author.iconURL }
+                        alt="author icon"
+                        width = "40"
+                        height = "40"
+                        onError={({ currentTarget }) => {
+                            currentTarget.onerror = null; // prevents looping
+                            currentTarget.src="/icon.png";
+                        }}
+                    />
+                    <div class='author_name'>{ author.name }</div>
+                    <br/>
             </div>) }
         </div>
     </div>)
