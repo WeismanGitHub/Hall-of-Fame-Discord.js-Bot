@@ -13,7 +13,8 @@ module.exports = {
     callback: async ({ interaction }) => errorHandler(interaction, async () => {
         const guildId = interaction.guildId;
 
-        let authors = (await GuildSchema.findOne({ _id: guildId }).select('-_id authors').lean()).authors;
+        const authors = (await GuildSchema.findOne({ _id: guildId }).select('-_id authors').lean()).authors
+        .sort((firstAuthor, secondAuthor) => firstAuthor.name.localeCompare(secondAuthor.name, undefined, { sensitivity: 'base' }))
 
         if (!authors.length) {
             throw new NotFoundError('Authors')
