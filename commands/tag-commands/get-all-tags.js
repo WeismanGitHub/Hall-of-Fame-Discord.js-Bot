@@ -13,10 +13,11 @@ module.exports = {
 
     callback: async ({ interaction }) => errorHandler(interaction, async () => {
         const guildId = interaction.guildId;
+        let message = '';
     
         const tags= (await GuildSchema.find({ _id: guildId }).select('tags').lean())[0].tags
         .sort((firstTag, secondTag) => firstTag.localeCompare(secondTag, undefined, { sensitivity: 'base' }))
-        let message = '';
+
         tags.forEach(tag => {
             message += `${tag}\n`;
         });
