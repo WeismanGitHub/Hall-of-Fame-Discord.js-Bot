@@ -92,4 +92,21 @@ router.post('/logout', (req, res) => {
 	res.status(200).clearCookie('guilds').clearCookie('accessToken').clearCookie('loggedIn').end()
 })
 
+router.get('/tags/:guildId', async (req, res) => {
+	const guilds = jwt.verify(req.cookies.guilds, process.env.JWT_SECRET).guilds
+	const guildId = req.params.guildId
+
+	if (!guilds.includes(guildId)) {
+		throw new BadRequestError('Invalid Guild Id')
+	}
+
+	const guild = await GuildSchema.findOne({ _id: guildId }).select('-_id tags').lean()
+
+	if (!guild) {
+		throw new NotFoundError('Guild Not Found')
+	}
+
+	res.status(200).json(guild.tags ?? [])
+})
+
 module.exports = router
