@@ -12,6 +12,7 @@ function Guild({ guildId, setGuildId }) {
     useEffect(() => {
         if (!guildId) {
             setAuthors([])
+            setTags([])
             setFilter({ guildId: guildId })
             return
         }
@@ -37,6 +38,7 @@ function Guild({ guildId, setGuildId }) {
         } catch(err) {
             setGuildId(null)
             setAuthors([])
+            setTags([])
             setFilter({})
 
             toast.error('Guild Not Found.Register with /register.', {
