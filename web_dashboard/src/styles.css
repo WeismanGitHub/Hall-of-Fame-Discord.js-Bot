@@ -82,6 +82,10 @@ body {
     float: left;
 }
 
+.author_container {
+    left: 5%;
+}
+
 .author_name {
-    padding-left: 5px;
+    margin-left: 50px;
 }

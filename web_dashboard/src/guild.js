@@ -48,6 +48,7 @@ function Guild({ guildId, setGuildId }) {
             <br/>
 
             { authors.map(author => <div class='author'>
+                <div class='author_container'>
                     <img
                         class='author_icon'
                         src={ author.iconURL }
@@ -61,6 +62,7 @@ function Guild({ guildId, setGuildId }) {
                     />
                     <div class='author_name'>{ author.name }</div>
                     <br/>
+                </div>
             </div>) }
         </div>
     </div>)
