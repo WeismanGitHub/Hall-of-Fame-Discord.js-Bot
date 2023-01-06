@@ -111,9 +111,9 @@ router.get('/tags/:guildId', async (req, res) => {
 
 router.get('/search', async (req, res) => {
 	const guilds = jwt.verify(req.cookies.guilds, process.env.JWT_SECRET).guilds
-	const { query, date, page } = req.query
-	const { guildId, tags, type, text, authorId } = query
-	const sanitizedQuery = { guildId: guildId }
+	const { search, date, page } = req.query
+	const { guildId, tags, type, text, authorId } = search
+	const sanitizedSearch = { guildId: guildId }
 
 	if (!guilds.includes(guildId)) {
 		throw new BadRequestError('Invalid Guild Id')
@@ -125,26 +125,26 @@ router.get('/search', async (req, res) => {
 	
 	if (type) {
 		if (type == 'image') {
-			sanitizedQuery.attachmentURL = { $ne: null }
+			sanitizedSearch.attachmentURL = { $ne: null }
 		} else {
-			sanitizedQuery.type = type
-			sanitizedQuery.attachmentURL = null
+			sanitizedSearch.type = type
+			sanitizedSearch.attachmentURL = null
 		}
 	}
 
 	if (authorId) {
-		sanitizedQuery.$or = [{ authorId: authorId }, { 'fragments.authorId': authorId }]
+		sanitizedSearch.$or = [{ authorId: authorId }, { 'fragments.authorId': authorId }]
 	}
 
 	if (tags) {
-		sanitizedQuery.tags = { $all: tags };
+		sanitizedSearch.tags = { $all: tags };
 	}
 
 	if (text) {
-		sanitizedQuery.$text = { $search: text }
+		sanitizedSearch.$text = { $search: text }
 	}
 
-	const quotes = UniversalQuoteSchema.find(sanitizedQuery)
+	const quotes = UniversalQuoteSchema.find(sanitizedSearch)
 	.sort(date ? { createdAt: date } : { createdAt: -1 })
 	.skip(page * 10).limit(10).lean()
 
