@@ -3,8 +3,10 @@ import { toast } from 'react-toastify'
 import axios, * as others from 'axios'
 import CreateQuote from './create-quote'
 
-function Guild({ guildId, setGuildId }) {
+function Guild({ guildId, setGuildId, setFilters }) {
     const [authors, setAuthors] = useState([])
+    const [tags, setTags] = useState([])
+    
 
     useEffect(() => {
         if (!guildId) {
@@ -12,15 +14,25 @@ function Guild({ guildId, setGuildId }) {
             return
         }
         
-        axios.get(`/api/v1/authors/${guildId}`)
-        .then(res => {
-            const sortedAuthors = res.data.sort((firstAuthor, secondAuthor) =>
-                firstAuthor.name.localeCompare(secondAuthor.name, undefined, { sensitivity: 'base' })
-            )
+        try {
+            axios.get(`/api/v1/authors/${guildId}`)
+            .then(res => {
+                const sortedAuthors = res.data.sort((firstAuthor, secondAuthor) =>
+                    firstAuthor.name.localeCompare(secondAuthor.name, undefined, { sensitivity: 'base' })
+                )
+    
+                setAuthors(sortedAuthors)
+            })
 
-            setAuthors(sortedAuthors)
-        })
-        .catch(err => {
+            axios.get(`/api/v1/tags/${guildId}`)
+            .then(res => {
+                const sortedTags = res.data.sort((firstTag, secondTag) =>
+                firstTag.localeCompare(secondTag, undefined, { sensitivity: 'base' })
+                )
+    
+                setTags(sortedTags)
+            })
+        } catch(err) {
             setGuildId(null)
             setAuthors([])
 
@@ -34,7 +46,7 @@ function Guild({ guildId, setGuildId }) {
                 progress: undefined,
                 theme: "colored",
             });
-        })
+        }
     }, [guildId])
 
     if (!guildId) {
@@ -42,6 +54,14 @@ function Guild({ guildId, setGuildId }) {
     }
 
     return (<div>
+        <div class='tags'>
+            <div class='tags_header'>Tags - { tags.length }</div>
+            <hr class="tags_divider"/>
+            <br/>
+
+            { tags.map(tag => <><div class='tag'>{ tag }</div><br/></>) }
+        </div>
+
         <div class='authors'>
             <div class='authors_header'>Authors - { authors.length }</div>
             <hr class="authors_divider"/>
