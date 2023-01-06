@@ -4,7 +4,7 @@ import Cookies from 'js-cookie';
 import Guild from './guild'
 
 function CreateQuote() {
-    return (<div class='center'>
+    return (<div class='create_quote'>
         Create Quote
     </div>)
 }
