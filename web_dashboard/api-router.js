@@ -1,4 +1,5 @@
 const { BadRequestError, NotFoundError, UnauthorizedError } = require('./errors');
+const UniversalQuoteSchema = require('../schemas/universal-quote-schema');
 const GuildSchema = require('../schemas/guild-schema');
 const { PermissionsBitField } = require('discord.js');
 const DiscordOauth2 = require("discord-oauth2");
@@ -6,7 +7,6 @@ const { request } = require('undici');
 const { Router } = require('express')
 const jwt = require('jsonwebtoken')
 require('express-async-errors')
-const path = require('path')
 
 const router = Router()
 const oauth = new DiscordOauth2();
@@ -107,6 +107,48 @@ router.get('/tags/:guildId', async (req, res) => {
 	}
 
 	res.status(200).json(guild.tags ?? [])
+})
+
+router.get('/search', async (req, res) => {
+	const guilds = jwt.verify(req.cookies.guilds, process.env.JWT_SECRET).guilds
+	const { query, date, page } = req.query
+	const { guildId, tags, type, text, authorId } = query
+	const sanitizedQuery = { guildId: guildId }
+
+	if (!guilds.includes(guildId)) {
+		throw new BadRequestError('Invalid Guild Id')
+	}
+
+	if (!isNaN(page)) {
+		throw new BadRequestError('Page Must Be Number')
+	}
+	
+	if (type) {
+		if (type == 'image') {
+			sanitizedQuery.attachmentURL = { $ne: null }
+		} else {
+			sanitizedQuery.type = type
+			sanitizedQuery.attachmentURL = null
+		}
+	}
+
+	if (authorId) {
+		sanitizedQuery.$or = [{ authorId: authorId }, { 'fragments.authorId': authorId }]
+	}
+
+	if (tags) {
+		sanitizedQuery.tags = { $all: tags };
+	}
+
+	if (text) {
+		sanitizedQuery.$text = { $search: text }
+	}
+
+	const quotes = UniversalQuoteSchema.find(sanitizedQuery)
+	.sort(date ? { createdAt: date } : { createdAt: -1 })
+	.skip(page * 10).limit(10).lean()
+
+	res.status(200).json(quotes)
 })
 
 module.exports = router
