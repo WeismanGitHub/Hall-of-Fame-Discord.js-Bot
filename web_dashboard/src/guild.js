@@ -57,7 +57,7 @@ function Guild({ guildId, setGuildId }) {
     }
 
     function search() {
-        axios.post('api/v1/search', filter)
+        axios.get('api/v1/search', filter)
         .then(res => {
             setQuotes(res.data)
         })
