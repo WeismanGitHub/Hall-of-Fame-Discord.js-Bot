@@ -111,8 +111,8 @@ router.get('/tags/:guildId', async (req, res) => {
 
 router.get('/search', async (req, res) => {
 	const guilds = jwt.verify(req.cookies.guilds, process.env.JWT_SECRET).guilds
-	const { search, date, page } = req.query
-	const { guildId, tags, type, text, authorId } = search
+	const { search, date, page, guildId } = req.body
+	const { tags, type, text, authorId } = search
 	const sanitizedSearch = { guildId: guildId }
 
 	if (!guilds.includes(guildId)) {
