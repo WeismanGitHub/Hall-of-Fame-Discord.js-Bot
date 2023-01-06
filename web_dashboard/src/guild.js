@@ -3,14 +3,16 @@ import { toast } from 'react-toastify'
 import axios, * as others from 'axios'
 import CreateQuote from './create-quote'
 
-function Guild({ guildId, setGuildId, setFilters }) {
+function Guild({ guildId, setGuildId }) {
     const [authors, setAuthors] = useState([])
+    const [filter, setFilter] = useState({ guildId: guildId })
+    const [quotes, setQuotes] = useState([])
     const [tags, setTags] = useState([])
     
-
     useEffect(() => {
         if (!guildId) {
             setAuthors([])
+            setFilter({ guildId: guildId })
             return
         }
         
@@ -35,6 +37,7 @@ function Guild({ guildId, setGuildId, setFilters }) {
         } catch(err) {
             setGuildId(null)
             setAuthors([])
+            setFilter({})
 
             toast.error('Guild Not Found.Register with /register.', {
                 position: "top-right",
@@ -51,6 +54,13 @@ function Guild({ guildId, setGuildId, setFilters }) {
 
     if (!guildId) {
         return <CreateQuote/>
+    }
+
+    function search() {
+        axios.post('api/v1/search', filter)
+        .then(res => {
+            setQuotes(res.data)
+        })
     }
 
     return (<div>
@@ -84,6 +94,18 @@ function Guild({ guildId, setGuildId, setFilters }) {
                     <br/>
                 </div>
             </div>) }
+        </div>
+
+        <div class='center'>
+            <img
+                class='search_icon'
+                src='/search.png'
+                alt="search icon"
+                width = "45"
+                height = "45"
+                title = 'search'
+                onClick={ search }
+            />
         </div>
     </div>)
 }
