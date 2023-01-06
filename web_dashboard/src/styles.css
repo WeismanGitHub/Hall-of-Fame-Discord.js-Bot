@@ -120,6 +120,7 @@ body {
     padding-left: 3px;
     padding-right: 3px;
     background-color: #d5dee6;
+    border: #d5dee6 1px dashed;
 }
 
 .tag:hover {
