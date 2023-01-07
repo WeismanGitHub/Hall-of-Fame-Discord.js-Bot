@@ -43,7 +43,7 @@ function Main() {
             .then(navigate('/login'))
         }
     }
-
+    
     return (<>
         <body>
             {
