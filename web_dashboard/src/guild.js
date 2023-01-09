@@ -8,8 +8,7 @@ function Guild({ guildId, setGuildId }) {
     const [quotes, setQuotes] = useState([])
     const [tags, setTags] = useState([])
     const [query, setQuery] = useState()
-    
-    console.log(quotes)
+
     useEffect(() => {
         if (!guildId) {
             setAuthors([])
@@ -37,11 +36,10 @@ function Guild({ guildId, setGuildId }) {
                 setTags(sortedTags)
             })
 
-            setQuery({
-                guildId: guildId,
-                page: 0,
-                search: {}
-            })
+            setQuery({ guildId: guildId, page: 0 })
+
+            axios.get('/api/v1/quotes', { params: query })
+            .then(res => setQuotes(res.data))
         } catch(err) {
             setGuildId(null)
             setAuthors([])
@@ -66,12 +64,14 @@ function Guild({ guildId, setGuildId }) {
     }
 
     function search() {
-        axios.get('/api/v1/search', { data: query })
+        axios.get('/api/v1/quotes', { params: query })
         .then(res => {
             setQuotes(res.data)
         })
     }
 
+    console.log(quotes)
+    
     return (<div>
         <div class='tags'>
             <div class='tags_header'>Tags - { tags.length }</div>
