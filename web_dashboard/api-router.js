@@ -111,7 +111,8 @@ router.get('/tags/:guildId', async (req, res) => {
 
 router.get('/quotes/:guildId', async (req, res) => {
 	const guilds = jwt.verify(req.cookies.guilds, process.env.JWT_SECRET).guilds
-	const { date, guildId, tags, type, text, authorId } = req.query
+	const { date, tags, type, text, authorId } = req.query
+	const guildId = req.params.guildId
 	const sanitizedSearch = { guildId: guildId }
 	const page = Number(req.query.page ?? 0)
 

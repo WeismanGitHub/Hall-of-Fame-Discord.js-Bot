@@ -36,7 +36,7 @@ function View({ guildId, setGuildId }) {
                 setTags(sortedTags)
             })
 
-            setQuery({ guildId: guildId, page: 0 })
+            setQuery({ page: 0 })
 
             axios.get('/api/v1/quotes', { params: query })
             .then(res => setQuotes(res.data))
@@ -64,7 +64,7 @@ function View({ guildId, setGuildId }) {
     }
 
     function search() {
-        axios.get('/api/v1/quotes', { params: query })
+        axios.get('/api/v1/quotes/' + guildId, { params: query })
         .then(res => {
             setQuotes(res.data)
         })
