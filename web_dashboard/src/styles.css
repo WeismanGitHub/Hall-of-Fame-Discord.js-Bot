@@ -1,14 +1,20 @@
 * {
     margin: 0;
+    overflow: hidden;
+    -ms-overflow-style: none;
+}
+
+* ::-webkit-scrollbar {
+    display: none;
 }
 
 br {
     display: block;
     margin-top: 5px;
-    /* line-height: 22px;
-    content: " "; */
- }
- 
+    line-height: 22px;
+    content: " ";
+}
+
 body {
     background-color: aliceblue;
 }
@@ -56,6 +62,7 @@ body {
     scrollbar-width: none;
     float: right;
     width: 20%;
+    overflow-x: hidden;
     background-color: #d5dee6;
 }
 
@@ -94,7 +101,7 @@ body {
     border: #d5dee6 1px dashed;
     left: 5%;
     padding-top: 5px;
-    padding-bottom: 11px;
+    padding-bottom: 5px;
     background-color: #d5dee6;
     width: 95%;
 }
