@@ -109,16 +109,17 @@ router.get('/tags/:guildId', async (req, res) => {
 	res.status(200).json(guild.tags ?? [])
 })
 
-router.get('/quotes', async (req, res) => {
+router.get('/quotes/:guildId', async (req, res) => {
 	const guilds = jwt.verify(req.cookies.guilds, process.env.JWT_SECRET).guilds
-	const { date, page, guildId, tags, type, text, authorId } = req.query
+	const { date, guildId, tags, type, text, authorId } = req.query
 	const sanitizedSearch = { guildId: guildId }
+	const page = Number(req.query.page)
 
 	if (!guilds.includes(guildId)) {
 		throw new BadRequestError('Invalid Guild Id')
 	}
 
-	if (page < 0) {
+	if (page < 0 || isNaN(page)) {	
 		throw new BadRequestError('Page must be number greater/equal to 0.')
 	}
 	
