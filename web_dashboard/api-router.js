@@ -109,27 +109,24 @@ router.get('/tags/:guildId', async (req, res) => {
 	res.status(200).json(guild.tags ?? [])
 })
 
-router.get('/search', async (req, res) => {
+router.get('/quotes', async (req, res) => {
 	const guilds = jwt.verify(req.cookies.guilds, process.env.JWT_SECRET).guilds
-	const { search, date, page, guildId } = req.body
-	const { tags, type, text, authorId } = search
+	const { date, page, guildId, tags, type, text, authorId } = req.query
 	const sanitizedSearch = { guildId: guildId }
 
 	if (!guilds.includes(guildId)) {
 		throw new BadRequestError('Invalid Guild Id')
 	}
 
-	if (!isNaN(page)) {
-		throw new BadRequestError('Page Must Be Number')
+	if (page < 0) {
+		throw new BadRequestError('Page must be number greater/equal to 0.')
 	}
 	
-	if (type) {
-		if (type == 'image') {
-			sanitizedSearch.attachmentURL = { $ne: null }
-		} else {
-			sanitizedSearch.type = type
-			sanitizedSearch.attachmentURL = null
-		}
+	if (type == 'image') {
+		sanitizedSearch.attachmentURL = { $ne: null }
+	} else if (type) {
+		sanitizedSearch.type = type
+		sanitizedSearch.attachmentURL = null
 	}
 
 	if (authorId) {
@@ -144,9 +141,9 @@ router.get('/search', async (req, res) => {
 		sanitizedSearch.$text = { $search: text }
 	}
 
-	const quotes = UniversalQuoteSchema.find(sanitizedSearch)
+	const quotes = await UniversalQuoteSchema.find(sanitizedSearch)
 	.sort(date ? { createdAt: date } : { createdAt: -1 })
-	.skip(page * 10).limit(10).lean()
+	.skip(page * 10).limit(10).select('').lean()
 
 	res.status(200).json(quotes)
 })
