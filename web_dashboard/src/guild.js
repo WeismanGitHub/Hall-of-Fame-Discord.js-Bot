@@ -78,7 +78,7 @@ function Guild({ guildId, setGuildId }) {
             <hr class="tags_divider"/>
             <br/>
 
-            { tags.map(tag => <><div class='tag'>{ tag }</div><br/></>) }
+            { tags.map(tag => <><div class='tag'>{ tag }</div><br class='tag_br'/></>) }
         </div>
 
         <div class='authors'>

@@ -127,6 +127,13 @@ body {
     overflow-y: scroll;
 }
 
+.tag_br {
+    display: block;
+    margin-top: 0px;
+    line-height: 0px;
+    content: " ";
+}
+
 .tags_divider {
     width: 100%;
 	background-color: black;
