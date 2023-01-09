@@ -113,7 +113,7 @@ router.get('/quotes/:guildId', async (req, res) => {
 	const guilds = jwt.verify(req.cookies.guilds, process.env.JWT_SECRET).guilds
 	const { date, guildId, tags, type, text, authorId } = req.query
 	const sanitizedSearch = { guildId: guildId }
-	const page = Number(req.query.page)
+	const page = Number(req.query.page ?? 0)
 
 	if (!guilds.includes(guildId)) {
 		throw new BadRequestError('Invalid Guild Id')
