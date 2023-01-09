@@ -3,7 +3,7 @@ import { toast } from 'react-toastify'
 import axios, * as others from 'axios'
 import CreateQuote from './create-quote'
 
-function Guild({ guildId, setGuildId }) {
+function View({ guildId, setGuildId }) {
     const [authors, setAuthors] = useState([])
     const [quotes, setQuotes] = useState([])
     const [tags, setTags] = useState([])
@@ -119,4 +119,4 @@ function Guild({ guildId, setGuildId }) {
     </div>)
 }
 
-export default Guild;
+export default View;

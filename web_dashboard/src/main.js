@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import axios, * as others from 'axios'
 import Cookies from 'js-cookie';
 
-import Guild from './guild'
+import View from './view'
 import Login from './login'
 
 function Main() {
@@ -86,7 +86,7 @@ function Main() {
                                 onClick={ logout }>
                             </img>
                         </div>
-                    <Guild guildId={ guildId } setGuildId={ setGuildId }/>
+                    <View guildId={ guildId } setGuildId={ setGuildId }/>
                 </div>
             }
         </body>
