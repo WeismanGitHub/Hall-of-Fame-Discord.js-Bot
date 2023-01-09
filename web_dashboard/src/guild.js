@@ -5,15 +5,16 @@ import CreateQuote from './create-quote'
 
 function Guild({ guildId, setGuildId }) {
     const [authors, setAuthors] = useState([])
-    const [filter, setFilter] = useState({ guildId: guildId })
     const [quotes, setQuotes] = useState([])
     const [tags, setTags] = useState([])
+    const [query, setQuery] = useState()
     
+    console.log(quotes)
     useEffect(() => {
         if (!guildId) {
             setAuthors([])
             setTags([])
-            setFilter({ guildId: guildId })
+            setQuery({})
             return
         }
         
@@ -35,11 +36,17 @@ function Guild({ guildId, setGuildId }) {
     
                 setTags(sortedTags)
             })
+
+            setQuery({
+                guildId: guildId,
+                page: 0,
+                search: {}
+            })
         } catch(err) {
             setGuildId(null)
             setAuthors([])
             setTags([])
-            setFilter({})
+            setQuery({})
 
             toast.error('Guild Not Found.Register with /register.', {
                 position: "top-right",
@@ -59,7 +66,7 @@ function Guild({ guildId, setGuildId }) {
     }
 
     function search() {
-        axios.get('api/v1/search', filter)
+        axios.get('/api/v1/search', { data: query })
         .then(res => {
             setQuotes(res.data)
         })
@@ -93,8 +100,8 @@ function Guild({ guildId, setGuildId }) {
                         }}
                     />
                     <div class='author_name'>{ author.name }</div>
-                    <br/>
                 </div>
+                <br/>
             </div>) }
         </div>
 

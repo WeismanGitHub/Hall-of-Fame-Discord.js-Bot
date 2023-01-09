@@ -2,6 +2,13 @@
     margin: 0;
 }
 
+br {
+    display: block;
+    margin-top: 5px;
+    /* line-height: 22px;
+    content: " "; */
+ }
+ 
 body {
     background-color: aliceblue;
 }
@@ -78,12 +85,24 @@ body {
 }
 
 .author_icon {
+    padding-left: 3px;
     border-radius: 50%;
     float: left;
 }
 
 .author_container {
+    border: #d5dee6 1px dashed;
     left: 5%;
+    padding-top: 5px;
+    padding-bottom: 11px;
+    background-color: #d5dee6;
+    width: 95%;
+}
+
+.author_container:hover {
+    filter: brightness(95%);
+    border: #8b9298 1px dashed;
+    border-radius: 5px;
 }
 
 .author_name {
