@@ -18,19 +18,20 @@ function Main() {
     useEffect(() => {
         const code = String(window.location).split('code=')[1]
 
-        if (code && !loggedIn) {
-            axios.post('/api/v1/auth', { code: code })
-            .then(res => setLoggedIn(true))
-            .catch(err => setLoggedIn(false))
-        }
-        
-        if (!loggedIn) {
-            return navigate('/login')
+        if (loggedIn) {
+            axios.get('/api/v1/guilds').then(res => setGuilds(guilds.concat(res.data)))
+            return
         }
 
-        axios.get('/api/v1/guilds').then(res => {
+        axios.post('/api/v1/auth', { code: code })
+        .then(res => {
+            return axios.get('/api/v1/guilds')
+        }).then(res => {
             setGuilds(guilds.concat(res.data))
-        }).catch(err => setLoggedIn(false))
+            setLoggedIn(true)
+        }).catch(err =>
+            navigate('/login')
+        )
     }, [])
     
     function guildIconClick(id) {
