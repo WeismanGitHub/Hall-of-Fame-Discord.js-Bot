@@ -112,6 +112,14 @@ body {
     border-radius: 5px;
 }
 
+.author_container:active {
+    filter: brightness(90%);
+}
+
+.author_container:focus {
+    filter: brightness(90%);
+}
+
 .author_name {
     margin-left: 50px;
 }

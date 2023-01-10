@@ -7,14 +7,17 @@ function View({ guildId, setGuildId }) {
     const [authors, setAuthors] = useState([])
     const [quotes, setQuotes] = useState([])
     const [tags, setTags] = useState([])
-    const [query, setQuery] = useState()
 
+    const [queryTags, setQueryTags] = useState([])
+    const [queryAuthorId, setQueryAuthorId] = useState('')
+    const [queryType, setQueryType] = useState('')
+    const [queryText, setQueryText] = useState('')
+    const [queryDate, setQueryDate] = useState(-1)
+    const [queryPage, setQueryPage] = useState(0)
+    
     useEffect(() => {
         if (!guildId) {
-            setAuthors([])
-            setTags([])
-            setQuery({})
-            return
+            throw new Error('No Guild Id')
         }
         
         try {
@@ -36,15 +39,19 @@ function View({ guildId, setGuildId }) {
                 setTags(sortedTags)
             })
 
-            setQuery({ page: 0 })
-
-            axios.get('/api/v1/quotes', { params: query })
+            axios.get('/api/v1/quotes/' + guildId)
             .then(res => setQuotes(res.data))
         } catch(err) {
+            setQueryAuthorId('')
             setGuildId(null)
+            setQueryDate(-1)
+            setQueryType('')
+            setQueryTags([])
+            setQueryText('')
+            setQueryPage(0)
             setAuthors([])
+            setQuotes([])
             setTags([])
-            setQuery({})
 
             toast.error('Guild Not Found.Register with /register.', {
                 position: "top-right",
@@ -64,10 +71,19 @@ function View({ guildId, setGuildId }) {
     }
 
     function search() {
-        axios.get('/api/v1/quotes/' + guildId, { params: query })
-        .then(res => {
-            setQuotes(res.data)
-        })
+        axios.get('/api/v1/quotes/' + guildId, { params: {
+            authorId: queryAuthorId,
+            tags: queryTags,
+            text: queryText,
+            type: queryType,
+            page: queryPage,
+            date: queryDate
+        } })
+        .then(res => setQuotes(res.data))
+    }
+
+    function authorClick(id) {
+        setQueryAuthorId(id)
     }
 
     console.log(quotes)
@@ -87,7 +103,7 @@ function View({ guildId, setGuildId }) {
             <br/>
 
             { authors.map(author => <div class='author'>
-                <div class='author_container'>
+                <div class='author_container' onClick={ () => authorClick(author._id) }>
                     <img
                         class='author_icon'
                         src={ author.iconURL }
