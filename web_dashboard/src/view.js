@@ -17,7 +17,17 @@ function View({ guildId, setGuildId }) {
     
     useEffect(() => {
         if (!guildId) {
-            throw new Error('No Guild Id')
+            setQueryAuthorId('')
+            setGuildId(null)
+            setQueryDate(-1)
+            setQueryType('')
+            setQueryTags([])
+            setQueryText('')
+            setQueryPage(0)
+            setAuthors([])
+            setQuotes([])
+            setTags([])
+            return
         }
         
         try {
