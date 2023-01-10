@@ -8,6 +8,11 @@
     display: none;
 }
 
+.highlighted {
+    filter: brightness(90%);
+    border-radius: 5px;
+}
+
 br {
     display: block;
     margin-top: 5px;

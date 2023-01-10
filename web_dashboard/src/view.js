@@ -8,21 +8,21 @@ function View({ guildId, setGuildId }) {
     const [quotes, setQuotes] = useState([])
     const [tags, setTags] = useState([])
 
+    const [queryAuthorId, setQueryAuthorId] = useState(null)
     const [queryTags, setQueryTags] = useState([])
-    const [queryAuthorId, setQueryAuthorId] = useState('')
-    const [queryType, setQueryType] = useState('')
-    const [queryText, setQueryText] = useState('')
+    const [queryType, setQueryType] = useState(null)
+    const [queryText, setQueryText] = useState(null)
     const [queryDate, setQueryDate] = useState(-1)
     const [queryPage, setQueryPage] = useState(0)
     
     useEffect(() => {
         if (!guildId) {
-            setQueryAuthorId('')
+            setQueryAuthorId(null)
             setGuildId(null)
             setQueryDate(-1)
-            setQueryType('')
+            setQueryType(null)
             setQueryTags([])
-            setQueryText('')
+            setQueryText(null)
             setQueryPage(0)
             setAuthors([])
             setQuotes([])
@@ -52,12 +52,12 @@ function View({ guildId, setGuildId }) {
             axios.get('/api/v1/quotes/' + guildId)
             .then(res => setQuotes(res.data))
         } catch(err) {
-            setQueryAuthorId('')
+            setQueryAuthorId(null)
             setGuildId(null)
             setQueryDate(-1)
-            setQueryType('')
+            setQueryType(null)
             setQueryTags([])
-            setQueryText('')
+            setQueryText(null)
             setQueryPage(0)
             setAuthors([])
             setQuotes([])
@@ -92,11 +92,15 @@ function View({ guildId, setGuildId }) {
         .then(res => setQuotes(res.data))
     }
 
-    function authorClick(id) {
-        setQueryAuthorId(id)
+    function tagClick(tag) {
+        setQueryTags(queryTags.slice(1).push(tag))
     }
 
-    console.log(quotes)
+    function authorClick(id) {
+        queryAuthorId == id ? setQueryAuthorId(null) : setQueryAuthorId(id)
+    }
+
+    console.log(queryAuthorId)
     
     return (<div>
         <div class='tags'>
@@ -104,7 +108,10 @@ function View({ guildId, setGuildId }) {
             <hr class="tags_divider"/>
             <br/>
 
-            { tags.map(tag => <><div class='tag'>{ tag }</div><br class='tag_br'/></>) }
+            { tags.map(tag => <>
+                <div class='tag' onClick={ () => tagClick(tag) }>{ tag }</div>
+                <br class='tag_br'/>
+            </>) }
         </div>
 
         <div class='authors'>
@@ -113,19 +120,21 @@ function View({ guildId, setGuildId }) {
             <br/>
 
             { authors.map(author => <div class='author'>
-                <div class='author_container' onClick={ () => authorClick(author._id) }>
-                    <img
-                        class='author_icon'
-                        src={ author.iconURL }
-                        alt="author icon"
-                        width = "40"
-                        height = "40"
-                        onError={({ currentTarget }) => {
-                            currentTarget.onerror = null; // prevents looping
-                            currentTarget.src="/icon.png";
-                        }}
-                    />
-                    <div class='author_name'>{ author.name }</div>
+                <div class={ queryAuthorId == author._id ? 'highlighted' : ''}>
+                    <div class='author_container' onClick={ () => authorClick(author._id) }>
+                        <img
+                            class='author_icon'
+                            src={ author.iconURL }
+                            alt="author icon"
+                            width = "40"
+                            height = "40"
+                            onError={({ currentTarget }) => {
+                                currentTarget.onerror = null; // prevents looping
+                                currentTarget.src="/icon.png";
+                            }}
+                        />
+                        <div class='author_name'>{ author.name }</div>
+                    </div>
                 </div>
                 <br/>
             </div>) }
