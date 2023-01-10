@@ -1,10 +1,8 @@
 function Authors({ authors, setQueryAuthorId, queryAuthorId }) {
     function authorClick(id) {
-        console.log(id)
         queryAuthorId == id ? setQueryAuthorId(null) : setQueryAuthorId(id)
     }
 
-    console.log(queryAuthorId)
     return <div class='authors'>
         <div class='authors_header'>Authors - { authors.length }</div>
         <hr class="authors_divider"/>
