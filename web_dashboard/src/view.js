@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
 import { toast } from 'react-toastify'
 import axios, * as others from 'axios'
+
 import CreateQuote from './create-quote'
+import Authors from './authors'
 
 function View({ guildId, setGuildId }) {
     const [authors, setAuthors] = useState([])
@@ -18,11 +20,11 @@ function View({ guildId, setGuildId }) {
     useEffect(() => {
         if (!guildId) {
             setQueryAuthorId(null)
-            setGuildId(null)
-            setQueryDate(-1)
             setQueryType(null)
-            setQueryTags([])
             setQueryText(null)
+            setQueryDate(-1)
+            setGuildId(null)
+            setQueryTags([])
             setQueryPage(0)
             setAuthors([])
             setQuotes([])
@@ -96,12 +98,6 @@ function View({ guildId, setGuildId }) {
         setQueryTags(queryTags.slice(1).push(tag))
     }
 
-    function authorClick(id) {
-        queryAuthorId == id ? setQueryAuthorId(null) : setQueryAuthorId(id)
-    }
-
-    console.log(queryAuthorId)
-    
     return (<div>
         <div class='tags'>
             <div class='tags_header'>Tags - { tags.length }</div>
@@ -114,31 +110,7 @@ function View({ guildId, setGuildId }) {
             </>) }
         </div>
 
-        <div class='authors'>
-            <div class='authors_header'>Authors - { authors.length }</div>
-            <hr class="authors_divider"/>
-            <br/>
-
-            { authors.map(author => <div class='author'>
-                <div class={ queryAuthorId == author._id ? 'highlighted' : ''}>
-                    <div class='author_container' onClick={ () => authorClick(author._id) }>
-                        <img
-                            class='author_icon'
-                            src={ author.iconURL }
-                            alt="author icon"
-                            width = "40"
-                            height = "40"
-                            onError={({ currentTarget }) => {
-                                currentTarget.onerror = null; // prevents looping
-                                currentTarget.src="/icon.png";
-                            }}
-                        />
-                        <div class='author_name'>{ author.name }</div>
-                    </div>
-                </div>
-                <br/>
-            </div>) }
-        </div>
+        <Authors authors={ authors } setQueryAuthorId={ setQueryAuthorId } queryAuthorId={ queryAuthorId }/>
 
         <div class='center'>
             <img
