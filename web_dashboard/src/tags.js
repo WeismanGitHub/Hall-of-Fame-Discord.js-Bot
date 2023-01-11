@@ -14,7 +14,6 @@ function Tags({ tags, setQueryTags, queryTags }) {
             }
         }
     }
-    
 
     return <div class='tags'>
         <div class='tags_header'>Tags - { tags.length }</div>
