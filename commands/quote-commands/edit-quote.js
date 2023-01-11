@@ -95,7 +95,7 @@ module.exports = {
             throw new InvalidInputError('ID')
         }
 
-        const update = {};
+        const update = { guildId: guildId };
 
         const lastImageChannel = options.getChannel('last_image');
         const newImageLink = options.getString('new_image_link');

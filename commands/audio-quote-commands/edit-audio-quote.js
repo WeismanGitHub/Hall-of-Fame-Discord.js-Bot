@@ -95,7 +95,7 @@ module.exports = {
         const deleteTags = options.getBoolean('delete_tags');
         const newAuthorName = options.getString('new_author');
         const newTitle = options.getString('new_title');
-        const update = {};
+        const update = { guildId: guildId };
         
         if (newAudioURL) {
             update.audioURL = newAudioURL;
