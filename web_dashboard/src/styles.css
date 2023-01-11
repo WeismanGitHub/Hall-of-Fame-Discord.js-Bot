@@ -2,6 +2,7 @@
     margin: 0;
     overflow: hidden;
     -ms-overflow-style: none;
+    word-wrap: break-word
 }
 
 * ::-webkit-scrollbar {
@@ -173,6 +174,14 @@ body {
     filter: brightness(95%);
     border: #8b9298 1px dashed;
     border-radius: 5px;
+}
+
+.tag:active {
+    filter: brightness(90%);
+}
+
+.tag:focus {
+    filter: brightness(90%);
 }
 
 .center {
