@@ -5,13 +5,16 @@ function Tags({ tags, setQueryTags, queryTags }) {
         if (queryTags.includes(tag)) {
             setQueryTags(queryTags.filter(queryTag => tag !== queryTag))
         } else {
-            setQueryTags([...queryTags, tag])
+            const updatedQueryTags = [...queryTags, tag]
 
-            if (queryTags.length >= 3) {
-                setQueryTags(queryTags.slice(1))
+            if (updatedQueryTags.length > 3) {
+                setQueryTags(updatedQueryTags.slice(1))
+            } else {
+                setQueryTags(updatedQueryTags)
             }
         }
     }
+    
 
     return <div class='tags'>
         <div class='tags_header'>Tags - { tags.length }</div>
