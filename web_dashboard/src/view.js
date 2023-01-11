@@ -4,6 +4,7 @@ import axios, * as others from 'axios'
 
 import CreateQuote from './create-quote'
 import Authors from './authors'
+import Tags from './tags'
 
 function View({ guildId, setGuildId }) {
     const [authors, setAuthors] = useState([])
@@ -94,22 +95,8 @@ function View({ guildId, setGuildId }) {
         .then(res => setQuotes(res.data))
     }
 
-    function tagClick(tag) {
-        setQueryTags(queryTags.slice(1).push(tag))
-    }
-
     return (<div>
-        <div class='tags'>
-            <div class='tags_header'>Tags - { tags.length }</div>
-            <hr class="tags_divider"/>
-            <br/>
-
-            { tags.map(tag => <>
-                <div class='tag' onClick={ () => tagClick(tag) }>{ tag }</div>
-                <br class='tag_br'/>
-            </>) }
-        </div>
-
+        <Tags tags={ tags } queryTags={ queryTags } setQueryTags={ setQueryTags }/>
         <Authors authors={ authors } setQueryAuthorId={ setQueryAuthorId } queryAuthorId={ queryAuthorId }/>
 
         <div class='center'>
