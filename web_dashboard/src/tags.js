@@ -21,10 +21,12 @@ function Tags({ tags, setQueryTags, queryTags }) {
         <hr class="tags_divider"/>
         <br/>
 
-        { tags.map(tag => <div class={ queryTags.includes(tag) ? 'highlighted' : 'unhighlighted'}>
+        { tags.map(tag => <>
+        <div class={ queryTags.includes(tag) ? 'highlighted' : 'unhighlighted'}>
             <div class='tag' onClick={ (e) => tagClick(e, tag) }>{ tag }</div>
-            <br class='tag_br'/>
-        </div>) }
+        </div>
+        <br class='tag_br'/>
+        </>) }
     </div>
 }
 

@@ -139,12 +139,15 @@ body {
     background-color: #d5dee6;
     padding: 25px;
     overflow-y: scroll;
+    align-content: center;
+    scrollbar-width: none;
+    overflow-x: hidden;
 }
 
 .tag_br {
     display: block;
-    margin-top: 0px;
-    line-height: 0px;
+    margin-top: 3px;
+    line-height: 3px;
     content: " ";
 }
 
@@ -163,11 +166,14 @@ body {
 
 .tag {
     cursor: pointer;
-    display: inline-block;
     padding-left: 3px;
     padding-right: 3px;
     background-color: #d5dee6;
     border: #d5dee6 1px dashed;
+    position: relative;
+    border-radius: 5px;
+    object-fit: cover;
+    width: 95%;
 }
 
 .tag:hover {
