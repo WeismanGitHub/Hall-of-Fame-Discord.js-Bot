@@ -48,14 +48,21 @@ body {
     margin-top: 5px;
 }
 
-.guild_icon {
+.chosen_guild {
+    border-radius: 25%;
+    cursor: pointer;
+    transition: all 125ms ease-in-out;
+    margin-top: 5px;
+}
+
+.unchosen_guild {
     border-radius: 50%;
     cursor: pointer;
     transition: all 125ms ease-in-out;
     margin-top: 5px;
 }
 
-.guild_icon:hover {
+.unchosen_guild:hover {
     border-radius: 25%;
     transition: all 125ms ease-in;
 }
@@ -191,9 +198,12 @@ body {
 }
 
 .center {
+    padding: 0px;
+    margin: 0px;
     max-height: 100vh;
     min-height: 100vh;
-    width: 65%;
+    width: 70%;
+    align-content: center;
     float: left;
 }
 
@@ -201,8 +211,30 @@ body {
     border-radius: 50%;
     cursor: pointer;
     float: right;
+    margin-right: 15px;
 }
 
 .search_icon:hover {
     filter: brightness(95%);
+}
+
+.quotes {
+    max-height: 85vh;
+    min-height: 85vh;
+}
+
+.back_next_buttons {
+    max-height: 7.5vh;
+    min-height: 7.5vh;
+    padding: 5px;
+}
+
+.next_button {
+    padding-right: 10px;
+    float: right;
+}
+
+.back_button {
+    padding-left: 10px;
+    float: left;
 }
