@@ -3,8 +3,8 @@ import axios, * as others from 'axios'
 import Cookies from 'js-cookie';
 
 function CreateQuote() {
-    return (<div class='create_quote'>
-        Create Quote
+    return (<div class='no_quotes'>
+        Under Construction
     </div>)
 }
 
