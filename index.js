@@ -1,6 +1,6 @@
 const { Client, Intents } = require('discord.js');
 const WOKCommands = require('wokcommands');
-const app = require('./web_dashboard/app')
+const app = require('./web-dashboard/app')
 const mongoose = require('mongoose');
 const log = require('log-to-file');
 const path = require('path');
