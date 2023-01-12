@@ -53,23 +53,21 @@ function Main() {
                 :
                     <div>
                         <div class='guilds'>
-                            { guilds.map(guild => 
-                                <div>
-                                    <img class='guild_icon'
-                                        src={ guild.iconURL }
-                                        alt="server icon"
-                                        width = "60"
-                                        height = "60"
-                                        title = { guild.name }
-                                        onClick={ () => guildIconClick(guild.id) }>
-                                    </img>
-                                    
-                                    { !guilds.indexOf(guild) && <hr class="guilds_divider"/>}
-                                </div>)
-                            }
+                            { guilds.map(guild => <div>
+                                <img class={ guildId == guild.id ? 'chosen_guild' : 'unchosen_guild'}
+                                    src={ guild.iconURL }
+                                    alt="server icon"
+                                    width = "60"
+                                    height = "60"
+                                    title = { guild.name }
+                                    onClick={ () => guildIconClick(guild.id) }>
+                                </img>
+                                
+                                { !guilds.indexOf(guild) && <hr class="guilds_divider"/>}
+                            </div>) }
                             
                             <a href="https://github.com/WeismanGitHub/Hall-of-Fame-Discord.js-Bot#readme">
-                                <img class='guild_icon'
+                                <img class='unchosen_guild'
                                     src='/question-mark.png'
                                     alt="readme button"
                                     width = "70"
@@ -77,7 +75,7 @@ function Main() {
                                     title = 'readme'
                                 />
                             </a>
-                            <img class='guild_icon'
+                            <img class='unchosen_guild'
                                 src='/logout.png'
                                 alt="logout button"
                                 width = "70"
