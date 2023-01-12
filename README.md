@@ -11,7 +11,7 @@
   <hr class="rounded">
   
   ## Web Dashboard
-  The web dashboard is an alternative way to use the bot's infrastructure. It can do nearly everything the bot can do, but it uses a GUI to make usage simpler.
+  The web dashboard is an alternate way to use the bot's infrastructure. It can do nearly everything the bot can do, but it uses a GUI to make usage simpler. Clicking on tags/authors adds them to the search. You can search text and filter by quote type at the bottom center of the page.
   <hr class="rounded">
 
   ## Authors
