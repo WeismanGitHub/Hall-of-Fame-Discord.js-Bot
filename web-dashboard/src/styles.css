@@ -221,6 +221,8 @@ body {
 .quotes {
     max-height: 85vh;
     min-height: 85vh;
+    align-content: center;
+    overflow-y: scroll;
 }
 
 .back_next_buttons {
@@ -237,4 +239,13 @@ body {
 .back_button {
     padding-left: 10px;
     float: left;
+}
+
+.no_quotes {
+    max-height: 85vh;
+    min-height: 85vh;
+    align-content: center;
+    padding-left: 25vw;
+    font-size: 250%;
+    padding-top: 23%;
 }
