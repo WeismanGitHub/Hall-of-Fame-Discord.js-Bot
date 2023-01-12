@@ -84,7 +84,7 @@ function Main() {
                                 onClick={ logout }>
                             </img>
                         </div>
-                    <View guildId={ guildId } setGuildId={ setGuildId }/>
+                    <View guildId={ guildId } setGuildId={ setGuildId } guildName={ guilds.find((guild) => guild.id == guildId).name }/>
                 </div>
             }
         </body>
