@@ -4,6 +4,7 @@ import axios, * as others from 'axios'
 
 import CreateQuote from './create-quote'
 import Authors from './authors'
+import Quotes from './quotes'
 import Tags from './tags'
 
 function View({ guildId, setGuildId }) {
@@ -100,6 +101,13 @@ function View({ guildId, setGuildId }) {
         <Authors authors={ authors } setQueryAuthorId={ setQueryAuthorId } queryAuthorId={ queryAuthorId }/>
 
         <div class='center'>
+            <div class='back_next_buttons'>
+                <button class='back_button'>Back</button>
+                <button class='next_button'>Next</button>
+            </div>
+
+            <Quotes quotes={ quotes } authors={ authors }/>
+
             <img
                 class='search_icon'
                 src='/search.png'
