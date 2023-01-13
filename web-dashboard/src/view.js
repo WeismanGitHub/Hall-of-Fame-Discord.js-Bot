@@ -106,27 +106,35 @@ function View({ guildId, setGuildId, guildName }) {
 
         <div class='center'>
             <div class='header'>
-                <img
-                    class='back_button'
-                    src='/left-arrow.png'
-                    alt="back button"
-                    width = "30"
-                    height = "30"
-                    title = 'back'
-                    onClick={ () => setQueryPage(queryPage - 1) }
-                />
+                <div class='back_button'>
+                    <img
+                        class={ queryPage <= 0 ? 'unclickable' : 'clickable' }
+                        src='/left-arrow.png'
+                        alt="back button"
+                        width = "30"
+                        height = "30"
+                        title = 'back'
+                        onClick={ () => {
+                            if (queryPage > 0) setQueryPage(queryPage - 1)
+                        } }
+                    />
+                </div>
 
                 <div class='server_name'>{ guildName }</div>
 
-                <img
-                    class='next_button'
-                    src='/right-arrow.png'
-                    alt="next button"
-                    width = "30"
-                    height = "30"
-                    title = 'next'
-                    onClick={ () => setQueryPage(queryPage + 1) }
-                />
+                <div class='next_button'>
+                    <img
+                        class={ quotes.length < 10 ? 'unclickable' : 'clickable' }
+                        src='/right-arrow.png'
+                        alt="next button"
+                        width = "30"
+                        height = "30"
+                        title = 'next'
+                        onClick={ () => {
+                            if (quotes.length == 10) setQueryPage(queryPage + 1)
+                        } }
+                    />
+                </div>
             </div>
 
             <Quotes quotes={ quotes } authors={ authors }/>
