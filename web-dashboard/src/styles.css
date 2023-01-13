@@ -229,24 +229,52 @@ body {
 .header {
     max-height: 5vh;
     min-height: 5vh;
-    padding-top: 5px;
+    padding-top: 3px;
     background-color: #c0c9d1;
     border-bottom: 1px solid #848b90;
 }
 
 .next_button {
     float: left;
+    cursor: pointer;
 }
 
 .back_button {
     float: left;
+    cursor: pointer;
+}
+
+.back_button:hover {
+    filter: brightness(95%);
+}
+
+.back_button:active {
+    filter: brightness(90%);
+}
+
+.back_button:focus {
+    filter: brightness(90%);
+}
+
+.next_button:hover {
+    filter: brightness(95%);
+}
+
+.next_button:active {
+    filter: brightness(90%);
+}
+
+.next_button:focus {
+    filter: brightness(90%);
 }
 
 .server_name {
     font-size: 125%;
     float: left;
-    padding-left: 40%;
-    padding-right: 40%;
+    max-width: 30%;
+    min-width: 30%;
+    margin-left: 37.5%;
+    margin-right: 26.5%;
     color: #f5f6f7;
 }
 
@@ -257,4 +285,9 @@ body {
     padding-left: 25vw;
     font-size: 250%;
     padding-top: 23%;
+}
+
+.unclickable {
+    cursor: not-allowed;
+    filter: brightness(85%);
 }
