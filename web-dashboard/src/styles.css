@@ -149,6 +149,7 @@ body {
     align-content: center;
     scrollbar-width: none;
     overflow-x: hidden;
+    padding-top: 3px;
 }
 
 .tag_br {
@@ -225,20 +226,28 @@ body {
     overflow-y: scroll;
 }
 
-.back_next_buttons {
-    max-height: 7.5vh;
-    min-height: 7.5vh;
-    padding: 5px;
+.header {
+    max-height: 5vh;
+    min-height: 5vh;
+    padding-top: 5px;
+    background-color: #c0c9d1;
+    border-bottom: 1px solid #848b90;
 }
 
 .next_button {
-    padding-right: 10px;
-    float: right;
+    float: left;
 }
 
 .back_button {
-    padding-left: 10px;
     float: left;
+}
+
+.server_name {
+    font-size: 125%;
+    float: left;
+    padding-left: 40%;
+    padding-right: 40%;
+    color: #f5f6f7;
 }
 
 .no_quotes {

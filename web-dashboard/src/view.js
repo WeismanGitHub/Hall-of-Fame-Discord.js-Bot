@@ -7,7 +7,7 @@ import Authors from './authors'
 import Quotes from './quotes'
 import Tags from './tags'
 
-function View({ guildId, setGuildId }) {
+function View({ guildId, setGuildId, guildName }) {
     const [authors, setAuthors] = useState([])
     const [quotes, setQuotes] = useState([])
     const [tags, setTags] = useState([])
@@ -19,6 +19,10 @@ function View({ guildId, setGuildId }) {
     const [queryDate, setQueryDate] = useState(-1)
     const [queryPage, setQueryPage] = useState(0)
     
+    useEffect(() => {
+        search()
+    }, [queryPage])
+
     useEffect(() => {
         if (!guildId) {
             setQueryAuthorId(null)
@@ -101,9 +105,28 @@ function View({ guildId, setGuildId }) {
         <Authors authors={ authors } setQueryAuthorId={ setQueryAuthorId } queryAuthorId={ queryAuthorId }/>
 
         <div class='center'>
-            <div class='back_next_buttons'>
-                <button class='back_button'>Back</button>
-                <button class='next_button'>Next</button>
+            <div class='header'>
+                <img
+                    class='back_button'
+                    src='/left-arrow.png'
+                    alt="back button"
+                    width = "30"
+                    height = "30"
+                    title = 'back'
+                    onClick={ () => setQueryPage(queryPage - 1) }
+                />
+
+                <div class='server_name'>{ guildName }</div>
+
+                <img
+                    class='next_button'
+                    src='/right-arrow.png'
+                    alt="next button"
+                    width = "30"
+                    height = "30"
+                    title = 'next'
+                    onClick={ () => setQueryPage(queryPage + 1) }
+                />
             </div>
 
             <Quotes quotes={ quotes } authors={ authors }/>
