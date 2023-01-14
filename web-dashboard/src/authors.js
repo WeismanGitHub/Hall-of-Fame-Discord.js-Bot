@@ -14,8 +14,8 @@ function Authors({ authors, setQueryAuthorId, queryAuthorId }) {
                         class='author_icon'
                         src={ author.iconURL }
                         alt="author icon"
-                        width = "40"
-                        height = "40"
+                        width = "45"
+                        height = "45"
                         onError={({ currentTarget }) => {
                             currentTarget.onerror = null; // prevents looping
                             currentTarget.src="/icon.png";
