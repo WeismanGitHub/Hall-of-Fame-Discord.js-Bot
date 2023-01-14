@@ -79,7 +79,7 @@ router.get('/authors/:guildId', async (req, res) => {
 		throw new BadRequestError('Invalid Guild Id')
 	}
 
-	const guild = await GuildSchema.findOne({ _id: guildId }).select('-_id authors -__v').lean()
+	const guild = await GuildSchema.findOne({ _id: guildId }).select('-_id authors').lean()
 
 	if (!guild) {
 		throw new NotFoundError('Guild Not Found')
@@ -100,7 +100,7 @@ router.get('/tags/:guildId', async (req, res) => {
 		throw new BadRequestError('Invalid Guild Id')
 	}
 
-	const guild = await GuildSchema.findOne({ _id: guildId }).select('-_id tags -__v').lean()
+	const guild = await GuildSchema.findOne({ _id: guildId }).select('-_id tags').lean()
 
 	if (!guild) {
 		throw new NotFoundError('Guild Not Found')
@@ -145,7 +145,7 @@ router.get('/quotes/:guildId', async (req, res) => {
 
 	const quotes = await UniversalQuoteSchema.find(sanitizedSearch)
 	.sort(date ? { createdAt: date } : { createdAt: -1 })
-	.skip(page * 10).limit(10).select('-guildId -__v').lean()
+	.skip(page * 10).limit(10).select('-guildId').lean()
 
 	res.status(200).json(quotes)
 })
