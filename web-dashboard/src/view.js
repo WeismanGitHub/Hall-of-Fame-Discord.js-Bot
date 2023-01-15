@@ -139,29 +139,26 @@ function View({ guildId, setGuildId, guildName }) {
 
             <Quotes quotes={ quotes } authors={ authors }/>
 
-            <input 
-                type="text"
-                class='text_search_bar'
-                value={ queryText }
-                placeholder="search text..."
-                onChange={ (e)=> {
-                    if (e.key == 'Enter') {
-                        return search()
-                    }
-
-                    setQueryText(e.target.value)
-                } }
-            />
-            
-            <img
-                class='search_icon'
-                src='/search.png'
-                alt="search icon"
-                width = "45"
-                height = "45"
-                title = 'search'
-                onClick={ search }
-            />
+            <div class='foot_note'>
+                <img
+                    class='search_icon'
+                    src='/search.png'
+                    alt="search icon"
+                    width = "45"
+                    height = "45"
+                    title = 'search'
+                    onClick={ search }
+                />
+                
+                <input 
+                    type="text"
+                    class='text_search_bar'
+                    value={ queryText }
+                    placeholder="search text..."
+                    onChange={ (e)=> setQueryText(e.target.value) }
+                    onKeyPress={ (event) => { event.key === 'Enter' && search() } }
+                />
+            </div>
         </div>
     </div>)
 }
