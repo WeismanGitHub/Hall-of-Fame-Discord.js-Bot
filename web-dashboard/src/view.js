@@ -139,6 +139,20 @@ function View({ guildId, setGuildId, guildName }) {
 
             <Quotes quotes={ quotes } authors={ authors }/>
 
+            <input 
+                type="text"
+                class='text_search_bar'
+                value={ queryText }
+                placeholder="search text..."
+                onChange={ (e)=> {
+                    if (e.key == 'Enter') {
+                        return search()
+                    }
+
+                    setQueryText(e.target.value)
+                } }
+            />
+            
             <img
                 class='search_icon'
                 src='/search.png'
