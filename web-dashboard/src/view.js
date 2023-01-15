@@ -139,7 +139,7 @@ function View({ guildId, setGuildId, guildName }) {
 
             <Quotes quotes={ quotes } authors={ authors }/>
 
-            <div class='foot_note'>
+            <div class='footer'>
                 <img
                     class='search_icon'
                     src='/search.png'
