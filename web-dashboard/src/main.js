@@ -70,16 +70,16 @@ function Main() {
                                 <img class='unchosen_guild'
                                     src='/question-mark.png'
                                     alt="readme button"
-                                    width = "70"
-                                    height = "70"
+                                    width = "60"
+                                    height = "60"
                                     title = 'readme'
                                 />
                             </a>
                             <img class='unchosen_guild'
                                 src='/logout.png'
                                 alt="logout button"
-                                width = "70"
-                                height = "70"
+                                width = "60"
+                                height = "60"
                                 title = 'logout'
                                 onClick={ logout }>
                             </img>
