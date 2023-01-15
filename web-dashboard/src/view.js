@@ -18,10 +18,10 @@ function View({ guildId, setGuildId, guildName }) {
     const [queryText, setQueryText] = useState(null)
     const [queryDate, setQueryDate] = useState(-1)
     const [queryPage, setQueryPage] = useState(0)
-    
+
     useEffect(() => {
-        search()
-    }, [queryPage])
+        setQueryPage(0)
+    }, [queryAuthorId, queryType, queryText, queryTags, queryDate])
 
     useEffect(() => {
         if (!guildId) {
@@ -115,7 +115,10 @@ function View({ guildId, setGuildId, guildName }) {
                         height = "30"
                         title = 'back'
                         onClick={ () => {
-                            if (queryPage > 0) setQueryPage(queryPage - 1)
+                            if (queryPage > 0) {
+                                setQueryPage(queryPage - 1)
+                                search()
+                            }
                         } }
                     />
                 </div>
@@ -131,7 +134,10 @@ function View({ guildId, setGuildId, guildName }) {
                         height = "30"
                         title = 'next'
                         onClick={ () => {
-                            if (quotes.length == 10) setQueryPage(queryPage + 1)
+                            if (quotes.length == 10) {
+                                setQueryPage(queryPage + 1)
+                                search()
+                            }
                         } }
                     />
                 </div>
