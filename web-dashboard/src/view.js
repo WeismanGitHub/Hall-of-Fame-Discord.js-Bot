@@ -124,14 +124,14 @@ function View({ guildId, setGuildId, guildName }) {
 
                 <div class='next_button'>
                     <img
-                        class={ quotes.length < 20 ? 'unclickable' : 'clickable' }
+                        class={ quotes.length < 10 ? 'unclickable' : 'clickable' }
                         src='/right-arrow.png'
                         alt="next button"
                         width = "30"
                         height = "30"
                         title = 'next'
                         onClick={ () => {
-                            if (quotes.length == 20) setQueryPage(queryPage + 1)
+                            if (quotes.length == 10) setQueryPage(queryPage + 1)
                         } }
                     />
                 </div>

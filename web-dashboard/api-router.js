@@ -145,7 +145,7 @@ router.get('/quotes/:guildId', async (req, res) => {
 
 	const quotes = await UniversalQuoteSchema.find(sanitizedSearch)
 	.sort(date ? { createdAt: date } : { createdAt: -1 })
-	.skip(page * 20).limit(20).select('-guildId').lean()
+	.skip(page * 10).limit(10).select('-guildId').lean()
 
 	res.status(200).json(quotes)
 })
