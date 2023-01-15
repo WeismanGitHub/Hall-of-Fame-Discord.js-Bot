@@ -219,13 +219,6 @@ body {
     filter: brightness(95%);
 }
 
-.quotes {
-    max-height: 85vh;
-    min-height: 85vh;
-    align-content: center;
-    overflow-y: scroll;
-}
-
 .header {
     max-height: 5vh;
     min-height: 5vh;
@@ -291,3 +284,46 @@ body {
     cursor: not-allowed;
     filter: brightness(85%);
 }
+
+.quotes {
+    max-height: 85vh;
+    min-height: 85vh;
+    align-content: center;
+    overflow-y: scroll;
+    margin-left: 15px;
+}
+
+.quote {
+    position: relative;
+    object-fit: cover;
+    margin-top: 10px;
+    display: inline-block;
+    margin-right: 15px;
+}
+
+.quote_author_icon {
+    border-radius: 50%;
+    float: left;
+}
+
+.quote_time {
+    font-size: 80%;
+    float: left;
+    padding-top: 6px;
+    margin-left: 4px;
+    color: #2a2d2e;
+}
+
+.quote_text {
+    float: left;
+    margin-left: 3px;
+    word-break: break-all;
+}
+
+.quote_author_name {
+    float: left;
+    margin-left: 3px;
+    font-size: 110%;
+    word-break: break-all;
+}
+
