@@ -24,6 +24,8 @@ function View({ guildId, setGuildId, guildName }) {
     }, [queryAuthorId, queryType, queryText, queryTags, queryDate])
 
     useEffect(() => {
+        setQueryPage(0)
+        
         if (!guildId) {
             setQueryAuthorId(null)
             setQueryType(null)
@@ -31,7 +33,6 @@ function View({ guildId, setGuildId, guildName }) {
             setQueryDate(-1)
             setGuildId(null)
             setQueryTags([])
-            setQueryPage(0)
             setAuthors([])
             setQuotes([])
             setTags([])
