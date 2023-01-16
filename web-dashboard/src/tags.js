@@ -24,7 +24,6 @@ function Tags({ tags, setQueryTags, queryTags }) {
         <div class={ queryTags.includes(tag) ? 'highlighted' : 'unhighlighted'}>
             <div class='tag' onClick={ (e) => tagClick(e, tag) }>{ tag }</div>
         </div>
-        <br class='tag_br'/>
         </>) }
     </div>
 }
