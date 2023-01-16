@@ -4,9 +4,7 @@
     -ms-overflow-style: none;
     word-wrap: break-word;
     overflow-y: scroll;
-    /* filter: invert(100%) hue-rotate(180deg); */
 }
-
 
 * ::-webkit-scrollbar {
     display: none;
@@ -314,13 +312,19 @@ body {
     align-content: center;
     overflow-y: scroll;
     margin-left: 15px;
+    padding-right: 15px;
 }
 
 .quote_message {
+    border-radius: 5px;
 	display: flex;
 	font-size: 0.9em;
 	margin: 1em 0;
 	padding: 0.25em 1em 0;
+}
+
+.quote_author_avatar {
+    align-self: flex-start;
 }
 
 .quote_message .quote_author_avatar {
@@ -356,4 +360,10 @@ body {
 
 .quote_message .quote_message_body {
 	position: relative;
+}
+
+.quote_image {
+    max-width: 260px;
+    border-radius: 5px;
+    margin-bottom: 5px;
 }

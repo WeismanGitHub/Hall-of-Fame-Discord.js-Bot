@@ -13,8 +13,9 @@ function Quotes({ quotes, authors }) {
             const { type, attachmentURL, createdAt, text } = quote
             let tags = quote.tags.filter(x => x !== null)
             tags = tags.length ? tags.join(', ') : ['no tags']
-
-            if (type == 'regular' && !attachmentURL) {
+            // #83D3AD #F79CCF #C487FF #F7BF8B
+            
+            if (type == 'regular') {
                 return <>
                     <div className='quote_message'>
                         <div className="quote_author_avatar">
@@ -38,6 +39,11 @@ function Quotes({ quotes, authors }) {
                             </div>
                             <div className="quote_message_body">
                                 { text }
+                                { !attachmentURL ? null : <img
+                                    class='quote_image'
+                                    src={ attachmentURL }
+                                    alt="invalid image"
+                                />}
                             </div>
                         </div>
                     </div>
