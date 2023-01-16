@@ -279,38 +279,6 @@ body {
     filter: brightness(85%);
 }
 
-.quotes {
-    max-height: 85vh;
-    min-height: 85vh;
-    align-content: center;
-    overflow-y: scroll;
-    margin-left: 15px;
-}
-
-.quote {
-    margin-top: 10px;
-}
-
-.quote_author_icon {
-    border-radius: 50%;
-    float: left;
-}
-
-.quote_author_name {
-    margin-left: 3px;
-    font-size: 110%;
-}
-
-.quote_time {
-    font-size: 80%;
-    padding-top: 6px;
-    margin-left: 4px;
-    color: #2a2d2e;
-}
-
-.quote_text {
-}
-
 .footer {
     padding-top: 2vh;
     max-height: 10vh;
@@ -338,4 +306,54 @@ body {
 
 .search_icon:hover {
     filter: brightness(95%);
+}
+
+.quotes {
+    max-height: 85vh;
+    min-height: 85vh;
+    align-content: center;
+    overflow-y: scroll;
+    margin-left: 15px;
+}
+
+.quote_message {
+	display: flex;
+	font-size: 0.9em;
+	margin: 1em 0;
+	padding: 0.25em 1em 0;
+}
+
+.quote_message .quote_author_avatar {
+	margin-top: 1px;
+	margin-right: 16px;
+    border-radius: 50%;
+}
+
+.quote_message .quote_message_content {
+	width: 100%;
+	line-height: 160%;
+	font-weight: normal;
+	overflow-wrap: anywhere;
+}
+
+.quote_message .quote_author_info {
+	display: inline-flex;
+	align-items: center;
+	font-size: 15px;
+}
+
+.quote_message .quote_author_info .quote_author_username {
+	font-size: 1.1em;
+	font-weight: 500;
+	letter-spacing: 0.5px;
+}
+
+.quote_message .quote_message_timestamp {
+	color: #2a2d2e;
+	font-size: 12px;
+	margin-left: 3px;
+}
+
+.quote_message .quote_message_body {
+	position: relative;
 }

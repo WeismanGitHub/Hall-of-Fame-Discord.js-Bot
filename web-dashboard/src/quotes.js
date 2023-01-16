@@ -11,26 +11,36 @@ function Quotes({ quotes, authors }) {
         { quotes.map(quote => {
             const author = authors.find(author => author._id == quote.authorId)
             const { type, attachmentURL, createdAt, text } = quote
+            let tags = quote.tags.filter(x => x !== null)
+            tags = tags.length ? tags.join(', ') : ['no tags']
 
             if (type == 'regular' && !attachmentURL) {
                 return <>
-                    <div class='quote'>
-                        <img
-                            class='quote_author_icon'
-                            src={ author?.iconURL || "/icon.png" }
-                            alt="author icon"
-                            width = "50"
-                            height = "50"
-                            onError={({ currentTarget }) => {
-                                currentTarget.onerror = null; // prevents looping
-                                currentTarget.src="/icon.png";
-                            }}
-                        />
-                        <div class='quote_author_name'>{ author?.name || 'Deleted Author' }</div>
-                        <div class='quote_time'>{ moment(createdAt).calendar() }</div>
-                        <div class='quote_text'>{ text }</div>
+                    <div className='quote_message'>
+                        <div className="quote_author_avatar">
+                            <img
+                                src={ author?.iconURL || "/icon.png" }
+                                alt="author icon"
+                                width = "50"
+                                height = "50"
+                                onError={({ currentTarget }) => {
+                                    currentTarget.onerror = null; // prevents looping
+                                    currentTarget.src="/icon.png";
+                                }}
+                            />
+                        </div>
+                        <div className="quote_message_content">
+                            <div>
+                                <span className="quote_author_info">
+                                    <span className="quote_author_username">{ author?.name || 'Deleted Author' }</span>
+                                </span>
+                                <span className="quote_message_timestamp"> { moment(createdAt).calendar() } - { tags }</span>
+                            </div>
+                            <div className="quote_message_body">
+                                { text }
+                            </div>
+                        </div>
                     </div>
-                    <br/>
                 </>
             }
         }) }
