@@ -123,7 +123,7 @@ function View({ guildId, setGuildId, guildName }) {
                     />
                 </div>
 
-                <div class='server_name'>{ guildName }</div>
+                <div class='server_name'>{ guildName } - Page { queryPage + 1}</div>
 
                 <div class='next_button'>
                     <img
