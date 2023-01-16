@@ -22,7 +22,9 @@ function Tags({ tags, setQueryTags, queryTags }) {
 
         { tags.map(tag => <>
         <div class={ queryTags.includes(tag) ? 'highlighted' : 'unhighlighted'}>
-            <div class='tag' onClick={ (e) => tagClick(e, tag) }>{ tag }</div>
+            <div class='tag_container' onClick={ (e) => tagClick(e, tag) }>
+                <div class='tag_text'>{ tag }</div>
+            </div>
         </div>
         </>) }
     </div>
