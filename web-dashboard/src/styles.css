@@ -358,12 +358,18 @@ body {
 	margin-left: 3px;
 }
 
+.quote_message_timestamp {
+    border-radius: 5px;
+    padding-left: 2px;
+    padding-right: 2px;
+}
+
 .quote_message .quote_message_body {
 	position: relative;
 }
 
 .quote_image {
-    max-width: 260px;
+    max-width: 400px;
     border-radius: 5px;
     margin-bottom: 5px;
 }

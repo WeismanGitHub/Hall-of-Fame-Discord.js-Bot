@@ -16,6 +16,8 @@ function Quotes({ quotes, authors }) {
             // #83D3AD #F79CCF #C487FF #F7BF8B
             
             if (type == 'regular') {
+                const color = attachmentURL ? '#F7BF8B' : '#C487FF'
+
                 return <>
                     <div className='quote_message'>
                         <div className="quote_author_avatar">
@@ -35,7 +37,9 @@ function Quotes({ quotes, authors }) {
                                 <span className="quote_author_info">
                                     <span className="quote_author_username">{ author?.name || 'Deleted Author' }</span>
                                 </span>
-                                <span className="quote_message_timestamp"> { moment(createdAt).calendar() } - { tags }</span>
+                                <span className="quote_message_timestamp" style={{ background: color }}>
+                                    { moment(createdAt).calendar() } - { tags }
+                                </span>
                             </div>
                             <div className="quote_message_body">
                                 { text }
