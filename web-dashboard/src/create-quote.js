@@ -4,7 +4,7 @@ import Cookies from 'js-cookie';
 
 function CreateQuote() {
     return (<div class='no_quotes'>
-        Under Construction
+        Quote creation is under construction!
     </div>)
 }
 
