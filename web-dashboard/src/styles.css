@@ -4,10 +4,11 @@
     -ms-overflow-style: none;
     word-wrap: break-word;
     overflow-y: scroll;
+    color: #8e9297;
 }
 
 * ::-webkit-scrollbar {
-    display: none;
+    width: 0px;
 }
 
 .highlighted {
@@ -23,7 +24,7 @@ br {
 }
 
 body {
-    background-color: aliceblue;
+    background-color: #36393f;
 }
 
 .guilds {
@@ -34,17 +35,16 @@ body {
     scrollbar-width: none;
     float: left;
     width: 80px;
-    background-color: #c0c9d1;
+    background-color: #202225;
 }
 
 .guilds_divider {
     margin-top: 5px;
     width: 90%;
     margin-left: 5%;
-	background-color: black;
+	background-color: #373a3f;
 	height: 5px;
 	border-radius: 22%;
-	opacity: .2;
 }
 
 .chosen_guild {
@@ -77,13 +77,13 @@ body {
     overflow-y: scroll;
     overflow-x: hidden;
     scrollbar-width: none;
-    background-color: #d5dee6;
+    background-color: #2f3136;
 }
 
 .authors_divider {
     width: 90%;
     margin-left: 5%;
-	background-color: black;
+	background-color: #232428;
 	height: 5px;
 	border-radius: 22%;
 	opacity: .2;
@@ -112,17 +112,17 @@ body {
 }
 
 .author_container {
-    border: #d5dee6 1px dashed;
+    border: #2f3136 1px dashed;
     left: 5%;
     padding-top: 5px;
     padding-bottom: 5px;
-    background-color: #d5dee6;
+    background-color: #2f3136;
     width: 95%;
 }
 
 .author_container:hover {
-    filter: brightness(95%);
-    border: #8b9298 1px dashed;
+    border: #5d616b 1px dashed;
+    color: #dcddde;
     border-radius: 5px;
 }
 
@@ -139,7 +139,7 @@ body {
 }
 
 .tags {
-    width: 10%;
+    width: 12.5%;
     float: left;
     max-height: 100vh;
     min-height: 100vh;
@@ -147,14 +147,14 @@ body {
     overflow-y: scroll;
     overflow-x: hidden;
     scrollbar-width: none;
-    background-color: #d5dee6;
+    background-color: #2f3136;
     text-align: center;
 }
 
 .tags_divider {
     width: 90%;
     margin-left: 5%;
-	background-color: black;
+	background-color: #232428;
 	height: 5px;
 	border-radius: 22%;
 	opacity: .2;
@@ -171,8 +171,8 @@ body {
     margin: 0px;
     padding: 0px;
     cursor: pointer;
-    background-color: #d5dee6;
-    border: #d5dee6 1px dashed;
+    background-color: #2f3136;
+    border: #2f3136 1px dashed;
     position: relative;
     border-radius: 5px;
     object-fit: cover;
@@ -188,8 +188,8 @@ body {
 }
 
 .tag_container:hover {
-    filter: brightness(95%);
-    border: #8b9298 1px dashed;
+    color: #dcddde;
+    border: #5d616b 1px dashed;
     border-radius: 5px;
 }
 
@@ -206,7 +206,7 @@ body {
     margin: 0px;
     max-height: 100vh;
     min-height: 100vh;
-    width: 70%;
+    width: 67.5%;
     align-content: center;
     float: left;
 }
@@ -215,52 +215,14 @@ body {
     max-height: 5vh;
     min-height: 5vh;
     padding-top: 3px;
-    background-color: #c0c9d1;
-    border-bottom: 1px solid #848b90;
-}
-
-.next_button {
-    float: left;
-    cursor: pointer;
-}
-
-.back_button {
-    float: left;
-    cursor: pointer;
-}
-
-.back_button:hover {
-    filter: brightness(95%);
-}
-
-.back_button:active {
-    filter: brightness(90%);
-}
-
-.back_button:focus {
-    filter: brightness(90%);
-}
-
-.next_button:hover {
-    filter: brightness(95%);
-}
-
-.next_button:active {
-    filter: brightness(90%);
-}
-
-.next_button:focus {
-    filter: brightness(90%);
+    background-color: #36393f;
+    border-bottom: 2px solid #232428;
 }
 
 .server_name {
     font-size: 125%;
-    float: left;
-    max-width: 30%;
-    min-width: 30%;
-    margin-left: 37.5%;
-    margin-right: 26.5%;
     color: #f5f6f7;
+    padding-left: 45%;
 }
 
 .no_quotes {
@@ -281,8 +243,8 @@ body {
     padding-top: 2vh;
     max-height: 10vh;
     min-height: 10vh;
-    border-top: 1px solid #848b90;
-    background-color: #c0c9d1;
+    border-top: 2px solid #232428;
+    background-color: #36393f;
 }
 
 .text_search_bar {
@@ -321,10 +283,12 @@ body {
 	font-size: 0.9em;
 	margin: 1em 0;
 	padding: 0.25em 1em 0;
+    background-color: #2f3136;
 }
 
 .quote_author_avatar {
     align-self: flex-start;
+    margin-bottom: 3px;
 }
 
 .quote_message .quote_author_avatar {
@@ -340,6 +304,14 @@ body {
 	overflow-wrap: anywhere;
 }
 
+.quote_message_body {
+    color: #dcddde;
+}
+
+.quote_author_username {
+    color: #f2ffff;
+}
+
 .quote_message .quote_author_info {
 	display: inline-flex;
 	align-items: center;
@@ -353,7 +325,7 @@ body {
 }
 
 .quote_message .quote_message_timestamp {
-	color: #2a2d2e;
+	color: #a3a6aa;
 	font-size: 12px;
 	margin-left: 3px;
 }
@@ -366,6 +338,10 @@ body {
 
 .quote_message .quote_message_body {
 	position: relative;
+}
+
+.quote_message {
+    padding-right: 0px;
 }
 
 .quote_image {

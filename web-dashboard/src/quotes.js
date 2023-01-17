@@ -13,13 +13,14 @@ function Quotes({ quotes, authors }) {
             const { type, attachmentURL, createdAt, text } = quote
             let tags = quote.tags.filter(x => x !== null)
             tags = tags.length ? tags.join(', ') : ['no tags']
-            // #83D3AD #F79CCF #C487FF #F7BF8B
+            // #ff2e95 #00A64A
             
             if (type == 'regular') {
-                const color = attachmentURL ? '#F7BF8B' : '#C487FF'
+                const color = attachmentURL ? '#FF7B00' : '#8F00FF'
 
                 return <>
-                    <div className='quote_message'>
+                    <div className='quote_message' style={{ 'border-left': `4px solid ${color}` }}>
+                        <div style={{ background: color }} className="discord-left-border"></div>
                         <div className="quote_author_avatar">
                             <img
                                 src={ author?.iconURL || "/icon.png" }
@@ -37,7 +38,7 @@ function Quotes({ quotes, authors }) {
                                 <span className="quote_author_info">
                                     <span className="quote_author_username">{ author?.name || 'Deleted Author' }</span>
                                 </span>
-                                <span className="quote_message_timestamp" style={{ background: color }}>
+                                <span className="quote_message_timestamp">
                                     { moment(createdAt).calendar() } - { tags }
                                 </span>
                             </div>
