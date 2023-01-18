@@ -2,8 +2,7 @@ const mongoose = require('mongoose');
 
 const FilterSchema = new mongoose.Schema({
     query: { type: Object },
-    sort: { type: Object},
-    createdAt: { type: Date, expires: 21600, default: new Date() } //Lifetime == 6 hours
-});
+    sort: { type: Object}
+}, { timestamps: { createdAt: true, updatedAt: false } });
 
 module.exports = mongoose.model('filters', FilterSchema);
