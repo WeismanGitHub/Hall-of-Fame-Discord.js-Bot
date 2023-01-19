@@ -16,9 +16,9 @@ const client = new Client({
 
 const port = process.env.PORT || 5000
 app.listen(port || 5000, () => console.log(`listening on port ${port}...`));
+app.set('client', client)
 
 client.on("ready", async () => {
-    app.set('client', client)
     client.user.setActivity('Use /help for help.');
 
     mongoose.connect(process.env.MONGO_URI, {
@@ -35,8 +35,6 @@ client.on("ready", async () => {
             disabledDefaultCommands: ['prefix', 'language'],
             mongoUri: process.env.MONGO_URI,
     });
-
-	console.log('logged in...');
 });
 
 process.on('uncaughtException', function (error) {
