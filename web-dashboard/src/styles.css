@@ -44,7 +44,8 @@ body {
     margin-left: 5%;
 	background-color: #373a3f;
 	height: 5px;
-	border-radius: 22%;
+    border: none;
+    border-radius: 5px;
 }
 
 .chosen_guild {
@@ -85,8 +86,8 @@ body {
     margin-left: 5%;
 	background-color: #232428;
 	height: 5px;
-	border-radius: 22%;
-	opacity: .2;
+    border: none;
+    border-radius: 5px;
 }
 
 .authors_header {
@@ -156,8 +157,8 @@ body {
     margin-left: 5%;
 	background-color: #232428;
 	height: 5px;
-	border-radius: 22%;
-	opacity: .2;
+    border: none;
+	border-radius: 5px;
 }
 
 .tags_header {
