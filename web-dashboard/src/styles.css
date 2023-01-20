@@ -12,7 +12,7 @@
 }
 
 .highlighted {
-    filter: brightness(90%);
+    filter: brightness(130%);
     border-radius: 5px;
 }
 
@@ -113,7 +113,6 @@ body {
 }
 
 .author_container {
-    border: #2f3136 1px dashed;
     left: 5%;
     padding-top: 5px;
     padding-bottom: 5px;
@@ -122,17 +121,16 @@ body {
 }
 
 .author_container:hover {
-    border: #5d616b 1px dashed;
-    color: #dcddde;
+    filter: brightness(110%);
     border-radius: 5px;
 }
 
 .author_container:active {
-    filter: brightness(90%);
+    filter: brightness(120%);
 }
 
 .author_container:focus {
-    filter: brightness(90%);
+    filter: brightness(120%);
 }
 
 .author_name {
@@ -189,17 +187,16 @@ body {
 }
 
 .tag_container:hover {
-    color: #dcddde;
-    border: #5d616b 1px dashed;
+    filter: brightness(110%);
     border-radius: 5px;
 }
 
 .tag_container:active {
-    filter: brightness(90%);
+    filter: brightness(120%);
 }
 
 .tag_container:focus {
-    filter: brightness(90%);
+    filter: brightness(120%);
 }
 
 .center {
