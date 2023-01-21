@@ -3,6 +3,7 @@ import { toast } from 'react-toastify'
 import axios, * as others from 'axios'
 
 import CreateQuote from './create-quote'
+import SearchArea from './search-area'
 import Authors from './authors'
 import Quotes from './quotes'
 import Tags from './tags'
@@ -16,7 +17,7 @@ function View({ guildId, setGuildId, guildName }) {
     const [queryType, setQueryType] = useState(null)
     const [queryText, setQueryText] = useState(null)
     const [queryTags, setQueryTags] = useState([])
-    const [queryDate, setQueryDate] = useState(-1)
+    const [queryDate, setQueryDate] = useState('new')
     const [queryPage, setQueryPage] = useState(0)
 
     useEffect(() => {
@@ -30,7 +31,7 @@ function View({ guildId, setGuildId, guildName }) {
             setQueryAuthorId(null)
             setQueryType(null)
             setQueryText(null)
-            setQueryDate(-1)
+            setQueryDate('new')
             setGuildId(null)
             setQueryTags([])
             setAuthors([])
@@ -63,7 +64,7 @@ function View({ guildId, setGuildId, guildName }) {
         } catch(err) {
             setQueryAuthorId(null)
             setGuildId(null)
-            setQueryDate(-1)
+            setQueryDate('new')
             setQueryType(null)
             setQueryTags([])
             setQueryText(null)
@@ -117,33 +118,27 @@ function View({ guildId, setGuildId, guildName }) {
         <Tags tags={ tags } queryTags={ queryTags } setQueryTags={ setQueryTags }/>
 
         <div class='center'>
-            <div class='header'>
-                <div class='server_name'>{ guildName }</div>
-            </div>
+            <div class='header'><div class='server_name'>{ guildName }</div></div>
 
-            <Quotes loadMoreQuotes={ loadMoreQuotes } quotes={ quotes } authors={ authors } queryPage={ queryPage } setQueryPage={ setQueryPage }/>
+            <Quotes
+                loadMoreQuotes={ loadMoreQuotes }
+                quotes={ quotes }
+                authors={ authors }
+                queryPage={ queryPage }
+                setQueryPage={ setQueryPage }
+            />
 
-            <div class='footer'>
-                <img
-                    class='search_icon'
-                    src='/search.png'
-                    alt="search icon"
-                    width = "45"
-                    height = "45"
-                    title = 'search'
-                    onClick={ search }
-                />
-                
-                <input 
-                    type="text"
-                    class='text_search_bar'
-                    value={ queryText }
-                    placeholder="search text..."
-                    onChange={ (e)=> setQueryText(e.target.value) }
-                    onKeyPress={ (event) => { event.key === 'Enter' && search() } }
-                />
-            </div>
+            <SearchArea
+                setQueryType={ setQueryType }
+                setQueryDate={ setQueryDate }
+                setQueryText={ setQueryText }
+                queryType={ queryType }
+                queryDate={ queryDate }
+                queryText={ queryText }
+                search={ search }
+            />
         </div>
+
         <Authors authors={ authors } setQueryAuthorId={ setQueryAuthorId } queryAuthorId={ queryAuthorId }/>
     </>)
 }
