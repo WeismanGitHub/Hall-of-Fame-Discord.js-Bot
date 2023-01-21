@@ -110,8 +110,10 @@ router.get('/tags/:guildId', async (req, res) => {
 })
 
 router.get('/quotes/:guildId', async (req, res) => {
+	const date = req.query.date == 'old' ? 1 : -1
+	console.log(date)
 	const guilds = jwt.verify(req.cookies.guilds, process.env.JWT_SECRET).guilds
-	const { date, tags, type, text, authorId } = req.query
+	const { tags, type, text, authorId } = req.query
 	const guildId = req.params.guildId
 	const sanitizedSearch = { guildId: guildId }
 	const page = Number(req.query.page ?? 0)
@@ -144,7 +146,7 @@ router.get('/quotes/:guildId', async (req, res) => {
 	}
 
 	const quotes = await UniversalQuoteSchema.find(sanitizedSearch)
-	.sort(date ? { createdAt: date } : { createdAt: -1 })
+	.sort({ createdAt: date })
 	.skip(page * 10).limit(10).select('-guildId').lean()
 
 	res.status(200).json(quotes)
