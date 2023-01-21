@@ -98,53 +98,18 @@ function View({ guildId, setGuildId, guildName }) {
             page: queryPage,
             date: queryDate
         } })
-        .then(res => setQuotes(res.data))
+        .then(res => setQuotes([...quotes, ...res.data]))
     }
 
-    return (<div>
+    return (<>
         <Tags tags={ tags } queryTags={ queryTags } setQueryTags={ setQueryTags }/>
-        <Authors authors={ authors } setQueryAuthorId={ setQueryAuthorId } queryAuthorId={ queryAuthorId }/>
 
         <div class='center'>
             <div class='header'>
-                <div class='back_button'>
-                    <img
-                        class={ queryPage <= 0 ? 'unclickable' : 'clickable' }
-                        src='/left-arrow.png'
-                        alt="back button"
-                        width = "30"
-                        height = "30"
-                        title = 'back'
-                        onClick={ () => {
-                            if (queryPage > 0) {
-                                setQueryPage(queryPage - 1)
-                                search()
-                            }
-                        } }
-                    />
-                </div>
-
-                <div class='server_name'>{ guildName } - Page { queryPage + 1}</div>
-
-                <div class='next_button'>
-                    <img
-                        class={ quotes.length < 10 ? 'unclickable' : 'clickable' }
-                        src='/right-arrow.png'
-                        alt="next button"
-                        width = "30"
-                        height = "30"
-                        title = 'next'
-                        onClick={ () => {
-                            if (quotes.length == 10) {
-                                setQueryPage(queryPage + 1)
-                                search()
-                            }
-                        } }
-                    />
-                </div>
+                <div class='server_name'>{ guildName }</div>
             </div>
 
-            <Quotes quotes={ quotes } authors={ authors }/>
+            <Quotes search={ search } quotes={ quotes } authors={ authors } queryPage={ queryPage } setQueryPage={ setQueryPage }/>
 
             <div class='footer'>
                 <img
@@ -167,7 +132,8 @@ function View({ guildId, setGuildId, guildName }) {
                 />
             </div>
         </div>
-    </div>)
+        <Authors authors={ authors } setQueryAuthorId={ setQueryAuthorId } queryAuthorId={ queryAuthorId }/>
+    </>)
 }
 
 export default View;
