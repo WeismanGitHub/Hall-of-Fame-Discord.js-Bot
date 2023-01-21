@@ -347,3 +347,18 @@ body {
     border-radius: 5px;
     margin-bottom: 5px;
 }
+
+.login {
+    text-align: center;
+    margin-left: 40%;
+    margin-top: 20%;
+    font-size: 200%;
+    border: #212226 3px solid;
+    background-color: #2f3136;
+    border-radius: 10px;
+    padding: 25px;
+}
+
+.login:hover {
+    filter: brightness(95%);
+}

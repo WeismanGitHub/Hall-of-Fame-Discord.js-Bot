@@ -1,6 +1,6 @@
 function Login() {
     return <a href={ process.env.REACT_APP_LOCALHOST_LINK }>
-        <button>Discord Login</button>
+        <button class='login'>Discord Login</button>
     </a>
 }
 
