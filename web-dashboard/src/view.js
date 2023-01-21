@@ -13,9 +13,9 @@ function View({ guildId, setGuildId, guildName }) {
     const [tags, setTags] = useState([])
 
     const [queryAuthorId, setQueryAuthorId] = useState(null)
-    const [queryTags, setQueryTags] = useState([])
     const [queryType, setQueryType] = useState(null)
     const [queryText, setQueryText] = useState(null)
+    const [queryTags, setQueryTags] = useState([])
     const [queryDate, setQueryDate] = useState(-1)
     const [queryPage, setQueryPage] = useState(0)
 
@@ -98,6 +98,18 @@ function View({ guildId, setGuildId, guildName }) {
             page: queryPage,
             date: queryDate
         } })
+        .then(res => setQuotes(res.data))
+    }
+
+    function loadMoreQuotes() {
+        axios.get('/api/v1/quotes/' + guildId, { params: {
+            authorId: queryAuthorId,
+            tags: queryTags,
+            text: queryText,
+            type: queryType,
+            page: queryPage + 1, // + 1 because of a bug. idk
+            date: queryDate
+        } })
         .then(res => setQuotes([...quotes, ...res.data]))
     }
 
@@ -109,7 +121,7 @@ function View({ guildId, setGuildId, guildName }) {
                 <div class='server_name'>{ guildName }</div>
             </div>
 
-            <Quotes search={ search } quotes={ quotes } authors={ authors } queryPage={ queryPage } setQueryPage={ setQueryPage }/>
+            <Quotes loadMoreQuotes={ loadMoreQuotes } quotes={ quotes } authors={ authors } queryPage={ queryPage } setQueryPage={ setQueryPage }/>
 
             <div class='footer'>
                 <img

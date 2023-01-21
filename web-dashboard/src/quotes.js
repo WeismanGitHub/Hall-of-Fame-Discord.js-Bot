@@ -1,7 +1,7 @@
 import InfiniteScroll from "react-infinite-scroller";
 import * as moment from 'moment-timezone';
 
-function Quotes({ search, quotes, authors, queryPage, setQueryPage }) {
+function Quotes({ loadMoreQuotes, quotes, authors, queryPage, setQueryPage }) {
     if (!quotes.length || !quotes) {
         return <div class='no_quotes'>
             404: No Quotes
@@ -10,9 +10,9 @@ function Quotes({ search, quotes, authors, queryPage, setQueryPage }) {
 
     function fetchQuotes() {
         setQueryPage(queryPage + 1)
-        search()
+        loadMoreQuotes()
     }
-
+    
     return <div class='quotes'>
         <InfiniteScroll
             pageStart={ queryPage }
