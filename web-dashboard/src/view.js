@@ -14,10 +14,10 @@ function View({ guildId, setGuildId, guildName }) {
     const [tags, setTags] = useState([])
 
     const [queryAuthorId, setQueryAuthorId] = useState(null)
+    const [queryDate, setQueryDate] = useState('new')
     const [queryType, setQueryType] = useState(null)
     const [queryText, setQueryText] = useState(null)
     const [queryTags, setQueryTags] = useState([])
-    const [queryDate, setQueryDate] = useState('new')
     const [queryPage, setQueryPage] = useState(0)
 
     useEffect(() => {
@@ -25,55 +25,41 @@ function View({ guildId, setGuildId, guildName }) {
     }, [queryAuthorId, queryType, queryText, queryTags, queryDate])
 
     useEffect(() => {
+        setQueryAuthorId(null)
+        setQueryDate('new')
+        setQueryType(null)
+        setQueryText(null)
+        setQueryTags([])
         setQueryPage(0)
+        setAuthors([])
+        setQuotes([])
+        setTags([])
         
         if (!guildId) {
-            setQueryAuthorId(null)
-            setQueryType(null)
-            setQueryText(null)
-            setQueryDate('new')
-            setGuildId(null)
-            setQueryTags([])
-            setAuthors([])
-            setQuotes([])
-            setTags([])
             return
         }
-        
-        try {
-            axios.get(`/api/v1/authors/${guildId}`)
-            .then(res => {
-                const sortedAuthors = res.data.sort((firstAuthor, secondAuthor) =>
-                    firstAuthor.name.localeCompare(secondAuthor.name, undefined, { sensitivity: 'base' })
-                )
-    
-                setAuthors(sortedAuthors)
-            })
+
+        axios.get(`/api/v1/authors/${guildId}`)
+        .then(res => {
+            const sortedAuthors = res.data.sort((firstAuthor, secondAuthor) =>
+                firstAuthor.name.localeCompare(secondAuthor.name, undefined, { sensitivity: 'base' })
+            )
+
+            setAuthors(sortedAuthors)
+
+            axios.get(`/api/v1/quotes/${guildId}`)
+            .then(res => setQuotes(res.data))
 
             axios.get(`/api/v1/tags/${guildId}`)
             .then(res => {
                 const sortedTags = res.data.sort((firstTag, secondTag) =>
-                firstTag.localeCompare(secondTag, undefined, { sensitivity: 'base' })
+                    firstTag.localeCompare(secondTag, undefined, { sensitivity: 'base' })
                 )
     
                 setTags(sortedTags)
             })
-
-            axios.get('/api/v1/quotes/' + guildId)
-            .then(res => setQuotes(res.data))
-        } catch(err) {
-            setQueryAuthorId(null)
-            setGuildId(null)
-            setQueryDate('new')
-            setQueryType(null)
-            setQueryTags([])
-            setQueryText(null)
-            setQueryPage(0)
-            setAuthors([])
-            setQuotes([])
-            setTags([])
-
-            toast.error('Guild Not Found.Register with /register.', {
+        }).catch(err => {
+            toast.error('Guild Not Found. Register with /register.', {
                 position: "top-right",
                 autoClose: 3000,
                 hideProgressBar: true,
@@ -82,8 +68,10 @@ function View({ guildId, setGuildId, guildName }) {
                 draggable: true,
                 progress: undefined,
                 theme: "colored",
-            });
-        }
+            })
+            
+            setGuildId(null)
+        })
     }, [guildId])
 
     if (!guildId) {
