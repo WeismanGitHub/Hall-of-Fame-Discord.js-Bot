@@ -1,8 +1,6 @@
 import InfiniteScroll from "react-infinite-scroller";
 import AudioPlayer from 'react-h5-audio-player';
-// import 'react-h5-audio-player/lib/styles.css';
 import * as moment from 'moment-timezone';
-import { toast } from 'react-toastify'
 
 function Quotes({ loadMoreQuotes, quotes, authors, queryPage, setQueryPage }) {
     if (!quotes.length || !quotes) {
