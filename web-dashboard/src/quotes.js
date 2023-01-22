@@ -1,5 +1,8 @@
 import InfiniteScroll from "react-infinite-scroller";
+import AudioPlayer from 'react-h5-audio-player';
+// import 'react-h5-audio-player/lib/styles.css';
 import * as moment from 'moment-timezone';
+import { toast } from 'react-toastify'
 
 function Quotes({ loadMoreQuotes, quotes, authors, queryPage, setQueryPage }) {
     if (!quotes.length || !quotes) {
@@ -67,14 +70,16 @@ function Quotes({ loadMoreQuotes, quotes, authors, queryPage, setQueryPage }) {
 
                                 <div className="quote_message_body">
                                     { text }
-
-                                    { !audioURL ? null : <div>
-                                        <br/>
-                                        <div class='audio_player'>
-                                            AUDIO PLAYER
-                                        </div>
-                                    </div>
-                                    }
+                                    { !audioURL ? <span className="quote_message_timestamp">invalid source</span> : <AudioPlayer
+                                        src={audioURL}
+                                        showJumpControls={false}
+                                        showSkipControls={false}
+                                        autoPlayAfterSrcChange={false}
+                                        hasDefaultKeyBindings={false}
+                                        showFilledProgress={true}
+                                        layout={'horizontal'}
+                                        customVolumeControls={[]}
+                                    /> }
 
                                     { !attachmentURL ? null : <img
                                         class='quote_image'
@@ -116,9 +121,6 @@ function Quotes({ loadMoreQuotes, quotes, authors, queryPage, setQueryPage }) {
                                             <div>
                                                 <span className="quote_author_info">
                                                     <span className="quote_author_username">{ author?.name || 'Deleted Author' }</span>
-                                                </span>
-                                                <span className="quote_message_timestamp">
-                                                    { moment(createdAt).calendar() } - { tags }
                                                 </span>
                                             </div>
 
