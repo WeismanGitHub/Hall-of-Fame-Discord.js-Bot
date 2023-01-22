@@ -7,7 +7,7 @@
   ## [Web Dashboard Link](https://hall-of-fame-discordjs-bot.weisman.repl.co/)
   
   ## Description
-  A hall of fame bot with 28 commands that allow you save text, images, and audio. The bot is geared towards smaller, close-knit servers. It's purpose is to allow users to organize memorable moments so they can be easily accessed with authors, tags, types, dates, and more. To create quotes you must first create an author for the quote. An author has a name and optionally an image. You can also add tags to quotes, which need to be created before hand. Every type of quote (audio, image, regular, and multi) has an author, text, and up to three tags.
+  A hall of fame bot with 28 commands that allow you save text, images, and audio. The bot is geared towards smaller, close-knit servers. It's purpose is to allow users to organize memorable moments so they can be easily accessed with authors, tags, types, dates, and more. Use the web dashboard as an easier alternative. To create quotes you must first create an author for the quote. An author has a name and optionally an image. You can also add tags to quotes, which need to be created before hand. Every type of quote (audio, image, regular, and multi) has an author, text, and up to three tags.
   <hr class="rounded">
   
   ## Web Dashboard
