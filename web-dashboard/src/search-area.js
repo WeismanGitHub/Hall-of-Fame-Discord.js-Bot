@@ -3,7 +3,16 @@ function SearchArea({ setQueryText, search, queryText, setQueryDate, queryDate, 
         setQueryDate(queryDate == 'new' ? 'old' : 'new')
     }
 
-    const queryTypes = ['regular', 'image', 'audio', 'multi']
+    function typeClick(type) {
+        setQueryType(queryType == type ? null : type)
+    }
+
+    const types = [
+        { name: 'regular', color: '#8F00FF' },
+        { name: 'image', color: '#FF7B00' },
+        { name: 'audio', color: '#00A64A' },
+        { name: 'multi', color: '#ff2e95' }
+    ]
 
     return <div class='footer'>
         <input
@@ -18,9 +27,11 @@ function SearchArea({ setQueryText, search, queryText, setQueryDate, queryDate, 
         <button class='date_picker' onClick={ dateClick }>{`${queryDate}est`}</button>
 
         <div class='type_picker'>
-            {queryTypes.map(type => {
-                return <div class={ queryType == type ? 'highlighted' : 'unhighlighted'}>
-                    <button class={`${type}_type`} onClick={ () => setQueryType(type) }>{type}</button>
+            {types.map(({ color, name }) => {
+                return <div style={{ float: 'left' }}>
+                    <div class={ queryType == name ? 'highlighted' : 'unhighlighted'}>
+                        <button class='type' style={{ 'background-color': color }} onClick={ () => typeClick(name) }>{name}</button>
+                    </div>
                 </div>
             })}
         </div>
