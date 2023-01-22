@@ -70,7 +70,8 @@ function Quotes({ loadMoreQuotes, quotes, authors, queryPage, setQueryPage }) {
 
                                 <div className="quote_message_body">
                                     { text }
-                                    { !audioURL ? <span className="quote_message_timestamp">invalid source</span> : <AudioPlayer
+                                    
+                                    { !audioURL ? null : <AudioPlayer
                                         src={audioURL}
                                         showJumpControls={false}
                                         showSkipControls={false}
