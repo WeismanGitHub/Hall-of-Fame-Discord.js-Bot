@@ -24,17 +24,25 @@ function Quotes({ loadMoreQuotes, quotes, authors, queryPage, setQueryPage }) {
         >
             { quotes.map(quote => {
                 const author = authors.find(author => author._id == quote.authorId)
-                const { type, attachmentURL, createdAt, text } = quote
-                let tags = quote.tags.filter(x => x !== null)
-                tags = tags.length ? tags.join(', ') : ['no tags']
-                // #ff2e95 #00A64A
-                
-                if (type == 'regular') {
-                    const color = attachmentURL ? '#FF7B00' : '#8F00FF'
+                const { type, attachmentURL, createdAt, text, audioURL, fragments } = quote
+                const filteredTags = quote.tags.filter(x => x !== null)
+                const tags = filteredTags.length ? filteredTags.join(', ') : ['no tags']
+                let color;
 
-                    return <>
-                        <div className='quote_message' style={{ 'border-left': `4px solid ${color}` }}>
-                            <div style={{ background: color }} className="discord-left-border"></div>
+                switch(type) {
+                    case 'regular':
+                        color = attachmentURL ? '#FF7B00' : '#8F00FF'
+                        break
+                    case 'audio':
+                        color = '#00A64A'
+                        break
+                    case 'multi':
+                        color = '#ff2e95'
+                        break
+                }
+                
+                if (type !== 'multi') {
+                        return <div className='quote_message' style={{ 'border-left': `4px solid ${color}` }}>
                             <div className="quote_author_avatar">
                                 <img
                                     src={ author?.iconURL || "/icon.png" }
@@ -56,8 +64,18 @@ function Quotes({ loadMoreQuotes, quotes, authors, queryPage, setQueryPage }) {
                                         { moment(createdAt).calendar() } - { tags }
                                     </span>
                                 </div>
+
                                 <div className="quote_message_body">
                                     { text }
+
+                                    { !audioURL ? null : <div>
+                                        <br/>
+                                        <div class='audio_player'>
+                                            AUDIO PLAYER
+                                        </div>
+                                    </div>
+                                    }
+
                                     { !attachmentURL ? null : <img
                                         class='quote_image'
                                         src={ attachmentURL }
@@ -66,9 +84,59 @@ function Quotes({ loadMoreQuotes, quotes, authors, queryPage, setQueryPage }) {
                                 </div>
                             </div>
                         </div>
-                    </>
+                } else {
+                    return <div className='quote_message' style={{ 'border-left': `4px solid ${color}` }}>
+                        <div className="quote_message_content">
+                            <div>
+                                <span className="quote_author_info">
+                                    <span className="quote_author_username">{ text }</span>
+                                </span>
+                                <span className="quote_message_timestamp">
+                                    { moment(createdAt).calendar() } - { tags }
+                                </span>
+                            </div>
+                            <div className="quote_message_body">
+                                { fragments.map(({ authorId, text })=> {
+                                    const author = authors.find(author => author._id == authorId)
+
+                                    return <div className='quote_message'>
+                                        <div className="quote_author_avatar">
+                                            <img
+                                                src={ author?.iconURL || "/icon.png" }
+                                                alt="author icon"
+                                                width = "40"
+                                                height = "40"
+                                                onError={({ currentTarget }) => {
+                                                    currentTarget.onerror = null; // prevents looping
+                                                    currentTarget.src="/icon.png";
+                                                }}
+                                            />
+                                        </div>
+                                        <div className="quote_message_content">
+                                            <div>
+                                                <span className="quote_author_info">
+                                                    <span className="quote_author_username">{ author?.name || 'Deleted Author' }</span>
+                                                </span>
+                                                <span className="quote_message_timestamp">
+                                                    { moment(createdAt).calendar() } - { tags }
+                                                </span>
+                                            </div>
+
+                                            <div className="quote_message_body">{ text }</div>
+                                        </div>
+                                    </div>
+                                })}
+
+                                { !attachmentURL ? null : <img
+                                    class='quote_image'
+                                    src={ attachmentURL }
+                                    alt="invalid image"
+                                />}
+                            </div>
+                        </div>
+                    </div>
                 }
-            }) }
+            })}
         </InfiniteScroll>
     </div>
 }
