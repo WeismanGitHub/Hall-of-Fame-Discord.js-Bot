@@ -127,6 +127,7 @@ router.get('/quotes/:guildId', async (req, res) => {
 	
 	if (type == 'image') {
 		sanitizedSearch.attachmentURL = { $ne: null }
+		sanitizedSearch.type = 'regular'
 	} else if (type) {
 		sanitizedSearch.type = type
 		sanitizedSearch.attachmentURL = null
