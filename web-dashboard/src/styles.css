@@ -253,6 +253,7 @@ body {
     padding-right: 50px;
     border-radius: 5px;
     background-color: #40444b;
+    color: #a4a7aa;
 }
 
 .search_icon {
@@ -361,4 +362,24 @@ body {
 
 .login:hover {
     filter: brightness(95%);
+}
+
+.date_picker {
+    margin-left: 15px;
+    float: left;
+    padding: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    border-radius: 5px;
+    background-color: #40444b;
+    min-width: 70px;
+    color: #a4a7aa;
+}
+
+.date_picker:hover {
+    filter: brightness(110%);
+}
+
+.date_picker:active {
+    filter: brightness(120%);
 }
