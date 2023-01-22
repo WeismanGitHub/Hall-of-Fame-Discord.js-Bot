@@ -259,7 +259,7 @@ body {
 .search_icon {
     border-radius: 50%;
     cursor: pointer;
-    float: right;
+    float: left;
     margin-right: 15px;
 }
 

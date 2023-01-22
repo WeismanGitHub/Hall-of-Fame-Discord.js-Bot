@@ -88,7 +88,7 @@ function Quotes({ loadMoreQuotes, quotes, authors, queryPage, setQueryPage }) {
                     return <div className='quote_message' style={{ 'border-left': `4px solid ${color}` }}>
                         <div className="quote_message_content">
                             <div>
-                                <span className="quote_author_info">
+                                <span className="quote_author_info" style={{ 'margin-left': '10px' }}>
                                     <span className="quote_author_username">{ text }</span>
                                 </span>
                                 <span className="quote_message_timestamp">
