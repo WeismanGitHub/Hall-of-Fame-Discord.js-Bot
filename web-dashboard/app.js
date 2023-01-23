@@ -19,15 +19,15 @@ const limiter = rateLimit({
 })
 
 app.use(limiter)
-app.use(express.urlencoded({ extended: true }))
-app.use(express.static(path.resolve(__dirname, './build')))
-app.use(cookieParser())
-app.use(express.json())
 app.use(compression())
 app.use(cors({ origin: ['http://localhost:5000'] }))
 app.use(helmet())
-
+app.use(express.urlencoded({ extended: true }))
+app.use(cookieParser())
+app.use(express.json())
+	
 app.use('/api/v1', apiRouter)
+app.use(express.static(path.resolve(__dirname, './build')))
 
 app.use('/api/*', (req, res, next) => {
 	throw new NotFoundError('Route does not exist.')
