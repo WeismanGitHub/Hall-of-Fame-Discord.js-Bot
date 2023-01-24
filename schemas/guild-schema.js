@@ -13,16 +13,11 @@ const AuthorSchema = new mongoose.Schema({
         type: String,
         minLength: 1,
         maxLength: 512,
-        default: null,
+        default: process.env.DEFAULT_ICON_URL,
         validate: {
             validator: function(URL) { return (URL == null || checkURL(URL)) },
             message: props => `Invalid Input: \`${props.value}\``
         },
-    },
-    type: {
-        type: String,
-        default: 'regular',
-        enum: ['regular', 'discord']
     },
     discordId: {
         type: String,
