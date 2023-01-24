@@ -18,10 +18,19 @@ const limiter = rateLimit({
 	legacyHeaders: false,
 })
 
+app.use(helmet({
+	contentSecurityPolicy: {
+		directives: {
+			...helmet.contentSecurityPolicy.getDefaultDirectives(),
+			"img-src": ["*"],
+			'media-src': ['*']
+		},
+	},
+	crossOriginEmbedderPolicy: false
+}))
 app.use(limiter)
 app.use(compression())
 app.use(cors({ origin: ['http://localhost:5000'] }))
-app.use(helmet())
 app.use(express.urlencoded({ extended: true }))
 app.use(cookieParser())
 app.use(express.json())
