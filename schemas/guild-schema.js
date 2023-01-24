@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 const AuthorSchema = new mongoose.Schema({
     name: {
         type: String,
-        required: [true, 'Must provide a name.'],
+        required: [true, "Must provide a name."],
         minlength: 1,
         maxlength: 256,
     },
@@ -13,11 +13,20 @@ const AuthorSchema = new mongoose.Schema({
         type: String,
         minLength: 1,
         maxLength: 512,
-        required: [true, 'Must provide a url.'],
+        default: null,
         validate: {
             validator: function(URL) { return (URL == null || checkURL(URL)) },
             message: props => `Invalid Input: \`${props.value}\``
         },
+    },
+    type: {
+        type: String,
+        default: 'regular',
+        enum: ['regular', 'discord']
+    },
+    discordId: {
+        type: String,
+        default: null,
     }
 });
 
