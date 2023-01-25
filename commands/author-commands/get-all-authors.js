@@ -31,7 +31,7 @@ module.exports = {
             const authorEmbeds = []
 
             for (let author of authorGroup) {
-                authorEmbeds.push(...authorEmbed(author).embeds)
+                authorEmbeds.push(...await authorEmbed(author).embeds)
             }
 
             await interaction.channel.send({ embeds: authorEmbeds })

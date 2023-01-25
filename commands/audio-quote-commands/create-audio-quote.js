@@ -92,7 +92,7 @@ module.exports = {
             tags: tags,
         });
 
-        const embeddedAudioQuote = quoteEmbed(audioQuote, checkedAuthor)
+        const embeddedAudioQuote = await quoteEmbed(audioQuote, checkedAuthor)
 
         await sendToQuotesChannel(embeddedAudioQuote, guildId, client)
         await interaction.reply(embeddedAudioQuote);

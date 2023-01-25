@@ -141,7 +141,7 @@ module.exports = {
 
         const author = await getAuthorById(audioQuote.authorId, guildId);
 
-        const embeddedAudioQuote = quoteEmbed(audioQuote, author)
+        const embeddedAudioQuote = await quoteEmbed(audioQuote, author)
 
         await sendToQuotesChannel(embeddedAudioQuote, guildId, client)
         await interaction.reply(embeddedAudioQuote);

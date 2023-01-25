@@ -91,7 +91,7 @@ module.exports = {
             attachmentURL: attachmentURL
         });
 
-        const embeddedQuote = quoteEmbed(quote, author)
+        const embeddedQuote = await quoteEmbed(quote, author)
 
         await sendToQuotesChannel(embeddedQuote, guildId, client)
         await interaction.reply(embeddedQuote);

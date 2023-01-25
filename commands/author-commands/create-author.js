@@ -67,6 +67,6 @@ module.exports = {
             { $addToSet: { authors: author }
         })
 
-        await interaction.reply(authorEmbed(author))
+        await interaction.reply(await authorEmbed(author))
     })
 };

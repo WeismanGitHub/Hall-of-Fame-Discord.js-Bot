@@ -30,7 +30,7 @@ async function sendQuotes(quotes, channel) {
                 }
             }
 
-            quoteEmbeds.push(...quoteEmbed(quote, author ?? checkedFragments).embeds)
+            quoteEmbeds.push(...(await quoteEmbed(quote, author ?? checkedFragments)).embeds)
         }
 
         await channel.send({ embeds: quoteEmbeds })

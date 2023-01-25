@@ -108,6 +108,6 @@ module.exports = {
         })
 
         const author = await getAuthorById(audioQuote.authorId, guildId)
-        await interaction.reply(quoteEmbed(audioQuote, author))
+        await interaction.reply(await quoteEmbed(audioQuote, author))
     })
 };

@@ -151,7 +151,7 @@ module.exports = {
 
         const author = await getAuthorById(quote.authorId, guildId);
 
-        const embeddedQuote = quoteEmbed(quote, author)
+        const embeddedQuote = await quoteEmbed(quote, author)
 
         await sendToQuotesChannel(embeddedQuote, guildId, client)
         await interaction.reply(embeddedQuote);
