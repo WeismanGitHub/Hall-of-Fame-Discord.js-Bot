@@ -38,8 +38,18 @@ module.exports = {
             type: Constants.ApplicationCommandOptionTypes.CHANNEL
         },
         {
+            name: "account_image",
+            description: "Use an account image. Will update with the account.",
+            type: Constants.ApplicationCommandOptionTypes.USER
+        },
+        {
             name: 'delete_image',
             description: 'Use the default image.',
+            type: Constants.ApplicationCommandOptionTypes.BOOLEAN
+        },
+        {
+            name: 'remove_account_image',
+            description: 'Removes the connection to the account image.',
             type: Constants.ApplicationCommandOptionTypes.BOOLEAN
         }
     ],
@@ -51,8 +61,10 @@ module.exports = {
             throw new InvalidInputError('No Changes')
         }
 
+        const removeAccountImage = options.getBoolean('remove_account_image')
         const lastImageChannel = options.getChannel('last_image');
         const deleteImage = options.getBoolean('delete_image')
+        const accountImage = options.getUser('account_image')
         let newIconURL = options.getString('image_link')
         const newName = options.getString('new_name');
         const oldName = options.getString('name');
@@ -78,7 +90,9 @@ module.exports = {
             {
                 "$set": {
                     ...newIconURL && { "authors.$.iconURL": newIconURL },
-                    ...newName && { "authors.$.name": newName }
+                    ...newName && { "authors.$.name": newName },
+                    ...removeAccountImage && { 'authors.$.discordId': null },
+                    ...accountImage && { 'authors.$.discordId': interaction.user.id }
                 }
             },
             { new: true }
