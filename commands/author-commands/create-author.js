@@ -22,7 +22,7 @@ module.exports = {
         },
         {
             name: "account_image",
-            description: "Use an account image.",
+            description: "Use an account image. Will update with the account.",
             type: Constants.ApplicationCommandOptionTypes.USER
         },
         {
