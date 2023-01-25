@@ -1,5 +1,4 @@
 const { MessageEmbed, MessageActionRow, MessageButton } = require('discord.js');
-const { InvalidInputError } = require('../errors');
 const client = require('../index')
 require('dotenv').config();
 
@@ -23,7 +22,7 @@ const notificationEmbed = function(title, body, color='#FFFE00') {
 }
 
 // Multi-quote isn't separate embed because easier to determine what to do here than anywhere there could be a multi-quote.
-const quoteEmbed = function(quote, extraData, color='#8F00FF') { // color == purple
+const quoteEmbed = async function(quote, extraData, color='#8F00FF') { // color == purple
 	let tags = quote.tags.filter(x => x !== null).map(tag => tag)
     tags = tags.length ? tags : ['no tags']
 	const colorChange = (color !== '#8F00FF')
@@ -51,10 +50,9 @@ const quoteEmbed = function(quote, extraData, color='#8F00FF') { // color == pur
 		const author = extraData // Extra data is author.
 
 		if (author.discordId) {
-			const user = client.users.cache.get(author.discordId)
-			author.iconURL = user.avatarURL()
+			extraData.iconURL = (await client.users.fetch(author.discordId))?.avatarURL()
 		}
-
+		
 		embed.setAuthor({ name: extraData.name, iconURL: extraData.iconURL }) // Extra data is author.
 	}
 
@@ -93,10 +91,9 @@ const errorEmbed = function(error, title='Theres been an error!', color='#FF0000
     };
 };
 
-const authorEmbed = function(author, color='#00EEFF') {
+const authorEmbed = async function(author, color='#00EEFF') {
 	if (author.discordId) {
-		const user = client.users.cache.get(author.discordId)
-		author.iconURL = user.avatarURL()
+		extraData.iconURL = (await client.users.fetch(author.discordId))?.avatarURL()
 	}
 
 	return {
