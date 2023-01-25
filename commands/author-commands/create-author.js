@@ -21,6 +21,11 @@ module.exports = {
             maxLength: 256
         },
         {
+            name: "account_image",
+            description: "Use an account image.",
+            type: Constants.ApplicationCommandOptionTypes.USER
+        },
+        {
             name: 'image_link',
             description: "This will be the author's icon.",
             type: Constants.ApplicationCommandOptionTypes.STRING,
@@ -38,17 +43,18 @@ module.exports = {
         const guildId = interaction.guildId;
         const name = options.getString('name');
         const lastImageChannel = options.getChannel('last_image');
+        const accountImage = options.getUser('account_image')
         let iconURL = options.getString('image_link')
-        
-        if (!lastImageChannel && !iconURL) {
-            iconURL = process.env.DEFAULT_ICON_URL
-        }
 
         if (lastImageChannel) {
             iconURL = await getLastImage(lastImageChannel)
         }
         
-        const author = { name: name, iconURL: iconURL }
+        const author = {
+            name: name,
+            iconURL: iconURL,
+            discordId: accountImage ? interaction.user.id : null
+        }
 
         const authorNameExists = await GuildSchema.exists({ _id: guildId, 'authors.name': name })
 
