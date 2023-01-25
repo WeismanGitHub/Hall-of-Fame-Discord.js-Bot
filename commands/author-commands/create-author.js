@@ -44,7 +44,7 @@ module.exports = {
         const name = options.getString('name');
         const lastImageChannel = options.getChannel('last_image');
         const accountImage = options.getUser('account_image')
-        let iconURL = options.getString('image_link')
+        let iconURL = options.getString('image_link') || process.env.DEFAULT_ICON_URL
 
         if (lastImageChannel) {
             iconURL = await getLastImage(lastImageChannel)
