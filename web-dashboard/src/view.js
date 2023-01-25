@@ -59,7 +59,7 @@ function View({ guildId, setGuildId, guildName }) {
                 setTags(sortedTags)
             })
         }).catch(err => {
-            toast.error("There's been an error.", {
+            toast.error(err.message || "There's been an error.", {
                 position: "top-right",
                 autoClose: 3000,
                 hideProgressBar: true,
