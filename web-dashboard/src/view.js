@@ -59,7 +59,7 @@ function View({ guildId, setGuildId, guildName }) {
                 setTags(sortedTags)
             })
         }).catch(err => {
-            toast.error('Guild Not Found. Register with /register.', {
+            toast.error("There's been an error.", {
                 position: "top-right",
                 autoClose: 3000,
                 hideProgressBar: true,
@@ -69,8 +69,6 @@ function View({ guildId, setGuildId, guildName }) {
                 progress: undefined,
                 theme: "colored",
             })
-            
-            setGuildId(null)
         })
     }, [guildId])
 
