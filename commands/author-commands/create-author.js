@@ -53,7 +53,7 @@ module.exports = {
         const author = {
             name: name,
             iconURL: iconURL,
-            discordId: accountImage ? interaction.user.id : null
+            discordId: accountImage ? accountImage.id : null
         }
 
         const authorNameExists = await GuildSchema.exists({ _id: guildId, 'authors.name': name })

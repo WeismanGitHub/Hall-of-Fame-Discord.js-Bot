@@ -92,7 +92,7 @@ module.exports = {
                     ...newIconURL && { "authors.$.iconURL": newIconURL },
                     ...newName && { "authors.$.name": newName },
                     ...removeAccountImage && { 'authors.$.discordId': null },
-                    ...accountImage && { 'authors.$.discordId': interaction.user.id }
+                    ...accountImage && { 'authors.$.discordId': accountImage.id }
                 }
             },
             { new: true }
