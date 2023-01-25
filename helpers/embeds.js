@@ -1,5 +1,6 @@
 const { MessageEmbed, MessageActionRow, MessageButton } = require('discord.js');
 const { InvalidInputError } = require('../errors');
+const client = require('../index')
 require('dotenv').config();
 
 const basicEmbed = function (title, body='', color='#000EFF') {
@@ -25,7 +26,6 @@ const notificationEmbed = function(title, body, color='#FFFE00') {
 const quoteEmbed = function(quote, extraData, color='#8F00FF') { // color == purple
 	let tags = quote.tags.filter(x => x !== null).map(tag => tag)
     tags = tags.length ? tags : ['no tags']
-	let embedCharacters = ''
 	const colorChange = (color !== '#8F00FF')
 	
 	if (quote.type == 'regular' && quote.attachmentURL) {
@@ -48,8 +48,14 @@ const quoteEmbed = function(quote, extraData, color='#8F00FF') { // color == pur
 		embed.setTitle(quote.text)
 		embed.setDescription(formattedFragments)
 	} else {
+		const author = extraData // Extra data is author.
+
+		if (author.discordId) {
+			const user = client.users.cache.get(author.discordId)
+			author.iconURL = user.avatarURL()
+		}
+
 		embed.setAuthor({ name: extraData.name, iconURL: extraData.iconURL }) // Extra data is author.
-		embedCharacters += embed.author.name
 	}
 
 	if (!colorChange) {
@@ -69,17 +75,6 @@ const quoteEmbed = function(quote, extraData, color='#8F00FF') { // color == pur
 	}
 
 	embed.setColor(color)
-	
-	embedCharacters += (
-		embed.description
-		+ embed.footer.text
-		+ embed.title ?? ''
-		+ (embed.fields.map(field => field.name + field.value).join(''))
-	)
-
-	if (embedCharacters.length > 6000) {
-		throw new InvalidInputError('Embed size cannot be greater than 6000.')
-	}
 
 	return { embeds: [embed] };
 };
@@ -99,6 +94,11 @@ const errorEmbed = function(error, title='Theres been an error!', color='#FF0000
 };
 
 const authorEmbed = function(author, color='#00EEFF') {
+	if (author.discordId) {
+		const user = client.users.cache.get(author.discordId)
+		author.iconURL = user.avatarURL()
+	}
+
 	return {
         embeds: [new MessageEmbed()
 		.setColor(color) // cyan
