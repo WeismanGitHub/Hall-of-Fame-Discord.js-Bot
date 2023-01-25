@@ -85,7 +85,18 @@ router.get('/authors/:guildId', async (req, res) => {
 		throw new NotFoundError('Guild Not Found')
 	}
 
-	res.status(200).json(guild.authors ?? [])
+	const authors = guild.authors.map(author => {
+		if (author.discordId) {
+			const client = req.app.get('client')
+			const user = client.users.cache.get(author.discordId)
+			
+			author.iconURL = user.avatarURL()
+		}
+
+		return author
+	})
+
+	res.status(200).json(authors ?? [])
 })
 
 router.post('/logout', (req, res) => {
