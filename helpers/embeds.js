@@ -93,7 +93,7 @@ const errorEmbed = function(error, title='Theres been an error!', color='#FF0000
 
 const authorEmbed = async function(author, color='#00EEFF') {
 	if (author.discordId) {
-		extraData.iconURL = (await client.users.fetch(author.discordId))?.avatarURL()
+		author.iconURL = (await client.users.fetch(author.discordId))?.avatarURL()
 	}
 
 	return {
