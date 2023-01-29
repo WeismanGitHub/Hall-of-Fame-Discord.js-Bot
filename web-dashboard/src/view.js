@@ -8,7 +8,7 @@ import Authors from './authors'
 import Quotes from './quotes'
 import Tags from './tags'
 
-function View({ guildId, setGuildId, guildName }) {
+function View({ guildId, guildName }) {
     const [authors, setAuthors] = useState([])
     const [quotes, setQuotes] = useState([])
     const [tags, setTags] = useState([])

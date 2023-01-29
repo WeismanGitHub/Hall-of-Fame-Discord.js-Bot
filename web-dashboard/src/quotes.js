@@ -3,7 +3,7 @@ import AudioPlayer from 'react-h5-audio-player';
 import * as moment from 'moment-timezone';
 
 function Quotes({ loadMoreQuotes, quotes, authors, queryPage, setQueryPage }) {
-    if (!quotes.length || !quotes) {
+    if (!quotes?.length || !quotes) {
         return <div class='no_quotes'>
             404: No Quotes
         </div>
@@ -123,7 +123,9 @@ function Quotes({ loadMoreQuotes, quotes, authors, queryPage, setQueryPage }) {
                                                 </span>
                                             </div>
 
-                                            <div className="quote_message_body">{ text }</div>
+                                            <div className="quote_message_body">
+                                                { text }
+                                            </div>
                                         </div>
                                     </div>
                                 })}

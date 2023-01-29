@@ -12,7 +12,7 @@ function Authors({ authors, setQueryAuthorId, queryAuthorId }) {
                 <div class='author_container' onClick={ () => authorClick(author._id) }>
                     <img
                         class='author_icon'
-                        src={ author.iconURL }
+                        src={ author?.iconURL || "/icon.png" }
                         alt="author icon"
                         width = "45"
                         height = "45"

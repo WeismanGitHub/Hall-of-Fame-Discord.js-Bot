@@ -55,7 +55,7 @@ function Main() {
                         <div class='guilds'>
                             { guilds.map(guild => <div>
                                 <img class={ guildId == guild.id ? 'chosen_guild' : 'unchosen_guild'}
-                                    src={ guild.iconURL }
+                                    src={ guild.iconURL || "/icon.png" }
                                     alt="server icon"
                                     width = "60"
                                     height = "60"
@@ -84,7 +84,7 @@ function Main() {
                                 onClick={ logout }>
                             </img>
                         </div>
-                    <View guildId={ guildId } setGuildId={ setGuildId } guildName={ guilds.find((guild) => guild.id == guildId).name }/>
+                    <View guildId={ guildId } setGuildId={ setGuildId } guildName={ guilds.find((guild) => guild.id == guildId)?.name }/>
                 </div>
             }
         </body>
