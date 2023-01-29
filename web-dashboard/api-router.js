@@ -74,8 +74,6 @@ router.get('/guilds', async (req, res) => {
 router.get('/authors/:guildId', async (req, res) => {
 	const guilds = jwt.verify(req.cookies.guilds, process.env.JWT_SECRET).guilds
 	const guildId = req.params.guildId
-	const authors = []
-
 	if (!guilds.includes(guildId)) {
 		throw new BadRequestError('Invalid Guild Id')
 	}
@@ -86,15 +84,14 @@ router.get('/authors/:guildId', async (req, res) => {
 		throw new NotFoundError('Guild Not Found')
 	}
 
-	for (let author of guild.authors) {
+	const authors = await Promise.all(guild.authors.map(async author => {
 		if (author.discordId) {
 			const user = await req.app.get('client').users.fetch(author.discordId)
-			
 			author.iconURL = user?.avatarURL() || process.env.DEFAULT_ICON_URL
 		}
 
-		authors.push(author)
-	}
+		return author
+	}))
 
 	res.status(200).json(authors ?? [])
 })
