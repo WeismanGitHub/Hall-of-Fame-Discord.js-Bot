@@ -14,7 +14,7 @@ describe('Quote Schema Tests', () => {
         await QuoteSchema.deleteMany({ guildId: id })
     })
 
-    describe('URL validation tests.',  () => {
+    describe('attachmentURL validation tests.',  () => {
         test('not a url', async () => {
             try {
                 await QuoteSchema.create({ guildId: id, authorId: id, attachmentURL: 'invalid url' })
@@ -47,7 +47,7 @@ describe('Quote Schema Tests', () => {
     describe('Tags validation tests.',  () => {
         test('empty tag', async () => {
             try {
-                await QuoteSchema.create({ guildId: id, authorId: id, tags: [''] })
+                await QuoteSchema.create({ guildId: id, authorId: id, tags: [''], text: 'test' })
             } catch(err) {
                 return true
             }
@@ -55,7 +55,7 @@ describe('Quote Schema Tests', () => {
 
         test('tag is too long', async () => {
             try {
-                await QuoteSchema.create({ guildId: id, authorId: id, tags: [[...Array(339).keys()].join('')] })
+                await QuoteSchema.create({ guildId: id, authorId: id, tags: [[...Array(339).keys()].join('')], text: 'test' })
             } catch(err) {
                 return true
             }
@@ -63,7 +63,7 @@ describe('Quote Schema Tests', () => {
 
         test('valid tags', async () => {
             try {
-                await QuoteSchema.create({ guildId: id, authorId: id, tags: ['tag 1', 'tag 2'] })
+                await QuoteSchema.create({ guildId: id, authorId: id, tags: ['tag 1', 'tag 2'], text: 'test' })
             } catch(err) {
                 return false
             }
@@ -81,7 +81,7 @@ describe('Quote Schema Tests', () => {
 
         test('text is too long', async () => {
             try {
-                await QuoteSchema.create({ guildId: id, authorId: id, tags: [[...Array(4096).keys()].join('')] })
+                await QuoteSchema.create({ guildId: id, authorId: id, text: [...Array(4096).keys()].join('') })
             } catch(err) {
                 return true
             }
@@ -90,6 +90,24 @@ describe('Quote Schema Tests', () => {
         test('valid text', async () => {
             try {
                 await QuoteSchema.create({ guildId: id, authorId: id, text: 'valid text' })
+            } catch(err) {
+                return false
+            }
+        })
+    });
+
+    describe('Type validation tests.',  () => {
+        test('invalid type', async () => {
+            try {
+                await QuoteSchema.create({ guildId: id, authorId: id, type: 'multi', text: 'text' })
+            } catch(err) {
+                return true
+            }
+        })
+
+        test('valid type', async () => {
+            try {
+                await QuoteSchema.create({ guildId: id, authorId: id, type: 'regular', text: 'text'})
             } catch(err) {
                 return false
             }
