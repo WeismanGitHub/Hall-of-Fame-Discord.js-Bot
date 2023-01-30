@@ -11,11 +11,11 @@ describe('Quote Schema Tests', () => {
     const id = '63a81898166d642afbd1fed9'
 
     afterAll(async () => {
-        await QuoteSchema.deleteMany({ _id: id })
+        await QuoteSchema.deleteMany({ guildId: id })
     })
 
-    describe('URL Validation',  () => {
-        it('causes error', async () => {
+    describe('URL validation tests.',  () => {
+        test('not a url', async () => {
             try {
                 await QuoteSchema.create({ guildId: id, authorId: id, attachmentURL: 'invalid url' })
             } catch(err) {
@@ -23,7 +23,23 @@ describe('Quote Schema Tests', () => {
             }
         })
 
-        it('succeeds', async () => {
+        test('513 char url', async () => {
+            try {
+                await QuoteSchema.create({ guildId: id, authorId: id, attachmentURL: [...Array(513).keys()].join('') })
+            } catch(err) {
+                return true
+            }
+        })
+
+        test('empty url', async () => {
+            try {
+                await QuoteSchema.create({ guildId: id, authorId: id, attachmentURL: '' })
+            } catch(err) {
+                return true
+            }
+        })
+
+        test('valid url', async () => {
             await QuoteSchema.create({ guildId: id, authorId: id, attachmentURL: 'https://fake.url' })
         })
     });
