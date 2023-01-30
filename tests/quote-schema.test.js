@@ -69,4 +69,30 @@ describe('Quote Schema Tests', () => {
             }
         })
     });
+
+    describe('Text validation tests.',  () => {
+        test('empty text', async () => {
+            try {
+                await QuoteSchema.create({ guildId: id, authorId: id, text: '' })
+            } catch(err) {
+                return true
+            }
+        })
+
+        test('text is too long', async () => {
+            try {
+                await QuoteSchema.create({ guildId: id, authorId: id, tags: [[...Array(4096).keys()].join('')] })
+            } catch(err) {
+                return true
+            }
+        })
+
+        test('valid text', async () => {
+            try {
+                await QuoteSchema.create({ guildId: id, authorId: id, text: 'valid text' })
+            } catch(err) {
+                return false
+            }
+        })
+    });
 })
