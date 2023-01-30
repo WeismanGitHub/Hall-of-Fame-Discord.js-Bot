@@ -23,7 +23,7 @@ describe('Quote Schema Tests', () => {
             }
         })
 
-        test('513 char url', async () => {
+        test('url is too long', async () => {
             try {
                 await QuoteSchema.create({ guildId: id, authorId: id, attachmentURL: [...Array(513).keys()].join('') })
             } catch(err) {
@@ -41,6 +41,32 @@ describe('Quote Schema Tests', () => {
 
         test('valid url', async () => {
             await QuoteSchema.create({ guildId: id, authorId: id, attachmentURL: 'https://fake.url' })
+        })
+    });
+
+    describe('Tags validation tests.',  () => {
+        test('empty tag', async () => {
+            try {
+                await QuoteSchema.create({ guildId: id, authorId: id, tags: [''] })
+            } catch(err) {
+                return true
+            }
+        })
+
+        test('tag is too long', async () => {
+            try {
+                await QuoteSchema.create({ guildId: id, authorId: id, tags: [[...Array(339).keys()].join('')] })
+            } catch(err) {
+                return true
+            }
+        })
+
+        test('valid tags', async () => {
+            try {
+                await QuoteSchema.create({ guildId: id, authorId: id, tags: ['tag 1', 'tag 2'] })
+            } catch(err) {
+                return false
+            }
         })
     });
 })
