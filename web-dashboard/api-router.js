@@ -39,8 +39,9 @@ router.post('/auth', async (req, res) => {
 		throw new BadRequestError('Problem with code. Try again.')
 	}
 
-	res.status(200).cookie('accessToken', oauthData.access_token, { httpOnly: true, secure: true })
-	.cookie('loggedIn', true).end() // "loggedIn" cookie because client can't see if httpOnly accessToken cookie exists.
+	// "loggedIn" cookie because client can't see if accessToken exists since it is httpOnly.
+	res.status(200).cookie('accessToken', oauthData.access_token, { httpOnly: true, secure: true, sameSite: 'strict' })
+	.cookie('loggedIn', true, { secure: true, sameSite: 'strict' }).end()
 })
 
 router.get('/guilds', async (req, res) => {
@@ -68,7 +69,7 @@ router.get('/guilds', async (req, res) => {
         { expiresIn: process.env.JWT_LIFETIME },
     )
 
-	res.status(200).cookie('guilds', guildsJWT, { httpOnly: true, secure: true }).json(guilds)
+	res.status(200).cookie('guilds', guildsJWT, { httpOnly: true, secure: true, sameSite: 'strict' }).json(guilds)
 });
 
 router.get('/authors/:guildId', async (req, res) => {
