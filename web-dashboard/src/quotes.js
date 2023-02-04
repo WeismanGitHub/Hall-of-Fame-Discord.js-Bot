@@ -32,7 +32,7 @@ function Quotes({ loadMoreQuotes, quotes, authors, queryPage, setQueryPage }) {
 
                 switch(type) {
                     case 'regular':
-                        color = attachmentURL ? '#FF7B00' : '#8F00FF'
+                        color = '#8F00FF'
                         break
                     case 'audio':
                         color = '#00A64A'
@@ -41,6 +41,8 @@ function Quotes({ loadMoreQuotes, quotes, authors, queryPage, setQueryPage }) {
                         color = '#ff2e95'
                         break
                 }
+                
+                color = attachmentURL ? '#FF7B00' : color
                 
                 if (type !== 'multi') {
                         return <div className='quote_message' style={{ 'border-left': `4px solid ${color}` }}>
