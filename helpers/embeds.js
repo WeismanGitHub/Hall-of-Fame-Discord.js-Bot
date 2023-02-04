@@ -26,10 +26,6 @@ const quoteEmbed = async function(quote, extraData, color='#8F00FF') { // color 
 	let tags = quote.tags.filter(x => x !== null).map(tag => tag)
     tags = tags.length ? tags : ['no tags']
 	const colorChange = (color !== '#8F00FF')
-	
-	if (quote.type == 'regular' && quote.attachmentURL) {
-		quote.type = 'image'
-	}
 
 	const embed = new MessageEmbed()
 	.setDescription(quote.text ?? '[No Text]')
@@ -50,10 +46,14 @@ const quoteEmbed = async function(quote, extraData, color='#8F00FF') { // color 
 		const author = extraData // Extra data is author.
 
 		if (author.discordId) {
-			extraData.iconURL = (await client.users.fetch(author.discordId))?.avatarURL()
+			author.iconURL = (await client.users.fetch(author.discordId))?.avatarURL()
 		}
 		
-		embed.setAuthor({ name: extraData.name, iconURL: extraData.iconURL }) // Extra data is author.
+		embed.setAuthor({ name: author.name, iconURL: author.iconURL })
+	}
+	
+	if (quote.attachmentURL) {
+		quote.type = 'image'
 	}
 
 	if (!colorChange) {
