@@ -101,31 +101,31 @@ function View({ guildId, guildName }) {
     }
 
     return (<>
-        <Tags tags={ tags } queryTags={ queryTags } setQueryTags={ setQueryTags }/>
+        <Tags tags={tags} queryTags={queryTags} setQueryTags={setQueryTags}/>
 
         <div class='center'>
-            <div class='header'><div class='server_name'>{ guildName }</div></div>
+            <div class='header'><div class='server_name'>{guildName}</div></div>
 
             <Quotes
-                loadMoreQuotes={ loadMoreQuotes }
-                quotes={ quotes }
-                authors={ authors }
-                queryPage={ queryPage }
-                setQueryPage={ setQueryPage }
+                loadMoreQuotes={loadMoreQuotes}
+                quotes={quotes}
+                authors={authors}
+                queryPage={queryPage}
+                setQueryPage={setQueryPage}
             />
 
             <SearchArea
-                setQueryType={ setQueryType }
-                setQueryDate={ setQueryDate }
-                setQueryText={ setQueryText }
-                queryType={ queryType }
-                queryDate={ queryDate }
-                queryText={ queryText }
-                search={ search }
+                setQueryType={setQueryType}
+                setQueryDate={setQueryDate}
+                setQueryText={setQueryText}
+                queryType={queryType}
+                queryDate={queryDate}
+                queryText={queryText}
+                search={search}
             />
         </div>
 
-        <Authors authors={ authors } setQueryAuthorId={ setQueryAuthorId } queryAuthorId={ queryAuthorId }/>
+        <Authors authors={authors} setQueryAuthorId={setQueryAuthorId} queryAuthorId={queryAuthorId} guildId={guildId}/>
     </>)
 }
 
