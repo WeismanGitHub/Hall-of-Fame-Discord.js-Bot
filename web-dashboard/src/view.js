@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { toast } from 'react-toastify'
 import axios, * as others from 'axios'
+import { errorToast } from './toasts'
 
 import CreateQuote from './create-quote'
 import SearchArea from './search-area'
@@ -59,16 +59,7 @@ function View({ guildId, guildName }) {
                 setTags(sortedTags)
             })
         }).catch(err => {
-            toast.error(err.message || "There's been an error.", {
-                position: "top-right",
-                autoClose: 3000,
-                hideProgressBar: true,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "colored",
-            })
+            errorToast(err.message || "There's been an error.")
         })
     }, [guildId])
 

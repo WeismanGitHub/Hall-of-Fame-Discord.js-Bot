@@ -1,7 +1,8 @@
 import { Menu, Item, useContextMenu } from 'react-contexify';
+import { successToast, errorToast } from './toasts';
 import 'react-contexify/ReactContexify.css';
 import axios, * as others from 'axios'
-import { toast } from 'react-toastify'
+
 
 function Authors({ authors, setQueryAuthorId, queryAuthorId, guildId }) {
     const authorContextId = 'author_id'
@@ -35,27 +36,9 @@ function Authors({ authors, setQueryAuthorId, queryAuthorId, guildId }) {
 
             axios.delete(`/api/v1/authors/${guildId}`, { id: authorId })
             .then(res => {
-                toast.success(`Successfully deleted "${name}".`, {
-                    position: "top-right",
-                    autoClose: 3000,
-                    hideProgressBar: true,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "colored",
-                })
+                successToast(`Successfully deleted "${name}".`)
             }).catch(err => {
-                toast.error(err.message || `Failed to delete "${name}".`, {
-                    position: "top-right",
-                    autoClose: 3000,
-                    hideProgressBar: true,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "colored",
-                })
+                errorToast(`Failed to delete "${name}".`)
             })
             break;
         }
