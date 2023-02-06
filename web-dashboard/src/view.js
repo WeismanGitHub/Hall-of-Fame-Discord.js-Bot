@@ -92,7 +92,13 @@ function View({ guildId, guildName }) {
     }
 
     return (<>
-        <Tags tags={tags} queryTags={queryTags} setQueryTags={setQueryTags}/>
+        <Tags
+            tags={tags}
+            queryTags={queryTags}
+            setQueryTags={setQueryTags}
+            setTags={setTags}
+            guildId={guildId}
+        />
 
         <div class='center'>
             <div class='header'><div class='server_name'>{guildName}</div></div>
@@ -116,7 +122,13 @@ function View({ guildId, guildName }) {
             />
         </div>
 
-        <Authors authors={authors} setQueryAuthorId={setQueryAuthorId} queryAuthorId={queryAuthorId} guildId={guildId}/>
+        <Authors
+            authors={authors}
+            setQueryAuthorId={setQueryAuthorId}
+            queryAuthorId={queryAuthorId}
+            guildId={guildId}
+            setAuthors={setAuthors}
+        />
     </>)
 }
 
