@@ -3,8 +3,7 @@ import { successToast, errorToast } from './toasts';
 import 'react-contexify/ReactContexify.css';
 import axios, * as others from 'axios'
 
-
-function Authors({ authors, setQueryAuthorId, queryAuthorId, guildId }) {
+function Authors({ authors, setQueryAuthorId, queryAuthorId, guildId, setAuthors }) {
     const authorContextId = 'author_id'
 
     function selectAuthor(id) {
@@ -37,6 +36,7 @@ function Authors({ authors, setQueryAuthorId, queryAuthorId, guildId }) {
             axios.delete(`/api/v1/authors/${guildId}`, { id: authorId })
             .then(res => {
                 successToast(`Successfully deleted "${name}".`)
+                setAuthors(authors.map(author => author.name !== name))
             }).catch(err => {
                 errorToast(`Failed to delete "${name}".`)
             })
@@ -68,9 +68,9 @@ function Authors({ authors, setQueryAuthorId, queryAuthorId, guildId }) {
                     <div class='author_name'>{name}</div>
                 </div>
                 <Menu id={authorContextId} theme="dark">
-                    <Item id="copy" props={name} onClick={handleItemClick}>Copy</Item>
+                    <Item id="copy" onClick={handleItemClick}>Copy</Item>
                     <Item id="edit" onClick={handleItemClick}>Edit</Item>
-                    <Item id="delete" props={{name, _id}} onClick={handleItemClick}>Delete</Item>
+                    <Item id="delete" onClick={handleItemClick}>Delete</Item>
                 </Menu>
             </div>
             <br/>
