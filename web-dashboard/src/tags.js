@@ -44,7 +44,7 @@ function Tags({ tags, setQueryTags, queryTags, guildId, setTags }) {
                 break
             }
 
-            axios.delete(`/api/v1/tags/${guildId}`, { tag: clickedTag })
+            axios.delete(`/api/v1/${guildId}/tags/${clickedTag}`)
             .then(res => {
                 successToast(`Successfully deleted "${clickedTag}".`)
                 setTags(tags.map(tag => tag !== clickedTag))

@@ -33,7 +33,7 @@ function Authors({ authors, setQueryAuthorId, queryAuthorId, guildId, setAuthors
                 break
             }
 
-            axios.delete(`/api/v1/authors/${guildId}`, { id: authorId })
+            axios.delete(`/api/v1/${guildId}/authors/${authorId}`)
             .then(res => {
                 successToast(`Successfully deleted "${name}".`)
                 setAuthors(authors.map(author => author.name !== name))

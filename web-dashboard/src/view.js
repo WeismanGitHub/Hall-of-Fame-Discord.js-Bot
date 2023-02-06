@@ -39,7 +39,7 @@ function View({ guildId, guildName }) {
             return
         }
 
-        axios.get(`/api/v1/authors/${guildId}`)
+        axios.get(`/api/v1/${guildId}/authors`)
         .then(res => {
             const sortedAuthors = res.data.sort((firstAuthor, secondAuthor) =>
                 firstAuthor.name.localeCompare(secondAuthor.name, undefined, { sensitivity: 'base' })
@@ -47,10 +47,10 @@ function View({ guildId, guildName }) {
 
             setAuthors(sortedAuthors)
 
-            axios.get(`/api/v1/quotes/${guildId}`)
+            axios.get(`/api/v1/${guildId}/quotes`)
             .then(res => setQuotes(res.data))
 
-            axios.get(`/api/v1/tags/${guildId}`)
+            axios.get(`/api/v1/${guildId}/tags`)
             .then(res => {
                 const sortedTags = res.data.sort((firstTag, secondTag) =>
                     firstTag.localeCompare(secondTag, undefined, { sensitivity: 'base' })
@@ -68,7 +68,7 @@ function View({ guildId, guildName }) {
     }
 
     function search() {
-        axios.get('/api/v1/quotes/' + guildId, { params: {
+        axios.get(`/api/v1/${guildId}/quotes`, { params: {
             authorId: queryAuthorId,
             tags: queryTags,
             text: queryText,
@@ -80,7 +80,7 @@ function View({ guildId, guildName }) {
     }
 
     function loadMoreQuotes() {
-        axios.get('/api/v1/quotes/' + guildId, { params: {
+        axios.get(`/api/v1/${guildId}/quotes`, { params: {
             authorId: queryAuthorId,
             tags: queryTags,
             text: queryText,
