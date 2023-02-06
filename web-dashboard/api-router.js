@@ -4,7 +4,8 @@ const {
 	getGuilds,
 	getAuthors,
 	getTags,
-	getQuotes
+	getQuotes,
+	deleteAuthor
 } = require('./api-controller')
 
 const router = Router()
@@ -16,10 +17,10 @@ router.post('/logout', (req, res) => {
 
 router.get('/guilds', getGuilds);
 
-router.get('/authors/:guildId', getAuthors)
+router.route('/:guildId/authors/:authorId?').get(getAuthors).delete(deleteAuthor)
 
-router.get('/tags/:guildId', getTags)
+router.get('/:guildId/tags', getTags)
 
-router.get('/quotes/:guildId', getQuotes)
+router.get('/:guildId/quotes', getQuotes)
 
 module.exports = router
