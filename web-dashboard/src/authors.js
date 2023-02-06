@@ -36,7 +36,7 @@ function Authors({ authors, setQueryAuthorId, queryAuthorId, guildId, setAuthors
             axios.delete(`/api/v1/${guildId}/authors/${authorId}`)
             .then(res => {
                 successToast(`Successfully deleted "${name}".`)
-                setAuthors(authors.map(author => author.name !== name))
+                setAuthors(authors.filter(author => author.name !== name))
             }).catch(err => {
                 errorToast(`Failed to delete "${name}".`)
             })

@@ -47,7 +47,7 @@ function Tags({ tags, setQueryTags, queryTags, guildId, setTags }) {
             axios.delete(`/api/v1/${guildId}/tags/${clickedTag}`)
             .then(res => {
                 successToast(`Successfully deleted "${clickedTag}".`)
-                setTags(tags.map(tag => tag !== clickedTag))
+                setTags(tags.filter(tag => tag !== clickedTag))
             }).catch(err => {
                 errorToast(`Failed to delete "${clickedTag}".`)
             })
