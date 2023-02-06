@@ -153,10 +153,47 @@ const getQuotes = async (req, res) => {
 	res.status(200).json(quotes)
 }
 
+async function deleteAuthor(req, res) {
+	const { guildId, authorId } = req.params
+
+	const result = await GuildSchema.updateOne(
+		{ _id: guildId },
+		{ $pull: { authors: { _id: authorId } } },
+	)
+
+	if (!result.modifiedCount) {
+		throw new NotFoundError(authorId)
+	}
+
+	res.status(200).end()
+}
+
+async function deleteTag(req, res) {
+	const { guildId, tag } = req.params
+
+	const result = await GuildSchema.updateOne(
+		{ _id: guildId },
+		{ $pull: { tags: tag }
+	}).select('-_id tags').lean()
+
+	await UniversalQuoteSchema.updateMany(
+		{ guildId: guildId, tags: { $all: [tag] }},
+		{ $pull: { 'tags': tag } }
+	)
+
+	if (!result.modifiedCount) {
+		throw new NotFoundError(authorId)
+	}
+
+	res.status(200).end()
+}
+
 module.exports = {
 	auth,
 	getGuilds,
 	getAuthors,
 	getTags,
-	getQuotes
+	getQuotes,
+	deleteAuthor,
+	deleteTag,
 }
