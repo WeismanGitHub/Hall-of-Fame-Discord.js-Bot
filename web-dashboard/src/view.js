@@ -109,6 +109,8 @@ function View({ guildId, guildName }) {
                 authors={authors}
                 queryPage={queryPage}
                 setQueryPage={setQueryPage}
+                setQuotes={setQuotes}
+                guildId={guildId}
             />
 
             <SearchArea
