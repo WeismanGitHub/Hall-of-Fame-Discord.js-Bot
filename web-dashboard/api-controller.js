@@ -35,9 +35,12 @@ const auth = async (req, res) => {
 		throw new BadRequestError('Problem with code. Try again.')
 	}
 
+	const expiration = new Date(Date.now() + (3600000 * 24 * 14)) // 14 days
+
 	// "loggedIn" cookie because client can't see if accessToken exists since it is httpOnly.
-	res.status(200).cookie('accessToken', oauthData.access_token, { httpOnly: true, secure: true, sameSite: 'strict' })
-	.cookie('loggedIn', true, { secure: true, sameSite: 'strict' }).end()
+	res.status(200)
+	.cookie('accessToken', oauthData.access_token, { httpOnly: true, secure: true, sameSite: 'strict', expires: expiration })
+	.cookie('loggedIn', true, { secure: true, sameSite: 'strict', expires: expiration }).end()
 }
 
 const getGuilds = async (req, res) => {
@@ -66,7 +69,11 @@ const getGuilds = async (req, res) => {
         { expiresIn: process.env.JWT_LIFETIME },
     )
 
-	res.status(200).cookie('guilds', guildsJWT, { httpOnly: true, secure: true, sameSite: 'strict' }).json(guilds)
+	const expiration = new Date(Date.now() + (3600000 * 24 * 14)) // 14 days
+
+	res.status(200)
+	.cookie('guilds', guildsJWT, { httpOnly: true, secure: true, sameSite: 'strict', expires: expiration })
+	.json(guilds)
 }
 
 const getAuthors =  async (req, res) => {
