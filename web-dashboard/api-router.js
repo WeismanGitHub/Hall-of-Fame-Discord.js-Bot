@@ -8,6 +8,7 @@ const {
 	deleteAuthor,
 	deleteTag,
 	deleteQuote,
+	editTag,
 	logout
 } = require('./controllers')
 
