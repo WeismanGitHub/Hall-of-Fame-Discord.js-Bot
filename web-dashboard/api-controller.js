@@ -162,7 +162,7 @@ async function deleteAuthor(req, res) {
 	)
 
 	if (!result.modifiedCount) {
-		throw new NotFoundError(authorId)
+		throw new NotFoundError(`Cannot find author: ${authorId}.`)
 	}
 
 	res.status(200).end()
@@ -182,7 +182,7 @@ async function deleteTag(req, res) {
 	)
 
 	if (!result.modifiedCount) {
-		throw new NotFoundError(authorId)
+		throw new NotFoundError(`Cannot find tag: ${tag}.`)
 	}
 
 	res.status(200).end()
@@ -194,7 +194,7 @@ async function deleteQuote(req, res) {
 	const result = await UniversalQuoteSchema.deleteOne({ guildId: guildId, _id: quoteId })
 
 	if (!result.deletedCount) {
-		throw new NotFoundError(quoteId)
+		throw new NotFoundError(`Cannot find quote: ${quoteId}.`)
 	}
 
 	res.status(200).end()
