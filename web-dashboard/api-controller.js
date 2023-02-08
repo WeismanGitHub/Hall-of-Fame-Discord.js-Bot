@@ -188,6 +188,19 @@ async function deleteTag(req, res) {
 	res.status(200).end()
 }
 
+async function deleteQuote(req, res) {
+	const { guildId, quoteId } = req.params
+
+	const result = await UniversalQuoteSchema.deleteOne({ guildId: guildId, _id: quoteId })
+
+	if (!result.deletedCount) {
+		throw new NotFoundError(quoteId)
+	}
+
+	res.status(200).end()
+}
+
+
 module.exports = {
 	auth,
 	getGuilds,
@@ -196,4 +209,5 @@ module.exports = {
 	getQuotes,
 	deleteAuthor,
 	deleteTag,
+	deleteQuote,
 }
