@@ -41,8 +41,25 @@ async function deleteTag(req, res) {
 	res.status(200).end()
 }
 
-async function editTag() {
+async function editTag(req, res) {
+	const { guildId, tag } = req.params
+	const newTag = req.body.newTag
+        
+	const res = await GuildSchema.updateOne(
+		{ _id: guildId, tags: tag },
+		{ $set: { 'tags.$': newTag }
+	})
 
+	if (!res.modifiedCount) {
+		throw new NotFoundError(tag)
+	}
+	
+	await UniversalQuoteSchema.updateMany(
+		{ guildId: guildId, tags: tag },
+		{ $set: { 'tags.$': newTag } }
+	)
+
+	res.status(200).end()
 }
 
 module.exports = { getTags, deleteTag, editTag }
