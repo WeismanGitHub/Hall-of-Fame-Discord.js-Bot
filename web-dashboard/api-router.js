@@ -7,6 +7,7 @@ const {
 	getQuotes,
 	deleteAuthor,
 	deleteTag,
+	deleteQuote,
 } = require('./api-controller')
 
 const router = Router()
@@ -22,6 +23,6 @@ router.route('/:guildId/authors/:authorId?').get(getAuthors).delete(deleteAuthor
 
 router.route('/:guildId/tags/:tag?').get(getTags).delete(deleteTag)
 
-router.get('/:guildId/quotes', getQuotes)
+router.route('/:guildId/quotes/:quoteId?').get(getQuotes).delete(deleteQuote)
 
 module.exports = router
