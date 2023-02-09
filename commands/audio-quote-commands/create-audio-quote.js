@@ -57,6 +57,17 @@ module.exports = {
             name: 'last_audio',
             description: 'Use the last audio file sent in a channel.',
             type: Constants.ApplicationCommandOptionTypes.CHANNEL
+        },
+        {
+            name: 'image_link',
+            description: 'Image attachment link. Upload an image to Discord and copy the link to that image.',
+            type: Constants.ApplicationCommandOptionTypes.STRING,
+            maxLength: 512
+        },
+        {
+            name: 'last_image',
+            description: 'Use the last image sent in a channel to the quote.',
+            type: Constants.ApplicationCommandOptionTypes.CHANNEL
         }
     ],
 
@@ -79,9 +90,15 @@ module.exports = {
         const lastAudioChannel = options.getChannel('last_audio');
         const audioURL = options.getString('audio_file_link');
         const title = options.getString('title');
+        const lastImageChannel = options.getChannel('last_image');
+        let attachmentURL = options.getString('image_link');
         
         if (!lastAudioChannel && !audioURL) {
             throw new InvalidInputError('Audio')
+        }
+
+        if (!attachmentURL && lastImageChannel) {
+            attachmentURL = await getLastImage(lastImageChannel)
         }
 
         const audioQuote = await AudioQuoteSchema.create({
@@ -90,6 +107,7 @@ module.exports = {
             text: title,
             audioURL: audioURL ?? await getLastAudio(lastAudioChannel),
             tags: tags,
+            attachmentURL: attachmentURL,
         });
 
         const embeddedAudioQuote = await quoteEmbed(audioQuote, checkedAuthor)
