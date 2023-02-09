@@ -1,19 +1,41 @@
+import { Menu, Item, useContextMenu } from 'react-contexify';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import 'react-contexify/ReactContexify.css';
 import axios, * as others from 'axios'
+
 import Cookies from 'js-cookie';
 
 import View from './view'
 import Login from './login'
 
 function Main() {
-    const [loggedIn, setLoggedIn] = useState(Cookies.get('loggedIn'))
     const createQuote = { name: 'create quote', iconURL: '/create-quote.png', id: null }
+    const [loggedIn, setLoggedIn] = useState(Cookies.get('loggedIn'))
     const [guilds, setGuilds] = useState([createQuote])
     const [guildId, setGuildId] = useState(null)
     const navigate = useNavigate()
+    const contextId = 'guild_id'
+
+    const { show } = useContextMenu({
+        id: contextId
+    });
+
+    function handleContextMenu(event, props) {
+        show({ event, props })
+    }
+
+    const handleItemClick = ({ id, props }) => {
+        const { guildId } = props
+
+        switch (id) {
+        case "create-quote":
+            console.log('create quote', guildId)
+            break;
+        }
+    }
 
     useEffect(() => {
         const code = String(window.location).split('code=')[1]
@@ -53,7 +75,9 @@ function Main() {
                 :
                     <div>
                         <div class='guilds'>
-                            { guilds.map(guild => <div>
+                            { guilds.map(guild => <div
+                                onContextMenu={(e) => guilds.indexOf(guild) ? handleContextMenu(e, { guildId: guild.id }) : null}
+                            >
                                 <img class={ guildId == guild.id ? 'chosen_guild' : 'unchosen_guild'}
                                     src={ guild.iconURL || "/icon.png" }
                                     alt="server icon"
@@ -84,6 +108,9 @@ function Main() {
                                 onClick={ logout }>
                             </img>
                         </div>
+                        <Menu id={contextId} theme="dark">
+                        <Item id="create-quote" onClick={handleItemClick}>Create Quote</Item>
+                    </Menu>
                     <View guildId={ guildId } setGuildId={ setGuildId } guildName={ guilds.find((guild) => guild.id == guildId)?.name }/>
                 </div>
             }
