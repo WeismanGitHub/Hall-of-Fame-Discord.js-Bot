@@ -45,12 +45,12 @@ async function editTag(req, res) {
 	const { guildId, tag } = req.params
 	const newTag = req.body.newTag
         
-	const res = await GuildSchema.updateOne(
+	const result = await GuildSchema.updateOne(
 		{ _id: guildId, tags: tag },
 		{ $set: { 'tags.$': newTag }
 	})
 
-	if (!res.modifiedCount) {
+	if (!result.modifiedCount) {
 		throw new NotFoundError(tag)
 	}
 	
