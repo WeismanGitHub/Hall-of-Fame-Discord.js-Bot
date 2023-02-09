@@ -113,6 +113,10 @@ const helpEmbed = function() {
 		.setCustomId(`${customId}`)
 		.setStyle('PRIMARY'),
 		new MessageButton()
+		.setLabel('Web Dashboard')
+		.setURL("https://hall-of-fame-discordjs-bot.weisman.repl.co/")
+		.setStyle('LINK'),
+		new MessageButton()
 		.setLabel('In-Depth Explanation')
 		.setURL("https://github.com/WeismanGitHub/Hall-of-Fame-Discord.js-Bot/blob/master/README.md")
 		.setStyle('LINK'),
