@@ -7,7 +7,7 @@
   ## [Web Dashboard Link](https://hall-of-fame-discordjs-bot.weisman.repl.co/)
   
   ## Description
-  A hall of fame bot with 28 commands that allow you save text, images, and audio. The bot is geared towards smaller, close-knit servers. It's purpose is to allow users to organize memorable moments so they can be easily accessed with authors, tags, types, dates, and more. Use the web dashboard as an easier alternative. To create quotes you must first create an author for the quote. An author has a name and optionally an image. You can also add tags to quotes, which need to be created before hand. Every type of quote (audio, image, regular, and multi) has an author, text, and up to three tags.
+  A hall of fame bot with 28 commands that allow you save text, images, and audio. This bot's purpose is to allow users to organize memorable moments so they can be easily classified and accessed with authors, tags, types, text, and more. Use the web dashboard as an easier alternative. Authors and tags must be defined before creating a quote.
   <hr class="rounded">
   
   ## Web Dashboard
@@ -29,7 +29,7 @@
   ![Regular Quote Example](/images/Regular%20Quote%20Example.png)
   
   #### Image Quote
-  Adding an image to any type of quote converts it to an image quote. Use the `last_image` parameter of a quote command to use the latest image sent in a channel. You can also upload an image to Discord or somewhere else, copy the link, and input that into the `image_link` parameter. Make sure not to copy the link to the message.
+  Adding an image to any type of quote converts it to an image quote. To create a quote with just an image use `/create_quote` and edit with `/edit_quote`. The `last_image` parameter of a quote command uses the latest image sent in a channel. You can also upload an image to Discord or somewhere else, copy the link, and input that into the `image_link` parameter. Make sure not to copy the link to the message.
   
   ![Image Quote Example](/images/Image%20Quote%20Example.png)
 
