@@ -73,6 +73,22 @@ module.exports = {
             description: "Use the last quote sent in a channel. Will grab any type of quote.",
             type: Constants.ApplicationCommandOptionTypes.CHANNEL
         },
+        {
+            name: 'new_image_link',
+            description: 'Image attachment link. Upload an image to Discord and copy the link to that image.',
+            type: Constants.ApplicationCommandOptionTypes.STRING,
+            maxLength: 512
+        },
+        {
+            name: 'last_image',
+            description: 'Add the last image sent in a channel to the quote.',
+            type: Constants.ApplicationCommandOptionTypes.CHANNEL
+        },
+        {
+            name: 'delete_image',
+            description: 'Removes image from quote.',
+            type: Constants.ApplicationCommandOptionTypes.BOOLEAN
+        },
     ],
 
     callback: async ({ interaction, client }) => errorHandler(interaction, async () => {
@@ -96,11 +112,22 @@ module.exports = {
         const newAuthorName = options.getString('new_author');
         const newTitle = options.getString('new_title');
         const update = { guildId: guildId };
+        const lastImageChannel = options.getChannel('last_image');
+        const newImageLink = options.getString('new_image_link');
+        const deleteImage = options.getBoolean('delete_image');
         
         if (newAudioURL) {
             update.audioURL = newAudioURL;
         } else if (lastAudioChannel) {
             update.audioURL = await getLastAudio(lastAudioChannel)
+        }
+
+        if (deleteImage) {
+            update.attachmentURL = null
+        } else if (newImageLink) {
+            update.attachmentURL = newImageLink;
+        } else if (lastImageChannel) {
+            update.attachmentURL = await getLastImage(lastImageChannel)
         }
         
         if (tags.length) {
