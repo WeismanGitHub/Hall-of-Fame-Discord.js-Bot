@@ -47,7 +47,7 @@ module.exports = {
             maxLength: 4096
         },
         {
-            name: 'date',
+            name: 'age',
             description: 'Sort by newest/oldest.',
             type: Constants.ApplicationCommandOptionTypes.STRING,
             choices: [
@@ -100,7 +100,7 @@ module.exports = {
 
     callback: async ({ interaction }) => errorHandler(interaction, async () => {
         const { options } = interaction;
-        const sort = options.getString('date') == null ? { createdAt: -1 } : { createdAt: options.getString('date') }
+        const sort = options.getString('age') == null ? { createdAt: -1 } : { createdAt: options.getString('age') }
         const limit = options.getInteger('limit') == null ? 10 : options.getInteger('limit')
         const searchPhrase = options.getString('search_phrase')
         const pagination = options.getBoolean('pagination')
