@@ -1,6 +1,6 @@
-function SearchArea({ setQueryText, search, queryText, setQueryDate, queryDate, queryType, setQueryType }) {
-    function dateClick() {
-        setQueryDate(queryDate == 'new' ? 'old' : 'new')
+function SearchArea({ setQueryText, search, queryText, setQueryAge, queryAge, queryType, setQueryType }) {
+    function ageClick() {
+        setQueryAge(queryAge == 'new' ? 'old' : 'new')
     }
 
     function typeClick(type) {
@@ -24,7 +24,7 @@ function SearchArea({ setQueryText, search, queryText, setQueryDate, queryDate, 
             onKeyPress={ (event) => { event.key === 'Enter' && search() } }
         />
 
-        <button class='date_picker' onClick={ dateClick }>{`${queryDate}est`}</button>
+        <button class='age_picker' onClick={ ageClick }>{`${queryAge}est`}</button>
 
         <div class='type_picker'>
             {types.map(({ color, name }) => {

@@ -14,7 +14,7 @@ function View({ guildId, guildName }) {
     const [tags, setTags] = useState([])
 
     const [queryAuthorId, setQueryAuthorId] = useState(null)
-    const [queryDate, setQueryDate] = useState('new')
+    const [queryAge, setQueryAge] = useState('new')
     const [queryType, setQueryType] = useState(null)
     const [queryText, setQueryText] = useState(null)
     const [queryTags, setQueryTags] = useState([])
@@ -22,11 +22,11 @@ function View({ guildId, guildName }) {
 
     useEffect(() => {
         setQueryPage(0)
-    }, [queryAuthorId, queryType, queryText, queryTags, queryDate])
+    }, [queryAuthorId, queryType, queryText, queryTags, queryAge])
 
     useEffect(() => {
         setQueryAuthorId(null)
-        setQueryDate('new')
+        setQueryAge('new')
         setQueryType(null)
         setQueryText(null)
         setQueryTags([])
@@ -74,7 +74,7 @@ function View({ guildId, guildName }) {
             text: queryText,
             type: queryType,
             page: queryPage,
-            date: queryDate
+            age: queryAge
         } })
         .then(res => setQuotes(res.data))
     }
@@ -86,7 +86,7 @@ function View({ guildId, guildName }) {
             text: queryText,
             type: queryType,
             page: queryPage + 1, // + 1 because of a bug. idk
-            date: queryDate
+            age: queryAge
         } })
         .then(res => setQuotes([...quotes, ...res.data]))
     }
@@ -115,10 +115,10 @@ function View({ guildId, guildName }) {
 
             <SearchArea
                 setQueryType={setQueryType}
-                setQueryDate={setQueryDate}
+                setQueryAge={setQueryAge}
                 setQueryText={setQueryText}
                 queryType={queryType}
-                queryDate={queryDate}
+                queryAge={queryAge}
                 queryText={queryText}
                 search={search}
             />
