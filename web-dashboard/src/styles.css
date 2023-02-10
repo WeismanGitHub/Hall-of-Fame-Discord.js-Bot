@@ -369,7 +369,7 @@ body {
     filter: brightness(95%);
 }
 
-.date_picker {
+.age_picker {
     margin-left: 15px;
     float: left;
     padding: 10px;
@@ -379,11 +379,11 @@ body {
     color: #a4a7aa;
 }
 
-.date_picker:hover {
+.age_picker:hover {
     filter: brightness(110%);
 }
 
-.date_picker:active {
+.age_picker:active {
     filter: brightness(120%);
 }
 
