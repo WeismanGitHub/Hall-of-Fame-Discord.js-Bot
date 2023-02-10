@@ -6,7 +6,7 @@ require('express-async-errors')
 const getQuotes = async (req, res) => {
 	const guilds = jwt.verify(req.cookies.guilds, process.env.JWT_SECRET).guilds
 	const { tags, type, text, authorId } = req.query
-	const date = req.query.date == 'old' ? 1 : -1
+	const age = req.query.age == 'old' ? 1 : -1
 	const guildId = req.params.guildId
 	const sanitizedSearch = { guildId: guildId }
 	const page = Number(req.query.page ?? 0)
@@ -39,7 +39,7 @@ const getQuotes = async (req, res) => {
 	}
 
 	const quotes = await UniversalQuoteSchema.find(sanitizedSearch)
-	.sort({ createdAt: date })
+	.sort({ createdAt: age })
 	.skip(page * 10).limit(10).select('-guildId').lean()
 
 	res.status(200).json(quotes)
