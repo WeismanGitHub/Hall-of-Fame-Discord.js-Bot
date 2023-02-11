@@ -34,6 +34,12 @@ function Main() {
         case "create-quote":
             console.log('create quote', guildId)
             break;
+        case "create-tag":
+            console.log('create tag', guildId)
+            break;
+        case "create-author":
+            console.log('create author', guildId)
+            break;
         }
     }
 
@@ -109,8 +115,10 @@ function Main() {
                             </img>
                         </div>
                         <Menu id={contextId} theme="dark">
-                        <Item id="create-quote" onClick={handleItemClick}>Create Quote</Item>
-                    </Menu>
+                            <Item id="create-quote" onClick={handleItemClick}>Create Quote</Item>
+                            <Item id="create-tag" onClick={handleItemClick}>Create Tag</Item>
+                            <Item id="create-author" onClick={handleItemClick}>Create Author</Item>
+                        </Menu>
                     <View guildId={ guildId } setGuildId={ setGuildId } guildName={ guilds.find((guild) => guild.id == guildId)?.name }/>
                 </div>
             }
