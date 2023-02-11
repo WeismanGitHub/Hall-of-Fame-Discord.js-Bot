@@ -41,7 +41,7 @@ module.exports = {
             maxLength: 512
         },
         {
-            name: 'delete_tags',
+            name: 'remove_tags',
             description: 'Removes tags from audio quote.',
             type: Constants.ApplicationCommandOptionTypes.BOOLEAN
         },
@@ -108,7 +108,7 @@ module.exports = {
 
         const newAudioURL = options.getString('new_audio_file_link');
         const lastAudioChannel = options.getChannel('last_audio');
-        const deleteTags = options.getBoolean('delete_tags');
+        const deleteTags = options.getBoolean('remove_tags');
         const newAuthorName = options.getString('new_author');
         const newTitle = options.getString('new_title');
         const update = { guildId: guildId };

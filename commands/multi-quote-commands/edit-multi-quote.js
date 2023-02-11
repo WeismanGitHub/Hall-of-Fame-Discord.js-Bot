@@ -96,7 +96,7 @@ module.exports = {
             type: Constants.ApplicationCommandOptionTypes.STRING,
         },
         {
-            name: 'delete_tags',
+            name: 'remove_tags',
             description: 'Removes tags from quote.',
             type: Constants.ApplicationCommandOptionTypes.BOOLEAN
         },
@@ -182,7 +182,7 @@ module.exports = {
             multiQuote.tags = tags
         }
         
-        if (options.getString('delete_tags')) {
+        if (options.getString('remove_tags')) {
             multiQuote.tags = [];
         }
 

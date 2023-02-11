@@ -41,7 +41,7 @@ module.exports = {
             maxLength: 512
         },
         {
-            name: 'delete_tags',
+            name: 'remove_tags',
             description: 'Removes tags from quote.',
             type: Constants.ApplicationCommandOptionTypes.BOOLEAN
         },
@@ -100,7 +100,7 @@ module.exports = {
         const lastImageChannel = options.getChannel('last_image');
         const newImageLink = options.getString('new_image_link');
         const deleteImage = options.getBoolean('delete_image');
-        const deleteTags = options.getBoolean('delete_tags');
+        const deleteTags = options.getBoolean('remove_tags');
         const newAuthorName = options.getString('new_author');
         const newText = options.getString('new_text');
         
