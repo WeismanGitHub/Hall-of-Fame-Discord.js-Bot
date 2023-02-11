@@ -1,8 +1,14 @@
 import { Menu, Item, useContextMenu } from 'react-contexify';
 import { successToast, errorToast } from './toasts';
+import 'reactjs-popup/dist/index.css';
 import axios, * as others from 'axios'
+import Popup from 'reactjs-popup';
+import { useState } from 'react';
 
 function Tags({ tags, setQueryTags, queryTags, guildId, setTags }) {
+    const tagContextId = 'tag_id'
+    const [showPop, setShowPopup] = useState(false)
+
     function tagClick(e, tag) {
         e.preventDefault();
 
@@ -18,8 +24,6 @@ function Tags({ tags, setQueryTags, queryTags, guildId, setTags }) {
             setQueryTags(updatedQueryTags)
         }
     }
-
-    const tagContextId = 'tag_id'
 
     const { show } = useContextMenu({
         id: tagContextId
@@ -37,8 +41,8 @@ function Tags({ tags, setQueryTags, queryTags, guildId, setTags }) {
             navigator.clipboard.writeText(clickedTag)
             break;
         case "edit":
-            alert('Editing coming soon.')
-            break;
+            setShowPopup(true)
+            break
         case "delete":
             if (!window.confirm(`Delete "${clickedTag}"?`)) {
                 break
@@ -75,6 +79,9 @@ function Tags({ tags, setQueryTags, queryTags, guildId, setTags }) {
             </Menu>
         </div>
         </>) }
+        <Popup open={showPop} position="center center" modal>
+            <div>Edit Tag</div>
+        </Popup>
     </div>
 }
 
