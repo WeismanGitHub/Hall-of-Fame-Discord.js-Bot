@@ -64,7 +64,7 @@ module.exports = {
             maxLength: 339
         },
         {
-            name: 'last_audio_file',
+            name: 'last_audio',
             description: 'Use the last audio file sent in a channel.',
             type: Constants.ApplicationCommandOptionTypes.CHANNEL
         },
@@ -107,7 +107,7 @@ module.exports = {
         }
 
         const newAudioURL = options.getString('new_audio_file_link');
-        const lastAudioChannel = options.getChannel('last_audio_file');
+        const lastAudioChannel = options.getChannel('last_audio');
         const deleteTags = options.getBoolean('delete_tags');
         const newAuthorName = options.getString('new_author');
         const newTitle = options.getString('new_title');
