@@ -51,7 +51,7 @@ async function editTag(req, res) {
 	})
 
 	if (!result.modifiedCount) {
-		throw new NotFoundError(tag)
+		throw new NotFoundError(`Cannot find tag: ${tag}.`)
 	}
 	
 	await UniversalQuoteSchema.updateMany(
