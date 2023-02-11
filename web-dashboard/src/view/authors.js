@@ -1,5 +1,5 @@
 import { Menu, Item, useContextMenu } from 'react-contexify';
-import { successToast, errorToast } from './toasts';
+import { successToast, errorToast } from '../toasts';
 import 'react-contexify/ReactContexify.css';
 import axios, * as others from 'axios'
 

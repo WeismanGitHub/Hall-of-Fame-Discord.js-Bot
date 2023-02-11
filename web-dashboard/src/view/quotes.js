@@ -1,6 +1,6 @@
 import { Menu, Item, useContextMenu } from 'react-contexify';
 import InfiniteScroll from "react-infinite-scroller";
-import { successToast, errorToast } from './toasts';
+import { successToast, errorToast } from '../toasts';
 import AudioPlayer from 'react-h5-audio-player';
 import 'react-contexify/ReactContexify.css';
 import * as moment from 'moment-timezone';

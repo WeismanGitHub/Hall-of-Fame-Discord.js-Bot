@@ -1,5 +1,5 @@
 import { Menu, Item, useContextMenu } from 'react-contexify';
-import { successToast, errorToast } from './toasts';
+import { successToast, errorToast } from '../toasts';
 import 'reactjs-popup/dist/index.css';
 import axios, * as others from 'axios'
 import Popup from 'reactjs-popup';

@@ -2,11 +2,11 @@ import { useState, useEffect } from 'react';
 import axios, * as others from 'axios'
 import { errorToast } from './toasts'
 
-import CreateQuote from './create-quote'
 import SearchArea from './search-area'
-import Authors from './authors'
-import Quotes from './quotes'
-import Tags from './tags'
+import Authors from './view/authors'
+import Quotes from './view/quotes'
+import Tags from './view/tags'
+import Home from './home'
 
 function View({ guildId, guildName }) {
     const [authors, setAuthors] = useState([])
@@ -64,7 +64,7 @@ function View({ guildId, guildName }) {
     }, [guildId])
 
     if (!guildId) {
-        return <CreateQuote/>
+        return <Home/>
     }
 
     function search() {
