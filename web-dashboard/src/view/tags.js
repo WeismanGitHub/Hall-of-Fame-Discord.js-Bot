@@ -83,8 +83,8 @@ function Tags({ tags, setQueryTags, queryTags, guildId, setTags }) {
             </Menu>
         </div>
         </>) }
-        <Popup open={showPop} position="center center" modal onClose={() => setShowPopup(false)}>
-            <EditTag tag={tagBeingEdited} guildId={guildId}/>
+        <Popup open={showPop} position="center center" modal onClose={() => setShowPopup(false)} className='edit_tag'>
+            <EditTag tagBeingEdited={tagBeingEdited} guildId={guildId} setTags={setTags} tags={tags}/>
         </Popup>
     </div>
 }
