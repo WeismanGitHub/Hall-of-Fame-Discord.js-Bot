@@ -1,5 +1,5 @@
+const { getLastAudio, getLastQuoteId, getLastImage } = require('../../helpers/get-last-item');
 const { getAuthorByName, getAuthorById } = require('../../helpers/get-author');
-const { getLastAudio, getLastQuoteId } = require('../../helpers/get-last-item');
 const sendToQuotesChannel = require('../../helpers/send-to-quotes-channel')
 const AudioQuoteSchema = require('../../schemas/audio-quote-schema');
 const { InvalidInputError, NotFoundError } = require('../../errors');
