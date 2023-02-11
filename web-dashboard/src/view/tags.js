@@ -5,9 +5,12 @@ import axios, * as others from 'axios'
 import Popup from 'reactjs-popup';
 import { useState } from 'react';
 
+import EditTag from '../edit/edit-tag'
+
 function Tags({ tags, setQueryTags, queryTags, guildId, setTags }) {
     const tagContextId = 'tag_id'
     const [showPop, setShowPopup] = useState(false)
+    const [tagBeingEdited, setTagBeingEdited] = useState(null)
 
     function tagClick(e, tag) {
         e.preventDefault();
@@ -42,6 +45,7 @@ function Tags({ tags, setQueryTags, queryTags, guildId, setTags }) {
             break;
         case "edit":
             setShowPopup(true)
+            setTagBeingEdited(clickedTag)
             break
         case "delete":
             if (!window.confirm(`Delete "${clickedTag}"?`)) {
@@ -79,8 +83,8 @@ function Tags({ tags, setQueryTags, queryTags, guildId, setTags }) {
             </Menu>
         </div>
         </>) }
-        <Popup open={showPop} position="center center" modal>
-            <div>Edit Tag</div>
+        <Popup open={showPop} position="center center" modal onClose={() => setShowPopup(false)}>
+            <EditTag tag={tagBeingEdited}/>
         </Popup>
     </div>
 }
