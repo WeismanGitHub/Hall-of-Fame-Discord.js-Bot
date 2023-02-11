@@ -84,7 +84,7 @@ function Tags({ tags, setQueryTags, queryTags, guildId, setTags }) {
         </div>
         </>) }
         <Popup open={showPop} position="center center" modal onClose={() => setShowPopup(false)}>
-            <EditTag tag={tagBeingEdited}/>
+            <EditTag tag={tagBeingEdited} guildId={guildId}/>
         </Popup>
     </div>
 }
