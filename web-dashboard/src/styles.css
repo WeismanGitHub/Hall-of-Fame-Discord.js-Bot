@@ -1427,14 +1427,41 @@ video {
 }
 
 .edit_tag {
-    border: 1px solid #2f3136;
-    border-radius: 5px;
     background-color: #2f3136;
     width: 100%;
     height: 100%;
-    float: left;
+    display: flex;
+    margin: auto;
+    flex-wrap: wrap;
+    padding: auto;
+    align-items: center;
+    text-align: center;
 }
 
 .edit_tag_input {
+  margin: auto;
+  margin-top: 150px;
+  padding: 10px;
+  padding-left: 15px;
+  padding-right: 290px;
+  border-radius: 5px;
+  background-color: #40444b;
+  color: #a4a7aa;
 }
 
+.modal_submit {
+  margin: auto;
+  padding: 10px;
+  border-radius: 5px;
+  background-color: #40444b;
+  min-width: 70px;
+  color: #a4a7aa;
+}
+
+.modal_submit:hover {
+  filter: brightness(110%);
+}
+
+.modal_submit:active {
+  filter: brightness(120%);
+}
