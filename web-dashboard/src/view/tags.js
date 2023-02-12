@@ -90,7 +90,13 @@ function Tags({ tags, setQueryTags, queryTags, guildId, setTags }) {
             modal onClose={() => setShowPopup(false)}
             {...{ contentStyle }}
         >
-            <EditTag tagBeingEdited={tagBeingEdited} guildId={guildId} setTags={setTags} tags={tags}/>
+            <EditTag
+                tagBeingEdited={tagBeingEdited}
+                guildId={guildId}
+                setTags={setTags}
+                tags={tags}
+                setTagBeingEdited={setTagBeingEdited}
+                />
         </Popup>
     </div>
 }

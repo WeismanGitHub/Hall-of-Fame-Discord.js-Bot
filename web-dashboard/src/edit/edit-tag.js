@@ -2,7 +2,7 @@ import { successToast, errorToast } from '../toasts';
 import { useState, useEffect } from 'react';
 import axios, * as others from 'axios'
 
-function EditTag({tagBeingEdited, guildId, setTags, tags}) {
+function EditTag({tagBeingEdited, guildId, setTags, tags, setTagBeingEdited}) {
     const [newTag, setNewTag] = useState(tagBeingEdited)
     
     function edit() {
@@ -10,6 +10,7 @@ function EditTag({tagBeingEdited, guildId, setTags, tags}) {
        .then(res => {
            successToast(`Successfully edited "${tagBeingEdited}".`)
            setTags(tags.map(tag => tag == tagBeingEdited ? newTag : tag))
+           setTagBeingEdited(newTag)
        }).catch(err => {
            errorToast(`Failed to edit "${tagBeingEdited}".`)
        })
