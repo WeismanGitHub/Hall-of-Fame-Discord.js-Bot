@@ -215,12 +215,19 @@ body {
     padding-top: 3px;
     background-color: #36393f;
     border-bottom: 2px solid #232428;
+    display: flex;
+    margin: auto;
+    align-items: center;
+    text-align: center;
 }
 
 .server_name {
     font-size: 125%;
     color: #f5f6f7;
-    padding-left: 45%;
+    display: flex;
+    margin: auto;
+    align-items: center;
+    text-align: center;
 }
 
 .no_quotes {
@@ -355,8 +362,10 @@ body {
 }
 
 .login {
+    display: flex;
+    margin: auto;
+    align-items: center;
     text-align: center;
-    margin-left: 40%;
     margin-top: 20%;
     font-size: 200%;
     border: #212226 3px solid;
@@ -1428,3 +1437,4 @@ video {
 
 .edit_tag_input {
 }
+
