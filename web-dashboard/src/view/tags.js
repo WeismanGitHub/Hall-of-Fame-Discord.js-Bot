@@ -11,6 +11,7 @@ function Tags({ tags, setQueryTags, queryTags, guildId, setTags }) {
     const tagContextId = 'tag_id'
     const [showPop, setShowPopup] = useState(false)
     const [tagBeingEdited, setTagBeingEdited] = useState(null)
+    const contentStyle = { background: '#2f3136', border: "#232428 2px solid", 'border-radius': '5px' }
 
     function tagClick(e, tag) {
         e.preventDefault();
@@ -83,7 +84,12 @@ function Tags({ tags, setQueryTags, queryTags, guildId, setTags }) {
             </Menu>
         </div>
         </>) }
-        <Popup open={showPop} position="center center" modal onClose={() => setShowPopup(false)} className='edit_tag'>
+        <Popup
+            open={showPop}
+            position="center center"
+            modal onClose={() => setShowPopup(false)}
+            {...{ contentStyle }}
+        >
             <EditTag tagBeingEdited={tagBeingEdited} guildId={guildId} setTags={setTags} tags={tags}/>
         </Popup>
     </div>
