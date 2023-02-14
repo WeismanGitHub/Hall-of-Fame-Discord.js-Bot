@@ -1,4 +1,4 @@
-const { BadRequestError, NotFoundError } = require('../errors');
+const { ForbiddenError, NotFoundError } = require('../errors');
 const GuildSchema = require('../../schemas/guild-schema');
 const jwt = require('jsonwebtoken')
 require('express-async-errors')
@@ -8,7 +8,7 @@ const getAuthors =  async (req, res) => {
 	const guildId = req.params.guildId
 
 	if (!guilds.includes(guildId)) {
-		throw new BadRequestError('Invalid Guild Id')
+		throw new ForbiddenError('Invalid Guild Id')
 	}
 
 	const guild = await GuildSchema.findOne({ _id: guildId }).select('-_id authors').lean()
@@ -34,14 +34,14 @@ async function deleteAuthor(req, res) {
 	const { guildId, authorId } = req.params
 
 	if (!guilds.includes(guildId)) {
-		throw new BadRequestError('Invalid Guild Id')
+		throw new ForbiddenError('Invalid Guild Id')
 	}
 
 	const result = await GuildSchema.updateOne(
 		{ _id: guildId },
 		{ $pull: { authors: { _id: authorId } } },
 	)
-	
+
 	if (!result.modifiedCount) {
 		throw new NotFoundError(`Cannot find author: ${authorId}.`)
 	}

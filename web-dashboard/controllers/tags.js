@@ -1,5 +1,5 @@
 const UniversalQuoteSchema = require('../../schemas/universal-quote-schema');
-const { BadRequestError, NotFoundError } = require('../errors');
+const { ForbiddenError, NotFoundError } = require('../errors');
 const GuildSchema = require('../../schemas/guild-schema');
 const jwt = require('jsonwebtoken')
 require('express-async-errors')
@@ -9,7 +9,7 @@ const getTags = async (req, res) => {
 	const guildId = req.params.guildId
 
 	if (!guilds.includes(guildId)) {
-		throw new BadRequestError('Invalid Guild Id')
+		throw new ForbiddenError('Invalid Guild Id')
 	}
 
 	const guild = await GuildSchema.findOne({ _id: guildId }).select('-_id tags').lean()
@@ -26,7 +26,7 @@ async function deleteTag(req, res) {
 	const { guildId, tag } = req.params
 
 	if (!guilds.includes(guildId)) {
-		throw new BadRequestError('Invalid Guild Id')
+		throw new ForbiddenError('Invalid Guild Id')
 	}
 
 	const result = await GuildSchema.updateOne(
@@ -52,9 +52,9 @@ async function editTag(req, res) {
 	const newTag = req.body.newTag
 
 	if (!guilds.includes(guildId)) {
-		throw new BadRequestError('Invalid Guild Id')
+		throw new ForbiddenError('Invalid Guild Id')
 	}
-	
+
 	const result = await GuildSchema.updateOne(
 		{ _id: guildId, tags: tag },
 		{ $set: { 'tags.$': newTag }

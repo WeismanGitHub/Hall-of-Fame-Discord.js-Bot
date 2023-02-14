@@ -1,5 +1,5 @@
+const { BadRequestError, NotFoundError, ForbiddenError } = require('../errors');
 const UniversalQuoteSchema = require('../../schemas/universal-quote-schema');
-const { BadRequestError, NotFoundError } = require('../errors');
 const jwt = require('jsonwebtoken')
 require('express-async-errors')
 
@@ -12,7 +12,7 @@ const getQuotes = async (req, res) => {
 	const page = Number(req.query.page ?? 0)
 
 	if (!guilds.includes(guildId)) {
-		throw new BadRequestError('Invalid Guild Id')
+		throw new ForbiddenError('Invalid Guild Id')
 	}
 
 	if (page < 0 || isNaN(page)) {	
@@ -50,7 +50,7 @@ async function deleteQuote(req, res) {
 	const { guildId, quoteId } = req.params
 
 	if (!guilds.includes(guildId)) {
-		throw new BadRequestError('Invalid Guild Id')
+		throw new ForbiddenError('Invalid Guild Id')
 	}
 
 	const result = await UniversalQuoteSchema.deleteOne({ guildId: guildId, _id: quoteId })
