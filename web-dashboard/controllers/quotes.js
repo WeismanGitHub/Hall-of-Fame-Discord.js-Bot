@@ -46,7 +46,12 @@ const getQuotes = async (req, res) => {
 }
 
 async function deleteQuote(req, res) {
+	const guilds = jwt.verify(req.cookies.guilds, process.env.JWT_SECRET).guilds
 	const { guildId, quoteId } = req.params
+
+	if (!guilds.includes(guildId)) {
+		throw new BadRequestError('Invalid Guild Id')
+	}
 
 	const result = await UniversalQuoteSchema.deleteOne({ guildId: guildId, _id: quoteId })
 
