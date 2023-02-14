@@ -22,7 +22,12 @@ const getTags = async (req, res) => {
 }
 
 async function deleteTag(req, res) {
+	const guilds = jwt.verify(req.cookies.guilds, process.env.JWT_SECRET).guilds
 	const { guildId, tag } = req.params
+
+	if (!guilds.includes(guildId)) {
+		throw new BadRequestError('Invalid Guild Id')
+	}
 
 	const result = await GuildSchema.updateOne(
 		{ _id: guildId },
@@ -42,9 +47,14 @@ async function deleteTag(req, res) {
 }
 
 async function editTag(req, res) {
+	const guilds = jwt.verify(req.cookies.guilds, process.env.JWT_SECRET).guilds
 	const { guildId, tag } = req.params
 	const newTag = req.body.newTag
-        
+
+	if (!guilds.includes(guildId)) {
+		throw new BadRequestError('Invalid Guild Id')
+	}
+	
 	const result = await GuildSchema.updateOne(
 		{ _id: guildId, tags: tag },
 		{ $set: { 'tags.$': newTag }
