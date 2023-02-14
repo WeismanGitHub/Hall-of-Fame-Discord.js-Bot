@@ -6,6 +6,7 @@ require('express-async-errors')
 const getAuthors =  async (req, res) => {
 	const guilds = jwt.verify(req.cookies.guilds, process.env.JWT_SECRET).guilds
 	const guildId = req.params.guildId
+
 	if (!guilds.includes(guildId)) {
 		throw new BadRequestError('Invalid Guild Id')
 	}
@@ -29,13 +30,18 @@ const getAuthors =  async (req, res) => {
 }
 
 async function deleteAuthor(req, res) {
+	const guilds = jwt.verify(req.cookies.guilds, process.env.JWT_SECRET).guilds
 	const { guildId, authorId } = req.params
+
+	if (!guilds.includes(guildId)) {
+		throw new BadRequestError('Invalid Guild Id')
+	}
 
 	const result = await GuildSchema.updateOne(
 		{ _id: guildId },
 		{ $pull: { authors: { _id: authorId } } },
 	)
-
+	
 	if (!result.modifiedCount) {
 		throw new NotFoundError(`Cannot find author: ${authorId}.`)
 	}
