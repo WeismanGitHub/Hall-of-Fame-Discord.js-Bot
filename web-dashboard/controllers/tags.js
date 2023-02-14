@@ -1,18 +1,10 @@
 const UniversalQuoteSchema = require('../../schemas/universal-quote-schema');
-const { ForbiddenError, NotFoundError } = require('../errors');
 const GuildSchema = require('../../schemas/guild-schema');
-const jwt = require('jsonwebtoken')
+const { NotFoundError } = require('../errors');
 require('express-async-errors')
 
 const getTags = async (req, res) => {
-	const guilds = jwt.verify(req.cookies.guilds, process.env.JWT_SECRET).guilds
-	const guildId = req.params.guildId
-
-	if (!guilds.includes(guildId)) {
-		throw new ForbiddenError('Invalid Guild Id')
-	}
-
-	const guild = await GuildSchema.findOne({ _id: guildId }).select('-_id tags').lean()
+	const guild = await GuildSchema.findOne({ _id: req.params.guildId }).select('-_id tags').lean()
 
 	if (!guild) {
 		throw new NotFoundError('Guild Not Found')
@@ -22,12 +14,7 @@ const getTags = async (req, res) => {
 }
 
 async function deleteTag(req, res) {
-	const guilds = jwt.verify(req.cookies.guilds, process.env.JWT_SECRET).guilds
 	const { guildId, tag } = req.params
-
-	if (!guilds.includes(guildId)) {
-		throw new ForbiddenError('Invalid Guild Id')
-	}
 
 	const result = await GuildSchema.updateOne(
 		{ _id: guildId },
@@ -47,13 +34,8 @@ async function deleteTag(req, res) {
 }
 
 async function editTag(req, res) {
-	const guilds = jwt.verify(req.cookies.guilds, process.env.JWT_SECRET).guilds
 	const { guildId, tag } = req.params
 	const newTag = req.body.newTag
-
-	if (!guilds.includes(guildId)) {
-		throw new ForbiddenError('Invalid Guild Id')
-	}
 
 	const result = await GuildSchema.updateOne(
 		{ _id: guildId, tags: tag },
