@@ -62,7 +62,7 @@ function Authors({ authors, setQueryAuthorId, queryAuthorId, guildId, setAuthors
                 <div class={ queryAuthorId == _id ? 'highlighted' : 'unhighlighted'}>
                     <div class='author_container'
                         onClick={() => selectAuthor(_id)}
-                        onContextMenu={(e) => handleContextMenu(e, { name, authorId: _id })}
+                        onContextMenu={(e) => handleContextMenu(e, { name, id: _id, iconURL})}
                     >
                         <img
                             class='author_icon'
