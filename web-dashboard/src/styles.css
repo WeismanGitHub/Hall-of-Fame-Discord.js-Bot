@@ -1465,3 +1465,20 @@ video {
 .modal_submit:active {
   filter: brightness(120%);
 }
+
+.info_popup {
+    margin: 5px;
+    margin-top: 25px;
+    padding: 5px;
+    border-radius: 5px;
+    background-color: #40444b;
+    color: #a4a7aa;
+}
+
+.info_popup:hover {
+  filter: brightness(110%);
+}
+
+.info_popup:active {
+  filter: brightness(120%);
+}

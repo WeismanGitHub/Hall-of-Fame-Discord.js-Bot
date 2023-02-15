@@ -5,7 +5,8 @@ import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import 'react-contexify/ReactContexify.css';
 import axios, * as others from 'axios'
-
+import 'reactjs-popup/dist/index.css'
+import Popup from 'reactjs-popup';
 import Cookies from 'js-cookie';
 
 import View from './view'
@@ -18,6 +19,13 @@ function Main() {
     const [guildId, setGuildId] = useState(null)
     const navigate = useNavigate()
     const contextId = 'guild_id'
+    const contentStyle = {
+        background: '#2f3136',
+        border: "#232428 2px solid",
+        'border-radius': '5px',
+        width: '275px', height: '150px',
+        'text-align': 'center'
+    }
 
     const { show } = useContextMenu({
         id: contextId
@@ -122,6 +130,19 @@ function Main() {
                     <View guildId={ guildId } setGuildId={ setGuildId } guildName={ guilds.find((guild) => guild.id == guildId)?.name }/>
                 </div>
             }
+
+            <Popup
+                open={localStorage.getItem('showInfoPopup') == 'false' ? false : true}
+                position="center center"
+                modal
+                {...{ contentStyle }}
+            >
+                {close => <>
+                    Right click on servers, quotes, authors, and tags for more options!
+                    <button class='info_popup' onClick={close}>close</button>
+                    <button class='info_popup' onClick={() => {close(); localStorage.setItem('showInfoPopup', 'false')}}>don't show again</button>
+                </>}
+            </Popup>
         </body>
 
         <ToastContainer
