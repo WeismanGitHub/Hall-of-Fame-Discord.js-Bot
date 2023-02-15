@@ -23,7 +23,7 @@ function Main() {
         background: '#2f3136',
         border: "#232428 2px solid",
         'border-radius': '5px',
-        width: '275px', height: '150px',
+        width: '275px', height: '125px',
         'text-align': 'center'
     }
 
@@ -139,8 +139,10 @@ function Main() {
             >
                 {close => <>
                     Right click on servers, quotes, authors, and tags for more options!
-                    <button class='info_popup' onClick={close}>close</button>
-                    <button class='info_popup' onClick={() => {close(); localStorage.setItem('showInfoPopup', 'false')}}>don't show again</button>
+                    <button class='info_popup_button' onClick={close}>close</button>
+                    <button class='info_popup_button' onClick={() => {close(); localStorage.setItem('showInfoPopup', 'false')}}>
+                        don't show again
+                    </button>
                 </>}
             </Popup>
         </body>
