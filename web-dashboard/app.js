@@ -38,7 +38,7 @@ app.use(cookieParser())
 app.use(express.json())
 
 app.use('/api/v1/:guildId/*', (req, res, next) => {
-	req.guilds = jwt.verify(req.cookies.guilds, process.env.JWT_SECRET)
+	req.guilds = jwt.verify(req.cookies.guilds, process.env.JWT_SECRET).guilds
 
 	if (!req.guilds.includes(req.params.guildId)) {
 		throw new ForbiddenError('Invalid Guild Id')
