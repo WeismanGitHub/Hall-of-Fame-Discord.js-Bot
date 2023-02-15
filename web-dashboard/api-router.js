@@ -16,7 +16,7 @@ const router = Router()
 
 router.post('/auth', auth)
 
-router.route('/logout').post(logout)
+router.post('/logout', logout)
 
 router.get('/guilds', getGuilds);
 
