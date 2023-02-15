@@ -34,7 +34,6 @@ function Authors({ authors, setQueryAuthorId, queryAuthorId, guildId, setAuthors
             navigator.clipboard.writeText(name)
             break;
         case "edit":
-            alert('Editing coming soon.')
             setShowPopup(true)
             setAuthorBeingEdited(props)
             break;
