@@ -5,16 +5,14 @@ import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import 'react-contexify/ReactContexify.css';
 import axios, * as others from 'axios'
+import { errorToast } from './toasts'
 import 'reactjs-popup/dist/index.css'
 import Popup from 'reactjs-popup';
-import Cookies from 'js-cookie';
 
 import View from './view'
-import Login from './login'
 
 function Main() {
     const createQuote = { name: 'create quote', iconURL: '/create-quote.png', id: null }
-    const [loggedIn, setLoggedIn] = useState(Cookies.get('loggedIn'))
     const [guilds, setGuilds] = useState([createQuote])
     const [guildId, setGuildId] = useState(null)
     const navigate = useNavigate()
@@ -54,20 +52,23 @@ function Main() {
     useEffect(() => {
         const code = String(window.location).split('code=')[1]
 
-        if (loggedIn) {
-            axios.get('/api/v1/guilds').then(res => setGuilds(guilds.concat(res.data)))
-            return
-        }
+        axios.get('/api/v1/guilds')
+        .then(res => setGuilds(guilds.concat(res.data)))
+        .catch(err => {
+            if (!code) {
+                return navigate('/login')
+            }
+    
+            axios.post('/api/v1/auth', { code: code })
+            .then(res => {
+                return axios.get('/api/v1/guilds')
+            }).then(res => {
+                setGuilds(guilds.concat(res.data))
+            }).catch(err =>
+                navigate('/login')
+            )
+        })
 
-        axios.post('/api/v1/auth', { code: code })
-        .then(res => {
-            return axios.get('/api/v1/guilds')
-        }).then(res => {
-            setGuilds(guilds.concat(res.data))
-            setLoggedIn(true)
-        }).catch(err =>
-            navigate('/login')
-        )
     }, [])
     
     function guildIconClick(id) {
@@ -78,58 +79,54 @@ function Main() {
         if (window.confirm('Are you sure you want to logout?')) {
             axios.post('/api/v1/logout')
             .then(navigate('/login'))
+            .catch(err => errorToast('Failed to logout.'))
         }
     }
     
     return (<>
         <body>
-            {
-                !loggedIn ?
-                    <Login/>
-                :
-                    <div>
-                        <div class='guilds'>
-                            { guilds.map(guild => <div
-                                onContextMenu={(e) => guilds.indexOf(guild) ? handleContextMenu(e, { guildId: guild.id }) : null}
-                            >
-                                <img class={ guildId == guild.id ? 'chosen_guild' : 'unchosen_guild'}
-                                    src={ guild.iconURL || "/icon.png" }
-                                    alt="server icon"
-                                    width = "60"
-                                    height = "60"
-                                    title = { guild.name }
-                                    onClick={ () => guildIconClick(guild.id) }>
-                                </img>
-                                
-                                { !guilds.indexOf(guild) && <hr class="guilds_divider"/>}
-                            </div>) }
-                            
-                            <a href="https://github.com/WeismanGitHub/Hall-of-Fame-Discord.js-Bot#readme">
-                                <img class='unchosen_guild'
-                                    src='/question-mark.png'
-                                    alt="readme button"
-                                    width = "60"
-                                    height = "60"
-                                    title = 'readme'
-                                />
-                            </a>
-                            <img class='unchosen_guild'
-                                src='/logout.png'
-                                alt="logout button"
-                                width = "60"
-                                height = "60"
-                                title = 'logout'
-                                onClick={ logout }>
-                            </img>
-                        </div>
-                        <Menu id={contextId} theme="dark">
-                            <Item id="create-quote" onClick={handleItemClick}>Create Quote</Item>
-                            <Item id="create-tag" onClick={handleItemClick}>Create Tag</Item>
-                            <Item id="create-author" onClick={handleItemClick}>Create Author</Item>
-                        </Menu>
-                    <View guildId={ guildId } setGuildId={ setGuildId } guildName={ guilds.find((guild) => guild.id == guildId)?.name }/>
+            <div>
+                <div class='guilds'>
+                    { guilds.map(guild => <div
+                        onContextMenu={(e) => guilds.indexOf(guild) ? handleContextMenu(e, { guildId: guild.id }) : null}
+                    >
+                        <img class={ guildId == guild.id ? 'chosen_guild' : 'unchosen_guild'}
+                            src={ guild.iconURL || "/icon.png" }
+                            alt="server icon"
+                            width = "60"
+                            height = "60"
+                            title = { guild.name }
+                            onClick={ () => guildIconClick(guild.id) }>
+                        </img>
+                        
+                        { !guilds.indexOf(guild) && <hr class="guilds_divider"/>}
+                    </div>) }
+                    
+                    <a href="https://github.com/WeismanGitHub/Hall-of-Fame-Discord.js-Bot#readme">
+                        <img class='unchosen_guild'
+                            src='/question-mark.png'
+                            alt="readme button"
+                            width = "60"
+                            height = "60"
+                            title = 'readme'
+                        />
+                    </a>
+                    <img class='unchosen_guild'
+                        src='/logout.png'
+                        alt="logout button"
+                        width = "60"
+                        height = "60"
+                        title = 'logout'
+                        onClick={ logout }>
+                    </img>
                 </div>
-            }
+                <Menu id={contextId} theme="dark">
+                    <Item id="create-quote" onClick={handleItemClick}>Create Quote</Item>
+                    <Item id="create-tag" onClick={handleItemClick}>Create Tag</Item>
+                    <Item id="create-author" onClick={handleItemClick}>Create Author</Item>
+                </Menu>
+                <View guildId={ guildId } setGuildId={ setGuildId } guildName={ guilds.find((guild) => guild.id == guildId)?.name }/>
+            </div>
 
             <Popup
                 open={localStorage.getItem('showInfoPopup') == 'false' ? false : true}
