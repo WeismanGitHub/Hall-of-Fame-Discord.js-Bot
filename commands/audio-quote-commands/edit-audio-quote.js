@@ -85,7 +85,7 @@ module.exports = {
             type: Constants.ApplicationCommandOptionTypes.CHANNEL
         },
         {
-            name: 'delete_image',
+            name: 'remove_image',
             description: 'Removes image from quote.',
             type: Constants.ApplicationCommandOptionTypes.BOOLEAN
         },
@@ -114,7 +114,7 @@ module.exports = {
         const update = { guildId: guildId };
         const lastImageChannel = options.getChannel('last_image');
         const newImageLink = options.getString('new_image_link');
-        const deleteImage = options.getBoolean('delete_image');
+        const deleteImage = options.getBoolean('remove_image');
         
         if (newAudioURL) {
             update.audioURL = newAudioURL;

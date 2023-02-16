@@ -46,7 +46,7 @@ module.exports = {
             type: Constants.ApplicationCommandOptionTypes.BOOLEAN
         },
         {
-            name: 'delete_image',
+            name: 'remove_image',
             description: 'Removes image from quote.',
             type: Constants.ApplicationCommandOptionTypes.BOOLEAN
         },
@@ -99,7 +99,7 @@ module.exports = {
 
         const lastImageChannel = options.getChannel('last_image');
         const newImageLink = options.getString('new_image_link');
-        const deleteImage = options.getBoolean('delete_image');
+        const deleteImage = options.getBoolean('remove_image');
         const deleteTags = options.getBoolean('remove_tags');
         const newAuthorName = options.getString('new_author');
         const newText = options.getString('new_text');

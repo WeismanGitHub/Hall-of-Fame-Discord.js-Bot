@@ -43,7 +43,7 @@ module.exports = {
             type: Constants.ApplicationCommandOptionTypes.USER
         },
         {
-            name: 'delete_image',
+            name: 'remove_image',
             description: 'Use the default image.',
             type: Constants.ApplicationCommandOptionTypes.BOOLEAN
         },
@@ -63,7 +63,7 @@ module.exports = {
 
         const removeAccountImage = options.getBoolean('remove_account_image')
         const lastImageChannel = options.getChannel('last_image');
-        const deleteImage = options.getBoolean('delete_image')
+        const deleteImage = options.getBoolean('remove_image')
         const accountImage = options.getUser('account_image')
         let newIconURL = options.getString('image_link')
         const newName = options.getString('new_name');
