@@ -39,10 +39,13 @@ const auth = async (req, res) => {
 
 	const expiration = new Date(Date.now() + (3600000 * 24 * 14)) // 14 days
 
-	// "loggedIn" cookie because client can't see if accessToken exists since it is httpOnly.
 	res.status(200)
-	.cookie('accessToken', oauthData.access_token, { httpOnly: true, secure: true, sameSite: 'strict', expires: expiration })
-	.cookie('loggedIn', true, { secure: true, sameSite: 'strict', expires: expiration }).end()
+	.cookie('accessToken', oauthData.access_token, {
+		httpOnly: true,
+		secure: true,
+		sameSite: 'strict',
+		expires: expiration
+	}).end()
 }
 
 const getGuilds = async (req, res) => {
@@ -79,7 +82,11 @@ const getGuilds = async (req, res) => {
 }
 
 const logout = (req, res) => {
-	res.status(200).clearCookie('guilds').clearCookie('accessToken').clearCookie('loggedIn').end()
+	res.status(200).clearCookie('guilds').clearCookie('accessToken').end()
+}
+
+async function uploadImage(req, res) {
+	res.status(200).end()
 }
 
 module.exports = {
@@ -92,5 +99,6 @@ module.exports = {
 	deleteTag,
 	deleteQuote,
 	editTag,
-	logout
+	logout,
+	uploadImage,
 };
