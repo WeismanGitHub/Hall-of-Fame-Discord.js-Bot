@@ -1,5 +1,5 @@
+const { NotFoundError, BadRequestError } = require('../errors');
 const GuildSchema = require('../../schemas/guild-schema');
-const { NotFoundError } = require('../errors');
 require('express-async-errors')
 
 const getAuthors =  async (req, res) => {
@@ -36,4 +36,47 @@ async function deleteAuthor(req, res) {
 	res.status(200).end()
 }
 
-module.exports = { getAuthors, deleteAuthor }
+async function editAuthor(req, res) {
+	const { removeAccountImage, deleteIcon, newName, newIconURL } = req.body
+	const { guildId, authorId } = req.params;
+	const update = {}
+
+	if (deleteIcon) {
+		update.iconURL = process.env.DEFAULT_ICON_URL
+	}
+
+	if (removeAccountImage) {
+		update.discordId = null
+	}
+
+	if (newName) {
+		update.name = newName
+	}
+
+	if (newIconURL) {
+		update.iconURL = newIconURL
+	}
+	
+	const authorNameExists = await GuildSchema.exists({ _id: guildId, 'authors.name': newName })
+
+	if (authorNameExists) {
+		throw new BadRequestError('Author Name Exists')
+	}
+
+	const authors = (await GuildSchema.findOneAndUpdate(
+		{ "$and": [
+			{ "_id": { "$eq": guildId } },
+			{ "authors": { "$elemMatch": { "_id": { "$eq": authorId } } } }
+		]},
+		{ "$set": update },
+		{ new: true }
+	).select('authors -_id').lean())?.authors
+
+	if (!authors) {
+		throw new NotFoundError(`Cannot find author: ${authorId}.`)
+	}
+
+	res.status(200).end()
+}
+
+module.exports = { getAuthors, deleteAuthor, editAuthor }
