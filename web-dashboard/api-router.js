@@ -9,7 +9,8 @@ const {
 	deleteTag,
 	deleteQuote,
 	editTag,
-	logout
+	logout,
+	uploadImage,
 } = require('./controllers')
 
 const router = Router()
@@ -17,6 +18,8 @@ const router = Router()
 router.post('/auth', auth)
 
 router.post('/logout', logout)
+
+router.post('/image', uploadImage)
 
 router.get('/guilds', getGuilds);
 
@@ -26,4 +29,4 @@ router.route('/:guildId/tags/:tag?').get(getTags).delete(deleteTag).patch(editTa
 
 router.route('/:guildId/quotes/:quoteId?').get(getQuotes).delete(deleteQuote)
 
-module.exports = router
+module.exports = router	
