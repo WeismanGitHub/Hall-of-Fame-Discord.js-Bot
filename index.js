@@ -18,14 +18,14 @@ const port = process.env.PORT || 5000
 app.listen(port || 5000, () => console.log(`listening on port ${port}...`));
 app.set('client', client)
 
+mongoose.connect(process.env.MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+}).then(console.log('connected to database...'));
+
 client.on("ready", async () => {
     client.user.setActivity('Use /help for help.');
 
-    mongoose.connect(process.env.MONGO_URI, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-    }).then(console.log('connected to database...'));
-    
 	new WOKCommands(
         client, {
             commandsDir: path.join(__dirname, './commands'),
