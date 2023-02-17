@@ -14,10 +14,11 @@ const cors = require('cors')
 
 const app = express();
 const limiter = rateLimit({
-    windowMs: 500,
+    windowMs: 1000,
 	max: 10,
 	standardHeaders: true,
 	legacyHeaders: false,
+	message: "Rate Limit: 10 requests per second"
 })
 
 app.use(helmet({
