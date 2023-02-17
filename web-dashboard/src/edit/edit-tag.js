@@ -1,6 +1,6 @@
 import { successToast, errorToast } from '../toasts';
-import { useState, useEffect } from 'react';
 import axios, * as others from 'axios'
+import { useState } from 'react';
 
 function EditTag({tagBeingEdited, guildId, setTags, tags, setTagBeingEdited}) {
     const [newTag, setNewTag] = useState(tagBeingEdited)
