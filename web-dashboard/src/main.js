@@ -136,8 +136,8 @@ function Main() {
             >
                 {close => <>
                     Right click on servers, quotes, authors, and tags for more options!
-                    <button class='info_popup_button' onClick={close}>close</button>
-                    <button class='info_popup_button' onClick={() => {close(); localStorage.setItem('showInfoPopup', 'false')}}>
+                    <button class='popup_button' onClick={close}>close</button>
+                    <button class='popup_button' onClick={() => {close(); localStorage.setItem('showInfoPopup', 'false')}}>
                         don't show again
                     </button>
                 </>}
