@@ -15,7 +15,7 @@ const cors = require('cors')
 const app = express();
 const limiter = rateLimit({
     windowMs: 1000,
-	max: 10,
+	max: 15,
 	standardHeaders: true,
 	legacyHeaders: false,
 	message: "Rate Limit: 10 requests per second"
