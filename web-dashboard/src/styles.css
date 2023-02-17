@@ -1466,7 +1466,7 @@ video {
   filter: brightness(120%);
 }
 
-.info_popup_button {
+.popup_button {
     margin: 5px;
     margin-top: 25px;
     padding: 5px;
@@ -1476,10 +1476,34 @@ video {
     color: #a4a7aa;
 }
 
-.info_popup_button:hover {
+.popup_button:hover {
   filter: brightness(110%);
 }
 
-.info_popup_button:active {
+.popup_button:active {
   filter: brightness(120%);
+}
+
+.author_edit_preview {
+  padding-top: 5px;
+  padding-bottom: 5px;
+  min-width: 200px;
+  background-color: #40444b;
+  border-radius: 5px;
+  cursor: default;
+  width: 'fit-content';
+}
+
+.author_edit_container {
+  left: 5%;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  background-color: #2f3136;
+  width: 95%;
+  display: inline;
+  position: relative;
+  object-fit: cover;
+  cursor: pointer;
+  font-size: 125%;
+  align-content: center;
 }
