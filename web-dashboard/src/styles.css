@@ -1507,3 +1507,20 @@ video {
   font-size: 125%;
   align-content: center;
 }
+
+.file_upload {
+  background-color: #40444b;
+  color: #a4a7aa;
+  padding: 0.5rem;
+  border-radius: 0.3rem;
+  cursor: pointer;
+  margin-top: 1rem;
+}
+
+.file_upload:hover {
+  filter: brightness(110%);
+}
+
+.file_upload:active {
+  filter: brightness(120%);
+}
