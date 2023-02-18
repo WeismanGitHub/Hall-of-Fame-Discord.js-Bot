@@ -16,7 +16,14 @@ const textDescription = "Text you're quoting."
 const nameDescription = "The name of the author."
 const fragmentDescription = "A fragment is an author/text pair."
 const accountImageDescription = "Use an account image. Will change along with the account."
-const removeAccountImage = "Stop using an account image."
+const removeAccountImageDescription = "Stop using an account image."
+const limitDescription = "How many quotes you want returned."
+const paginationDescription = "Send every quote at once."
+const channelDescription = "A channel to showcase every quote. New quotes will be added here."
+const ageDescription = "Sort by newest/oldest."
+const notificationsDescription = "Turn notifications on or off."
+const removeDescription = "Remove the quotes channel."
+const notificationsChannelDescription = "The channel you want notifications to be sent in."
 
 module.exports = {
     tagDescription,
@@ -37,15 +44,12 @@ module.exports = {
     nameDescription,
     fragmentDescription,
     accountImageDescription,
-    removeAccountImage
+    removeAccountImageDescription,
+    limitDescription,
+    paginationDescription,
+    channelDescription,
+    ageDescription,
+    notificationsDescription,
+    removeDescription,
+    notificationsChannelDescription
 }
-
-`
-notifications: Turn notifications on or off.
-notification_channel: Change the default notifications channel.
-age: Sort by newest/oldest.
-limit: Amount of quotes returned. Must be less than 10.
-pagination: Send all quotes at once or ten at a time.
-quotes_channel: Choose a channel to have all the quotes in. It will be updated with new quotes.
-remove_channel: Remove the quotes channel.
-`
