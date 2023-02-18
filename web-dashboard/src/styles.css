@@ -1495,11 +1495,9 @@ video {
 }
 
 .author_edit_container {
-  left: 5%;
   padding-top: 5px;
   padding-bottom: 5px;
   background-color: #2f3136;
-  width: 95%;
   display: inline;
   position: relative;
   object-fit: cover;
