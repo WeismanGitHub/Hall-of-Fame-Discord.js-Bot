@@ -1,6 +1,5 @@
 const { ForbiddenError } = require('../errors')
 const rateLimit = require('express-rate-limit')
-const errorHandler = require('./error-handler')
 const { NotFoundError } = require('./errors')
 const cookieParser = require('cookie-parser')
 const compression = require('compression')
@@ -59,6 +58,9 @@ app.get('/*', (req, res) => {
 	res.status(200).sendFile(path.resolve(__dirname, './build/index.html'))
 })
 
-app.use(errorHandler)
+app.use((err, req, res, next) => {
+    console.error(err.message)
+    res.status(err.statusCode || 500).send(err.message)
+})
 
 module.exports = app
