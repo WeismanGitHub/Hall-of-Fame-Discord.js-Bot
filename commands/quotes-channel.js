@@ -13,12 +13,12 @@ module.exports = {
 
     options: [
         {
-            name: 'quotes_channel',
+            name: 'channel',
             description: 'Choose a channel to have all the quotes in. It will be updated with new quotes.',
             type: Constants.ApplicationCommandOptionTypes.CHANNEL,
         },
         {
-            name: 'remove_channel',
+            name: 'remove',
             description: 'Remove the quotes channel.',
             type: Constants.ApplicationCommandOptionTypes.STRING,
             choices: [
@@ -37,8 +37,8 @@ module.exports = {
     callback: async ({ interaction }) => errorHandler(interaction, async () => {
         const { options } = interaction;
         const guildId = interaction.guildId;
-        const quotesChannel = options.getChannel('quotes_channel');
-        const removeChannel = options.getString('remove_channel');
+        const quotesChannel = options.getChannel('channel');
+        const removeChannel = options.getString('remove');
         const channelId = quotesChannel?.id
 
         if (removeChannel == null && !quotesChannel) {
