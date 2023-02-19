@@ -1407,7 +1407,7 @@ video {
     padding-top: 14px !important;
 }
 .Toastify__toast-body {
-    color: #444C63    ;
+    color: #444C63;
     font-size: 16px;
     padding-left: 20px;
     line-height: 20px;
@@ -1422,14 +1422,12 @@ video {
 }
 
 .popup-content {
-    width: 600px;
-    height: 400px;
+    width: 500px;
+    height: 300px;
 }
 
 .edit_tag {
     background-color: #2f3136;
-    width: 100%;
-    height: 100%;
     display: flex;
     margin: auto;
     flex-wrap: wrap;
@@ -1440,8 +1438,9 @@ video {
 
 .edit_tag_input {
   margin: auto;
-  width: 320px;
-  margin-top: 150px;
+  width: 350px;
+  margin-top: 75px;
+  margin-bottom: 75px;
   padding: 10px;
   padding-left: 15px;
   border-radius: 5px;
