@@ -17,7 +17,7 @@ const limiter = rateLimit({
 	max: 15,
 	standardHeaders: true,
 	legacyHeaders: false,
-	message: "Rate Limit: 10 requests per second"
+	message: "Rate Limit: 15 requests per second"
 })
 
 app.use(helmet({
