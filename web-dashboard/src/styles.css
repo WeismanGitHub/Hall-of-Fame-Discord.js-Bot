@@ -253,11 +253,11 @@ body {
 }
 
 .text_search_bar {
+    width: 320px;
     margin-left: 15px;
     float: left;
     padding: 10px;
     padding-left: 15px;
-    padding-right: 290px;
     border-radius: 5px;
     background-color: #40444b;
     color: #a4a7aa;
@@ -1440,10 +1440,10 @@ video {
 
 .edit_tag_input {
   margin: auto;
+  width: 320px;
   margin-top: 150px;
   padding: 10px;
   padding-left: 15px;
-  padding-right: 290px;
   border-radius: 5px;
   background-color: #40444b;
   color: #a4a7aa;
@@ -1467,13 +1467,12 @@ video {
 }
 
 .popup_button {
-    margin: 5px;
-    margin-top: 25px;
-    padding: 5px;
-    padding-top: 2px;
-    border-radius: 5px;
-    background-color: #40444b;
-    color: #a4a7aa;
+  margin: 5px;
+  padding: 5px;
+  border-radius: 5px;
+  background-color: #40444b;
+  color: #a4a7aa;
+  cursor: pointer;
 }
 
 .popup_button:hover {
@@ -1497,7 +1496,7 @@ video {
 .author_edit_container {
   padding-top: 5px;
   padding-bottom: 5px;
-  background-color: #2f3136;
+  background-color: #40444b;
   display: inline;
   position: relative;
   object-fit: cover;
@@ -1507,12 +1506,15 @@ video {
 }
 
 .file_upload {
+  margin: 5px;
+  padding: 5px;
+  padding-left: 7px;
+  padding-right: 7px;
+  padding-bottom: 7px;
+  border-radius: 5px;
   background-color: #40444b;
   color: #a4a7aa;
-  padding: 0.5rem;
-  border-radius: 0.3rem;
   cursor: pointer;
-  margin-top: 1rem;
 }
 
 .file_upload:hover {
@@ -1521,4 +1523,25 @@ video {
 
 .file_upload:active {
   filter: brightness(120%);
+}
+
+.edit_author_name {
+  min-width: 350px;
+  margin: auto;
+  padding: 10px;
+  padding-left: 15px;
+  border-radius: 5px;
+  background-color: #40444b;
+  color: #a4a7aa;
+  margin-bottom: 10px;
+}
+
+.centered_row {
+  display: inline-block;
+  margin: 0 auto;
+  width: 100%;
+  flex-wrap: wrap;
+  padding: auto;
+  align-items: center;
+  text-align: center;
 }
