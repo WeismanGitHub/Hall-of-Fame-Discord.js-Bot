@@ -25,7 +25,8 @@ app.use(helmet({
 		directives: {
 			...helmet.contentSecurityPolicy.getDefaultDirectives(),
 			"img-src": ["*", "blob:"],
-			'media-src': ['*']
+			'media-src': ['*'],
+			"default-src": ["'self'", "https://api.imgur.com/3/image/"]
 		},
 	},
 	crossOriginEmbedderPolicy: false
