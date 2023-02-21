@@ -11,6 +11,15 @@ function EditAuthor({authorBeingEdited, guildId, setAuthors, authors, setAuthorB
     const [selectedFile, setSelectedFile] = useState()
     const authorId = authorBeingEdited.id
     
+    function getBase64(file) {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.readAsDataURL(file);
+          reader.onload = () => resolve(reader.result);
+          reader.onerror = error => reject(error);
+        });
+    }
+
     function edit() {
         const update = { removeAccountImage, deleteIcon }
 
@@ -18,24 +27,38 @@ function EditAuthor({authorBeingEdited, guildId, setAuthors, authors, setAuthorB
             update.newName = name
         }
         
-        // if (selectedFile) {
-        //     const auth = `Client-ID ${process.env.REACT_APP_IMGUR_ID}`
-        //     const formData = new FormData()
-        //     formData.append("file", selectedFile);
+        if (selectedFile) {
+            getBase64(selectedFile)
+            .then(base64File => {
+                axios.post(
+                    'https://api.imgur.com/3/image/',
+                    { image: base64File.split(',')[1] },
+                    { headers: {
+                        Authorization: `Client-ID ${process.env.REACT_APP_IMGUR_ID}`,
+                        accept: "application/x-www-form-urlencoded"
+                    } }
+                ).then((res) => {
+                    update.newIconURL = res.data.data.link
 
-        //     fetch("https://api.imgur.com/3/image/", {
-        //         method: "POST",
-        //         body: formData,
-        //         headers: {
-        //             Authorization: auth,
-        //             Accept: "application/json",
-        //         },
-        //     })
-        //     .then((res) => console.log(res))
-        //     .catch((err) => console.log(err));
+                    axios.patch(`/api/v1/${guildId}/authors/${authorId}`, update)
+                    .then(res => {
+                        successToast(`Successfully edited "${authorBeingEdited.name}".`)
 
-        //     // update.newIconURL = `${window.location}/images/${''}`
-        // }
+                        setAuthors(authors.map(author => {
+                            return author == authorBeingEdited ? { iconURL, name, id: authorId } : authorBeingEdited
+                        }))
+
+                        setAuthorBeingEdited({ iconURL, name, id: authorId })
+                    }).catch(err => {
+                        errorToast(`Failed to edit "${authorBeingEdited.name}".`)
+                    })
+                }).catch((err) => {
+                    errorToast('Error uploading image.')
+                });
+            })
+
+            return
+        }
 
     //     axios.patch(`/api/v1/${guildId}/authors/${authorId}`, update)
     //     .then(res => {
@@ -54,6 +77,7 @@ function EditAuthor({authorBeingEdited, guildId, setAuthors, authors, setAuthorB
                     class='author_icon'
                     src={(selectedFile ? URL.createObjectURL(selectedFile) : null) || iconURL || "/icon.png"}
                     alt="author icon"
+                    style={{'margin-right': '10px'}}
                     width = "60"
                     height = "60"
                     onError={({ currentTarget }) => {
