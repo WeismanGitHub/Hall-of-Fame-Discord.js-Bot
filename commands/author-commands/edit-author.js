@@ -76,10 +76,12 @@ module.exports = {
             newIconURL = await getLastImage(lastImageChannel)
         }
         
-        const authorNameExists = await GuildSchema.exists({ _id: guildId, 'authors.name': newName })
-
-        if (authorNameExists) {
-            throw new InvalidInputError('Author Exists')
+        if (newName) {
+            const authorNameExists = await GuildSchema.exists({ _id: guildId, 'authors.name': newName })
+    
+            if (authorNameExists) {
+                throw new InvalidInputError('Author Exists')
+            }
         }
 
         const authors = (await GuildSchema.findOneAndUpdate(
