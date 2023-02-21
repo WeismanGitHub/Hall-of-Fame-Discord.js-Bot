@@ -4,10 +4,8 @@ import { useState } from 'react';
 
 function EditAuthor({authorBeingEdited, guildId, setAuthors, authors, setAuthorBeingEdited}) {
     const [removeAccountImage, setRemoveAccountImage] = useState(false)
-    const [iconURL, setIconURL] = useState(authorBeingEdited.iconURL)
     const [name, setName] = useState(authorBeingEdited.name)
     const [deleteIcon, setDeleteIcon] = useState(false)
-    const [selectedImageLink, setSelectedImageLink] = useState(null)
     const [selectedFile, setSelectedFile] = useState()
     const authorId = authorBeingEdited.id
     
@@ -45,10 +43,10 @@ function EditAuthor({authorBeingEdited, guildId, setAuthors, authors, setAuthorB
                         successToast(`Successfully edited "${authorBeingEdited.name}".`)
 
                         setAuthors(authors.map(author => {
-                            return author == authorBeingEdited ? { iconURL, name, id: authorId } : authorBeingEdited
+                            return author == authorBeingEdited ? { iconURL: update.newIconURL, name, _id: authorId } : author
                         }))
 
-                        setAuthorBeingEdited({ iconURL, name, id: authorId })
+                        setAuthorBeingEdited({ iconURL: update.newIconURL, name, id: authorId })
                     }).catch(err => {
                         errorToast(`Failed to edit "${authorBeingEdited.name}".`)
                     })
@@ -60,14 +58,18 @@ function EditAuthor({authorBeingEdited, guildId, setAuthors, authors, setAuthorB
             return
         }
 
-    //     axios.patch(`/api/v1/${guildId}/authors/${authorId}`, update)
-    //     .then(res => {
-    //        successToast(`Successfully edited "${authorBeingEdited.name}".`)
-    //        setAuthors(authors.map(author => author == authorBeingEdited ? { iconURL, name, id: authorId } : authorBeingEdited))
-    //        setAuthorBeingEdited({ iconURL, name, id: authorId })
-    //    }).catch(err => {
-    //        errorToast(`Failed to edit "${authorBeingEdited.name}".`)
-    //    })
+        axios.patch(`/api/v1/${guildId}/authors/${authorId}`, update)
+        .then(res => {
+           successToast(`Successfully edited "${authorBeingEdited.name}".`)
+
+           setAuthors(authors.map(author => {
+                return author == authorBeingEdited ? { iconURL: authorBeingEdited.iconURL, name, _id: authorId } : author
+           }))
+
+           setAuthorBeingEdited({ iconURL: update.newIconURL, name, id: authorId })
+        }).catch(err => {
+           errorToast(`Failed to edit "${authorBeingEdited.name}".`)
+       })
     }
 
     return (<>
@@ -75,7 +77,7 @@ function EditAuthor({authorBeingEdited, guildId, setAuthors, authors, setAuthorB
             <div class='author_edit_preview'>
                 <img
                     class='author_icon'
-                    src={(selectedFile ? URL.createObjectURL(selectedFile) : null) || iconURL || "/icon.png"}
+                    src={(selectedFile ? URL.createObjectURL(selectedFile) : null) || authorBeingEdited.iconURL || "/icon.png"}
                     alt="author icon"
                     style={{'margin-right': '10px'}}
                     width = "60"
