@@ -7,7 +7,7 @@ function EditAuthor({authorBeingEdited, guildId, setAuthors, authors, setAuthorB
     const [name, setName] = useState(authorBeingEdited.name)
     const [deleteIcon, setDeleteIcon] = useState(false)
     const [selectedFile, setSelectedFile] = useState()
-    const authorId = authorBeingEdited.id
+    const authorId = authorBeingEdited._id
     
     function getBase64(file) {
         return new Promise((resolve, reject) => {

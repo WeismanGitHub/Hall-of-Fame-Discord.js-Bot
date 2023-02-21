@@ -27,7 +27,7 @@ function Authors({ authors, setQueryAuthorId, queryAuthorId, guildId, setAuthors
     }
 
     const handleItemClick = ({ id, props }) => {
-        const { name, authorId } = props
+        const { name, _id } = props
 
         switch (id) {
         case "copy":
@@ -42,7 +42,7 @@ function Authors({ authors, setQueryAuthorId, queryAuthorId, guildId, setAuthors
                 break
             }
 
-            axios.delete(`/api/v1/${guildId}/authors/${authorId}`)
+            axios.delete(`/api/v1/${guildId}/authors/${_id}`)
             .then(res => {
                 successToast(`Successfully deleted "${name}".`)
                 setAuthors(authors.filter(author => author.name !== name))
@@ -62,7 +62,7 @@ function Authors({ authors, setQueryAuthorId, queryAuthorId, guildId, setAuthors
                 <div class={ queryAuthorId == _id ? 'highlighted' : 'unhighlighted'}>
                     <div class='author_container'
                         onClick={() => selectAuthor(_id)}
-                        onContextMenu={(e) => handleContextMenu(e, { name, id: _id, iconURL})}
+                        onContextMenu={(e) => handleContextMenu(e, { name, _id, iconURL})}
                     >
                         <img
                             class='author_icon'
