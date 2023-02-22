@@ -1,7 +1,7 @@
 import { Menu, Item, useContextMenu } from 'react-contexify';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import 'react-contexify/ReactContexify.css';
 import axios, * as others from 'axios'
@@ -13,6 +13,7 @@ import View from './view'
 
 function Main() {
     const createQuote = { name: 'create quote', iconURL: '/create-quote.png', id: null }
+    const [searchParams, setSearchParams] = useSearchParams();
     const [guilds, setGuilds] = useState([createQuote])
     const [guildId, setGuildId] = useState(null)
     const navigate = useNavigate()
@@ -50,7 +51,11 @@ function Main() {
     }
 
     useEffect(() => {
-        const code = String(window.location).split('code=')[1]
+        const code = searchParams.get('code')
+        
+        if (code) {
+            setSearchParams({})
+        }
 
         axios.get('/api/v1/guilds')
         .then(res => setGuilds(guilds.concat(res.data)))
