@@ -20,7 +20,7 @@
     "react-dom": "^18.2.0",
     "react-h5-audio-player": "^3.8.6",
     "react-infinite-scroller": "^1.2.6",
-    "react-router-dom": "^6.4.3",
+    "react-router-dom": "^6.8.1",
     "react-scripts": "5.0.1",
     "react-toastify": "^9.1.1",
     "reactjs-popup": "^2.0.5",
