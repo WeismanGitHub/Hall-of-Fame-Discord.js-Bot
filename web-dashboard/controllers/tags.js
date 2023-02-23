@@ -54,4 +54,15 @@ async function editTag(req, res) {
 	res.status(200).end()
 }
 
-module.exports = { getTags, deleteTag, editTag }
+async function createTag(req, res) {
+	const tag = req.body.tag.toLowerCase();
+
+	await GuildSchema.updateOne(
+		{ _id: req.params.guildId },
+		{ $addToSet: { tags: tag } }
+	)
+
+	res.status(200).end()
+}
+
+module.exports = { getTags, deleteTag, editTag, createTag, createTag }
