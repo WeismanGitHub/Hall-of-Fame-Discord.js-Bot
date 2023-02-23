@@ -6,7 +6,7 @@ const jwt = require('jsonwebtoken')
 require('express-async-errors')
 
 const { getAuthors, deleteAuthor, editAuthor } = require('./authors');
-const { getQuotes, deleteQuote } = require('./quotes');
+const { getQuotes, deleteQuote, editQuote } = require('./quotes');
 const { getTags, deleteTag, editTag } = require('./tags');
 
 const auth = async (req, res) => {
@@ -102,4 +102,5 @@ module.exports = {
 	logout,
 	uploadImage,
 	editAuthor,
+	editQuote,
 };
