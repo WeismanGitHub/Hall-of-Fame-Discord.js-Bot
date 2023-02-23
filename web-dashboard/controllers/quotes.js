@@ -68,4 +68,22 @@ async function editQuote(req, res) {
 	res.status(200).end()
 }
 
-module.exports = { getQuotes, deleteQuote, editQuote }
+async function createQuote(req, res) {
+	const { type } = req.body.type
+
+	switch (type) {
+		case 'regular':
+			console.log('regular')
+			break;
+		case 'audio':
+			console.log('audio')
+			break;
+		case 'multi':
+			console.log('multi')
+			break;
+	}
+
+	res.status(200).end()
+}
+
+module.exports = { getQuotes, deleteQuote, editQuote, createQuote }
