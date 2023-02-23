@@ -12,7 +12,9 @@ const {
 	logout,
 	uploadImage,
 	editAuthor,
-	editQuote
+	editQuote,
+	createQuote,
+	createTag,
 } = require('./controllers')
 
 const router = Router()
@@ -27,8 +29,8 @@ router.get('/guilds', getGuilds);
 
 router.route('/:guildId/authors/:authorId?').get(getAuthors).delete(deleteAuthor).patch(editAuthor)
 
-router.route('/:guildId/quotes/:quoteId?').get(getQuotes).delete(deleteQuote).patch(editQuote)
+router.route('/:guildId/quotes/:quoteId?').get(getQuotes).delete(deleteQuote).patch(editQuote).post(createQuote)
 
-router.route('/:guildId/tags/:tag?').get(getTags).delete(deleteTag).patch(editTag)
+router.route('/:guildId/tags/:tag?').get(getTags).delete(deleteTag).patch(editTag).post(createTag)
 
 module.exports = router	
