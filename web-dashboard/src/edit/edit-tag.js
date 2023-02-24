@@ -25,7 +25,7 @@ function EditTag({tagBeingEdited, guildId, setTags, tags, setTagBeingEdited}) {
             onKeyPress={ (event) => { event.key === 'Enter' && edit() } }
         />
         <div style={{ width: '100%' }}><br/></div>
-        <button class='modal_submit' onClick={edit} style={{ 'margin-bottom': '50px' }}>Submit</button>
+        <button class='modal_submit' onClick={edit} style={{ 'margin-bottom': '40px' }}>Submit</button>
     </div>)
 }
 
