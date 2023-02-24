@@ -57,7 +57,7 @@ async function editTag(req, res) {
 async function createTag(req, res) {
 	const tag = req.body.tag.toLowerCase();
 
-	await GuildSchema.updateOne(
+	const result = await GuildSchema.updateOne(
 		{ _id: req.params.guildId },
 		{ $addToSet: { tags: tag } }
 	)
