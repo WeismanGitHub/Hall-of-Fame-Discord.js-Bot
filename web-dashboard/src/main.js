@@ -9,10 +9,15 @@ import { errorToast } from './toasts'
 import 'reactjs-popup/dist/index.css'
 import Popup from 'reactjs-popup';
 
+import CreateAuthor from './create/create-author'
+import CreateQuote from './create/create-quote';
+import CreateTag from './create/create-tag';
 import View from './view'
 
 function Main() {
     const createQuote = { name: 'create quote', iconURL: '/create-quote.png', id: null }
+    const [showCreatePopup, setShowCreatePopup] = useState(false)
+    const [createGuildId, setCreateGuildId] = useState(null)
     const [searchParams, setSearchParams] = useSearchParams();
     const [guilds, setGuilds] = useState([createQuote])
     const [guildId, setGuildId] = useState(null)
@@ -25,7 +30,7 @@ function Main() {
         width: '275px', height: '125px',
         'text-align': 'center'
     }
-
+    
     const { show } = useContextMenu({
         id: contextId
     });
@@ -38,15 +43,18 @@ function Main() {
         const { guildId } = props
 
         switch (id) {
-        case "create-quote":
-            console.log('create quote', guildId)
-            break;
-        case "create-tag":
-            console.log('create tag', guildId)
-            break;
-        case "create-author":
-            console.log('create author', guildId)
-            break;
+            case "create-quote":
+                setShowCreatePopup('quote')
+                setCreateGuildId(guildId)
+                break;
+            case "create-tag":
+                setShowCreatePopup('tag')
+                setCreateGuildId(guildId)
+                break;
+            case "create-author":
+                setShowCreatePopup('author')
+                setCreateGuildId(guildId)
+                break;
         }
     }
 
@@ -146,6 +154,18 @@ function Main() {
                         don't show again
                     </button>
                 </>}
+            </Popup>
+
+            <Popup
+                open={Boolean(showCreatePopup)}
+                position="center center"
+                modal
+                onClose={() => setShowCreatePopup(null)}
+                {...{ contentStyle: { background: '#2f3136', border: "#232428 2px solid", 'border-radius': '5px' }}}
+            >
+                {showCreatePopup == 'author' ? <CreateAuthor guildId={createGuildId}/> : null}
+                {showCreatePopup == 'quote' ? <CreateQuote guildId={createGuildId}/> : null}
+                {showCreatePopup == 'tag' ? <CreateTag guildId={createGuildId}/> : null}
             </Popup>
         </body>
 
