@@ -1,5 +1,6 @@
 const { NotFoundError, BadRequestError } = require('../errors');
 const GuildSchema = require('../../schemas/guild-schema');
+const mongoose = require('mongoose');
 require('express-async-errors')
 
 const getAuthors =  async (req, res) => {
@@ -48,35 +49,65 @@ async function editAuthor(req, res) {
 	if (removeAccountImage) {
 		update.discordId = null
 	}
-
+	
 	if (newName) {
+		const authorNameExists = await GuildSchema.exists({ _id: guildId, 'authors.name': newName })
 		update.name = newName
+		
+		if (authorNameExists) {
+			throw new BadRequestError('Author Name Exists')
+		}
 	}
-
+	
 	if (newIconURL) {
 		update.iconURL = newIconURL
 	}
-	
-	const authorNameExists = await GuildSchema.exists({ _id: guildId, 'authors.name': newName })
 
-	if (authorNameExists) {
-		throw new BadRequestError('Author Name Exists')
-	}
+	console.log((await GuildSchema.findOne(
+		{ _id : guildId },
+		{ authors: {
+			"$filter": {
+				"input": "$authors",
+				"as": "author",
+				"cond":
+				{ "$eq": ["$$author._id", new mongoose.Types.ObjectId(authorId)] }
+			}
+		},
+	}).lean())['authors'][0])
 
-	const authors = (await GuildSchema.findOneAndUpdate(
+	console.log(guildId, authorId, update)
+	const result = await GuildSchema.updateOne(
 		{ "$and": [
 			{ "_id": { "$eq": guildId } },
-			{ "authors": { "$elemMatch": { "_id": { "$eq": authorId } } } }
+			{ "authors": { "$elemMatch": { "_id": { "$eq": new mongoose.Types.ObjectId(authorId) } } } }
 		]},
 		{ "$set": update },
-		{ new: true }
-	).select('authors -_id').lean())?.authors
-
-	if (!authors) {
+	)
+	
+	console.log(result)
+	if (!result.modifiedCount) {
 		throw new NotFoundError(`Cannot find author: ${authorId}.`)
 	}
 
 	res.status(200).end()
 }
 
-module.exports = { getAuthors, deleteAuthor, editAuthor }
+async function createAuthor(req, res) {
+	const { name, iconURL } = req.body
+	const { guildId } = req.params
+
+	const authorNameExists = await GuildSchema.exists({ _id: guildId, 'authors.name': name })
+	
+	if (authorNameExists) {
+		throw new BadRequestError('Author Exists')
+	}
+
+	await GuildSchema.updateOne(
+		{ _id: guildId },
+		{ $addToSet: { authors: { name, iconURL, discordId: null } }
+	})
+	
+	res.status(200).end()
+}
+
+module.exports = { getAuthors, deleteAuthor, editAuthor, createAuthor }
