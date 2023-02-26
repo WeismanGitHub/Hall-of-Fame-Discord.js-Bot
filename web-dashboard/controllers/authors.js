@@ -37,37 +37,33 @@ async function deleteAuthor(req, res) {
 }
 
 async function editAuthor(req, res) {
-	const { removeAccountImage, deleteIcon, newName, newIconURL, newDiscordId } = req.body
+	const { removeDiscordId, removeIconURL, name, iconURL, discordId } = req.body
 	const { guildId, authorId } = req.params;
 	const update = {}
+	
+	if (iconURL) {
+		update['authors.$.iconURL'] = iconURL
+	}
 
-	if (deleteIcon) {
+	if (removeIconURL) {
 		update['authors.$.iconURL'] = process.env.DEFAULT_ICON_URL
 	}
-
-	if (removeAccountImage) {
-		update['authors.$.discordId'] = null
-	}
-
-	if (newDiscordId) {
-		update['authors.$.discordId'] = newDiscordId
-	}
-
-	if (removeAccountImage) {
-		update['authors.$.discordId'] = null
-	}
 	
-	if (newName) {
-		const authorNameExists = await GuildSchema.exists({ _id: guildId, 'authors.name': newName })
-		update['authors.$.name'] = newName
+	if (discordId) {
+		update['authors.$.discordId'] = discordId
+	}
+
+	if (removeDiscordId) {
+		update['authors.$.discordId'] = null
+	}
+
+	if (name) {
+		const authorNameExists = await GuildSchema.exists({ _id: guildId, 'authors.name': name })
+		update['authors.$.name'] = name
 		
 		if (authorNameExists) {
 			throw new BadRequestError('Author Name Exists')
 		}
-	}
-	
-	if (newIconURL) {
-		update['authors.$.iconURL'] = newIconURL
 	}
 
 	const result = await GuildSchema.updateOne(
