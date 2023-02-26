@@ -1,6 +1,5 @@
 const { NotFoundError, BadRequestError } = require('../errors');
 const GuildSchema = require('../../schemas/guild-schema');
-const mongoose = require('mongoose');
 require('express-async-errors')
 
 const getAuthors =  async (req, res) => {
@@ -38,21 +37,29 @@ async function deleteAuthor(req, res) {
 }
 
 async function editAuthor(req, res) {
-	const { removeAccountImage, deleteIcon, newName, newIconURL } = req.body
+	const { removeAccountImage, deleteIcon, newName, newIconURL, newDiscordId } = req.body
 	const { guildId, authorId } = req.params;
 	const update = {}
 
 	if (deleteIcon) {
-		update.iconURL = process.env.DEFAULT_ICON_URL
+		update['authors.$.iconURL'] = process.env.DEFAULT_ICON_URL
 	}
 
 	if (removeAccountImage) {
-		update.discordId = null
+		update['authors.$.discordId'] = null
+	}
+
+	if (newDiscordId) {
+		update['authors.$.discordId'] = newDiscordId
+	}
+
+	if (removeAccountImage) {
+		update['authors.$.discordId'] = null
 	}
 	
 	if (newName) {
 		const authorNameExists = await GuildSchema.exists({ _id: guildId, 'authors.name': newName })
-		update.name = newName
+		update['authors.$.name'] = newName
 		
 		if (authorNameExists) {
 			throw new BadRequestError('Author Name Exists')
@@ -60,33 +67,19 @@ async function editAuthor(req, res) {
 	}
 	
 	if (newIconURL) {
-		update.iconURL = newIconURL
+		update['authors.$.iconURL'] = newIconURL
 	}
 
-	console.log((await GuildSchema.findOne(
-		{ _id : guildId },
-		{ authors: {
-			"$filter": {
-				"input": "$authors",
-				"as": "author",
-				"cond":
-				{ "$eq": ["$$author._id", new mongoose.Types.ObjectId(authorId)] }
-			}
-		},
-	}).lean())['authors'][0])
-
-	console.log(guildId, authorId, update)
 	const result = await GuildSchema.updateOne(
 		{ "$and": [
 			{ "_id": { "$eq": guildId } },
-			{ "authors": { "$elemMatch": { "_id": { "$eq": new mongoose.Types.ObjectId(authorId) } } } }
+			{ "authors": { "$elemMatch": { "_id": { "$eq": authorId } } } }
 		]},
 		{ "$set": update },
 	)
-	
-	console.log(result)
+
 	if (!result.modifiedCount) {
-		throw new NotFoundError(`Cannot find author: ${authorId}.`)
+		throw new NotFoundError(`Cannot edit author: ${authorId}.`)
 	}
 
 	res.status(200).end()
