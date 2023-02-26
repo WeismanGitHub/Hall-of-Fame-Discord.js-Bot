@@ -3,9 +3,9 @@ import axios, * as others from 'axios'
 import { useState } from 'react';
 
 function EditAuthor({authorBeingEdited, guildId, setAuthors, authors, setAuthorBeingEdited}) {
-    const [removeAccountImage, setRemoveAccountImage] = useState(false)
+    const [removeDiscordId, setRemoveDiscordId] = useState(false)
+    const [removeIconURL, setRemoveIconURL] = useState(false)
     const [name, setName] = useState(authorBeingEdited.name)
-    const [deleteIcon, setDeleteIcon] = useState(false)
     const [selectedFile, setSelectedFile] = useState()
     const authorId = authorBeingEdited._id
     
@@ -19,10 +19,10 @@ function EditAuthor({authorBeingEdited, guildId, setAuthors, authors, setAuthorB
     }
 
     function edit() {
-        const update = { removeAccountImage, deleteIcon }
+        const update = { removeDiscordId, removeIconURL }
 
         if (name !== authorBeingEdited.name) {
-            update.newName = name
+            update.name = name
         }
         
         if (selectedFile) {
@@ -36,17 +36,17 @@ function EditAuthor({authorBeingEdited, guildId, setAuthors, authors, setAuthorB
                         accept: "application/x-www-form-urlencoded"
                     } }
                 ).then((res) => {
-                    update.newIconURL = res.data.data.link
+                    update.iconURL = res.data.data.link
 
                     axios.patch(`/api/v1/${guildId}/authors/${authorId}`, update)
                     .then(res => {
                         successToast(`Successfully edited "${authorBeingEdited.name}".`)
 
                         setAuthors(authors.map(author => {
-                            return author == authorBeingEdited ? { iconURL: update.newIconURL, name, _id: authorId } : author
+                            return author == authorBeingEdited ? { iconURL: update.iconURL, name, _id: authorId } : author
                         }))
 
-                        setAuthorBeingEdited({ iconURL: update.newIconURL, name, id: authorId })
+                        setAuthorBeingEdited({ iconURL: update.iconURL, name, id: authorId })
                     }).catch(err => {
                         errorToast(`Failed to edit "${authorBeingEdited.name}".`)
                     })
@@ -66,7 +66,7 @@ function EditAuthor({authorBeingEdited, guildId, setAuthors, authors, setAuthorB
                 return author == authorBeingEdited ? { iconURL: authorBeingEdited.iconURL, name, _id: authorId } : author
            }))
 
-           setAuthorBeingEdited({ iconURL: update.newIconURL, name, id: authorId })
+           setAuthorBeingEdited({ iconURL: update.iconURL, name, id: authorId })
         }).catch(err => {
            errorToast(`Failed to edit "${authorBeingEdited.name}".`)
        })
@@ -105,19 +105,19 @@ function EditAuthor({authorBeingEdited, guildId, setAuthors, authors, setAuthorB
             </label>
             
             <button
-                class={`popup_button ${deleteIcon ? 'highlighted' : 'unhighlighted'}`}
-                onClick={() => setDeleteIcon(!deleteIcon)}
+                class={`popup_button ${removeIconURL ? 'highlighted' : 'unhighlighted'}`}
+                onClick={() => setRemoveIconURL(!removeIconURL)}
                 style={{ 'min-width': '105px'}}
                 >
-                {`${deleteIcon == true ? 'Remove' : 'Keep'} Icon`}
+                {`${removeIconURL == true ? 'Remove' : 'Keep'} Icon`}
             </button>
 
             <button
-                class={`popup_button ${removeAccountImage ? 'highlighted' : 'unhighlighted'}`}
-                onClick={() => setRemoveAccountImage(!removeAccountImage)}
+                class={`popup_button ${removeDiscordId ? 'highlighted' : 'unhighlighted'}`}
+                onClick={() => setRemoveDiscordId(!removeDiscordId)}
                 style={{ 'min-width': '180px'}}
                 >
-                {`${removeAccountImage == true ? 'Remove' : 'Keep'} Account Image`}
+                {`${removeDiscordId == true ? 'Remove' : 'Keep'} Account Image`}
             </button>
         
             <div style={{ width: '100%' }}><br/></div>
