@@ -44,7 +44,7 @@ async function deleteQuote(req, res) {
 	const result = await UniversalQuoteSchema.deleteOne({ guildId: guildId, _id: quoteId })
 
 	if (!result.deletedCount) {
-		throw new NotFoundError(`Cannot find quote: ${quoteId}.`)
+		throw new NotFoundError(`Cannot delete quote: ${quoteId}.`)
 	}
 
 	res.status(200).end()
