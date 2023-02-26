@@ -27,7 +27,7 @@ async function deleteTag(req, res) {
 	)
 
 	if (!result.modifiedCount) {
-		throw new NotFoundError(`Cannot find tag: ${tag}.`)
+		throw new NotFoundError(`Cannot delete tag: ${tag}.`)
 	}
 
 	res.status(200).end()
@@ -43,7 +43,7 @@ async function editTag(req, res) {
 	})
 
 	if (!result.modifiedCount) {
-		throw new NotFoundError(`Cannot find tag: ${tag}.`)
+		throw new NotFoundError(`Cannot edit tag: ${tag}.`)
 	}
 	
 	await UniversalQuoteSchema.updateMany(
@@ -57,7 +57,7 @@ async function editTag(req, res) {
 async function createTag(req, res) {
 	const tag = req.body.tag.toLowerCase();
 
-	const result = await GuildSchema.updateOne(
+	await GuildSchema.updateOne(
 		{ _id: req.params.guildId },
 		{ $addToSet: { tags: tag } }
 	)
