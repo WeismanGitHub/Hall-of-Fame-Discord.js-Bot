@@ -11,13 +11,14 @@ require('express-async-errors')
 const path = require('path')
 const cors = require('cors')
 
+const max = 15
 const app = express();
 const limiter = rateLimit({
     windowMs: 1000,
-	max: 15,
+	max: max,
 	standardHeaders: true,
 	legacyHeaders: false,
-	message: "Rate Limit: 15 requests per second"
+	message: `Rate Limit: ${max} requests per second`
 })
 
 app.use(helmet({
