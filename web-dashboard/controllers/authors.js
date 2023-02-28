@@ -15,6 +15,7 @@ const getAuthors =  async (req, res) => {
 			author.iconURL = user?.avatarURL() || process.env.DEFAULT_ICON_URL
 		}
 
+		delete author.discordId
 		return author
 	}))
 
