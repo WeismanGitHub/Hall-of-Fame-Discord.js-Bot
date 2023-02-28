@@ -1,5 +1,6 @@
 const UniversalQuoteSchema = require('../../schemas/universal-quote-schema');
 const { BadRequestError, NotFoundError } = require('../errors');
+const { getAuthorById } = require('../../helpers/get-author');
 require('express-async-errors')
 
 const getQuotes = async (req, res) => {
@@ -51,7 +52,13 @@ async function deleteQuote(req, res) {
 }
 
 async function editQuote(req, res) {
-	const { type } = req.body.type
+	const { guildId } = req.params
+	const {
+		type,
+		tags,
+		authorId,
+		fragments
+	} = req.body
 
 	switch (type) {
 		case 'regular':
@@ -69,11 +76,34 @@ async function editQuote(req, res) {
 }
 
 async function createQuote(req, res) {
-	const { type } = req.body.type
+	const { guildId } = req.params
+	const {
+		type,
+		tags,
+		authorId,
+		fragments,
+		text,
+		attachmentURL,
+		audioURL,
+	} = req.body
+
+	if (authorId) {
+		const authorName = await getAuthorById(authorId)
+
+		if (authorName == 'Deleted Author') {
+            throw new NotFoundError(`Cannot find author: ${quoteId}.`)
+        }
+	}
 
 	switch (type) {
 		case 'regular':
-			console.log('regular')
+			await UniversalQuoteSchema.create({
+				guildId,
+				authorId,
+				text,
+				tags,
+				attachmentURL,
+			})
 			break;
 		case 'audio':
 			console.log('audio')
