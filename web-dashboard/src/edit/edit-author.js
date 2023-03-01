@@ -42,15 +42,17 @@ function EditAuthor({authorBeingEdited, guildId, setAuthors, authors, setAuthorB
                     .then(res => {
                         successToast(`Successfully edited "${authorBeingEdited.name}".`)
 
-                        setAuthors(authors.map(author => {
-                            return author == authorBeingEdited ? { iconURL: update.iconURL, name, _id: authorId } : author
-                        }))
+                        setAuthors(authors.map(author => 
+                            author._id == authorBeingEdited._id ? { iconURL: update.iconURL, name, _id: authorId } : author
+                        ))
 
-                        setAuthorBeingEdited({ iconURL: update.iconURL, name, id: authorId })
+                        setAuthorBeingEdited({ iconURL: update.iconURL, name, _id: authorId })
+                        setSelectedFile(null)
                     }).catch(err => {
                         errorToast(`Failed to edit "${authorBeingEdited.name}".`)
                     })
-                }).catch((err) => {
+                }).catch(err => {
+                    setSelectedFile(null)
                     errorToast('Error uploading image.')
                 });
             })
@@ -62,12 +64,12 @@ function EditAuthor({authorBeingEdited, guildId, setAuthors, authors, setAuthorB
         .then(res => {
            successToast(`Successfully edited "${authorBeingEdited.name}".`)
 
-           setAuthors(authors.map(author => {
-                console.log(author, authorBeingEdited)
-                return author == authorBeingEdited ? { iconURL: authorBeingEdited.iconURL, name, _id: authorId } : author
-           }))
+           setAuthors(authors.map(author => 
+                author._id == authorBeingEdited._id ? { iconURL: authorBeingEdited.iconURL, name, _id: authorId } : author
+           ))
 
            setAuthorBeingEdited({ iconURL: update.iconURL, name, _id: authorId })
+           setSelectedFile(null)
         }).catch(err => {
            errorToast(`Failed to edit "${authorBeingEdited.name}".`)
        })
