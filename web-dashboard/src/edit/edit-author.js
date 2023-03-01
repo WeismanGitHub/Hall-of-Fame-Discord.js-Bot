@@ -63,10 +63,11 @@ function EditAuthor({authorBeingEdited, guildId, setAuthors, authors, setAuthorB
            successToast(`Successfully edited "${authorBeingEdited.name}".`)
 
            setAuthors(authors.map(author => {
+                console.log(author, authorBeingEdited)
                 return author == authorBeingEdited ? { iconURL: authorBeingEdited.iconURL, name, _id: authorId } : author
            }))
 
-           setAuthorBeingEdited({ iconURL: update.iconURL, name, id: authorId })
+           setAuthorBeingEdited({ iconURL: update.iconURL, name, _id: authorId })
         }).catch(err => {
            errorToast(`Failed to edit "${authorBeingEdited.name}".`)
        })
@@ -109,7 +110,7 @@ function EditAuthor({authorBeingEdited, guildId, setAuthors, authors, setAuthorB
                 onClick={() => setRemoveIconURL(!removeIconURL)}
                 style={{ 'min-width': '105px'}}
                 >
-                {`${removeIconURL == true ? 'Remove' : 'Keep'} Icon`}
+                    Remove Icon
             </button>
 
             <button
@@ -117,7 +118,7 @@ function EditAuthor({authorBeingEdited, guildId, setAuthors, authors, setAuthorB
                 onClick={() => setRemoveDiscordId(!removeDiscordId)}
                 style={{ 'min-width': '180px'}}
                 >
-                {`${removeDiscordId == true ? 'Remove' : 'Keep'} Account Image`}
+                    Remove Account Image
             </button>
         
             <div style={{ width: '100%' }}><br/></div>
