@@ -49,7 +49,7 @@ const quoteEmbed = async function(quote, extraData, color='#8F00FF') { // color 
 			author.iconURL = (await client.users.fetch(author.discordId))?.avatarURL()
 		}
 		
-		embed.setAuthor({ name: author.name, iconURL: author.iconURL })
+		embed.setAuthor({ name: author.name, iconURL: author.iconURL || process.env.DEFAULT_ICON_URL })
 	}
 	
 	if (quote.attachmentURL) {
@@ -92,14 +92,17 @@ const errorEmbed = function(error, title='Theres been an error!', color='#FF0000
 };
 
 const authorEmbed = async function(author, color='#00EEFF') {
-	if (author.discordId) {
-		author.iconURL = (await client.users.fetch(author.discordId))?.avatarURL()
+	const { discordId, name } = author
+	let { iconURL } = author
+
+	if (discordId) {
+		iconURL = (await client.users.fetch(discordId))?.avatarURL()
 	}
 
 	return {
         embeds: [new MessageEmbed()
 		.setColor(color) // cyan
-		.setAuthor({ name: author.name.substring(0, 256), iconURL: author.iconURL })
+		.setAuthor({ name: name.substring(0, 256), iconURL: iconURL || process.env.DEFAULT_ICON_URL })
 	]}
 }
 
