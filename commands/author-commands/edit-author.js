@@ -71,7 +71,7 @@ module.exports = {
         const guildId = interaction.guildId;
 
         if (deleteImage) {
-            newIconURL = process.env.DEFAULT_ICON_URL
+            newIconURL = null
         } else if (lastImageChannel) {
             newIconURL = await getLastImage(lastImageChannel)
         }
