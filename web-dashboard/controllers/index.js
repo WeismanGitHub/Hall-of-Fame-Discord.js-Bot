@@ -5,8 +5,8 @@ const { request } = require('undici');
 const jwt = require('jsonwebtoken')
 require('express-async-errors')
 
+const { getQuotes, deleteQuote, editQuote, createQuote, getRandomQuotes } = require('./quotes');
 const { getAuthors, deleteAuthor, editAuthor, createAuthor } = require('./authors');
-const { getQuotes, deleteQuote, editQuote, createQuote } = require('./quotes');
 const { getTags, deleteTag, editTag, createTag } = require('./tags');
 
 const auth = async (req, res) => {
@@ -106,4 +106,5 @@ module.exports = {
 	createQuote,
 	createTag,
 	createAuthor,
+	getRandomQuotes,
 };
