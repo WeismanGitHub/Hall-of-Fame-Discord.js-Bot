@@ -47,7 +47,7 @@ async function editAuthor(req, res) {
 	}
 
 	if (removeIconURL) {
-		update['authors.$.iconURL'] = process.env.DEFAULT_ICON_URL
+		update['authors.$.iconURL'] = null
 	}
 	
 	if (discordId) {
@@ -94,7 +94,7 @@ async function createAuthor(req, res) {
 
 	await GuildSchema.updateOne(
 		{ _id: guildId },
-		{ $addToSet: { authors: { name, iconURL, discordId: null } }
+		{ $addToSet: { authors: { name, iconURL } }
 	})
 	
 	res.status(200).end()
