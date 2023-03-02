@@ -2,11 +2,11 @@ import { useState, useEffect } from 'react';
 import axios, * as others from 'axios'
 import { errorToast } from './toasts'
 
-import SearchArea from './search-area'
+import SearchArea from './view/search-area'
 import Authors from './view/authors'
 import Quotes from './view/quotes'
+import Home from './view/home'
 import Tags from './view/tags'
-import Home from './home'
 
 function View({ guildId, guildName }) {
     const [authors, setAuthors] = useState([])
