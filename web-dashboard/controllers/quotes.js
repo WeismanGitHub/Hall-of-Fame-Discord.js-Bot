@@ -5,34 +5,34 @@ require('express-async-errors')
 
 const getQuotes = async (req, res) => {
 	const { tags, type, text, authorId } = req.query
+	const query = { guildId: req.params.guildId }
 	const age = req.query.age == 'old' ? 1 : -1
-	const sanitizedSearch = { guildId: req.params.guildId }
-	const page = Number(req.query.page ?? 0)
+	const page = Number(req.query.page || 0)
 
 	if (page < 0 || isNaN(page)) {	
 		throw new BadRequestError('Page must be number greater/equal to 0.')
 	}
 	
 	if (type == 'image') {
-		sanitizedSearch.attachmentURL = { $ne: null }
+		query.attachmentURL = { $ne: null }
 	} else if (type) {
-		sanitizedSearch.type = type
-		sanitizedSearch.attachmentURL = null
+		query.type = type
+		query.attachmentURL = null
 	}
 
 	if (authorId) {
-		sanitizedSearch.$or = [{ authorId: authorId }, { 'fragments.authorId': authorId }]
+		query.$or = [{ authorId: authorId }, { 'fragments.authorId': authorId }]
 	}
 
 	if (tags) {
-		sanitizedSearch.tags = { $all: tags };
+		query.tags = { $all: tags };
 	}
 
 	if (text) {
-		sanitizedSearch.$text = { $search: text }
+		query.$text = { $search: text }
 	}
 
-	const quotes = await UniversalQuoteSchema.find(sanitizedSearch)
+	const quotes = await UniversalQuoteSchema.find(query)
 	.sort({ createdAt: age })
 	.skip(page * 10).limit(10).select('-guildId').lean()
 
@@ -116,4 +116,47 @@ async function createQuote(req, res) {
 	res.status(200).end()
 }
 
-module.exports = { getQuotes, deleteQuote, editQuote, createQuote }
+async function getRandomQuotes(req, res) {
+	const { tags, type, text, authorId } = req.query
+	const query = { guildId: req.params.guildId }
+	const amount = Number(req.query.amount || 10)
+
+	if (isNaN(amount) || amount < 1 || amount > 10) {
+		throw new BadRequestError('Amount must be between 1 and 10.')
+	}
+	
+	if (type == 'image') {
+		query.attachmentURL = { $ne: null }
+	} else if (type) {
+		query.type = type
+		query.attachmentURL = null
+	}
+
+	if (authorId) {
+		query.$or = [{ authorId: authorId }, { 'fragments.authorId': authorId }]
+	}
+
+	if (tags) {
+		query.tags = { $all: tags };
+	}
+
+	if (text) {
+		query.$text = { $search: text }
+	}
+
+	const amountOfDocuments = await UniversalQuoteSchema.countDocuments(query)
+
+	if (!amountOfDocuments) {
+		throw new NotFoundError('Cannot find quotes.')
+	}
+	
+	const randomNumber = Math.floor(Math.random() * amountOfDocuments);
+
+	const quotes = await UniversalQuoteSchema.find(query)
+	.skip(randomNumber).limit(amount).select('-guildId').lean()
+
+	res.status(200).json(quotes)
+}
+
+
+module.exports = { getQuotes, deleteQuote, editQuote, createQuote, getRandomQuotes }
