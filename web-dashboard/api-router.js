@@ -17,6 +17,7 @@ const {
 	createTag,
 	createAuthor,
 	getRandomQuotes,
+	countQuotes,
 } = require('./controllers')
 
 const router = Router()
@@ -31,6 +32,7 @@ router.get('/guilds', getGuilds);
 
 router.route('/:guildId/authors/:authorId?').get(getAuthors).delete(deleteAuthor).patch(editAuthor).post(createAuthor)
 
+router.route('/:guildId/quotes/count').get(countQuotes)
 router.route('/:guildId/quotes/random').get(getRandomQuotes)
 router.route('/:guildId/quotes/:quoteId?').get(getQuotes).delete(deleteQuote).patch(editQuote).post(createQuote)
 
