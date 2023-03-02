@@ -158,5 +158,36 @@ async function getRandomQuotes(req, res) {
 	res.status(200).json(quotes)
 }
 
+async function countQuotes(req, res) {
+	const { tags, type, text, authorId } = req.query
+	const query = { guildId: req.params.guildId }
 
-module.exports = { getQuotes, deleteQuote, editQuote, createQuote, getRandomQuotes }
+	if (type == 'image') {
+		query.attachmentURL = { $ne: null }
+	} else if (type) {
+		query.type = type
+		query.attachmentURL = null
+	}
+
+	if (authorId) {
+		query.$or = [{ authorId: authorId }, { 'fragments.authorId': authorId }]
+	}
+
+	if (tags) {
+		query.tags = { $all: tags };
+	}
+
+	if (text) {
+		query.$text = { $search: text }
+	}
+
+	const amount = await UniversalQuoteSchema.countDocuments(query)
+	
+	if (!amount) {
+		throw new NotFoundError('Cannot find quotes.')
+	}
+
+	res.status(200).json({ amount: amount })
+}
+
+module.exports = { getQuotes, deleteQuote, editQuote, createQuote, getRandomQuotes, countQuotes }
