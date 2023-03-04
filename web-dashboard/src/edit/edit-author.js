@@ -68,7 +68,7 @@ function EditAuthor({authorBeingEdited, guildId, setAuthors, authors, setAuthorB
                 author._id == authorBeingEdited._id ? { iconURL: authorBeingEdited.iconURL, name, _id: authorId } : author
            ))
 
-           setAuthorBeingEdited({ iconURL: update.iconURL, name, _id: authorId })
+           setAuthorBeingEdited({ iconURL: authorBeingEdited.iconURL, name, _id: authorId })
            setSelectedFile(null)
         }).catch(err => {
            errorToast(`Failed to edit "${authorBeingEdited.name}".`)
