@@ -3,7 +3,7 @@ const GuildSchema = require('../schemas/guild-schema')
 const client = require('../index')
 
 async function sendQuotes(quotes, channel) {
-    let authors = (await GuildSchema.findById(quotes[0].guildId).select('-_id authors').lean()).authors
+    let authors = (await GuildSchema.findById(channel.guild.id).select('-_id authors').lean()).authors
     authors = await Promise.all(authors.map(async author => {
         if (author.discordId) {
             author.iconURL = (await client.users.fetch(author.discordId))?.avatarURL()
@@ -40,7 +40,7 @@ async function sendQuotes(quotes, channel) {
                 }
             }
 
-            quoteEmbeds.push(...(await quoteEmbed(quote, author ?? checkedFragments)).embeds)
+            quoteEmbeds.push(...quoteEmbed(quote, author ?? checkedFragments).embeds)
         }
 
         await channel.send({ embeds: quoteEmbeds })
