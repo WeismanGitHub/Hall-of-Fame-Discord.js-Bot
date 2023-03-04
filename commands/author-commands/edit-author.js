@@ -39,7 +39,7 @@ module.exports = {
         },
         {
             name: "account_image",
-            description: "Use an account image. Will update with the account.",
+            description: "Use an account image.",
             type: Constants.ApplicationCommandOptionTypes.USER
         },
         {
@@ -47,11 +47,6 @@ module.exports = {
             description: 'Use the default image.',
             type: Constants.ApplicationCommandOptionTypes.BOOLEAN
         },
-        {
-            name: 'remove_account_image',
-            description: 'Removes the connection to the account image.',
-            type: Constants.ApplicationCommandOptionTypes.BOOLEAN
-        }
     ],
 
     callback: async ({ interaction }) => errorHandler(interaction, async () => {
@@ -61,12 +56,11 @@ module.exports = {
             throw new InvalidInputError('No Changes')
         }
 
-        const removeAccountImage = options.getBoolean('remove_account_image')
         const lastImageChannel = options.getChannel('last_image');
         const deleteImage = options.getBoolean('remove_image')
-        const accountImage = options.getUser('account_image')
         let newIconURL = options.getString('image_link')
-        const newName = options.getString('new_name');
+        const newName = options.getString('new_name')
+        const user = options.getUser('account_image')
         const oldName = options.getString('name');
         const guildId = interaction.guildId;
 
@@ -74,6 +68,8 @@ module.exports = {
             newIconURL = null
         } else if (lastImageChannel) {
             newIconURL = await getLastImage(lastImageChannel)
+        } else if (user) {
+            newIconURL = await user.avatarURL()
         }
         
         if (newName) {
@@ -92,9 +88,7 @@ module.exports = {
             {
                 "$set": {
                     ...newIconURL && { "authors.$.iconURL": newIconURL },
-                    ...newName && { "authors.$.name": newName },
-                    ...removeAccountImage && { 'authors.$.discordId': null },
-                    ...accountImage && { 'authors.$.discordId': accountImage.id }
+                    ...newName && { "authors.$.name": newName }
                 }
             },
             { new: true }
