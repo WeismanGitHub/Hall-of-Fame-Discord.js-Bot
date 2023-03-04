@@ -136,6 +136,6 @@ module.exports = {
             var author = await getAuthorById(randomQuote.authorId, guildId);
         }
 
-        await interaction.reply(await quoteEmbed(randomQuote, author ?? checkedFragments));
+        await interaction.reply(quoteEmbed(randomQuote, author ?? checkedFragments));
     })
 };
