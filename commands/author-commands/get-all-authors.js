@@ -28,9 +28,7 @@ module.exports = {
         }
 
         for (let authorGroup of authorGroups) {
-            const authorEmbeds = (await Promise.all(authorGroup.map(async author => {
-                return (await authorEmbed(author)).embeds
-            }))).flat()
+            const authorEmbeds = authorGroup.map(author => authorEmbed(author).embeds).flat()
 
             await interaction.channel.send({ embeds: authorEmbeds })
             .catch(async _ => {
