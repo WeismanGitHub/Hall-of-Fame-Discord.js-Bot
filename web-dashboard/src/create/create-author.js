@@ -74,6 +74,7 @@ function CreateAuthor({guildId}) {
         </div>
 
         <div class='centered_row'>
+            <div style={{'margin': '5px'}}></div>
             <label class="file_upload">
                 <input
                     type="file"
@@ -84,8 +85,9 @@ function CreateAuthor({guildId}) {
                 />
                 Upload Icon
             </label>
-        
+
             <div style={{ width: '100%' }}><br/></div>
+            <div style={{'margin': '5px'}}></div>
 
             <input
                 type="text"
