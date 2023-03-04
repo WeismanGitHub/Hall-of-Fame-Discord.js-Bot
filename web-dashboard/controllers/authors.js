@@ -9,17 +9,7 @@ const getAuthors =  async (req, res) => {
 		throw new NotFoundError('Guild Not Found')
 	}
 
-	const authors = await Promise.all(guild.authors.map(async author => {
-		if (author.discordId) {
-			const user = await req.app.get('client').users.fetch(author.discordId)
-			author.iconURL = user?.avatarURL() || process.env.DEFAULT_ICON_URL
-		}
-
-		delete author.discordId
-		return author
-	}))
-
-	res.status(200).json(authors ?? [])
+	res.status(200).json(guild.authors ?? [])
 }
 
 async function deleteAuthor(req, res) {
@@ -38,7 +28,7 @@ async function deleteAuthor(req, res) {
 }
 
 async function editAuthor(req, res) {
-	const { removeDiscordId, removeIconURL, name, iconURL, discordId } = req.body
+	const { removeIconURL, name, iconURL } = req.body
 	const { guildId, authorId } = req.params;
 	const update = {}
 	
@@ -48,14 +38,6 @@ async function editAuthor(req, res) {
 
 	if (removeIconURL) {
 		update['authors.$.iconURL'] = null
-	}
-	
-	if (discordId) {
-		update['authors.$.discordId'] = discordId
-	}
-
-	if (removeDiscordId) {
-		update['authors.$.discordId'] = null
 	}
 
 	if (name) {
