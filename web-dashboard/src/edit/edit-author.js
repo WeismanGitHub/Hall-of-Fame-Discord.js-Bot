@@ -19,6 +19,11 @@ function EditAuthor({authorBeingEdited, guildId, setAuthors, authors, setAuthorB
 
     function edit() {
         const update = { removeIconURL }
+        const newAuthor = {
+            iconURL: (removeIconURL ? null : authorBeingEdited.iconURL),
+            _id: authorId,
+            name
+        }
 
         if (name !== authorBeingEdited.name) {
             update.name = name
@@ -36,16 +41,17 @@ function EditAuthor({authorBeingEdited, guildId, setAuthors, authors, setAuthorB
                     } }
                 ).then((res) => {
                     update.iconURL = res.data.data.link
+                    newAuthor.iconURL = res.data.data.link
 
                     axios.patch(`/api/v1/${guildId}/authors/${authorId}`, update)
                     .then(res => {
                         successToast(`Successfully edited "${authorBeingEdited.name}".`)
 
                         setAuthors(authors.map(author => 
-                            author._id == authorBeingEdited._id ? { iconURL: update.iconURL, name, _id: authorId } : author
+                            author._id == authorBeingEdited._id ? newAuthor : author
                         ))
 
-                        setAuthorBeingEdited({ iconURL: update.iconURL, name, _id: authorId })
+                        setAuthorBeingEdited(newAuthor)
                         setSelectedFile(null)
                     }).catch(err => {
                         errorToast(`Failed to edit "${authorBeingEdited.name}".`)
@@ -64,10 +70,10 @@ function EditAuthor({authorBeingEdited, guildId, setAuthors, authors, setAuthorB
            successToast(`Successfully edited "${authorBeingEdited.name}".`)
 
            setAuthors(authors.map(author => 
-                author._id == authorBeingEdited._id ? { iconURL: authorBeingEdited.iconURL, name, _id: authorId } : author
+                author._id == authorBeingEdited._id ? newAuthor : author
            ))
 
-           setAuthorBeingEdited({ iconURL: authorBeingEdited.iconURL, name, _id: authorId })
+           setAuthorBeingEdited(newAuthor)
            setSelectedFile(null)
         }).catch(err => {
            errorToast(`Failed to edit "${authorBeingEdited.name}".`)
