@@ -100,6 +100,6 @@ module.exports = {
 
         const author = authors.find(author => author.name == (newName ?? oldName))
 
-        await interaction.reply(await authorEmbed(author));
+        await interaction.reply(authorEmbed(author));
     })
 };
