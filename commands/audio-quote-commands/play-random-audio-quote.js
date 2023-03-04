@@ -137,6 +137,6 @@ module.exports = {
         })
 
         const author = await getAuthorById(randomAudioQuote.authorId, guildId);
-        await interaction.reply(await quoteEmbed(randomAudioQuote, author))
+        await interaction.reply(quoteEmbed(randomAudioQuote, author))
     })
 };

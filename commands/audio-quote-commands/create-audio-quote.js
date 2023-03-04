@@ -110,7 +110,7 @@ module.exports = {
             attachmentURL: attachmentURL,
         });
 
-        const embeddedAudioQuote = await quoteEmbed(audioQuote, checkedAuthor)
+        const embeddedAudioQuote = quoteEmbed(audioQuote, checkedAuthor)
 
         await sendToQuotesChannel(embeddedAudioQuote, guildId, client)
         await interaction.reply(embeddedAudioQuote);
