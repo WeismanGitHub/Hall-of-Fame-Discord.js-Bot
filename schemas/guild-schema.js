@@ -18,10 +18,6 @@ const AuthorSchema = new mongoose.Schema({
             validator: function(URL) { return (URL == null || checkURL(URL)) },
             message: props => `Invalid Input: \`${props.value}\``
         },
-    },
-    discordId: {
-        type: String,
-        default: null,
     }
 });
 
