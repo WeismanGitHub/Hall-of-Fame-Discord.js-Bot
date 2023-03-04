@@ -248,7 +248,7 @@ module.exports = {
         multiQuote.fragments = updatedFragments
         await multiQuote.save()
 
-        const embeddedMultiQuote = await quoteEmbed(multiQuote, updatedFragments)
+        const embeddedMultiQuote = quoteEmbed(multiQuote, updatedFragments)
 
         await sendToQuotesChannel(embeddedMultiQuote, guildId, client)
         await interaction.reply(embeddedMultiQuote);

@@ -152,7 +152,7 @@ module.exports = {
             attachmentURL: attachmentURL
         });
 
-        const embeddedMultiQuote = await quoteEmbed(multiQuote, checkedFragments)
+        const embeddedMultiQuote = quoteEmbed(multiQuote, checkedFragments)
 
         await sendToQuotesChannel(embeddedMultiQuote, guildId, client)
         await interaction.reply(embeddedMultiQuote);
