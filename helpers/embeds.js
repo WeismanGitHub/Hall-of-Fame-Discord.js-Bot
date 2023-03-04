@@ -22,7 +22,7 @@ const notificationEmbed = function(title, body, color='#FFFE00') {
 }
 
 // Multi-quote isn't separate embed because easier to determine what to do here than anywhere there could be a multi-quote.
-const quoteEmbed = async function(quote, extraData, color='#8F00FF') { // color == purple
+const quoteEmbed = function(quote, extraData, color='#8F00FF') { // color == purple
 	let tags = quote.tags.filter(x => x !== null).map(tag => tag)
     tags = tags.length ? tags : ['no tags']
 	const colorChange = (color !== '#8F00FF')
@@ -44,10 +44,6 @@ const quoteEmbed = async function(quote, extraData, color='#8F00FF') { // color 
 		embed.setDescription(formattedFragments)
 	} else {
 		const author = extraData // Extra data is author.
-
-		if (author.discordId) {
-			author.iconURL = (await client.users.fetch(author.discordId))?.avatarURL()
-		}
 		
 		embed.setAuthor({ name: author.name, iconURL: author.iconURL || process.env.DEFAULT_ICON_URL })
 	}
@@ -91,18 +87,13 @@ const errorEmbed = function(error, title='Theres been an error!', color='#FF0000
     };
 };
 
-const authorEmbed = async function(author, color='#00EEFF') {
-	const { discordId, name } = author
-	let { iconURL } = author
-
-	if (discordId) {
-		iconURL = (await client.users.fetch(discordId))?.avatarURL()
-	}
+const authorEmbed = function(author, color='#00EEFF') {
+	const { iconURL, name } = author
 
 	return {
         embeds: [new MessageEmbed()
 		.setColor(color) // cyan
-		.setAuthor({ name: name.substring(0, 256), iconURL: iconURL || process.env.DEFAULT_ICON_URL })
+		.setAuthor({ name: name.substring(0, 256), iconURL: (iconURL || process.env.DEFAULT_ICON_URL) })
 	]}
 }
 
