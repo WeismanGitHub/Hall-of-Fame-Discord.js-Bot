@@ -22,7 +22,7 @@ module.exports = {
         },
         {
             name: "account_image",
-            description: "Use an account image. Will update with the account.",
+            description: "Use an account image.",
             type: Constants.ApplicationCommandOptionTypes.USER
         },
         {
@@ -43,17 +43,18 @@ module.exports = {
         const guildId = interaction.guildId;
         const name = options.getString('name');
         const lastImageChannel = options.getChannel('last_image');
-        const accountImage = options.getUser('account_image')
+        const user = options.getUser('account_image')
         let iconURL = options.getString('image_link')
 
         if (lastImageChannel) {
             iconURL = await getLastImage(lastImageChannel)
+        } else if (account) {
+            iconURL = await user.avatarURL()
         }
-        
+
         const author = {
             name: name,
-            iconURL: iconURL,
-            discordId: accountImage ? accountImage.id : null
+            iconURL: iconURL
         }
 
         const authorNameExists = await GuildSchema.exists({ _id: guildId, 'authors.name': name })
@@ -67,6 +68,6 @@ module.exports = {
             { $addToSet: { authors: author }
         })
 
-        await interaction.reply(await authorEmbed(author))
+        await interaction.reply(authorEmbed(author))
     })
 };
