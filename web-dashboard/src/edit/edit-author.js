@@ -3,7 +3,6 @@ import axios, * as others from 'axios'
 import { useState } from 'react';
 
 function EditAuthor({authorBeingEdited, guildId, setAuthors, authors, setAuthorBeingEdited}) {
-    const [removeDiscordId, setRemoveDiscordId] = useState(false)
     const [removeIconURL, setRemoveIconURL] = useState(false)
     const [name, setName] = useState(authorBeingEdited.name)
     const [selectedFile, setSelectedFile] = useState()
@@ -19,7 +18,7 @@ function EditAuthor({authorBeingEdited, guildId, setAuthors, authors, setAuthorB
     }
 
     function edit() {
-        const update = { removeDiscordId, removeIconURL }
+        const update = { removeIconURL }
 
         if (name !== authorBeingEdited.name) {
             update.name = name
@@ -115,14 +114,6 @@ function EditAuthor({authorBeingEdited, guildId, setAuthors, authors, setAuthorB
                     Remove Icon
             </button>
 
-            <button
-                class={`popup_button ${removeDiscordId ? 'highlighted' : 'unhighlighted'}`}
-                onClick={() => setRemoveDiscordId(!removeDiscordId)}
-                style={{ 'min-width': '180px'}}
-                >
-                    Remove Account Image
-            </button>
-        
             <div style={{ width: '100%' }}><br/></div>
 
             <input
