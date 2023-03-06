@@ -1,4 +1,4 @@
-function SearchArea({ setQueryText, search, queryText, setQueryAge, queryAge, queryType, setQueryType }) {
+function SearchArea({ setQueryText, search, queryText, setQueryAge, queryAge, queryType, setQueryType, setCountClick }) {
     function ageClick() {
         setQueryAge(queryAge == 'new' ? 'old' : 'new')
     }
@@ -25,6 +25,8 @@ function SearchArea({ setQueryText, search, queryText, setQueryAge, queryAge, qu
         />
 
         <button class='age_picker' onClick={ ageClick }>{`${queryAge}est`}</button>
+
+        <button class='age_picker' onClick={ () => setCountClick(true) }>Count</button>
 
         <div class='type_picker'>
             {types.map(({ color, name }) => {
