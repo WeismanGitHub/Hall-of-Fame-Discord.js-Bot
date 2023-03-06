@@ -1,4 +1,4 @@
-import { errorToast, regularToast } from './toasts'
+import { errorToast, successToast } from './toasts'
 import { useState, useEffect } from 'react';
 import axios, * as others from 'axios'
 
@@ -34,7 +34,7 @@ function View({ guildId, guildName }) {
                 type: queryType,
             } })
             .then(res => {
-                regularToast(`${res.data.amount} quotes.`)
+                successToast(`${res.data.amount} quotes.`)
                 setCountClick(false)
             })
             .catch(err => {
