@@ -1,6 +1,6 @@
+import { errorToast, regularToast } from './toasts'
 import { useState, useEffect } from 'react';
 import axios, * as others from 'axios'
-import { errorToast } from './toasts'
 
 import SearchArea from './view/search-area'
 import Authors from './view/authors'
@@ -19,10 +19,26 @@ function View({ guildId, guildName }) {
     const [queryText, setQueryText] = useState(null)
     const [queryTags, setQueryTags] = useState([])
     const [queryPage, setQueryPage] = useState(0)
+    const [countClick, setCountClick] = useState(false)
 
     useEffect(() => {
         setQueryPage(0)
     }, [queryAuthorId, queryType, queryText, queryTags, queryAge])
+
+    useEffect(() => {
+        if (countClick) {
+            axios.get(`/api/v1/${guildId}/quotes/count`, { params: {
+                authorId: queryAuthorId,
+                tags: queryTags,
+                text: queryText,
+                type: queryType,
+            } })
+            .then(res => {
+                regularToast(res.data.amount)
+                setCountClick(false)
+            })
+        }
+    }, [countClick])
 
     useEffect(() => {
         setQueryAuthorId(null)
@@ -121,6 +137,7 @@ function View({ guildId, guildName }) {
                 queryAge={queryAge}
                 queryText={queryText}
                 search={search}
+                setCountClick={setCountClick}
             />
         </div>
 
