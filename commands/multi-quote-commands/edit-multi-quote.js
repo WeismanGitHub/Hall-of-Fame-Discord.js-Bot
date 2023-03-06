@@ -177,11 +177,11 @@ module.exports = {
         if (!multiQuote) {
             throw new NotFoundError('Multi-Quote')
         }
-
-        if (tags.length) {
+        
+        if (tags.some(tag => tag !== null)) {
             multiQuote.tags = tags
         }
-        
+
         if (options.getString('remove_tags')) {
             multiQuote.tags = [];
         }
