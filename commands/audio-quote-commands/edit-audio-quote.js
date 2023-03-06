@@ -111,10 +111,10 @@ module.exports = {
         const deleteTags = options.getBoolean('remove_tags');
         const newAuthorName = options.getString('new_author');
         const newTitle = options.getString('new_title');
-        const update = { guildId: guildId };
         const lastImageChannel = options.getChannel('last_image');
         const newImageLink = options.getString('new_image_link');
         const deleteImage = options.getBoolean('remove_image');
+        const update = {};
         
         if (newAudioURL) {
             update.audioURL = newAudioURL;
@@ -130,7 +130,7 @@ module.exports = {
             update.attachmentURL = await getLastImage(lastImageChannel)
         }
         
-        if (tags.length) {
+        if (tags.some(tag => tag !== null)) {
             update.tags = tags
         }
 
@@ -153,10 +153,9 @@ module.exports = {
         }
         
         if (!Object.keys(update).length) {
-            throw new InvalidInputError('No Parameters')
+            throw new InvalidInputError('No Changes')
         }
 
-        
         const audioQuote = await AudioQuoteSchema.findOneAndUpdate(
             { _id: id, guildId: guildId, type: 'audio' },
             update
