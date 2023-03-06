@@ -34,7 +34,11 @@ function View({ guildId, guildName }) {
                 type: queryType,
             } })
             .then(res => {
-                regularToast(res.data.amount)
+                regularToast(`${res.data.amount} quotes.`)
+                setCountClick(false)
+            })
+            .catch(err => {
+                errorToast('Error occurred. Please try again!')
                 setCountClick(false)
             })
         }
