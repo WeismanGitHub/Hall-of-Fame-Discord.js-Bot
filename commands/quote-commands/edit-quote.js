@@ -95,7 +95,7 @@ module.exports = {
             throw new InvalidInputError('ID')
         }
 
-        const update = { guildId: guildId };
+        const update = {};
 
         const lastImageChannel = options.getChannel('last_image');
         const newImageLink = options.getString('new_image_link');
@@ -103,8 +103,8 @@ module.exports = {
         const deleteTags = options.getBoolean('remove_tags');
         const newAuthorName = options.getString('new_author');
         const newText = options.getString('new_text');
-        
-        if (tags.length) {
+
+        if (tags.some(tag => tag !== null)) {
             update.tags = tags
         }
 
