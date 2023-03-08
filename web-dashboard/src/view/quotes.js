@@ -47,10 +47,10 @@ function Quotes({ loadMoreQuotes, quotes, authors, queryPage, setQueryPage, guil
                 break
             }
 
-            axios.delete(`/api/v1/${guildId}/quotes/${props.id}`)
+            axios.delete(`/api/v1/${guildId}/quotes/${props._id}`)
             .then(res => {
                 successToast(`Successfully deleted quote.`)
-                setQuotes(quotes.filter(quote => quote._id !== props.id))
+                setQuotes(quotes.filter(quote => quote._id !== props._id))
             }).catch(err => {
                 errorToast(`Failed to delete quote.`)
             })
