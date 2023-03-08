@@ -149,10 +149,6 @@ async function getRandomQuotes(req, res) {
 		{ $sample: { size: amount } }
 	])
 
-	if (!quotes.length) {
-		throw new NotFoundError('Cannot find quotes.')
-	}
-
 	res.status(200).json(quotes)
 }
 
@@ -181,10 +177,6 @@ async function countQuotes(req, res) {
 	}
 
 	const amount = await UniversalQuoteSchema.countDocuments(query)
-	
-	if (!amount) {
-		throw new NotFoundError('Cannot find quotes.')
-	}
 
 	res.status(200).json({ amount: amount })
 }
