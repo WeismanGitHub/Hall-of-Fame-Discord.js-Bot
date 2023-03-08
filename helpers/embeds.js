@@ -33,7 +33,7 @@ const quoteEmbed = function(quote, extraData, color='#8F00FF') { // color == pur
 	.addFields({ name: 'ID:', value: `${quote._id}` })
 	.setImage(quote.attachmentURL)
 	.setTimestamp(quote.createdAt)
-	.setFooter({ text: quote.type })
+	.setFooter({ text: quote.attachmentURL ? 'image' : quote.type })
 	
 	if (quote.type == 'multi') {
 		const formattedFragments = extraData.map(fragment => { // Extra data is fragments.
