@@ -144,16 +144,14 @@ async function getRandomQuotes(req, res) {
 		query.$text = { $search: text }
 	}
 
-	const amountOfDocuments = await UniversalQuoteSchema.countDocuments(query)
+	const quotes = await UniversalQuoteSchema.aggregate([
+		{ $match: query },
+		{ $sample: { size: amount } }
+	])
 
-	if (!amountOfDocuments) {
+	if (!quotes.length) {
 		throw new NotFoundError('Cannot find quotes.')
 	}
-	
-	const randomNumber = Math.floor(Math.random() * amountOfDocuments);
-
-	const quotes = await UniversalQuoteSchema.find(query)
-	.skip(randomNumber).limit(amount).select('-guildId').lean()
 
 	res.status(200).json(quotes)
 }
