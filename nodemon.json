@@ -2,7 +2,6 @@
     "ignore": [
         "web-dashboard/build/*",
         "web-dashboard/src/*",
-        "web-dashboard/src/*",
         "web-dashboard/public/*"
     ]
 }
