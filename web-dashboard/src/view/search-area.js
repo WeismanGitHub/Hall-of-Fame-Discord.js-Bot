@@ -37,11 +37,12 @@ function SearchArea({
 
         <button class='age_picker' onClick={ ageClick }>{`${queryAge}est`}</button>
 
-        <button class='age_picker' onClick={ () => setCountClick(true) }>Count</button>
-
-        <div class={ random ? 'highlighted' : 'unhighlighted'}>
-            <button class='age_picker' onClick={ () => setRandom(!random) }>Random</button>
-        </div>
+        <button
+            class={[random ? 'highlighted' : 'unhighlighted', 'age_picker'].join(" ")}
+            onClick={ () => setRandom(!random) }
+        >
+            Random
+        </button>
 
         <div class='type_picker'>
             {types.map(({ color, name }) => {
@@ -52,6 +53,8 @@ function SearchArea({
                 </div>
             })}
         </div>
+
+        <button class='age_picker' onClick={ () => setCountClick(true) }>Count</button>
 
         <img
             class='search_icon'
