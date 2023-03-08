@@ -32,13 +32,14 @@ function View({ guildId, guildName }) {
                 authorId: queryAuthorId,
                 tags: queryTags,
                 text: queryText,
-                type: queryType,
+                quoteType: queryType, // Setting it to just "type" doesn't work. I'm guessing that's a reserved property or something?
             } })
             .then(res => {
                 successToast(`${res.data.amount} quotes.`)
                 setCountClick(false)
             })
             .catch(err => {
+                console.log(err)
                 errorToast('Error occurred. Please try again!')
                 setCountClick(false)
             })

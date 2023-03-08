@@ -157,13 +157,14 @@ async function getRandomQuotes(req, res) {
 }
 
 async function countQuotes(req, res) {
-	const { tags, type, text, authorId } = req.query
+	// Using just "type" doesn't work. I'm guessing that's a reserved property or something?
+	const { tags, quoteType, text, authorId } = req.query
 	const query = { guildId: req.params.guildId }
 
-	if (type == 'image') {
+	if (quoteType == 'image') {
 		query.attachmentURL = { $ne: null }
-	} else if (type) {
-		query.type = type
+	} else if (quoteType) {
+		query.type = quoteType
 		query.attachmentURL = null
 	}
 
