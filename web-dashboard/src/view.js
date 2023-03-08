@@ -20,6 +20,7 @@ function View({ guildId, guildName }) {
     const [queryTags, setQueryTags] = useState([])
     const [queryPage, setQueryPage] = useState(0)
     const [countClick, setCountClick] = useState(false)
+    const [random, setRandom] = useState(false)
 
     useEffect(() => {
         setQueryPage(0)
@@ -54,7 +55,7 @@ function View({ guildId, guildName }) {
         setAuthors([])
         setQuotes([])
         setTags([])
-        
+
         if (!guildId) {
             return
         }
@@ -88,6 +89,16 @@ function View({ guildId, guildName }) {
     }
 
     function search() {
+        if (random) {
+            return axios.get(`/api/v1/${guildId}/quotes`, { params: {
+                authorId: queryAuthorId,
+                tags: queryTags,
+                text: queryText,
+                type: queryType
+            } })
+            .then(res => setQuotes(res.data))
+        }
+
         axios.get(`/api/v1/${guildId}/quotes`, { params: {
             authorId: queryAuthorId,
             tags: queryTags,
@@ -100,6 +111,16 @@ function View({ guildId, guildName }) {
     }
 
     function loadMoreQuotes() {
+        if (random) {
+            return axios.get(`/api/v1/${guildId}/quotes`, { params: {
+                authorId: queryAuthorId,
+                tags: queryTags,
+                text: queryText,
+                type: queryType
+            } })
+            .then(res => setQuotes([...quotes, ...res.data]))
+        }
+
         axios.get(`/api/v1/${guildId}/quotes`, { params: {
             authorId: queryAuthorId,
             tags: queryTags,
@@ -142,6 +163,8 @@ function View({ guildId, guildName }) {
                 queryText={queryText}
                 search={search}
                 setCountClick={setCountClick}
+                random={random}
+                setRandom={setRandom}
             />
         </div>
 
