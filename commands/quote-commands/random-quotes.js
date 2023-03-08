@@ -1,16 +1,17 @@
-const { getAuthorByName, getAuthorById } = require('../../helpers/get-author');
 const UniversalQuoteSchema = require('../../schemas/universal-quote-schema');
+const { Constants, MessageActionRow, MessageButton } = require('discord.js');
+const { getAuthorByName } = require('../../helpers/get-author');
+const FilterSchema = require('../../schemas/filter-schema');
 const errorHandler = require('../../helpers/error-handler');
-const GuildSchema = require('../../schemas/guild-schema');
-const { quoteEmbed } = require('../../helpers/embeds');
+const sendQuotes = require('../../helpers/send-quotes');
+const { basicEmbed } = require('../../helpers/embeds');
 const checkTags = require('../../helpers/check-tags');
 const { NotFoundError } = require('../../errors');
-const { Constants } = require('discord.js');
 
 module.exports = {
     category:'Quotes',
-    name: 'random_quote',
-    description: 'Get a random quote.',
+    name: 'random_quotes',
+    description: 'Get random quotes.',
     guildOnly: true,
     slash: true,
 
@@ -67,12 +68,20 @@ module.exports = {
                     value: 'image'
                 }
             ]
+        },
+        {
+            name: 'limit',
+            description: 'Amount of quotes returned. Must be less than 10.',
+            type: Constants.ApplicationCommandOptionTypes.INTEGER,
+            minLength: 1,
+            maxLength: 9,
         }
     ],
     
     callback: async ({ interaction }) => errorHandler(interaction, async () => {
         const { options } = interaction;
         const searchPhrase = options.getString('search_phrase')
+        const limit = options.getInteger('limit') == null ? 10 : options.getInteger('limit')
         const inputtedAuthor = options.getString('author');
         const type = options.getString('type')
 
@@ -113,29 +122,39 @@ module.exports = {
             query.$text = { $search: searchPhrase }
         }
 
-        const amountOfDocuments = await UniversalQuoteSchema.countDocuments(query)
+        const quotes = await UniversalQuoteSchema.aggregate([
+            { $match: query },
+            { $sample: { size: limit } }
+        ])
 
-        if (!amountOfDocuments) {
+        if (!quotes.length) {
             throw new NotFoundError('Quotes')
         }
-        
-        const randomNumber = Math.floor(Math.random() * amountOfDocuments);
-        const randomQuote = await UniversalQuoteSchema.findOne(query).skip(randomNumber).lean()
 
-        if (randomQuote.type == 'multi') {
-            const guildAuthors = (await GuildSchema.findById(guildId).select('-_id authors').lean()).authors
-            var checkedFragments = []
+        await interaction.reply(basicEmbed('Started!'))
 
-            for (let fragment of randomQuote.fragments) {
-                const authorName = (guildAuthors.find(({ _id }) => _id?.equals(fragment.authorId) ))?.name
-                fragment.authorName = authorName ?? 'Deleted Author'
+        // sendQuotes modifies quotes array so gotta use a copy.
+        await sendQuotes([...quotes], interaction.channel)
 
-                checkedFragments.push(fragment)
-            }
-        } else {
-            var author = await getAuthorById(randomQuote.authorId, guildId);
+        if (quotes.length < 10) {
+            // Putting the message and return on the same line doesn't actually cause it to return. IDFK why.
+            await interaction.channel.send(basicEmbed('Done!'))
+            return
         }
 
-        await interaction.reply(quoteEmbed(randomQuote, author ?? checkedFragments));
+        const filterId = (await FilterSchema.create({ query }))._id
+        const customId = JSON.stringify({ type: 'random-quotes', filterId })
+
+        const row = new MessageActionRow()
+        .addComponents(
+            new MessageButton()
+            .setLabel('Next 10 Random Quotes ⏩')
+            .setCustomId(`${customId}`)
+            .setStyle('PRIMARY')
+        )
+        
+        await interaction.channel.send({
+            components: [row]
+        })
     })
 };
