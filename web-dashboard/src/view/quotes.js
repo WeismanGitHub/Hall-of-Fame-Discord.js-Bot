@@ -217,6 +217,8 @@ function Quotes({ loadMoreQuotes, quotes, authors, queryPage, setQueryPage, guil
                 setQuotes={setQuotes}
                 guildId={guildId}
                 quotes={quotes}
+                authors={authors}
+                tags={tags}
                 />
         </Popup>
     </>
