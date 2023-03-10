@@ -210,6 +210,7 @@ function Quotes({ loadMoreQuotes, quotes, authors, queryPage, setQueryPage, guil
             position="center center"
             modal onClose={() => setShowPopup(false)}
             {...{ contentStyle }}
+            nested
         >
             <EditQuote
                 setQuoteBeingEdited={setQuoteBeingEdited}
