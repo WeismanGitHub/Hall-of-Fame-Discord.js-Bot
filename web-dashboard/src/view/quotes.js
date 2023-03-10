@@ -11,7 +11,7 @@ import { useState } from 'react';
 
 import EditQuote from '../edit/edit-quote'
 
-function Quotes({ loadMoreQuotes, quotes, authors, queryPage, setQueryPage, guildId, setQuotes }) {
+function Quotes({ loadMoreQuotes, quotes, authors, queryPage, setQueryPage, guildId, setQuotes, tags}) {
     const contentStyle = { background: '#2f3136', border: "#232428 2px solid", 'border-radius': '5px' }
     const [quoteBeingEdited, setQuoteBeingEdited] = useState(null)
     const [showPopup, setShowPopup] = useState(false)

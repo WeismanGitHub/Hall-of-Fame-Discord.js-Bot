@@ -154,6 +154,7 @@ function View({ guildId, guildName }) {
                 setQueryPage={setQueryPage}
                 setQuotes={setQuotes}
                 guildId={guildId}
+                tags={tags}
             />
 
             <SearchArea
