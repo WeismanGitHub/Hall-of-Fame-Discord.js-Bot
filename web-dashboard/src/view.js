@@ -24,7 +24,7 @@ function View({ guildId, guildName }) {
 
     useEffect(() => {
         setQueryPage(0)
-    }, [queryAuthorId, queryType, queryText, queryTags, queryAge])
+    }, [queryAuthorId, queryType, queryText, queryTags, queryAge, random])
 
     useEffect(() => {
         if (countClick) {
@@ -51,6 +51,7 @@ function View({ guildId, guildName }) {
         setQueryAge('new')
         setQueryType(null)
         setQueryText(null)
+        setRandom(false)
         setQueryTags([])
         setQueryPage(0)
         setAuthors([])
@@ -91,7 +92,7 @@ function View({ guildId, guildName }) {
 
     function search() {
         if (random) {
-            return axios.get(`/api/v1/${guildId}/quotes`, { params: {
+            return axios.get(`/api/v1/${guildId}/quotes/random`, { params: {
                 authorId: queryAuthorId,
                 tags: queryTags,
                 text: queryText,
@@ -113,24 +114,24 @@ function View({ guildId, guildName }) {
 
     function loadMoreQuotes() {
         if (random) {
-            return axios.get(`/api/v1/${guildId}/quotes`, { params: {
+            axios.get(`/api/v1/${guildId}/quotes/random`, { params: {
                 authorId: queryAuthorId,
                 tags: queryTags,
                 text: queryText,
                 type: queryType
             } })
             .then(res => setQuotes([...quotes, ...res.data]))
+        } else {
+            axios.get(`/api/v1/${guildId}/quotes`, { params: {
+                authorId: queryAuthorId,
+                tags: queryTags,
+                text: queryText,
+                type: queryType,
+                page: queryPage + 1, // + 1 because of a bug. idk
+                age: queryAge
+            } })
+            .then(res => setQuotes([...quotes, ...res.data]))
         }
-
-        axios.get(`/api/v1/${guildId}/quotes`, { params: {
-            authorId: queryAuthorId,
-            tags: queryTags,
-            text: queryText,
-            type: queryType,
-            page: queryPage + 1, // + 1 because of a bug. idk
-            age: queryAge
-        } })
-        .then(res => setQuotes([...quotes, ...res.data]))
     }
 
     return (<>
