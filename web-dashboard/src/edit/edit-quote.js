@@ -28,6 +28,7 @@ function EditQuote({quoteBeingEdited, guildId, setQuotes, quotes, setQuoteBeingE
     const [imageFile, setImageFile] = useState(null)
     const [audioFile, setAudioFile] = useState(null)
     const createdAt = quoteBeingEdited.createdAt
+    const audioURL = quoteBeingEdited.audioURL
     const quoteId = quoteBeingEdited._id
     const type = quoteBeingEdited.type
 
@@ -118,12 +119,22 @@ function EditQuote({quoteBeingEdited, guildId, setQuotes, quotes, setQuoteBeingE
             attachmentURL={removeImage ? null : (imageFile || attachmentURL)}
             text={text}
             fragments={quoteFragments}
-            audioURL={audioFile}
+            audioURL={audioFile || audioURL}
             authors={authors}
             createdAt={createdAt}
         />
 
         <div class='centered_row'>
+            {type !== 'audio' ? null : <label class="file_upload">
+                <input
+                    type="file"
+                    accept=".mp3,.wav,.ogg"
+                    onChange={(e) => setAudioFile(e.target.files[0])}
+                    onKeyPress={ (event) => { event.key === 'Enter' && create() } }
+                    hidden
+                />
+                Upload Audio
+            </label>}
             <label class="file_upload">
                 <input
                     type="file"
@@ -156,6 +167,7 @@ function EditQuote({quoteBeingEdited, guildId, setQuotes, quotes, setQuoteBeingE
             <input
                 type="text"
                 class='edit_author_name'
+                style={{ width: '550px' }}
                 value={text}
                 onChange={ (e)=> setText(e.target.value) }
                 onKeyPress={ (event) => { event.key === 'Enter' && create() } }
