@@ -17,7 +17,10 @@ function DisplayQuote({ author, text, fragments, attachmentURL, tags, audioURL, 
     }
     
     color = attachmentURL ? '#FF7B00' : color
-    
+
+    const filteredTags = tags.filter(tag => tag !== null)
+    const stringifiedTags = filteredTags.length ? filteredTags.join(', ') : ['no tags']
+
     if (type !== 'multi') {
         return <>
             <div className='quote_message' style={{ 'border-left': `4px solid ${color}` }}>
@@ -39,7 +42,7 @@ function DisplayQuote({ author, text, fragments, attachmentURL, tags, audioURL, 
                             <span className="quote_author_username">{ author?.name || 'Deleted Author' }</span>
                         </span>
                         <span className="quote_message_timestamp">
-                            { moment(createdAt).calendar() } - { tags }
+                            { moment(createdAt).calendar() } - { stringifiedTags }
                         </span>
                     </div>
 
