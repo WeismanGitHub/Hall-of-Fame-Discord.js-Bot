@@ -23,7 +23,7 @@ function DisplayQuote({ author, text, fragments, attachmentURL, tags, audioURL, 
 
     if (type !== 'multi') {
         return <>
-            <div className='quote_message' style={{ 'border-left': `4px solid ${color}` }}>
+            <div className='quote_message' style={{ 'border-left': `4px solid ${color}`, 'background-color': '#292c30' }}>
                 <div className="quote_author_avatar">
                     <img
                         src={ author?.iconURL || "/icon.png" }
@@ -71,7 +71,7 @@ function DisplayQuote({ author, text, fragments, attachmentURL, tags, audioURL, 
         </>
     } else {
         return <>
-            <div className='quote_message' style={{ 'border-left': `4px solid ${color}` }}>
+            <div className='quote_message' style={{ 'border-left': `4px solid ${color}`, 'background-color': '#292c30' }}>
                 <div className="quote_message_content">
                     <div>
                         <span className="quote_author_info" style={{ 'margin-left': '10px' }}>
