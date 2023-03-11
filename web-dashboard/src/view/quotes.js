@@ -11,8 +11,16 @@ import { useState } from 'react';
 
 import EditQuote from '../edit/edit-quote'
 
+const contentStyle = {
+    background: '#2f3136',
+    border: "#232428 2px solid",
+    'border-radius': '5px',
+    'min-height': '300px',
+    'max-height': '700px',
+    'height': 'fit-content',
+}
+
 function Quotes({ loadMoreQuotes, quotes, authors, queryPage, setQueryPage, guildId, setQuotes, tags}) {
-    const contentStyle = { background: '#2f3136', border: "#232428 2px solid", 'border-radius': '5px' }
     const [quoteBeingEdited, setQuoteBeingEdited] = useState(null)
     const [showPopup, setShowPopup] = useState(false)
     const quoteContextId = 'quote_id'
@@ -220,7 +228,7 @@ function Quotes({ loadMoreQuotes, quotes, authors, queryPage, setQueryPage, guil
                 quotes={quotes}
                 authors={authors}
                 tags={tags}
-                />
+            />
         </Popup>
     </>
 }
