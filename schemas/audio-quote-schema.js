@@ -60,9 +60,14 @@ AudioQuoteSchema.pre('save', async function() {
 
 AudioQuoteSchema.pre('updateOne', async function(next) {
     const audioQuote = this.getUpdate()
-    
+    const guildId = this.getQuery().guildId
+
+    if (!guildId) {
+        throw new InvalidInputError('Missing guildId')
+    }
+
     if (audioQuote?.tags?.length) {
-        audioQuote.tags = await checkTags(audioQuote.tags, audioQuote.guildId);
+        audioQuote.tags = await checkTags(audioQuote.tags, guildId);
     }
 
     next()
@@ -70,9 +75,15 @@ AudioQuoteSchema.pre('updateOne', async function(next) {
 
 AudioQuoteSchema.pre('findOneAndUpdate', async function(next) {
     const audioQuote = this.getUpdate()
+    const guildId = this.getQuery().guildId
+
+    if (!guildId) {
+        throw new InvalidInputError('Missing guildId')
+    }
+
 
     if (audioQuote?.tags?.length) {
-        audioQuote.tags = await checkTags(audioQuote.tags, audioQuote.guildId);
+        audioQuote.tags = await checkTags(audioQuote.tags, guildId);
     }
     
     next()
