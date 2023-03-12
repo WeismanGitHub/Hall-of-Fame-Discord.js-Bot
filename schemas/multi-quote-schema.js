@@ -70,13 +70,18 @@ MultiQuoteSchema.pre('save', async function() {
 MultiQuoteSchema.pre('updateOne', async function(next) {
     const multiQuote = this.getUpdate()
     const length = multiQuote.fragments.length
+    const guildId = this.getQuery().guildId
+
+    if (!guildId) {
+        throw new InvalidInputError('Missing guildId')
+    }
 
     if (length < 2 || length > 5) {
         throw new InvalidInputError('Must have between 2 and 5 fragments.')
     }
     
     if (multiQuote?.tags?.length) {
-        multiQuote.tags = await checkTags(multiQuote.tags, multiQuote.guildId);
+        multiQuote.tags = await checkTags(multiQuote.tags, guildId);
     }
 
     next()
@@ -85,13 +90,18 @@ MultiQuoteSchema.pre('updateOne', async function(next) {
 MultiQuoteSchema.pre('findOneAndUpdate', async function(next) {
     const multiQuote = this.getUpdate()
     const length = multiQuote.fragments.length
+    const guildId = this.getQuery().guildId
+
+    if (!guildId) {
+        throw new InvalidInputError('Missing guildId')
+    }
 
     if (length < 2 || length > 5) {
         throw new InvalidInputError('Must have between 2 and 5 fragments.')
     }
     
     if (multiQuote?.tags?.length) {
-        multiQuote.tags = await checkTags(multiQuote.tags, multiQuote.guildId);
+        multiQuote.tags = await checkTags(multiQuote.tags, guildId);
     }
 
     next()
