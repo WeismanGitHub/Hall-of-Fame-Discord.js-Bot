@@ -61,19 +61,30 @@ QuoteSchema.pre('save', async function() {
 
 QuoteSchema.pre('updateOne', async function(next) {
     const quote = this.getUpdate()
+    const guildId = this.getQuery().guildId
+
+    if (!guildId) {
+        throw new InvalidInputError('Missing guildId')
+    }
 
     if (quote?.tags?.length) {
-        quote.tags = await checkTags(quote.tags, quote.guildId);
+        quote.tags = await checkTags(quote.tags, guildId);
     }
 
     next()
 })
 
 QuoteSchema.pre('findOneAndUpdate', async function(next) {
+    console.log('sdfs')
     const quote = this.getUpdate()
+    const guildId = this.getQuery().guildId
+
+    if (!guildId) {
+        throw new InvalidInputError('Missing guildId')
+    }
 
     if (quote?.tags?.length) {
-        quote.tags = await checkTags(quote.tags, quote.guildId);
+        quote.tags = await checkTags(quote.tags, guildId);
     }
 
     next()
