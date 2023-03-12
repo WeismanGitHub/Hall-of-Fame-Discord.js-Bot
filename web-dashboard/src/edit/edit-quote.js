@@ -24,6 +24,7 @@ function EditQuote({quoteBeingEdited, guildId, setQuotes, quotes, setQuoteBeingE
     const [quoteTags, setQuoteTags] = useState(quoteBeingEdited.tags)
     const [text, setText] = useState(quoteBeingEdited.text)
     const [removeImage, setRemoveImage] = useState(false)
+    const [removeTags, setRemoveTags] = useState(false)
     const attachmentURL = quoteBeingEdited.attachmentURL
     const [imageFile, setImageFile] = useState(null)
     const [audioFile, setAudioFile] = useState(null)
@@ -115,7 +116,7 @@ function EditQuote({quoteBeingEdited, guildId, setQuotes, quotes, setQuoteBeingE
         <DisplayQuote
             author={authors.find(author => author._id == quoteAuthorId)}
             type={type}
-            tags={quoteTags}
+            tags={quoteTags || []}
             attachmentURL={removeImage ? null : (imageFile || attachmentURL)}
             text={text}
             fragments={quoteFragments}
@@ -148,7 +149,7 @@ function EditQuote({quoteBeingEdited, guildId, setQuotes, quotes, setQuoteBeingE
             { !quoteBeingEdited.attachmentURL ? null :
                 <button
                     class={`popup_button ${removeImage ? 'highlighted' : 'unhighlighted'}`}
-                    onClick={() => setRemoveImage(true)}
+                    onClick={() => setRemoveImage(!removeImage)}
                     style={{ 'min-width': '105px'}}
                     >
                         Remove Image
@@ -158,6 +159,16 @@ function EditQuote({quoteBeingEdited, guildId, setQuotes, quotes, setQuoteBeingE
             {type == 'multi' ?
                 <button class="file_upload" onClick={() => setShowFragmentsPopup(true)}>Create Fragments</button> :
                 <button class="file_upload" onClick={() => setShowAuthorsPopup(true)}>Select Author</button>
+            }
+
+            { !quoteTags?.length ? null :
+                <button
+                    class={`popup_button ${removeTags ? 'highlighted' : 'unhighlighted'}`}
+                    onClick={() => setRemoveTags(!removeTags)}
+                    style={{ 'min-width': '105px'}}
+                    >
+                        Remove Tags
+                </button>
             }
 
             <button class="file_upload" onClick={() => setShowTagsPopup(true)}>Select Tags</button>
