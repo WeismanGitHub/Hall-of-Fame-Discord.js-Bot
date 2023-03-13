@@ -3,6 +3,7 @@ import * as moment from 'moment-timezone';
 
 function DisplayQuote({ author, text, fragments, attachmentURL, tags, audioURL, type, authors, createdAt }) {
     let color;
+    console.log(fragments)
 
     switch(type) {
         case 'regular':
@@ -17,7 +18,7 @@ function DisplayQuote({ author, text, fragments, attachmentURL, tags, audioURL, 
     }
     
     color = attachmentURL ? '#FF7B00' : color
-
+    
     const filteredTags = tags.filter(tag => tag !== null)
     const stringifiedTags = filteredTags.length ? filteredTags.join(', ') : ['no tags']
 
@@ -78,7 +79,7 @@ function DisplayQuote({ author, text, fragments, attachmentURL, tags, audioURL, 
                             <span className="quote_author_username">{ text }</span>
                         </span>
                         <span className="quote_message_timestamp">
-                            { moment(createdAt).calendar() } - { tags }
+                            { moment(createdAt).calendar() } - { stringifiedTags }
                         </span>
                     </div>
                     <div className="quote_message_body">
