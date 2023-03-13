@@ -1,7 +1,7 @@
 import { successToast, errorToast } from '../toasts';
 import axios, * as others from 'axios'
 import 'reactjs-popup/dist/index.css'
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Popup from 'reactjs-popup';
 
 import FragmentsPopup from '../popups/fragments-popup'
@@ -37,6 +37,18 @@ function EditQuote({quoteBeingEdited, guildId, setQuotes, quotes, setQuoteBeingE
     const [showAuthorsPopup, setShowAuthorsPopup] = useState(false)
     const [showTagsPopup, setShowTagsPopup] = useState(false)
     
+    useEffect(() => {
+        if (removeTags) {
+            setQuoteTags([])
+        }
+    }, [removeTags])
+
+    useEffect(() => {
+        if (!quoteTags.length) {
+            setRemoveTags(false)
+        }
+    }, [quoteTags])
+
     function getBase64(file) {
         return new Promise((resolve, reject) => {
           const reader = new FileReader();
