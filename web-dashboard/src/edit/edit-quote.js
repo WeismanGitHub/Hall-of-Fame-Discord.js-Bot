@@ -70,70 +70,77 @@ function EditQuote({quoteBeingEdited, guildId, setQuotes, quotes, setQuoteBeingE
         });
     }
 
-    function create() {
-        const update = { removeImage }
+    async function edit() {
+        const update = { removeImage, removeTags, type }
+        let newImageURL;
+        let newAudioURL;
+
+        if (quoteFragments?.length < 2) {
+            return errorToast('Must have between 2 and 5 fragments.')
+        }
+
+        if (quoteFragments && quoteFragments !== quoteBeingEdited.fragments) {
+            update.fragments = quoteFragments
+        }
 
         if (text !== quoteBeingEdited.text) {
-            update.newText = text
+            update.text = text
+        }
+        
+        if (quoteAuthorId !== quoteBeingEdited.authorId) {
+            update.authorId = quoteAuthorId
+        }
+
+        if (quoteTags !== quoteBeingEdited.tags) {
+            update.tags = quoteTags
         }
         
         if (imageFile) {
-            getBase64(imageFile)
-            .then(base64File => {
-                axios.post(
-                    'https://api.imgur.com/3/image/',
-                    { image: base64File.split(',')[1] },
-                    { headers: {
-                        Authorization: `Client-ID ${process.env.REACT_APP_IMGUR_ID}`,
-                        accept: "application/x-www-form-urlencoded"
-                    } }
-                ).then((res) => {
-                    update.newAttachmentURL = res.data.data.link
+            const base64Image = await getBase64(imageFile)
+            
+            newImageURL = (await axios.post(
+                'https://api.imgur.com/3/image/',
+                { image: base64Image.split(',')[1] },
+                { headers: {
+                    Authorization: `Client-ID ${process.env.REACT_APP_IMGUR_ID}`,
+                    accept: "application/x-www-form-urlencoded"
+                } }
+            ).catch((err) => {
+                errorToast('Error uploading image.')
+            })).data.data.link
 
-                    axios.patch(`/api/v1/${guildId}/quotes/${quoteId}`, update)
-                    .then(res => {
-                        successToast(`Successfully edited quote.`)
-                        const updatedQuote = {
-                            text: text,
-                            attachmentURL: res.data.data.link,
-                            authorId: quoteAuthorId,
-                            tags: quoteTags,
-                        }
+            console.log(newImageURL)
+            update.attachmentURL = newImageURL
+        }
 
-                        setQuotes(quotes.map(quote => {
-                            return quote == quoteBeingEdited ? updatedQuote : quote
-                        }))
-
-                        setQuoteBeingEdited(updatedQuote)
-                    }).catch(err => {
-                        errorToast(`Failed to edit quote.`)
-                    })
-                }).catch((err) => {
-                    errorToast('Error uploading image.')
-                });
-            })
-
-            return
+        if (audioFile) {
+            console.log('audio quote stuff')
         }
 
         axios.patch(`/api/v1/${guildId}/quotes/${quoteId}`, update)
         .then(res => {
             successToast(`Successfully edited quote.`)
+
             const updatedQuote = {
                 text: text,
-                attachmentURL: res.data.data.link,
+                attachmentURL: newImageURL,
+                audioURL: newAudioURL,
                 authorId: quoteAuthorId,
                 tags: quoteTags,
+                fragments: quoteFragments,
+                createdAt: createdAt,
+                type: type,
+                _id: quoteId,
             }
 
             setQuotes(quotes.map(quote => {
-                return quote == quoteBeingEdited ? updatedQuote : quote
+                return quote._id == quoteId ? updatedQuote : quote
             }))
 
             setQuoteBeingEdited(updatedQuote)
         }).catch(err => {
             errorToast(`Failed to edit quote.`)
-       })
+        })
     }
 
     return (<>
@@ -155,7 +162,7 @@ function EditQuote({quoteBeingEdited, guildId, setQuotes, quotes, setQuoteBeingE
                     type="file"
                     accept=".mp3,.wav,.ogg"
                     onChange={(e) => setAudioFile(e.target.files[0])}
-                    onKeyPress={ (event) => { event.key === 'Enter' && create() } }
+                    onKeyPress={ (event) => { event.key === 'Enter' && edit() } }
                     hidden
                 />
                 Upload Audio
@@ -165,7 +172,7 @@ function EditQuote({quoteBeingEdited, guildId, setQuotes, quotes, setQuoteBeingE
                     type="file"
                     accept=".gif,.jpg,.jpeg,.png"
                     onChange={(e) => setImageFile(e.target.files[0])}
-                    onKeyPress={ (event) => { event.key === 'Enter' && create() } }
+                    onKeyPress={ (event) => { event.key === 'Enter' && edit() } }
                     hidden
                 />
                 Upload Image
@@ -181,7 +188,7 @@ function EditQuote({quoteBeingEdited, guildId, setQuotes, quotes, setQuoteBeingE
             }
 
             {type == 'multi' ?
-                <button class="file_upload" onClick={() => setShowFragmentsPopup(true)}>Create Fragments</button> :
+                <button class="file_upload" onClick={() => setShowFragmentsPopup(true)}>Change xFragments</button> :
                 <button class="file_upload" onClick={() => setShowAuthorsPopup(true)}>Select Author</button>
             }
 
@@ -205,12 +212,12 @@ function EditQuote({quoteBeingEdited, guildId, setQuotes, quotes, setQuoteBeingE
                 style={{ width: '550px' }}
                 value={text}
                 onChange={ (e)=> setText(e.target.value) }
-                onKeyPress={ (event) => { event.key === 'Enter' && create() } }
+                onKeyPress={ (event) => { event.key === 'Enter' && edit() } }
                 autoFocus
             />
             
             <div style={{ width: '100%' }}><br/></div>
-            <button class='modal_submit' onClick={create} style={{ 'margin-bottom': '50px' }}>Submit</button>
+            <button class='modal_submit' onClick={edit} style={{ 'margin-bottom': '50px' }}>Submit</button>
         </div>
 
         <Popup
