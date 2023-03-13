@@ -70,7 +70,7 @@ MultiQuoteSchema.pre('save', async function() {
 
 MultiQuoteSchema.pre('updateOne', async function(next) {
     const multiQuote = this.getUpdate()
-    const length = multiQuote.fragments.length
+    const length = multiQuote?.fragments?.length
     const guildId = this.getQuery().guildId
 
     if (!guildId) {
@@ -90,7 +90,7 @@ MultiQuoteSchema.pre('updateOne', async function(next) {
 
 MultiQuoteSchema.pre('findOneAndUpdate', async function(next) {
     const multiQuote = this.getUpdate()
-    const length = multiQuote.fragments.length
+    const length = multiQuote?.fragments?.length
     const guildId = this.getQuery().guildId
 
     if (!guildId) {
