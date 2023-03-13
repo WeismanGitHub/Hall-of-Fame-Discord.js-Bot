@@ -251,7 +251,7 @@ function EditQuote({quoteBeingEdited, guildId, setQuotes, quotes, setQuoteBeingE
             open={showFragmentsPopup}
             position="center center"
             modal onClose={() => setShowFragmentsPopup(false)}
-            {...{ contentStyle }}
+            {...{ contentStyle: {...contentStyle, width: '400px' } }}
             nested
         >
             <FragmentsPopup
