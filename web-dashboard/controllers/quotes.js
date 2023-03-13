@@ -68,49 +68,50 @@ async function editQuote(req, res) {
 		text,
 	} = req.body
 	
-	// Can't use UniversalQuoteSchema because it has no pre save/update checks like other schemas.
-	const quote = await ((type) => {
-		switch (type) {
-			case 'regular':
-				return QuoteSchema.findOne({ _id: quoteId, guildId: guildId })
-			case 'audio':
-				return AudioQuoteSchema.findOne({ _id: quoteId, guildId: guildId })
-			case 'multi':
-				return MultiQuoteSchema.findOne({ _id: quoteId, guildId: guildId })
-			default:
-				throw new InvalidInputError('Invalid Quote Type')
-		}
-	})(type)
+	const update = {}
 
 	if (attachmentURL) {
-		quote.attachmentURL = attachmentURL
+		update.attachmentURL = attachmentURL
 	} else if (removeImage) {
-		quote.attachmentURL = null
+		update.attachmentURL = null
 	}
 
 	if (tags) {
-		quote.tags = tags
+		update.tags = tags
 	} else if (removeTags) {
-		quote.tags = []
+		update.tags = []
 	}
 
 	if (text) {
-		quote.text = text
+		update.text = text
 	}
 	
 	if (authorId) {
-		quote.authorId = authorId
+		update.authorId = authorId
 	}
 	
 	if (fragments) {
-		quote.fragments = fragments
+		update.fragments = fragments
 	}
 
 	if (audioURL) {
-		quote.audioURL = audioURL
+		update.audioURL = audioURL
 	}
 
-	await quote.save()
+	// Can't use UniversalQuoteSchema because it has no pre save/update checks like other schemas.
+	switch (type) {
+		case 'regular':
+			await QuoteSchema.updateOne({ _id: quoteId, guildId: guildId }, update)
+			break;
+		case 'audio':
+			await AudioQuoteSchema.updateOne({ _id: quoteId, guildId: guildId }, update)
+			break;
+		case 'multi':
+			await MultiQuoteSchema.updateOne({ _id: quoteId, guildId: guildId }, update)
+			break;
+		default:
+			throw new InvalidInputError('Invalid Quote Type')
+	}
 
 	res.status(200).end()
 }
