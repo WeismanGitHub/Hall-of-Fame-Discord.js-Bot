@@ -188,7 +188,7 @@ function EditQuote({quoteBeingEdited, guildId, setQuotes, quotes, setQuoteBeingE
             }
 
             {type == 'multi' ?
-                <button class="file_upload" onClick={() => setShowFragmentsPopup(true)}>Change xFragments</button> :
+                <button class="file_upload" onClick={() => setShowFragmentsPopup(true)}>Change Fragments</button> :
                 <button class="file_upload" onClick={() => setShowAuthorsPopup(true)}>Select Author</button>
             }
 
