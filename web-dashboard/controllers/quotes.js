@@ -110,8 +110,8 @@ async function editQuote(req, res) {
 		quote.audioURL = audioURL
 	}
 
-	quote.save()
-	
+	await quote.save()
+
 	res.status(200).end()
 }
 
