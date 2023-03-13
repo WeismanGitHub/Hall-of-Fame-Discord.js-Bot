@@ -155,7 +155,7 @@ function Quotes({ loadMoreQuotes, quotes, authors, queryPage, setQueryPage, guil
                         return <>
                             <div className='quote_message'
                             style={{ 'border-left': `4px solid ${color}` }}
-                            onContextMenu={(e) => handleContextMenu(e, { id: _id })}>
+                            onContextMenu={(e) => handleContextMenu(e, quote)}>
                                 <div className="quote_message_content">
                                     <div>
                                         <span className="quote_author_info" style={{ 'margin-left': '10px' }}>
