@@ -41,7 +41,8 @@ const AudioQuoteSchema = new mongoose.Schema({
     type: {
         type: String,
         default: 'audio',
-        enum: ['audio']
+        enum: ['audio'],
+        immutable: true
     }
 }, { timestamps: { createdAt: true, updatedAt: false } });
 
