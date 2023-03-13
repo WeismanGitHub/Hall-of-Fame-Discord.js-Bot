@@ -129,7 +129,7 @@ function EditQuote({quoteBeingEdited, guildId, setQuotes, quotes, setQuoteBeingE
             author={authors.find(author => author._id == quoteAuthorId)}
             type={type}
             tags={quoteTags || []}
-            attachmentURL={removeImage ? null : (imageFile || attachmentURL)}
+            attachmentURL={removeImage ? null : ((imageFile ? URL.createObjectURL(imageFile) : null) || attachmentURL)}
             text={text}
             fragments={quoteFragments}
             audioURL={audioFile || audioURL}
