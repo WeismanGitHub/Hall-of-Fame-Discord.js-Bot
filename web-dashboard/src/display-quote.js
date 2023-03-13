@@ -3,7 +3,6 @@ import * as moment from 'moment-timezone';
 
 function DisplayQuote({ author, text, fragments, attachmentURL, tags, audioURL, type, authors, createdAt }) {
     let color;
-    console.log(fragments)
 
     switch(type) {
         case 'regular':
