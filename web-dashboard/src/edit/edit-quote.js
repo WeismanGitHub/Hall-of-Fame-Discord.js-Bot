@@ -109,7 +109,6 @@ function EditQuote({quoteBeingEdited, guildId, setQuotes, quotes, setQuoteBeingE
                 errorToast('Error uploading image.')
             })).data.data.link
 
-            console.log(newImageURL)
             update.attachmentURL = newImageURL
         }
 
@@ -123,7 +122,7 @@ function EditQuote({quoteBeingEdited, guildId, setQuotes, quotes, setQuoteBeingE
 
             const updatedQuote = {
                 text: text,
-                attachmentURL: newImageURL,
+                attachmentURL: removeImage ? null : (newImageURL || attachmentURL),
                 audioURL: newAudioURL,
                 authorId: quoteAuthorId,
                 tags: quoteTags,
