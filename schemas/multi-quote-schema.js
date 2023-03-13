@@ -33,7 +33,8 @@ const MultiQuoteSchema = new mongoose.Schema({
     type: {
         type: String,
         default: 'multi',
-        enum: ['multi']
+        enum: ['multi'],
+        immutable: true
     },
     attachmentURL: {
         type: String,

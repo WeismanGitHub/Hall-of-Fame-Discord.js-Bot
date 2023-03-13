@@ -34,7 +34,8 @@ const QuoteSchema = new mongoose.Schema({
     type: {
         type: String,
         default: 'regular',
-        enum: ['regular']
+        enum: ['regular'],
+        immutable: true
     }
 }, { timestamps: { createdAt: true, updatedAt: false } });
 
