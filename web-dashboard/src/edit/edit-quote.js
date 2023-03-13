@@ -49,6 +49,18 @@ function EditQuote({quoteBeingEdited, guildId, setQuotes, quotes, setQuoteBeingE
         }
     }, [quoteTags])
 
+    useEffect(() => {
+        if (removeImage) {
+            setImageFile(null)
+        }
+    }, [removeImage])
+
+    useEffect(() => {
+        if (imageFile) {
+            setRemoveImage(false)
+        }
+    }, [imageFile])
+
     function getBase64(file) {
         return new Promise((resolve, reject) => {
           const reader = new FileReader();
