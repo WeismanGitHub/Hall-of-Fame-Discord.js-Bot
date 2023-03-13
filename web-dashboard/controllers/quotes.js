@@ -1,6 +1,9 @@
+const { BadRequestError, NotFoundError, InvalidInputError } = require('../errors');
 const UniversalQuoteSchema = require('../../schemas/universal-quote-schema');
-const { BadRequestError, NotFoundError } = require('../errors');
+const MultiQuoteSchema = require('../../schemas/multi-quote-schema')
+const AudioQuoteSchema = require('../../schemas/audio-quote-schema')
 const { getAuthorById } = require('../../helpers/get-author');
+const QuoteSchema = require('../../schemas/quote-schema');
 require('express-async-errors')
 
 const getQuotes = async (req, res) => {
@@ -52,26 +55,63 @@ async function deleteQuote(req, res) {
 }
 
 async function editQuote(req, res) {
-	const { guildId } = req.params
+	const { guildId, quoteId } = req.params
 	const {
-		type,
 		tags,
+		type,
 		authorId,
-		fragments
+		fragments,
+		removeTags,
+		removeImage,
+		audioURL,
+		attachmentURL,
+		text,
 	} = req.body
+	
+	// Can't use UniversalQuoteSchema because it has no pre save/update checks like other schemas.
+	const quote = await ((type) => {
+		switch (type) {
+			case 'regular':
+				return QuoteSchema.findOne({ _id: quoteId, guildId: guildId })
+			case 'audio':
+				return AudioQuoteSchema.findOne({ _id: quoteId, guildId: guildId })
+			case 'multi':
+				return MultiQuoteSchema.findOne({ _id: quoteId, guildId: guildId })
+			default:
+				throw new InvalidInputError('Invalid Quote Type')
+		}
+	})(type)
 
-	switch (type) {
-		case 'regular':
-			console.log('regular')
-			break;
-		case 'audio':
-			console.log('audio')
-			break;
-		case 'multi':
-			console.log('multi')
-			break;
+	if (attachmentURL) {
+		quote.attachmentURL = attachmentURL
+	} else if (removeImage) {
+		quote.attachmentURL = null
 	}
 
+	if (tags) {
+		quote.tags = tags
+	} else if (removeTags) {
+		quote.tags = []
+	}
+
+	if (text) {
+		quote.text = text
+	}
+	
+	if (authorId) {
+		quote.authorId = authorId
+	}
+	
+	if (fragments) {
+		quote.fragments = fragments
+	}
+
+	if (audioURL) {
+		quote.audioURL = audioURL
+	}
+
+	quote.save()
+	
 	res.status(200).end()
 }
 
