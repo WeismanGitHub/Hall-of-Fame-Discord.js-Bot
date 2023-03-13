@@ -19,7 +19,7 @@ const contentStyle = {
 }
 
 function EditQuote({quoteBeingEdited, guildId, setQuotes, quotes, setQuoteBeingEdited, authors, tags}) {
-    const [setQuoteFragments, quoteFragments] = useState(quoteBeingEdited.fragments)
+    const [quoteFragments, setQuoteFragments] = useState(quoteBeingEdited.fragments)
     const [quoteAuthorId, setQuoteAuthorId] = useState(quoteBeingEdited.authorId)
     const [quoteTags, setQuoteTags] = useState(quoteBeingEdited.tags)
     const [text, setText] = useState(quoteBeingEdited.text)
