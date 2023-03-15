@@ -43,13 +43,13 @@ module.exports = {
         const guildId = interaction.guildId;
         const name = options.getString('name');
         const lastImageChannel = options.getChannel('last_image');
-        const user = options.getUser('account_image')
+        const account = options.getUser('account_image')
         let iconURL = options.getString('image_link')
 
         if (lastImageChannel) {
             iconURL = await getLastImage(lastImageChannel)
         } else if (account) {
-            iconURL = await user.avatarURL()
+            iconURL = await account.avatarURL()
         }
 
         const author = {
