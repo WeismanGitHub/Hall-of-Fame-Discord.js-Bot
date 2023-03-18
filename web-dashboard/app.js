@@ -1,3 +1,4 @@
+const fetchMetadata =  require('fetch-metadata')
 const { ForbiddenError } = require('../errors')
 const rateLimit = require('express-rate-limit')
 const { NotFoundError } = require('./errors')
@@ -21,17 +22,33 @@ const limiter = rateLimit({
 	message: `Rate Limit: ${max} requests per second`
 })
 
-app.use(helmet({
-	contentSecurityPolicy: {
-		directives: {
-			...helmet.contentSecurityPolicy.getDefaultDirectives(),
-			"img-src": ["*", "blob:"],
-			'media-src': ['*'],
-			"default-src": ["'self'", "https://api.imgur.com/3/image/"]
+app.use(
+	fetchMetadata({
+	  allowedFetchSites: ['same-origin', 'same-site', 'none'],
+	  disallowedNavigationRequests: ['frame', 'iframe'],
+	  errorStatusCode: 403,
+	  allowedPaths: [],
+	  onError: (request, response, next, options) => {
+		response.statusCode = options.errorStatusCode
+		response.end()
+	  },
+	})
+)
+
+app.use(
+	helmet({
+		contentSecurityPolicy: {
+			directives: {
+				...helmet.contentSecurityPolicy.getDefaultDirectives(),
+				"img-src": ["*", "blob:"],
+				'media-src': ['*'],
+				"default-src": ["'self'", "https://api.imgur.com/3/image/"]
+			},
 		},
-	},
-	crossOriginEmbedderPolicy: false
-}))
+		crossOriginEmbedderPolicy: false
+	})
+)
+
 app.use(limiter)
 app.use(compression())
 app.use(cors({ origin: ['http://localhost:5000'] }))
