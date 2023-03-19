@@ -1,6 +1,6 @@
 function FragmentsPopup({ authors, setQuoteFragments, quoteFragments }) {
-    function deleteFragment() {
-        console.log('delete fragment')
+    function deleteFragment(fragment) {
+        setQuoteFragments(quoteFragments.filter(frag => frag !== fragment))
     }
 
     function createFragment() {
@@ -10,10 +10,11 @@ function FragmentsPopup({ authors, setQuoteFragments, quoteFragments }) {
     function changeAuthor() {
         console.log('change author')
     }
-
+    
     return (<>
         <div className="quote_message_body">
-            { quoteFragments.map(({ authorId, text })=> {
+            { quoteFragments.map(fragment => {
+                const { text, authorId } = fragment
                 const author = authors.find(author => author._id == authorId)
 
                 return <div className='quote_message' style={{'background-color': '#292c30'}}>
@@ -21,17 +22,20 @@ function FragmentsPopup({ authors, setQuoteFragments, quoteFragments }) {
                         <button
                             style={{padding: '5px'}}
                             class='modal_submit'
-                            onClick={()=> changeAuthor({ authorId, text })}
+                            onClick={()=> changeAuthor(fragment)}
                         >
                             Author
                         </button>
-                        <button
-                            class='modal_submit'
-                            onClick={()=> deleteFragment({ authorId, text })}
-                            style={{padding: '5px', 'margin-top': '3px'}}
-                        >
-                            Delete
-                        </button>
+
+                        { quoteFragments.length <= 2 ? null : 
+                            <button
+                                class='modal_submit'
+                                onClick={()=> deleteFragment(fragment)}
+                                style={{padding: '5px', 'margin-top': '3px'}}
+                            >
+                                Delete
+                            </button>
+                        }
                     </div>
 
                     <div className="quote_author_avatar">
@@ -58,8 +62,16 @@ function FragmentsPopup({ authors, setQuoteFragments, quoteFragments }) {
                                 type="text"
                                 class='edit_author_name'
                                 value={text}
-                                onChange={ (e)=> console.log(e.target.value) }
-                                autoFocus
+                                onChange={ (e)=> {
+                                    setQuoteFragments(quoteFragments.map(frag => {
+                                        if (frag == fragment) {
+                                            frag.text = e.target.value
+                                        }
+
+                                        return frag
+                                    }))
+                                }}
+                                autoFocus= {quoteFragments[0] == fragment}
                             />
                         </div>
                     </div>
