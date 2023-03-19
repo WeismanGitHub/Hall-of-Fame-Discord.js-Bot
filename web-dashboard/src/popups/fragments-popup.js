@@ -1,14 +1,49 @@
+import AuthorsPopup from './authors-popup'
+import 'reactjs-popup/dist/index.css'
+import Popup from 'reactjs-popup';
+import { useState } from 'react'
+
+const contentStyle = {
+    background:
+    '#2f3136',
+    border: "#232428 2px solid",
+    'border-radius': '5px',
+    height: '300px',
+    width: '300px'
+}
+
 function FragmentsPopup({ authors, setQuoteFragments, quoteFragments }) {
+    const [fragmentBeingEdited, setFragmentBeingEdited] = useState(null)
+    const [showAuthorsPopup, setShowAuthorsPopup] = useState(false)
+
+    function setFragmentAuthorId(id) {
+        setQuoteFragments(quoteFragments.map(frag => {
+            if (frag.authorId == fragmentBeingEdited.authorId && frag.text == fragmentBeingEdited.text) {
+                frag.authorId = id
+
+                setFragmentBeingEdited(null)
+            }
+
+            return frag
+        }))
+    }
+
     function deleteFragment(fragment) {
+        if (fragment?.authorId == fragmentBeingEdited?.authorId && fragment?.text == fragmentBeingEdited?.text) {
+            setFragmentBeingEdited(null)
+        }
+        
         setQuoteFragments(quoteFragments.filter(frag => frag !== fragment))
     }
 
     function createFragment() {
-        console.log('new fragment')
+        setFragmentBeingEdited({ authorId: null, text: '' })
+        setQuoteFragments([...quoteFragments, { authorId: null, text: '' }])
     }
 
-    function changeAuthor() {
-        console.log('change author')
+    function changeAuthor(fragment) {
+        setFragmentBeingEdited(fragment)
+        setShowAuthorsPopup(true)
     }
     
     return (<>
@@ -79,9 +114,25 @@ function FragmentsPopup({ authors, setQuoteFragments, quoteFragments }) {
             })}
         </div>
 
-        <div class='centered_row'>
-            <button class='modal_submit' onClick={createFragment} style={{ 'margin-bottom': '50px' }}>New Fragment</button>
-        </div>
+        { (quoteFragments.every(frag => frag.text !== '') && fragmentBeingEdited?.authorId === null) ? null : 
+            <div class='centered_row'>
+                <button class='modal_submit' onClick={createFragment} style={{ 'margin-bottom': '50px' }}>New Fragment</button>
+            </div>
+        }
+
+        <Popup
+            open={showAuthorsPopup}
+            position="center center"
+            modal onClose={() => setShowAuthorsPopup(false)}
+            {...{ contentStyle }}
+            nested
+        >
+            <AuthorsPopup
+                authors={authors}
+                setQuoteAuthorId={setFragmentAuthorId}
+                quoteAuthorId={fragmentBeingEdited?.authorId}
+            />
+        </Popup>
     </>)
 }
 
