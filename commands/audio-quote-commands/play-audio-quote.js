@@ -4,7 +4,6 @@ const { getLastQuoteId } = require('../../helpers/get-last-item')
 const { getAuthorById } = require('../../helpers/get-author');
 const errorHandler = require('../../helpers/error-handler');
 const { quoteEmbed } = require('../../helpers/embeds');
-const { Constants } = require('discord.js');
 
 const {
     createAudioPlayer,
@@ -25,20 +24,20 @@ module.exports = {
         {
             name: 'title',
             description: 'Play quote with either an id or title.',
-            type: Constants.ApplicationCommandOptionTypes.STRING,
+          // type: Constants.ApplicationCommandOptionTypes.STRING,
             maxLength: 4096
         },
         {
             name: 'id',
             description: 'Play quote with either an id or title.',
-            type: Constants.ApplicationCommandOptionTypes.STRING,
+       //     type: Constants.ApplicationCommandOptionTypes.STRING,
             minLength: 24,
             maxLength: 24,
         },
         {
             name: 'last_quote',
             description: "Use the last quote sent in a channel. Will grab any type of quote.",
-            type: Constants.ApplicationCommandOptionTypes.CHANNEL
+         //   type: Constants.ApplicationCommandOptionTypes.CHANNEL
         },
     ],
 

@@ -3,7 +3,6 @@ const errorHandler = require('../../helpers/error-handler');
 const GuildSchema = require('../../schemas/guild-schema');
 const { authorEmbed } = require('../../helpers/embeds');
 const { InvalidInputError } = require('../../errors');
-const { Constants } = require('discord.js');
 
 module.exports = {
     category:'Authors',
@@ -16,25 +15,25 @@ module.exports = {
         {
             name: 'name',
             description: 'The name of the author you want to create.',
-            type: Constants.ApplicationCommandOptionTypes.STRING,
+   //         type: Constants.ApplicationCommandOptionTypes.STRING,
             required: true,
             maxLength: 256
         },
         {
             name: "account_image",
             description: "Use an account image.",
-            type: Constants.ApplicationCommandOptionTypes.USER
+   //         type: Constants.ApplicationCommandOptionTypes.USER
         },
         {
             name: 'image_link',
             description: "This will be the author's icon.",
-            type: Constants.ApplicationCommandOptionTypes.STRING,
+    //        type: Constants.ApplicationCommandOptionTypes.STRING,
             maxLength: 512
         },
         {
             name: 'last_image',
             description: 'Use the last image sent in a channel for the author icon.',
-            type: Constants.ApplicationCommandOptionTypes.CHANNEL
+   //         type: Constants.ApplicationCommandOptionTypes.CHANNEL
         },
     ],
 

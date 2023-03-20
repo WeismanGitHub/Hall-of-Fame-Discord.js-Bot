@@ -3,7 +3,6 @@ const errorHandler = require('../../helpers/error-handler');
 const QuoteSchema = require('../../schemas/quote-schema');
 const { basicEmbed } = require('../../helpers/embeds');
 const { NotFoundError } = require('../../errors');
-const { Constants } = require('discord.js');
 
 module.exports = {
     category:'Quotes',
@@ -16,14 +15,14 @@ module.exports = {
         {
             name: 'id',
             description: 'The id of the quote.',
-            type: Constants.ApplicationCommandOptionTypes.STRING,
+      //      type: Constants.ApplicationCommandOptionTypes.STRING,
             minLength: 24,
             maxLength: 24
         },
         {
             name: 'last_quote',
             description: "Use the last quote sent in a channel. Will grab any type of quote.",
-            type: Constants.ApplicationCommandOptionTypes.CHANNEL
+       //     type: Constants.ApplicationCommandOptionTypes.CHANNEL
         },
     ],
 

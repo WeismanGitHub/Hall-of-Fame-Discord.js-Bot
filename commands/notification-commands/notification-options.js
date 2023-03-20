@@ -2,7 +2,6 @@ const errorHandler = require('../../helpers/error-handler');
 const GuildSchema = require('../../schemas/guild-schema');
 const { basicEmbed } = require('../../helpers/embeds');
 const { InvalidInputError } = require('../../errors');
-const { Constants } = require('discord.js');
 
 module.exports = {
     category:'Notifications',
@@ -15,7 +14,7 @@ module.exports = {
         {
             name: 'notifications',
             description: 'Turn notifications on or off.',
-            type: Constants.ApplicationCommandOptionTypes.STRING,
+    //        type: Constants.ApplicationCommandOptionTypes.STRING,
             choices: [
                 {
                     name: 'on',
@@ -30,7 +29,7 @@ module.exports = {
         {
             name: 'notification_channel',
             description: 'Change the default notifications channel.',
-            type: Constants.ApplicationCommandOptionTypes.CHANNEL
+    //        type: Constants.ApplicationCommandOptionTypes.CHANNEL
         }
     ],
     

@@ -5,7 +5,6 @@ const AudioQuoteSchema = require('../../schemas/audio-quote-schema');
 const { getAuthorByName } = require('../../helpers/get-author');
 const errorHandler = require('../../helpers/error-handler');
 const { quoteEmbed } = require('../../helpers/embeds');
-const { Constants } = require('discord.js');
 
 module.exports = {
     category:'Audio Quotes',
@@ -19,55 +18,55 @@ module.exports = {
             name: 'author',
             description: 'The name of who said the quote. You must first register an author with /createauthor.',
             required: true,
-            type: Constants.ApplicationCommandOptionTypes.STRING,
+            //type: Constants.ApplicationCommandOptionTypes.STRING,
             maxLength: 256
         },
         {
             name: 'title',
             description: 'Title of the audio quote.',
             required: true,
-            type: Constants.ApplicationCommandOptionTypes.STRING,
+            //type: Constants.ApplicationCommandOptionTypes.STRING,
             maxLength: 4096
         },
         {
             name: 'audio_file_link',
             description: 'Must be a link to an audio file. You can upload the audio file to discord and copy that link.',
-            type: Constants.ApplicationCommandOptionTypes.STRING,
+            //type: Constants.ApplicationCommandOptionTypes.STRING,
             maxLength: 512
         },
         {
             name: 'first_tag',
             description: 'Tags are used for filtering.',
-            type: Constants.ApplicationCommandOptionTypes.STRING,
+            //type: Constants.ApplicationCommandOptionTypes.STRING,
             maxLength: 339
         },
         {
             name: 'second_tag',
             description: 'Tags are used for filtering.',
-            type: Constants.ApplicationCommandOptionTypes.STRING,
+            //type: Constants.ApplicationCommandOptionTypes.STRING,
             maxLength: 339
         },
         {
             name: 'third_tag',
             description: 'Tags are used for filtering.',
-            type: Constants.ApplicationCommandOptionTypes.STRING,
+            //type: Constants.ApplicationCommandOptionTypes.STRING,
             maxLength: 339
         },
         {
             name: 'last_audio',
             description: 'Use the last audio file sent in a channel.',
-            type: Constants.ApplicationCommandOptionTypes.CHANNEL
+           // type: Constants.ApplicationCommandOptionTypes.CHANNEL
         },
         {
             name: 'image_link',
             description: 'Image attachment link. Upload an image to Discord and copy the link to that image.',
-            type: Constants.ApplicationCommandOptionTypes.STRING,
+         //   type: Constants.ApplicationCommandOptionTypes.STRING,
             maxLength: 512
         },
         {
             name: 'last_image',
             description: 'Use the last image sent in a channel to the quote.',
-            type: Constants.ApplicationCommandOptionTypes.CHANNEL
+           // type: Constants.ApplicationCommandOptionTypes.CHANNEL
         }
     ],
 

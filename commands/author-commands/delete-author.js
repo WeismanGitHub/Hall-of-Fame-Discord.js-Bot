@@ -2,7 +2,6 @@ const errorHandler = require('../../helpers/error-handler');
 const GuildSchema = require('../../schemas/guild-schema');
 const { basicEmbed } = require('../../helpers/embeds');
 const { NotFoundError } = require('../../errors');
-const { Constants } = require('discord.js');
 
 module.exports = {
     category:'Authors',
@@ -16,7 +15,7 @@ module.exports = {
             name: 'author',
             description: 'The name of the author you want to delete.',
             required: true,
-            type: Constants.ApplicationCommandOptionTypes.STRING,
+       //     type: Constants.ApplicationCommandOptionTypes.STRING,
             maxLength: 256
         }
     ],

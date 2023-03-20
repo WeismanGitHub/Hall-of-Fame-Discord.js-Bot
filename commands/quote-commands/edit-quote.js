@@ -5,7 +5,6 @@ const { InvalidInputError, NotFoundError } = require('../../errors');
 const errorHandler = require('../../helpers/error-handler');
 const QuoteSchema= require('../../schemas/quote-schema');
 const { quoteEmbed } = require('../../helpers/embeds');
-const { Constants } = require('discord.js');
 
 module.exports = {
     category:'Quotes',
@@ -18,65 +17,65 @@ module.exports = {
         {
             name: 'id',
             description: 'The id of the quote.',
-            type: Constants.ApplicationCommandOptionTypes.STRING,
+     //       type: Constants.ApplicationCommandOptionTypes.STRING,
             minLength: 24,
             maxLength: 24,
         },
         {
             name: 'new_author',
             description: 'Name of the new author. You must create an author beforehand.',
-            type: Constants.ApplicationCommandOptionTypes.STRING,
+      //      type: Constants.ApplicationCommandOptionTypes.STRING,
             maxLength: 256
         },
         {
             name: 'new_text',
             description: 'New quote text.',
-            type: Constants.ApplicationCommandOptionTypes.STRING,
+     //       type: Constants.ApplicationCommandOptionTypes.STRING,
             maxLength: 4096
         },
         {
             name: 'new_image_link',
             description: 'Image attachment link. Upload an image to Discord and copy the link to that image.',
-            type: Constants.ApplicationCommandOptionTypes.STRING,
+      //      type: Constants.ApplicationCommandOptionTypes.STRING,
             maxLength: 512
         },
         {
             name: 'remove_tags',
             description: 'Removes tags from quote.',
-            type: Constants.ApplicationCommandOptionTypes.BOOLEAN
+    //        type: Constants.ApplicationCommandOptionTypes.BOOLEAN
         },
         {
             name: 'remove_image',
             description: 'Removes image from quote.',
-            type: Constants.ApplicationCommandOptionTypes.BOOLEAN
+    //        type: Constants.ApplicationCommandOptionTypes.BOOLEAN
         },
         {
             name: 'first_tag',
             description: 'Tags are used for filtering. You must create a tag beforehand. New tags will overwrite the old ones.',
-            type: Constants.ApplicationCommandOptionTypes.STRING,
+      //      type: Constants.ApplicationCommandOptionTypes.STRING,
             maxLength: 339
         },
         {
             name: 'second_tag',
             description: 'Tags are used for filtering. You must create a tag beforehand. New tags will overwrite the old ones.',
-            type: Constants.ApplicationCommandOptionTypes.STRING,
+   //         type: Constants.ApplicationCommandOptionTypes.STRING,
             maxLength: 339
         },
         {
             name: 'third_tag',
             description: 'Tags are used for filtering. You must create a tag beforehand. New tags will overwrite the old ones.',
-            type: Constants.ApplicationCommandOptionTypes.STRING,
+    //        type: Constants.ApplicationCommandOptionTypes.STRING,
             maxLength: 339
         },
         {
             name: 'last_image',
             description: 'Add the last image sent in a channel to the quote.',
-            type: Constants.ApplicationCommandOptionTypes.CHANNEL
+ //           type: Constants.ApplicationCommandOptionTypes.CHANNEL
         },
         {
             name: 'last_quote',
             description: "Use the last quote sent in a channel. Will grab any type of quote.",
-            type: Constants.ApplicationCommandOptionTypes.CHANNEL
+   //         type: Constants.ApplicationCommandOptionTypes.CHANNEL
         },
     ],
 

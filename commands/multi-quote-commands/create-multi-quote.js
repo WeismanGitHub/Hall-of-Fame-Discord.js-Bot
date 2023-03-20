@@ -5,7 +5,6 @@ const { getLastImage } = require('../../helpers/get-last-item');
 const errorHandler = require('../../helpers/error-handler');
 const { quoteEmbed } = require('../../helpers/embeds');
 const { NotFoundError } = require('../../errors');
-const { Constants } = require('discord.js');
 
 module.exports = {
     category:'Multi Quotes',
@@ -19,87 +18,87 @@ module.exports = {
             name: 'title',
             description: 'Title of the multi-quote.',
             required: true,
-            type: Constants.ApplicationCommandOptionTypes.STRING
+    //        type: Constants.ApplicationCommandOptionTypes.STRING
         },
         {
             name: 'first_author',
             description: 'The name of the first author.',
-            type: Constants.ApplicationCommandOptionTypes.STRING,
+     //       type: Constants.ApplicationCommandOptionTypes.STRING,
             required: true,
         },
         {
             name: 'first_text',
             description: 'The first part of the multi-quote.',
-            type: Constants.ApplicationCommandOptionTypes.STRING,
+     //       type: Constants.ApplicationCommandOptionTypes.STRING,
             required: true,
         },
         {
             name: 'second_author',
             description: 'The name of the second author.',
-            type: Constants.ApplicationCommandOptionTypes.STRING,
+     //       type: Constants.ApplicationCommandOptionTypes.STRING,
             required: true,
         },
         {
             name: 'second_text',
             description: 'The second part of the multi-quote.',
-            type: Constants.ApplicationCommandOptionTypes.STRING,
+      //      type: Constants.ApplicationCommandOptionTypes.STRING,
             required: true,
         },
         {
             name: 'first_tag',
             description: 'Tags are used for filtering.',
-            type: Constants.ApplicationCommandOptionTypes.STRING,
+     //       type: Constants.ApplicationCommandOptionTypes.STRING,
         },
         {
             name: 'second_tag',
             description: 'Tags are used for filtering.',
-            type: Constants.ApplicationCommandOptionTypes.STRING
+      //      type: Constants.ApplicationCommandOptionTypes.STRING
         },
         {
             name: 'third_tag',
             description: 'Tags are used for filtering.',
-            type: Constants.ApplicationCommandOptionTypes.STRING,
+       //     type: Constants.ApplicationCommandOptionTypes.STRING,
         },
         {
             name: 'third_author',
             description: 'The name of the third author.',
-            type: Constants.ApplicationCommandOptionTypes.STRING,
+    //        type: Constants.ApplicationCommandOptionTypes.STRING,
         },
         {
             name: 'third_text',
             description: 'The third part of the multi-quote.',
-            type: Constants.ApplicationCommandOptionTypes.STRING,
+      //      type: Constants.ApplicationCommandOptionTypes.STRING,
         },
         {
             name: 'fourth_author',
             description: 'The name of the fourth author.',
-            type: Constants.ApplicationCommandOptionTypes.STRING,
+     //       type: Constants.ApplicationCommandOptionTypes.STRING,
         },
         {
             name: 'fourth_text',
             description: 'The fourth part of the multi-quote.',
-            type: Constants.ApplicationCommandOptionTypes.STRING,
+   //         type: Constants.ApplicationCommandOptionTypes.STRING,
         },
         {
             name: 'fifth_author',
             description: 'The name of the fifth author.',
-            type: Constants.ApplicationCommandOptionTypes.STRING,
+      //      type: Constants.ApplicationCommandOptionTypes.STRING,
         },
         {
             name: 'fifth_text',
             description: 'The fifth part of the multi-quote.',
-            type: Constants.ApplicationCommandOptionTypes.STRING,
+     //       type: Constants.ApplicationCommandOptionTypes.STRING,
         },
         {
             name: 'image_link',
             description: 'Image attachment link. Upload an image to Discord and copy the link to that image.',
-            type: Constants.ApplicationCommandOptionTypes.STRING,
+    //        type: Constants.ApplicationCommandOptionTypes.STRING,
             maxLength: 512
         },
         {
             name: 'last_image',
             description: 'Use the last image sent in a channel to the quote.',
-            type: Constants.ApplicationCommandOptionTypes.CHANNEL
+    //        type: Constants.ApplicationCommandOptionTypes.CHANNEL
         }
     ],
 

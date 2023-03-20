@@ -5,7 +5,6 @@ const AudioQuoteSchema = require('../../schemas/audio-quote-schema');
 const { InvalidInputError, NotFoundError } = require('../../errors');
 const errorHandler = require('../../helpers/error-handler');
 const { quoteEmbed } = require('../../helpers/embeds');
-const { Constants } = require('discord.js');
 
 module.exports = {
     category:'Audio Quotes',
@@ -18,76 +17,76 @@ module.exports = {
         {
             name: 'id',
             description: 'The id of the audio quote.',
-            type: Constants.ApplicationCommandOptionTypes.STRING,
+          //  type: Constants.ApplicationCommandOptionTypes.STRING,
             minLength: 24,
             maxLength: 24,
         },
         {
             name: 'new_author',
             description: 'Name of the new author. You must create an author beforehand.',
-            type: Constants.ApplicationCommandOptionTypes.STRING,
+         //   type: Constants.ApplicationCommandOptionTypes.STRING,
             maxLength: 256
         },
         {
             name: 'new_title',
             description: 'New audio quote title.',
-            type: Constants.ApplicationCommandOptionTypes.STRING,
+       //     type: Constants.ApplicationCommandOptionTypes.STRING,
             maxLength: 4096
         },
         {
             name: 'new_audio_file_link',
             description: 'New audio file link.',
-            type: Constants.ApplicationCommandOptionTypes.STRING,
+        //    type: Constants.ApplicationCommandOptionTypes.STRING,
             maxLength: 512
         },
         {
             name: 'remove_tags',
             description: 'Removes tags from audio quote.',
-            type: Constants.ApplicationCommandOptionTypes.BOOLEAN
+       //     type: Constants.ApplicationCommandOptionTypes.BOOLEAN
         },
         {
             name: 'first_tag',
             description: 'Tags are used for filtering. You must create a tag beforehand. New tags will overwrite the old ones.',
-            type: Constants.ApplicationCommandOptionTypes.STRING,
+      //      type: Constants.ApplicationCommandOptionTypes.STRING,
             maxLength: 339
         },
         {
             name: 'second_tag',
             description: 'Tags are used for filtering. You must create a tag beforehand. New tags will overwrite the old ones.',
-            type: Constants.ApplicationCommandOptionTypes.STRING,
+       //     type: Constants.ApplicationCommandOptionTypes.STRING,
             maxLength: 339
         },
         {
             name: 'third_tag',
             description: 'Tags are used for filtering. You must create a tag beforehand. New tags will overwrite the old ones.',
-            type: Constants.ApplicationCommandOptionTypes.STRING,
+         //   type: Constants.ApplicationCommandOptionTypes.STRING,
             maxLength: 339
         },
         {
             name: 'last_audio',
             description: 'Use the last audio file sent in a channel.',
-            type: Constants.ApplicationCommandOptionTypes.CHANNEL
+       //     type: Constants.ApplicationCommandOptionTypes.CHANNEL
         },
         {
             name: 'last_quote',
             description: "Use the last quote sent in a channel. Will grab any type of quote.",
-            type: Constants.ApplicationCommandOptionTypes.CHANNEL
+      //      type: Constants.ApplicationCommandOptionTypes.CHANNEL
         },
         {
             name: 'new_image_link',
             description: 'Image attachment link. Upload an image to Discord and copy the link to that image.',
-            type: Constants.ApplicationCommandOptionTypes.STRING,
+     //       type: Constants.ApplicationCommandOptionTypes.STRING,
             maxLength: 512
         },
         {
             name: 'last_image',
             description: 'Add the last image sent in a channel to the quote.',
-            type: Constants.ApplicationCommandOptionTypes.CHANNEL
+     //       type: Constants.ApplicationCommandOptionTypes.CHANNEL
         },
         {
             name: 'remove_image',
             description: 'Removes image from quote.',
-            type: Constants.ApplicationCommandOptionTypes.BOOLEAN
+      //      type: Constants.ApplicationCommandOptionTypes.BOOLEAN
         },
     ],
 

@@ -3,7 +3,6 @@ const { getLastImage } = require('../../helpers/get-last-item');
 const errorHandler = require('../../helpers/error-handler');
 const GuildSchema = require('../../schemas/guild-schema');
 const { authorEmbed } = require('../../helpers/embeds');
-const { Constants } = require('discord.js');
 
 module.exports = {
     category:'Authors',
@@ -17,35 +16,35 @@ module.exports = {
             name: 'name',
             description: 'The name of the author you want to edit. (case sensitive)',
             required: true,
-            type: Constants.ApplicationCommandOptionTypes.STRING,
+  //          type: Constants.ApplicationCommandOptionTypes.STRING,
             maxLength: 256
         },
         {
             name: 'new_name',
             description: 'The name you want to change the author to. (case sensitive)',
-            type: Constants.ApplicationCommandOptionTypes.STRING,
+   //         type: Constants.ApplicationCommandOptionTypes.STRING,
             maxLength: 256
         },
         {
             name: 'image_link',
             description: 'This will be the author icon.',
-            type: Constants.ApplicationCommandOptionTypes.STRING,
+  //          type: Constants.ApplicationCommandOptionTypes.STRING,
             maxLength: 512
         },
         {
             name: 'last_image',
             description: 'Use the last image sent in a channel for the author icon.',
-            type: Constants.ApplicationCommandOptionTypes.CHANNEL
+   //         type: Constants.ApplicationCommandOptionTypes.CHANNEL
         },
         {
             name: "account_image",
             description: "Use an account image.",
-            type: Constants.ApplicationCommandOptionTypes.USER
+   //         type: Constants.ApplicationCommandOptionTypes.USER
         },
         {
             name: 'remove_image',
             description: 'Use the default image.',
-            type: Constants.ApplicationCommandOptionTypes.BOOLEAN
+  //          type: Constants.ApplicationCommandOptionTypes.BOOLEAN
         },
     ],
 

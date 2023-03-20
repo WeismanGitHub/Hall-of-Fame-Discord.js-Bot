@@ -1,5 +1,5 @@
 const UniversalQuoteSchema = require('../../schemas/universal-quote-schema');
-const { Constants, MessageActionRow, MessageButton } = require('discord.js');
+const { MessageActionRow, MessageButton } = require('discord.js');
 const { getAuthorByName } = require('../../helpers/get-author');
 const FilterSchema = require('../../schemas/filter-schema');
 const errorHandler = require('../../helpers/error-handler');
@@ -19,37 +19,37 @@ module.exports = {
         {
             name: 'author',
             description: 'Sort by author of quote.',
-            type: Constants.ApplicationCommandOptionTypes.STRING,
+    //        type: Constants.ApplicationCommandOptionTypes.STRING,
             maxLength: 256
         },
         {
             name: 'first_tag',
             description: 'Quote must include this tag.',
-            type: Constants.ApplicationCommandOptionTypes.STRING,
+     //       type: Constants.ApplicationCommandOptionTypes.STRING,
             maxLength: 339
         },
         {
             name: 'second_tag',
             description: 'Quote must include this tag.',
-            type: Constants.ApplicationCommandOptionTypes.STRING,
+      //      type: Constants.ApplicationCommandOptionTypes.STRING,
             maxLength: 339
         },
         {
             name: 'third_tag',
             description: 'Quote must include this tag.',
-            type: Constants.ApplicationCommandOptionTypes.STRING,
+    //        type: Constants.ApplicationCommandOptionTypes.STRING,
             maxLength: 339
         },
         {
             name: 'search_phrase',
             description: 'A phrase to search for in the quote text.',
-            type: Constants.ApplicationCommandOptionTypes.STRING,
+         //   type: Constants.ApplicationCommandOptionTypes.STRING,
             maxLength: 4096
         },
         {
             name: 'type',
             description: 'Filter by type of quote.',
-            type: Constants.ApplicationCommandOptionTypes.STRING,
+      //      type: Constants.ApplicationCommandOptionTypes.STRING,
             choices: [
                 {
                     name: 'regular quote',
@@ -72,7 +72,7 @@ module.exports = {
         {
             name: 'limit',
             description: 'Amount of quotes returned. Must be less than 10.',
-            type: Constants.ApplicationCommandOptionTypes.INTEGER,
+   //         type: Constants.ApplicationCommandOptionTypes.INTEGER,
             minLength: 1,
             maxLength: 9,
         }

@@ -2,7 +2,6 @@ const errorHandler = require('../../helpers/error-handler');
 const GuildSchema = require('../../schemas/guild-schema');
 const QuoteSchema = require('../../schemas/quote-schema');
 const { basicEmbed } = require('../../helpers/embeds');
-const { Constants } = require('discord.js');
 
 module.exports = {
     category:'Tags',
@@ -17,7 +16,7 @@ module.exports = {
             description: 'The tag you want to delete.',
             required: true,
             maxLength: 339,
-            type: Constants.ApplicationCommandOptionTypes.STRING
+     //       type: Constants.ApplicationCommandOptionTypes.STRING
         }
     ],
 

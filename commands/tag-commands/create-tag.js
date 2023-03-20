@@ -1,7 +1,6 @@
 const errorHandler = require('../../helpers/error-handler');
 const GuildSchema = require('../../schemas/guild-schema');
 const { basicEmbed } = require('../../helpers/embeds');
-const { Constants } = require('discord.js');
 
 module.exports = {
     category:'Tags',
@@ -15,7 +14,7 @@ module.exports = {
             name: 'tag',
             description: 'The name of the tag you want to create.',
             required: true,
-            type: Constants.ApplicationCommandOptionTypes.STRING,
+    //        type: Constants.ApplicationCommandOptionTypes.STRING,
             maxLength: 339,
         }
     ],

@@ -5,7 +5,6 @@ const errorHandler = require('../../helpers/error-handler');
 const QuoteSchema = require('../../schemas/quote-schema');
 const { quoteEmbed } = require('../../helpers/embeds');
 const { NotFoundError } = require('../../errors') ;
-const { Constants } = require('discord.js');
 
 module.exports = {
     category:'Quotes',
@@ -19,43 +18,43 @@ module.exports = {
             name: 'author',
             description: 'The name of who said the quote. You must first register an author with /createauthor.',
             required: true,
-            type: Constants.ApplicationCommandOptionTypes.STRING,
+   //         type: Constants.ApplicationCommandOptionTypes.STRING,
             maxLength: 256
         },
         {
             name: 'text',
             description: 'What was said by the person.',
-            type: Constants.ApplicationCommandOptionTypes.STRING,
+   //         type: Constants.ApplicationCommandOptionTypes.STRING,
             maxLength: 4096
         },
         {
             name: 'image_link',
             description: 'Image attachment link. Upload an image to Discord and copy the link to that image.',
-            type: Constants.ApplicationCommandOptionTypes.STRING,
+    //        type: Constants.ApplicationCommandOptionTypes.STRING,
             maxLength: 512
         },
         {
             name: 'first_tag',
             description: 'Tags are used for filtering.',
-            type: Constants.ApplicationCommandOptionTypes.STRING,
+       //     type: Constants.ApplicationCommandOptionTypes.STRING,
             maxLength: 339
         },
         {
             name: 'second_tag',
             description: 'Tags are used for filtering.',
-            type: Constants.ApplicationCommandOptionTypes.STRING,
+   //         type: Constants.ApplicationCommandOptionTypes.STRING,
             maxLength: 339
         },
         {
             name: 'third_tag',
             description: 'Tags are used for filtering.',
-            type: Constants.ApplicationCommandOptionTypes.STRING,
+   //         type: Constants.ApplicationCommandOptionTypes.STRING,
             maxLength: 339
         },
         {
             name: 'last_image',
             description: 'Use the last image sent in a channel to the quote.',
-            type: Constants.ApplicationCommandOptionTypes.CHANNEL
+ //           type: Constants.ApplicationCommandOptionTypes.CHANNEL
         }
     ],
 

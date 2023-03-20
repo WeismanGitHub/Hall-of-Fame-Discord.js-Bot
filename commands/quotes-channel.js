@@ -1,4 +1,4 @@
-const { Constants, MessageActionRow, MessageButton } = require('discord.js');
+const { MessageActionRow, MessageButton } = require('discord.js');
 const errorHandler = require('../helpers/error-handler')
 const GuildSchema = require('../schemas/guild-schema');
 const { basicEmbed } = require('../helpers/embeds');
@@ -15,12 +15,12 @@ module.exports = {
         {
             name: 'channel',
             description: 'Choose a channel to have all the quotes in. It will be updated with new quotes.',
-            type: Constants.ApplicationCommandOptionTypes.CHANNEL,
+            // type: Constants.ApplicationCommandOptionTypes.CHANNEL,
         },
         {
             name: 'remove',
             description: 'Remove the quotes channel.',
-            type: Constants.ApplicationCommandOptionTypes.STRING,
+            // type: Constants.ApplicationCommandOptionTypes.STRING,
             choices: [
                 {
                     name: 'remove',

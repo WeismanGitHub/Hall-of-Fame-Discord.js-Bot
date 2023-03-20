@@ -1,10 +1,9 @@
-const { InvalidInputError, NotFoundError, InvalidActionError } = require('../../errors')
+const { NotFoundError, InvalidActionError } = require('../../errors')
 const { getAuthorByName, getAuthorById } = require('../../helpers/get-author');
 const AudioQuoteSchema = require('../../schemas/audio-quote-schema')
 const errorHandler = require('../../helpers/error-handler');
 const { quoteEmbed } = require('../../helpers/embeds');
 const checkTags = require('../../helpers/check-tags');
-const { Constants } = require('discord.js');
 
 const {
     createAudioPlayer,
@@ -25,31 +24,31 @@ module.exports = {
         {
             name: 'author',
             description: 'Sort by author of quote.',
-            type: Constants.ApplicationCommandOptionTypes.STRING,
+     //       type: Constants.ApplicationCommandOptionTypes.STRING,
             maxLength: 256
         },
         {
             name: 'first_tag',
             description: 'Quote must include this tag.',
-            type: Constants.ApplicationCommandOptionTypes.STRING,
+       //     type: Constants.ApplicationCommandOptionTypes.STRING,
             maxLength: 339
         },
         {
             name: 'second_tag',
             description: 'Quote must include this tag.',
-            type: Constants.ApplicationCommandOptionTypes.STRING,
+      //      type: Constants.ApplicationCommandOptionTypes.STRING,
             maxLength: 339
         },
         {
             name: 'third_tag',
             description: 'Quote must include this tag.',
-            type: Constants.ApplicationCommandOptionTypes.STRING,
+      //      type: Constants.ApplicationCommandOptionTypes.STRING,
             maxLength: 339
         },
         {
             name: 'search_phrase',
             description: 'A phrase to search for in the quote text.',
-            type: Constants.ApplicationCommandOptionTypes.STRING,
+      //      type: Constants.ApplicationCommandOptionTypes.STRING,
             maxLength: 4096
         },
     ],

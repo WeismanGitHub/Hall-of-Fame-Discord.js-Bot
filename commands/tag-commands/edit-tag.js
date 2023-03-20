@@ -3,7 +3,6 @@ const GuildSchema = require('../../schemas/guild-schema');
 const QuoteSchema = require('../../schemas/quote-schema');
 const { basicEmbed } = require('../../helpers/embeds');
 const { NotFoundError } = require('../../errors');
-const { Constants } = require('discord.js');
 
 module.exports = {
     category:'Tags',
@@ -18,14 +17,14 @@ module.exports = {
             description: 'The tag you want to edit.',
             required: true,
             maxLength: 339,
-            type: Constants.ApplicationCommandOptionTypes.STRING
+      //      type: Constants.ApplicationCommandOptionTypes.STRING
         },
         {
             name: 'new_name',
             description: 'What you want to rename the tag to.',
             required: true,
             maxLength: 339,
-            type: Constants.ApplicationCommandOptionTypes.STRING
+    //        type: Constants.ApplicationCommandOptionTypes.STRING
         }
     ],
 
