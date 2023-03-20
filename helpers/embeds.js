@@ -47,10 +47,6 @@ const quoteEmbed = function(quote, extraData, color='#8F00FF') { // color == pur
 		
 		embed.setAuthor({ name: author.name, iconURL: author.iconURL || process.env.DEFAULT_ICON_URL })
 	}
-	
-	if (quote.attachmentURL) {
-		quote.type = 'image'
-	}
 
 	if (!colorChange) {
 		switch (quote.type) {
@@ -61,13 +57,13 @@ const quoteEmbed = function(quote, extraData, color='#8F00FF') { // color == pur
 				case 'audio':
 				color = '#00A64A'// green
 				break;
-
-				case 'image':
-				color = '#FF7B00'// orange
-				break;
 		}
 	}
 
+	if (quote.attachmentURL) {
+		color = '#FF7B00'// orange
+	}
+	
 	embed.setColor(color)
 
 	return { embeds: [embed] };
