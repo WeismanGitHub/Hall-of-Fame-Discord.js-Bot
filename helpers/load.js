@@ -18,8 +18,6 @@ async function loadCommands(client) {
         client.commands.set(command.data.name, command);
     }
 
-    console.log(`Started refreshing ${commands.length} application (/) commands.`);
-
     const rest = new REST({ version: '10' }).setToken(client.token);
     const clientId = client?.application?.id
 
@@ -49,7 +47,21 @@ async function loadCommands(client) {
 }
 
 async function loadEvents(client) {
+    const eventsPath = join(__dirname, '../events');
+    const eventFiles = readdirSync(eventsPath).filter(file => file.endsWith('.js'));
+    
+    for (const file of eventFiles) {
+        const filePath = join(eventsPath, file);
+        const event = require(filePath);
 
+        if (event.once) {
+            client.once(event.name, (...args) => event.execute(...args));
+        } else {
+            client.on(event.name, (...args) => event.execute(...args));
+        }
+    }
+
+    console.log(`Successfully loaded ${eventFiles.length} events.`);
 }
 
 module.exports = {
