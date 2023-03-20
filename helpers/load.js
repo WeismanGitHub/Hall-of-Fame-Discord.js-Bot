@@ -18,7 +18,7 @@ function getPaths(dir) {
         }
     }
     
-    recursiveLoop(paths.map(path => join(__dirname, '../commands', path)))
+    recursiveLoop(paths.map(path => join(dir, path)))
     return filePaths
 }
 
@@ -66,12 +66,10 @@ async function loadCommands(client) {
 }
 
 async function loadEvents(client) {
-    const eventsPath = join(__dirname, '../events');
-    const eventFiles = readdirSync(eventsPath).filter(file => file.endsWith('.js'));
+    const eventsPaths = getPaths(join(__dirname, '../events')).filter(file => file.endsWith('.js'))
     
-    for (const file of eventFiles) {
-        const filePath = join(eventsPath, file);
-        const event = require(filePath);
+    for (const eventPath of eventsPaths) {
+        const event = require(eventPath);
 
         if (event.once) {
             client.once(event.name, (...args) => event.execute(...args));
@@ -80,7 +78,7 @@ async function loadEvents(client) {
         }
     }
 
-    console.log(`Successfully loaded ${eventFiles.length} events.`);
+    console.log(`Successfully loaded ${eventsPaths.length} events.`);
 }
 
 module.exports = {
