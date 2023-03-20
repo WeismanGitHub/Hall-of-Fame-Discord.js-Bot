@@ -75,11 +75,17 @@ function EditQuote({quoteBeingEdited, guildId, setQuotes, quotes, setQuoteBeingE
         let newImageURL;
         let newAudioURL;
 
-        if (quoteFragments?.length < 2) {
-            return errorToast('Must have between 2 and 5 fragments.')
-        }
-
         if (quoteFragments && quoteFragments !== quoteBeingEdited.fragments) {
+            if (quoteFragments?.length < 2 && quoteFragments?.length > 5) {
+                return errorToast('Must have between 2 and 5 fragments.')
+            }
+
+            for (let frag of quoteFragments) {
+                if (!frag.text || !frag.authorId) {
+                    return errorToast('Fragments must have an author and text.')
+                }
+            }
+    
             update.fragments = quoteFragments
         }
 
