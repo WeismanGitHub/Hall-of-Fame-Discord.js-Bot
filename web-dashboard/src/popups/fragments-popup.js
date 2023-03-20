@@ -114,7 +114,8 @@ function FragmentsPopup({ authors, setQuoteFragments, quoteFragments }) {
             })}
         </div>
 
-        { (quoteFragments.every(frag => frag.text !== '') && fragmentBeingEdited?.authorId === null) ? null : 
+        { (quoteFragments.some(frag => frag.text === '') || fragmentBeingEdited?.authorId === null || quoteFragments.length >= 5)
+            ? null :
             <div class='centered_row'>
                 <button class='modal_submit' onClick={createFragment} style={{ 'margin-bottom': '50px' }}>New Fragment</button>
             </div>
