@@ -1,10 +1,10 @@
-const { MessageEmbed, MessageActionRow, MessageButton } = require('discord.js');
+const { EmbedBuilder, ActionRowBuilder, ButtonBuilder } = require('discord.js');
 const client = require('../index')
 require('dotenv').config();
 
 const basicEmbed = function (title, body='', color='#000EFF') {
 	return { embeds: [
-		new MessageEmbed()
+		new EmbedBuilder()
 		.setTitle(title.substring(0, 256))
 		.setDescription(body.substring(0, 4096))
 		.setColor(color) // blue
@@ -12,7 +12,7 @@ const basicEmbed = function (title, body='', color='#000EFF') {
 };
 
 const notificationEmbed = function(title, body, color='#FFFE00') {
-	return { embeds: [new MessageEmbed()
+	return { embeds: [new EmbedBuilder()
 		.setTitle(title.substring(0, 256))
 		.setDescription(body.substring(0, 4096))
 		.addFields({ name: 'Contact the Creator:', value: `<@${process.env.MAIN_ACCOUNT_ID}>` })
@@ -27,7 +27,7 @@ const quoteEmbed = function(quote, extraData, color='#8F00FF') { // color == pur
     tags = tags.length ? tags : ['no tags']
 	const colorChange = (color !== '#8F00FF')
 
-	const embed = new MessageEmbed()
+	const embed = new EmbedBuilder()
 	.setDescription(quote.text ?? '[No Text]')
 	.addFields({ name: 'Tags:', value: tags.join(', ') })
 	.addFields({ name: 'ID:', value: `${quote._id}` })
@@ -74,7 +74,7 @@ const errorEmbed = function(error, title='Theres been an error!', color='#FF0000
 
 	return {
         embeds: [
-			new MessageEmbed()
+			new EmbedBuilder()
 			.setTitle(title.substring(0, 256))
 			.setDescription(error.substring(0, 4096))
 			.setColor(color) // red
@@ -87,7 +87,7 @@ const authorEmbed = function(author, color='#00EEFF') {
 	const { iconURL, name } = author
 
 	return {
-        embeds: [new MessageEmbed()
+        embeds: [new EmbedBuilder()
 		.setColor(color) // cyan
 		.setAuthor({ name: name.substring(0, 256), iconURL: (iconURL || process.env.DEFAULT_ICON_URL) })
 	]}
@@ -96,28 +96,28 @@ const authorEmbed = function(author, color='#00EEFF') {
 const helpEmbed = function() {
 	const customId = JSON.stringify({ type: 'help' })
 
-	const row = new MessageActionRow()
+	const row = new ActionRowBuilder()
 	.addComponents([
-		new MessageButton()
+		new ButtonBuilder()
 		.setLabel('Command Descriptions')
 		.setCustomId(`${customId}`)
-		.setStyle('PRIMARY'),
-		new MessageButton()
+		.setStyle('Primary'),
+		new ButtonBuilder()
 		.setLabel('Web Dashboard')
 		.setURL("https://hall-of-fame-discordjs-bot.weisman.repl.co/")
-		.setStyle('LINK'),
-		new MessageButton()
+		.setStyle('Link'),
+		new ButtonBuilder()
 		.setLabel('In-Depth Explanation')
 		.setURL("https://github.com/WeismanGitHub/Hall-of-Fame-Discord.js-Bot/blob/master/README.md")
-		.setStyle('LINK'),
-		new MessageButton()
+		.setStyle('Link'),
+		new ButtonBuilder()
 		.setLabel('Source Code')
 		.setURL("https://github.com/WeismanGitHub/Hall-of-Fame-Discord.js-Bot")
-		.setStyle('LINK'),
+		.setStyle('Link'),
 
 	])
 
-	const descriptionEmbed = new MessageEmbed()
+	const descriptionEmbed = new EmbedBuilder()
 	.setColor('#5865F2') // Discord Blurple
 	.setDescription("A hall of fame bot with 28 commands that allow you save text, images, and audio. This bot's purpose is to allow users to organize memorable moments so they can be easily classified and accessed with authors, tags, types, text, and more. Use the web dashboard as an easier alternative. Authors and tags must be defined before creating a quote. I strongly recommend you check the Github readme for a more in depth explanation.")
 	.addFields({ name: 'Contact the Creator:', value: `<@${process.env.MAIN_ACCOUNT_ID}>` })
