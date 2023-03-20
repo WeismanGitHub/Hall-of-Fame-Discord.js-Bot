@@ -1,14 +1,33 @@
 const { REST, Routes } = require('discord.js');
-const { readdirSync } = require('fs');
+const { statSync, readdirSync } = require('fs');
 const { join } = require('path');
 
+function getPaths(dir) {
+    const paths = readdirSync(dir)
+    const filePaths = []
+
+    function recursiveLoop(paths) {
+        for (let path of paths) {
+            const fileStat = statSync(path)
+            
+            if (fileStat.isFile()) {
+                filePaths.push(path)
+            } else if (fileStat.isDirectory()) {
+                recursiveLoop(readdirSync(path).map(subPath => join(path, subPath)))
+            }
+        }
+    }
+    
+    recursiveLoop(paths.map(path => join(__dirname, '../commands', path)))
+    return filePaths
+}
+
 async function loadCommands(client) {
-    const commandsPath = join(__dirname, '../commands')
-    const commandFiles = readdirSync(commandsPath).filter(file => file.endsWith('.js'));
+    const commandPaths = getPaths(join(__dirname, '../commands')).filter(file => file.endsWith('.js'))
     const commands = [];
 
-    for (const file of commandFiles) {
-        const command = require(`../commands/${file}`);
+    for (const path of commandPaths) {
+        const command = require(path);
 
         if (!command?.data) {
             continue
