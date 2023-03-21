@@ -12,12 +12,11 @@ module.exports = {
 	execute: async (interaction) => errorHandler(interaction, async () => {
         const guildId = interaction.guildId;
 
-        if (!await GuildSchema.exists({ _id: guildId })) {
-            await GuildSchema.create({ _id: guildId })
-
-            await interaction.reply(basicEmbed('Registered This Server!'));
-        } else {
-            await interaction.reply(basicEmbed('Already Registered!'));
+        if (await GuildSchema.exists({ _id: guildId })) {
+            return await interaction.reply(basicEmbed('Already Registered!'));
         }
+        
+        await GuildSchema.create({ _id: guildId })
+        interaction.reply(basicEmbed('Registered This Server!'));
     })
 };
