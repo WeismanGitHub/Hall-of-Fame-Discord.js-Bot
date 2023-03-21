@@ -1,4 +1,5 @@
 const { MessageActionRow, MessageButton, SlashCommandBuilder, ChannelType } = require('discord.js');
+const { channelDescription, removeDescription } = require('../descriptions');
 const GuildSchema = require('../schemas/guild-schema');
 const { basicEmbed } = require('../helpers/embeds');
 const { InvalidInputError } = require('../errors')
@@ -10,12 +11,12 @@ module.exports = {
         .setDMPermission(false)
         .addChannelOption(option => option
             .setName('channel')
-            .setDescription('Choose a channel to have all the quotes in. It will be updated with new quotes.')
+            .setDescription(channelDescription)
             .addChannelTypes(ChannelType.GuildText)
         )
         .addStringOption(option => option
             .setName('remove')
-            .setDescription('Remove the quotes channel.')
+            .setDescription(removeDescription)
             .addChoices(
 				{ name: 'remove', value: 'true' },
 				{ name: 'keep', value: 'false' },
