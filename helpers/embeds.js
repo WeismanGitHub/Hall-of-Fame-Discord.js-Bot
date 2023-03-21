@@ -1,5 +1,4 @@
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder } = require('discord.js');
-const client = require('../index')
 require('dotenv').config();
 
 const basicEmbed = function (title, body='', color='#000EFF') {
@@ -113,6 +112,10 @@ const helpEmbed = function() {
 		new ButtonBuilder()
 		.setLabel('Source Code')
 		.setURL("https://github.com/WeismanGitHub/Hall-of-Fame-Discord.js-Bot")
+		.setStyle('Link'),
+		new ButtonBuilder()
+		.setLabel('Buy Me a Coffee')
+		.setURL(process.env.COFFEE_LINK)
 		.setStyle('Link'),
 
 	])
