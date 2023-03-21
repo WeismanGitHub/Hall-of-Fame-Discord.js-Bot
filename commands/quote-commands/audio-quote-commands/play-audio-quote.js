@@ -1,8 +1,8 @@
-const { InvalidInputError, NotFoundError, InvalidActionError } = require('../../errors')
-const AudioQuoteSchema = require('../../schemas/audio-quote-schema')
-const { getLastQuoteId } = require('../../helpers/get-last-item')
-const { getAuthorById } = require('../../helpers/get-author');
-const { quoteEmbed } = require('../../helpers/embeds');
+const { InvalidInputError, NotFoundError, InvalidActionError } = require('../../../errors')
+const AudioQuoteSchema = require('../../../schemas/audio-quote-schema')
+const { getLastQuoteId } = require('../../../helpers/get-last-item')
+const { getAuthorById } = require('../../../helpers/get-author');
+const { quoteEmbed } = require('../../../helpers/embeds');
 
 const {
     createAudioPlayer,

@@ -1,10 +1,10 @@
-const sendToQuotesChannel = require('../../helpers/send-to-quotes-channel')
-const { getAuthorByName } = require('../../helpers/get-author');
-const { getLastImage } = require('../../helpers/get-last-item');
-const QuoteSchema = require('../../schemas/quote-schema');
-const { quoteEmbed } = require('../../helpers/embeds');
-const { NotFoundError } = require('../../errors') ;
-const client = require('../../index')
+const sendToQuotesChannel = require('../../../helpers/send-to-quotes-channel')
+const { getAuthorByName } = require('../../../helpers/get-author');
+const { getLastImage } = require('../../../helpers/get-last-item');
+const QuoteSchema = require('../../../schemas/quote-schema');
+const { quoteEmbed } = require('../../../helpers/embeds');
+const { NotFoundError } = require('../../../errors') ;
+const client = require('../../../index')
 
 module.exports = {
     category:'Quotes',
