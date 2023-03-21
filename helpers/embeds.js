@@ -2,12 +2,15 @@ const { EmbedBuilder, ActionRowBuilder, ButtonBuilder } = require('discord.js');
 require('dotenv').config();
 
 const basicEmbed = function (title, body='', color='#000EFF') {
-	return { embeds: [
-		new EmbedBuilder()
-		.setTitle(title.substring(0, 256))
-		.setDescription(body.substring(0, 4096))
-		.setColor(color) // blue
-	]}
+	const embed = new EmbedBuilder()
+	.setTitle(title.substring(0, 256))
+	.setColor(color) // blue
+
+	if (body.length ) {
+		embed.setDescription(body.substring(1, 4096))
+	}
+	
+	return { embeds: [embed] }
 };
 
 const notificationEmbed = function(title, body, color='#FFFE00') {
@@ -27,7 +30,7 @@ const quoteEmbed = function(quote, extraData, color='#8F00FF') { // color == pur
 	const colorChange = (color !== '#8F00FF')
 
 	const embed = new EmbedBuilder()
-	.setDescription(quote.text ?? '[No Text]')
+	.setDescription(quote.text || '[No Text]')
 	.addFields({ name: 'Tags:', value: tags.join(', ') })
 	.addFields({ name: 'ID:', value: `${quote._id}` })
 	.setImage(quote.attachmentURL)
