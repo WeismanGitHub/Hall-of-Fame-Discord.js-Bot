@@ -1,5 +1,4 @@
 const { basicEmbed, notificationEmbed } = require('../../helpers/embeds');
-const errorHandler = require('../../helpers/error-handler');
 const GuildSchema = require('../../schemas/guild-schema');
 const {
     InteractionCollector,
@@ -8,6 +7,7 @@ const {
     Modal,
 } = require('discord.js');
 const { InvalidInputError } = require('../../errors');
+const client = require('../../index')
 
 module.exports = {
     category:'Notifications',
@@ -17,7 +17,7 @@ module.exports = {
     testOnly: true, //This just makes it available to my private server.
     slash: true,
 
-    callback: async ({ interaction, client }) => errorHandler(interaction, async () => {
+    callback: async (interaction) => {
         const modal = new Modal()
         .setCustomId('notifyId')
         .setTitle('Notification');
@@ -74,5 +74,5 @@ module.exports = {
 
             await interaction.reply(basicEmbed('Notification sent!'))
         })
-    })
+    }
 };

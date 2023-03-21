@@ -1,7 +1,6 @@
 const { NotFoundError, InvalidActionError } = require('../../errors')
 const { getAuthorByName, getAuthorById } = require('../../helpers/get-author');
 const AudioQuoteSchema = require('../../schemas/audio-quote-schema')
-const errorHandler = require('../../helpers/error-handler');
 const { quoteEmbed } = require('../../helpers/embeds');
 const checkTags = require('../../helpers/check-tags');
 
@@ -53,7 +52,7 @@ module.exports = {
         },
     ],
 
-    callback: async ({ interaction }) => errorHandler(interaction, async () => {
+    callback: async ({ interaction }) => {
         const guildId = interaction.guildId;
         const { options } = interaction;
 
@@ -137,5 +136,5 @@ module.exports = {
 
         const author = await getAuthorById(randomAudioQuote.authorId, guildId);
         await interaction.reply(quoteEmbed(randomAudioQuote, author))
-    })
+    }
 };

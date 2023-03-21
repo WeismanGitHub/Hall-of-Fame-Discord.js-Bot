@@ -3,8 +3,8 @@ const { getLastQuoteId, getLastImage } = require('../../helpers/get-last-item');
 const sendToQuotesChannel = require('../../helpers/send-to-quotes-channel');
 const MultiQuoteSchema = require('../../schemas/multi-quote-schema');
 const { NotFoundError, InvalidInputError } = require('../../errors');
-const errorHandler = require('../../helpers/error-handler');
 const { quoteEmbed } = require('../../helpers/embeds');
+const client = require('../../index')
 
 module.exports = {
     category:'Multi Quotes',
@@ -142,7 +142,7 @@ module.exports = {
         },
     ],
 
-    callback: async ({ interaction, client }) => errorHandler(interaction, async () => {
+    callback: async (interaction) => {
         const guildId = interaction.guildId;
         const { options } = interaction;
 
@@ -251,5 +251,5 @@ module.exports = {
 
         await sendToQuotesChannel(embeddedMultiQuote, guildId, client)
         await interaction.reply(embeddedMultiQuote);
-    })
+    }
 };

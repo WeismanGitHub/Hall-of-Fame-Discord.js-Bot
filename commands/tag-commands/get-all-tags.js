@@ -1,4 +1,3 @@
-const errorHandler = require('../../helpers/error-handler');
 const GuildSchema = require('../../schemas/guild-schema');
 const { basicEmbed } = require('../../helpers/embeds');
 const { NotFoundError } = require('../../errors');
@@ -11,7 +10,7 @@ module.exports = {
     guildOnly: true,
     slash: true,
 
-    callback: async ({ interaction }) => errorHandler(interaction, async () => {
+    callback: async (interaction) => {
         const guildId = interaction.guildId;
         let message = '';
     
@@ -27,5 +26,5 @@ module.exports = {
         }
 
         await interaction.reply(basicEmbed('Server Tags:', message))
-    })
+    }
 };

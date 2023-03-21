@@ -1,4 +1,3 @@
-const errorHandler = require('../../helpers/error-handler');
 const GuildSchema = require('../../schemas/guild-schema');
 const { basicEmbed } = require('../../helpers/embeds');
 
@@ -19,7 +18,7 @@ module.exports = {
         }
     ],
 
-    callback: async ({ interaction }) => errorHandler(interaction, async () => {
+    callback: async (interaction) => {
         const { options } = interaction;
         const guildId = interaction.guildId;
         const tag = (options.getString('tag')).toLowerCase();
@@ -29,5 +28,5 @@ module.exports = {
             { $addToSet: { tags: tag } })
 
         await interaction.reply(basicEmbed(`Created '${tag}' tag!`));
-    })
+    }
 };

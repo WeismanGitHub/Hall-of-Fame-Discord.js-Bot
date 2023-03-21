@@ -1,4 +1,3 @@
-const errorHandler = require('../../helpers/error-handler');
 const GuildSchema = require('../../schemas/guild-schema');
 const { basicEmbed } = require('../../helpers/embeds');
 const { InvalidInputError } = require('../../errors');
@@ -33,7 +32,7 @@ module.exports = {
         }
     ],
     
-    callback: async ({ interaction }) => errorHandler(interaction, async () => {
+    callback: async (interaction) => {
         const { options } = interaction;
         const notifications = options.getString('notifications')
         const notificationChannelId = (options.getChannel('notification_channel'))?.id
@@ -54,5 +53,5 @@ module.exports = {
         await GuildSchema.updateOne({ _id: interaction.guildId }, update)
 
         await interaction.reply(basicEmbed('Updated notification preferences!'))
-    })
+    }
 };

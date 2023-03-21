@@ -1,5 +1,4 @@
 const { getLastQuoteId } = require('../../helpers/get-last-item');
-const errorHandler = require('../../helpers/error-handler');
 const QuoteSchema = require('../../schemas/quote-schema');
 const { basicEmbed } = require('../../helpers/embeds');
 const { NotFoundError } = require('../../errors');
@@ -26,7 +25,7 @@ module.exports = {
         },
     ],
 
-    callback: async ({ interaction }) => errorHandler(interaction, async () => {
+    callback: async (interaction) => {
         const { options } = interaction;
         const lastQuoteChannel = options.getChannel('last_quote');
         const id = options.getString('id') ?? await getLastQuoteId(lastQuoteChannel)
@@ -40,5 +39,5 @@ module.exports = {
 
         const text = quote.text ? `'${quote.text.substring(0, 245)}'` : 'quote' // substring to fit 256 char title limit.
         await interaction.reply(basicEmbed(`Deleted ${text}!`));
-    })
+    }
 };

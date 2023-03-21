@@ -2,9 +2,9 @@ const { getLastImage, getLastQuoteId } = require('../../helpers/get-last-item');
 const { getAuthorByName, getAuthorById } = require('../../helpers/get-author');
 const sendToQuotesChannel = require('../../helpers/send-to-quotes-channel')
 const { InvalidInputError, NotFoundError } = require('../../errors');
-const errorHandler = require('../../helpers/error-handler');
 const QuoteSchema= require('../../schemas/quote-schema');
 const { quoteEmbed } = require('../../helpers/embeds');
+const client = require('../../index')
 
 module.exports = {
     category:'Quotes',
@@ -79,7 +79,7 @@ module.exports = {
         },
     ],
 
-    callback: async ({ interaction, client }) => errorHandler(interaction, async () => {
+    callback: async (interaction) => {
         const { options } = interaction;
         const guildId  = interaction.guildId;
         const lastQuoteChannel = options.getChannel('last_quote');
@@ -154,5 +154,5 @@ module.exports = {
 
         await sendToQuotesChannel(embeddedQuote, guildId, client)
         await interaction.reply(embeddedQuote);
-    })
+    }
 };

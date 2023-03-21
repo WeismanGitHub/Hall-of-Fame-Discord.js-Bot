@@ -1,6 +1,5 @@
 const { InvalidInputError, NotFoundError } = require('../../errors');
 const { getLastImage } = require('../../helpers/get-last-item');
-const errorHandler = require('../../helpers/error-handler');
 const GuildSchema = require('../../schemas/guild-schema');
 const { authorEmbed } = require('../../helpers/embeds');
 
@@ -48,7 +47,7 @@ module.exports = {
         },
     ],
 
-    callback: async ({ interaction }) => errorHandler(interaction, async () => {
+    callback: async (interaction) => {
         const { options } = interaction;
 
         if (options._hoistedOptions <= 1) {
@@ -100,5 +99,5 @@ module.exports = {
         const author = authors.find(author => author.name == (newName ?? oldName))
 
         await interaction.reply(authorEmbed(author));
-    })
+    }
 };

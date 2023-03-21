@@ -1,5 +1,4 @@
 const { MessageActionRow, MessageButton } = require('discord.js');
-const errorHandler = require('../helpers/error-handler')
 const GuildSchema = require('../schemas/guild-schema');
 const { basicEmbed } = require('../helpers/embeds');
 const { InvalidInputError } = require('../errors')
@@ -34,7 +33,7 @@ module.exports = {
         }
     ],
 
-    callback: async ({ interaction }) => errorHandler(interaction, async () => {
+    callback: async (interaction ) => {
         const { options } = interaction;
         const guildId = interaction.guildId;
         const quotesChannel = options.getChannel('channel');
@@ -69,5 +68,5 @@ module.exports = {
             ...basicEmbed(`New quotes will be forwarded to \`#${quotesChannel.name}\` from now on.`),
                 components: [row]
         })
-    })
+    }
 };

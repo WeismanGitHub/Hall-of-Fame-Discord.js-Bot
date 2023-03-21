@@ -1,4 +1,3 @@
-const errorHandler = require('../../helpers/error-handler');
 const GuildSchema = require('../../schemas/guild-schema');
 const QuoteSchema = require('../../schemas/quote-schema');
 const { basicEmbed } = require('../../helpers/embeds');
@@ -28,7 +27,7 @@ module.exports = {
         }
     ],
 
-    callback: async ({ interaction }) => errorHandler(interaction, async () => {
+    callback: async (interaction) => {
         const { options } = interaction;
         const guildId = interaction.guildId;
         const tag = options.getString('tag');
@@ -49,5 +48,5 @@ module.exports = {
         )
 
         await interaction.reply(basicEmbed(`Changed '${tag}' to '${newName}'!`));
-    })
+    }
 };

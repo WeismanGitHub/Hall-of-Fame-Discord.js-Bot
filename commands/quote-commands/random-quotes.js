@@ -2,7 +2,6 @@ const UniversalQuoteSchema = require('../../schemas/universal-quote-schema');
 const { MessageActionRow, MessageButton } = require('discord.js');
 const { getAuthorByName } = require('../../helpers/get-author');
 const FilterSchema = require('../../schemas/filter-schema');
-const errorHandler = require('../../helpers/error-handler');
 const sendQuotes = require('../../helpers/send-quotes');
 const { basicEmbed } = require('../../helpers/embeds');
 const checkTags = require('../../helpers/check-tags');
@@ -78,7 +77,7 @@ module.exports = {
         }
     ],
     
-    callback: async ({ interaction }) => errorHandler(interaction, async () => {
+    callback: async (interaction) => {
         const { options } = interaction;
         const searchPhrase = options.getString('search_phrase')
         const limit = options.getInteger('limit') == null ? 10 : options.getInteger('limit')
@@ -156,5 +155,5 @@ module.exports = {
         await interaction.channel.send({
             components: [row]
         })
-    })
+    }
 };

@@ -1,5 +1,4 @@
 const { getLastImage } = require('../../helpers/get-last-item');
-const errorHandler = require('../../helpers/error-handler');
 const GuildSchema = require('../../schemas/guild-schema');
 const { authorEmbed } = require('../../helpers/embeds');
 const { InvalidInputError } = require('../../errors');
@@ -37,7 +36,7 @@ module.exports = {
         },
     ],
 
-    callback: async ({ interaction }) => errorHandler(interaction, async () => {
+    callback: async ({ interaction }) => {
         const { options } = interaction;
         const guildId = interaction.guildId;
         const name = options.getString('name');
@@ -68,5 +67,5 @@ module.exports = {
         })
 
         await interaction.reply(authorEmbed(author))
-    })
+    }
 };

@@ -1,4 +1,3 @@
-const errorHandler = require('../helpers/error-handler');
 const GuildSchema = require('../schemas/guild-schema');
 const { SlashCommandBuilder } = require('discord.js');
 const { basicEmbed } = require('../helpers/embeds');
@@ -9,7 +8,7 @@ module.exports = {
 		.setDescription('Register your server.')
         .setDMPermission(false)
 	,
-	execute: async (interaction) => errorHandler(interaction, async () => {
+	execute: async (interaction) => {
         const guildId = interaction.guildId;
 
         if (await GuildSchema.exists({ _id: guildId })) {
@@ -18,5 +17,5 @@ module.exports = {
         
         await GuildSchema.create({ _id: guildId })
         interaction.reply(basicEmbed('Registered This Server!'));
-    })
+    }
 };

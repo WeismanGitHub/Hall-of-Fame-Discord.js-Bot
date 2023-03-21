@@ -1,5 +1,4 @@
 const { errorEmbed, authorEmbed, basicEmbed } = require('../../helpers/embeds');
-const errorHandler = require('../../helpers/error-handler');
 const GuildSchema = require('../../schemas/guild-schema');
 const { NotFoundError } = require('../../errors');
 
@@ -10,7 +9,7 @@ module.exports = {
     guildOnly: true,
     slash: true,
 
-    callback: async ({ interaction }) => errorHandler(interaction, async () => {
+    callback: async (interaction) => {
         const guildId = interaction.guildId;
 
         const authors = (await GuildSchema.findOne({ _id: guildId }).select('-_id authors').lean()).authors
@@ -42,5 +41,5 @@ module.exports = {
         };
         
         await interaction.channel.send(basicEmbed('Done!'));
-    })
+    }
 };

@@ -2,7 +2,6 @@ const { InvalidInputError, NotFoundError, InvalidActionError } = require('../../
 const AudioQuoteSchema = require('../../schemas/audio-quote-schema')
 const { getLastQuoteId } = require('../../helpers/get-last-item')
 const { getAuthorById } = require('../../helpers/get-author');
-const errorHandler = require('../../helpers/error-handler');
 const { quoteEmbed } = require('../../helpers/embeds');
 
 const {
@@ -41,7 +40,7 @@ module.exports = {
         },
     ],
 
-    callback: async ({ interaction }) => errorHandler(interaction, async () => {
+    callback: async (interaction) => {
         const guildId = interaction.guildId;
         const { options } = interaction;
         
@@ -108,5 +107,5 @@ module.exports = {
 
         const author = await getAuthorById(audioQuote.authorId, guildId)
         await interaction.reply(quoteEmbed(audioQuote, author))
-    })
+    }
 };

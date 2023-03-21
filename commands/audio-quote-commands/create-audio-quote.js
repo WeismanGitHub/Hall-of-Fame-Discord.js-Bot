@@ -3,7 +3,6 @@ const sendToQuotesChannel = require('../../helpers/send-to-quotes-channel');
 const { InvalidInputError, NotFoundError } = require('../../errors');
 const AudioQuoteSchema = require('../../schemas/audio-quote-schema');
 const { getAuthorByName } = require('../../helpers/get-author');
-const errorHandler = require('../../helpers/error-handler');
 const { quoteEmbed } = require('../../helpers/embeds');
 
 module.exports = {
@@ -70,7 +69,7 @@ module.exports = {
         }
     ],
 
-    callback: async ({ interaction, client }) => errorHandler(interaction, async () => {
+    callback: async ({ interaction, client }) => {
         const guildId = interaction.guildId;
         const { options } = interaction;
         const tags = [
@@ -113,5 +112,5 @@ module.exports = {
 
         await sendToQuotesChannel(embeddedAudioQuote, guildId, client)
         await interaction.reply(embeddedAudioQuote);
-    })
+    }
 };

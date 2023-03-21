@@ -1,4 +1,3 @@
-const errorHandler = require('../helpers/error-handler');
 const { SlashCommandBuilder } = require('discord.js')
 const { helpEmbed } = require('../helpers/embeds')
 
@@ -7,7 +6,5 @@ module.exports = {
 		.setName('help')
 		.setDescription("Find out more about this bot and it's commands.")
 	,
-	execute: async (interaction) => errorHandler(interaction, async () => {
-        interaction.reply(helpEmbed())
-    })
+	execute: async (interaction) => interaction.reply(helpEmbed())
 };

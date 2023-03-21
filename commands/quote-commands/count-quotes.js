@@ -1,6 +1,5 @@
 const UniversalQuoteSchema = require('../../schemas/universal-quote-schema');
 const { getAuthorByName } = require('../../helpers/get-author');
-const errorHandler = require('../../helpers/error-handler');
 const { basicEmbed } = require('../../helpers/embeds');
 const checkTags = require('../../helpers/check-tags');
 const { NotFoundError } = require('../../errors')
@@ -69,7 +68,7 @@ module.exports = {
         }
     ],
 
-    callback: async ({ interaction }) => errorHandler(interaction, async () => {
+    callback: async (interaction) => {
         const { options } = interaction;
         const searchPhrase = options.getString('search_phrase')
         const inputtedAuthor = options.getString('author');
@@ -119,5 +118,5 @@ module.exports = {
         }
 
         await interaction.reply(basicEmbed(`${count} quote${plural ? 's' : ''} match${plural ? '' : 'es'} your specifications!`))
-    })
+    }
 };

@@ -1,4 +1,3 @@
-const errorHandler = require('../../helpers/error-handler');
 const GuildSchema = require('../../schemas/guild-schema');
 const { basicEmbed } = require('../../helpers/embeds');
 const { NotFoundError } = require('../../errors');
@@ -20,7 +19,7 @@ module.exports = {
         }
     ],
 
-    callback: async ({ interaction }) => errorHandler(interaction, async () => {
+    callback: async ({ interaction }) => {
         const { options } = interaction;
         const guildId = interaction.guildId;
         const authorName = options.getString('author');
@@ -35,5 +34,5 @@ module.exports = {
         }
 
         interaction.reply(basicEmbed(`Deleted '${authorName}' author!`));
-    })
+    }
 };
