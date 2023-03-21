@@ -1,4 +1,3 @@
-const errorHandler = require('../../helpers/error-handler');
 const { EmbedBuilder } = require('discord.js');
 const { Events } = require('discord.js');
 const client = require('../../index')
@@ -6,7 +5,7 @@ const client = require('../../index')
 module.exports = {
 	name: Events.InteractionCreate,
 	once: false,
-    execute: async (interaction) => errorHandler(interaction, async () => {
+    execute: async (interaction) => {
         if (!interaction.isButton()) {
             return
         }
@@ -26,5 +25,5 @@ module.exports = {
         }
 
         await interaction.reply({ embeds: [commandsEmbed] });
-    })
+    }
 }

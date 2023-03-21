@@ -1,7 +1,6 @@
 const UniversalQuoteSchema = require('../../schemas/universal-quote-schema');
 const { MessageActionRow, MessageButton } = require('discord.js');
 const FilterSchema = require('../../schemas/filter-schema');
-const errorHandler = require('../../helpers/error-handler');
 const sendQuotes = require('../../helpers/send-quotes');
 const { InvalidActionError } = require('../../errors');
 const { basicEmbed } = require('../../helpers/embeds');
@@ -10,7 +9,7 @@ const { Events } = require('discord.js');
 module.exports = {
 	name: Events.InteractionCreate,
 	once: false,
-    execute: async (interaction) => errorHandler(interaction, async () => {
+    execute: async (interaction) => {
         if (!interaction.isButton()) {
             return
         }
@@ -54,5 +53,5 @@ module.exports = {
         await interaction.channel.send({
             components: [row]
         })
-    })
+    }
 }
