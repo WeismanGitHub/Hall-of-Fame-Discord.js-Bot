@@ -1,6 +1,6 @@
-const GuildSchema = require('../schemas/guild-schema');
+const GuildSchema = require('../../schemas/guild-schema');
 const { SlashCommandBuilder } = require('discord.js');
-const { basicEmbed } = require('../helpers/embeds');
+const { basicEmbed } = require('../../helpers/embeds');
 
 module.exports = {
 	data: new SlashCommandBuilder()

@@ -1,8 +1,8 @@
-const { NotFoundError, InvalidActionError } = require('../../errors')
-const { getAuthorByName, getAuthorById } = require('../../helpers/get-author');
-const AudioQuoteSchema = require('../../schemas/audio-quote-schema')
-const { quoteEmbed } = require('../../helpers/embeds');
-const checkTags = require('../../helpers/check-tags');
+const { getAuthorByName, getAuthorById } = require('../../../helpers/get-author');
+const { NotFoundError, InvalidActionError } = require('../../../errors')
+const AudioQuoteSchema = require('../../../schemas/audio-quote-schema')
+const { quoteEmbed } = require('../../../helpers/embeds');
+const checkTags = require('../../../helpers/check-tags');
 
 const {
     createAudioPlayer,

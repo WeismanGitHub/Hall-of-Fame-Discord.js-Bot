@@ -1,10 +1,10 @@
-const { getAuthorByName, getAuthorById } = require('../../helpers/get-author');
-const { getLastQuoteId, getLastImage } = require('../../helpers/get-last-item');
-const sendToQuotesChannel = require('../../helpers/send-to-quotes-channel');
-const MultiQuoteSchema = require('../../schemas/multi-quote-schema');
-const { NotFoundError, InvalidInputError } = require('../../errors');
-const { quoteEmbed } = require('../../helpers/embeds');
-const client = require('../../index')
+const { getAuthorByName, getAuthorById } = require('../../../helpers/get-author');
+const { getLastQuoteId, getLastImage } = require('../../../helpers/get-last-item');
+const sendToQuotesChannel = require('../../../helpers/send-to-quotes-channel');
+const MultiQuoteSchema = require('../../../schemas/multi-quote-schema');
+const { NotFoundError, InvalidInputError } = require('../../../errors');
+const { quoteEmbed } = require('../../../helpers/embeds');
+const client = require('../../../index')
 
 module.exports = {
     category:'Multi Quotes',

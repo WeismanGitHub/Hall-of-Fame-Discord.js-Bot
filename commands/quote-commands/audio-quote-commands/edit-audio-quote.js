@@ -1,9 +1,9 @@
-const { getLastAudio, getLastQuoteId, getLastImage } = require('../../helpers/get-last-item');
-const { getAuthorByName, getAuthorById } = require('../../helpers/get-author');
-const sendToQuotesChannel = require('../../helpers/send-to-quotes-channel')
-const AudioQuoteSchema = require('../../schemas/audio-quote-schema');
-const { InvalidInputError, NotFoundError } = require('../../errors');
-const { quoteEmbed } = require('../../helpers/embeds');
+const { getLastAudio, getLastQuoteId, getLastImage } = require('../../../helpers/get-last-item');
+const { getAuthorByName, getAuthorById } = require('../../../helpers/get-author');
+const sendToQuotesChannel = require('../../../helpers/send-to-quotes-channel')
+const AudioQuoteSchema = require('../../../schemas/audio-quote-schema');
+const { InvalidInputError, NotFoundError } = require('../../../errors');
+const { quoteEmbed } = require('../../../helpers/embeds');
 
 module.exports = {
     category:'Audio Quotes',

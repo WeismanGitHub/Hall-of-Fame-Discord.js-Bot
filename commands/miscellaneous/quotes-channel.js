@@ -1,8 +1,8 @@
 const { MessageActionRow, MessageButton, SlashCommandBuilder, ChannelType } = require('discord.js');
-const { channelDescription, removeDescription } = require('../descriptions');
-const GuildSchema = require('../schemas/guild-schema');
-const { basicEmbed } = require('../helpers/embeds');
-const { InvalidInputError } = require('../errors')
+const { channelDescription, removeDescription } = require('../../descriptions');
+const GuildSchema = require('../../schemas/guild-schema');
+const { basicEmbed } = require('../../helpers/embeds');
+const { InvalidInputError } = require('../../errors')
 
 module.exports = {
 	data: new SlashCommandBuilder()
