@@ -76,7 +76,7 @@ const errorEmbed = function(error, title='Theres been an error!', color='#FF0000
         embeds: [
 			new EmbedBuilder()
 			.setTitle(title.substring(0, 256))
-			.setDescription(error.substring(0, 4096))
+			.setDescription(String(error).substring(0, 4096))
 			.setColor(color) // red
 		],
 		ephemeral: ephemeral
