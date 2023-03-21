@@ -76,7 +76,6 @@ QuoteSchema.pre('updateOne', async function(next) {
 })
 
 QuoteSchema.pre('findOneAndUpdate', async function(next) {
-    console.log('sdfs')
     const quote = this.getUpdate()
     const guildId = this.getQuery().guildId
 
