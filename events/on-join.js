@@ -1,24 +1,28 @@
-const errorHandler = require('../helpers/error-handler');
+const { Events, PermissionFlagsBits } = require('discord.js');
 const GuildSchema = require('../schemas/guild-schema');
 const { helpEmbed } = require('../helpers/embeds')
-const { Events } = require('discord.js');
 
 module.exports = {
 	name: Events.GuildCreate,
 	once: false,
-    execute: async (interaction) => errorHandler(interaction, async () => {
-        console.log(interaction)
-        // const guildId = guild.id;
-        // const guildRegistered = await GuildSchema.exists({ _id: guildId })
-    
-        // if (!guildRegistered) {
-        //     await GuildSchema.create({_id: guildId });
-        // }
-
-        // const channel = guild.systemChannelID ?? guild.channels.cache.find(channel => 
-        //     channel.type == 'GUILD_TEXT' && channel.permissionsFor(guild.me).has('SEND_MESSAGES')
-        // )
+    execute: async (guild) => {
+        try {
+            const guildId = guild.id;
+            const isGuildRegistered = await GuildSchema.exists({ _id: guildId })
         
-        // await channel.send(helpEmbed())
-    })
+            if (!isGuildRegistered) {
+                await GuildSchema.create({_id: guildId });
+            }
+            
+            const channel = guild.systemChannel || guild.channels.cache.find(channel => {
+                return channel.type == 0 && channel.permissionsFor(guild?.members?.me)?.has(PermissionFlagsBits.SendMessages)
+            })
+
+            if (!channel) return
+            
+            await channel.send(helpEmbed())
+        } catch(err) {
+            console.log(err)
+        }
+    }
 };
