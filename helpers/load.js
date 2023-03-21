@@ -1,5 +1,6 @@
-const { REST, Routes } = require('discord.js');
 const { statSync, readdirSync } = require('fs');
+const { REST, Routes } = require('discord.js');
+const { errorEmbed } = require('./embeds');
 const { join } = require('path');
 
 function getPaths(dir) {
@@ -19,6 +20,7 @@ function getPaths(dir) {
     }
     
     recursiveLoop(paths.map(path => join(dir, path)))
+    
     return filePaths
 }
 
@@ -40,7 +42,6 @@ async function loadCommands(client) {
     const rest = new REST({ version: '10' }).setToken(client.token);
     const clientId = client?.application?.id
 
-
     if (!clientId) {
         throw new Error('Client Id is invalid.')
     }
@@ -59,8 +60,8 @@ async function loadCommands(client) {
         try {
             await command.execute(interaction);
         } catch (err) {
-            console.error(err);
-            await interaction.reply({ content: 'There was an error while executing client command!', ephemeral: true });
+            interaction.reply(errorEmbed(err))
+            .catch(_ => interaction.channel.send(errorEmbed(err)))
         }
     });
 }
@@ -70,15 +71,25 @@ async function loadEvents(client) {
     
     for (const eventPath of eventsPaths) {
         const event = require(eventPath);
-
+        
         if (event.once) {
             client.once(event.name, (...args) => event.execute(...args));
         } else {
-            client.on(event.name, (...args) => event.execute(...args));
+            client.on(event.name, (...args) => {
+                event.execute(...args)
+                .catch(err => {
+                    if (event.name == 'interactionCreate') {
+                        const interaction = args[0]
+                        
+                        interaction.reply(errorEmbed(err))
+                        .catch(_ => interaction.channel.send(errorEmbed(err)))
+                    }
+                })
+            });
         }
     }
 
-    console.log(`Successfully loaded ${eventsPaths.length} events.`);
+    console.log(`loaded ${eventsPaths.length} events...`);
 }
 
 module.exports = {
