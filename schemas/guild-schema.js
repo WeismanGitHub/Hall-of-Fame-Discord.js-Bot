@@ -25,16 +25,7 @@ const GuildSchema = new mongoose.Schema({
     _id: { type: String, required: true },
     authors: [AuthorSchema],
     tags: [TagSchema],
-    notifications: {
-        type: Boolean,
-        default: true,
-    },
-    notificationChannelId: {
-        type: String
-    },
-    quotesChannelId: {
-        type: String,
-    }
+    quotesChannelId: { type: String, default: null }
 });
 
 GuildSchema.plugin(schema => {
