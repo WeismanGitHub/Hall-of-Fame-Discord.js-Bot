@@ -1,39 +1,28 @@
-const { MessageActionRow, MessageButton } = require('discord.js');
+const { MessageActionRow, MessageButton, SlashCommandBuilder, ChannelType } = require('discord.js');
 const GuildSchema = require('../schemas/guild-schema');
 const { basicEmbed } = require('../helpers/embeds');
 const { InvalidInputError } = require('../errors')
 
 module.exports = {
-    category:'Quotes',
-    name: 'quotes_channel',
-    description: 'Choose a channel to have all the quotes in. It will be updated when new quotes are created.',
-    guildOnly: true,
-    slash: true,
-
-    options: [
-        {
-            name: 'channel',
-            description: 'Choose a channel to have all the quotes in. It will be updated with new quotes.',
-            // type: Constants.ApplicationCommandOptionTypes.CHANNEL,
-        },
-        {
-            name: 'remove',
-            description: 'Remove the quotes channel.',
-            // type: Constants.ApplicationCommandOptionTypes.STRING,
-            choices: [
-                {
-                    name: 'remove',
-                    value: 'true'
-                },
-                {
-                    name: 'keep',
-                    value: 'false'
-                },
-            ]
-        }
-    ],
-
-    callback: async (interaction ) => {
+	data: new SlashCommandBuilder()
+		.setName('quotes_channel')
+		.setDescription('Choose a channel to have all the quotes in. It will be updated when new quotes are created.')
+        .setDMPermission(false)
+        .addChannelOption(option => option
+            .setName('channel')
+            .setDescription('Choose a channel to have all the quotes in. It will be updated with new quotes.')
+            .addChannelTypes(ChannelType.GuildText)
+        )
+        .addStringOption(option => option
+            .setName('remove')
+            .setDescription('Remove the quotes channel.')
+            .addChoices(
+				{ name: 'remove', value: 'true' },
+				{ name: 'keep', value: 'false' },
+			)
+        )
+	,
+	execute: async (interaction) => {
         const { options } = interaction;
         const guildId = interaction.guildId;
         const quotesChannel = options.getChannel('channel');
@@ -47,10 +36,6 @@ module.exports = {
         if (removeChannel) {
             await GuildSchema.updateOne({ _id: guildId }, { $unset: { quotesChannelId: true } })
             return await interaction.reply(basicEmbed('Removed quotes channel!'))
-        }
-        
-        if (quotesChannel.type !== 'GUILD_TEXT') {
-            throw new InvalidInputError('Channel')
         }
 
         await GuildSchema.updateOne({ _id: guildId }, { quotesChannelId: channelId })
