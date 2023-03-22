@@ -1,28 +1,25 @@
 const GuildSchema = require('../../schemas/guild-schema');
+const { nameDescription } = require('../../descriptions');
 const { basicEmbed } = require('../../helpers/embeds');
+const { SlashCommandBuilder } = require('discord.js');
 const { NotFoundError } = require('../../errors');
 
 module.exports = {
-    category:'Authors',
-    name: 'delete_author',
-    description: 'Delete an author. To create a quote you need an author.',
-    guildOnly: true,
-    slash: true,
-
-    options: [
-        {
-            name: 'author',
-            description: 'The name of the author you want to delete.',
-            required: true,
-       //     type: Constants.ApplicationCommandOptionTypes.STRING,
-            maxLength: 256
-        }
-    ],
-
-    callback: async ({ interaction }) => {
+	data: new SlashCommandBuilder()
+		.setName('delete_author')
+		.setDescription('Delete an author. To create a quote you need an author.')
+        .setDMPermission(false)
+        .addStringOption(option => option
+            .setName('name')
+            .setDescription(nameDescription)
+            .setMaxLength(256)
+            .setRequired(true)
+        )
+	,
+	execute: async (interaction) => {
         const { options } = interaction;
         const guildId = interaction.guildId;
-        const authorName = options.getString('author');
+        const authorName = options.getString('name');
 
         const result = await GuildSchema.updateOne(
             { _id: guildId },
