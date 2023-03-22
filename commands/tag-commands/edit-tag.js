@@ -1,33 +1,29 @@
+const { tagDescription, newNameDescription } = require('../../descriptions');
 const GuildSchema = require('../../schemas/guild-schema');
 const QuoteSchema = require('../../schemas/quote-schema');
 const { basicEmbed } = require('../../helpers/embeds');
+const { SlashCommandBuilder } = require('discord.js');
 const { NotFoundError } = require('../../errors');
 
 module.exports = {
-    category:'Tags',
-    name: 'edit_tag',
-    description: 'Edit a tag.',
-    guildOnly: true,
-    slash: true,
-
-    options: [
-        {
-            name: 'tag',
-            description: 'The tag you want to edit.',
-            required: true,
-            maxLength: 339,
-      //      type: Constants.ApplicationCommandOptionTypes.STRING
-        },
-        {
-            name: 'new_name',
-            description: 'What you want to rename the tag to.',
-            required: true,
-            maxLength: 339,
-    //        type: Constants.ApplicationCommandOptionTypes.STRING
-        }
-    ],
-
-    callback: async (interaction) => {
+	data: new SlashCommandBuilder()
+		.setName('edit_tag')
+		.setDescription('Edit a tag.')
+        .setDMPermission(false)
+        .addStringOption(option => option
+            .setName('tag')
+            .setDescription(tagDescription)
+            .setMaxLength(339)
+            .setRequired(true)
+        )
+        .addStringOption(option => option
+            .setName('new_name')
+            .setDescription(newNameDescription)
+            .setMaxLength(339)
+            .setRequired(true)
+        )
+	,
+	execute: async (interaction) => {
         const { options } = interaction;
         const guildId = interaction.guildId;
         const tag = options.getString('tag');
