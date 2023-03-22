@@ -2,52 +2,51 @@ const { InvalidInputError, NotFoundError } = require('../../errors');
 const { getLastImage } = require('../../helpers/get-last-item');
 const GuildSchema = require('../../schemas/guild-schema');
 const { authorEmbed } = require('../../helpers/embeds');
+const { SlashCommandBuilder } = require('discord.js');
+const {
+    authorDescription,
+    newNameDescription,
+    imageLinkDescription,
+    accountImageDescription,
+    lastImageDescription,
+    removeImageDescription,
+} = require('../../descriptions');
 
 module.exports = {
-    category:'Authors',
-    name: 'edit_author',
-    description: 'Edit an author. To create a quote you need an author.',
-    guildOnly: true,
-    slash: true,
-
-    options: [
-        {
-            name: 'name',
-            description: 'The name of the author you want to edit. (case sensitive)',
-            required: true,
-  //          type: Constants.ApplicationCommandOptionTypes.STRING,
-            maxLength: 256
-        },
-        {
-            name: 'new_name',
-            description: 'The name you want to change the author to. (case sensitive)',
-   //         type: Constants.ApplicationCommandOptionTypes.STRING,
-            maxLength: 256
-        },
-        {
-            name: 'image_link',
-            description: 'This will be the author icon.',
-  //          type: Constants.ApplicationCommandOptionTypes.STRING,
-            maxLength: 512
-        },
-        {
-            name: 'last_image',
-            description: 'Use the last image sent in a channel for the author icon.',
-   //         type: Constants.ApplicationCommandOptionTypes.CHANNEL
-        },
-        {
-            name: "account_image",
-            description: "Use an account image.",
-   //         type: Constants.ApplicationCommandOptionTypes.USER
-        },
-        {
-            name: 'remove_image',
-            description: 'Use the default image.',
-  //          type: Constants.ApplicationCommandOptionTypes.BOOLEAN
-        },
-    ],
-
-    callback: async (interaction) => {
+	data: new SlashCommandBuilder()
+		.setName('edit_author')
+		.setDescription('Edit an author. To create a quote you need an author.')
+        .setDMPermission(false)
+        .addStringOption(option => option
+            .setName('author')
+            .setDescription(authorDescription)
+            .setMaxLength(256)
+            .setRequired(true)
+        )
+        .addStringOption(option => option
+            .setName('new_name')
+            .setDescription(newNameDescription)
+            .setMaxLength(256)
+        )
+        .addStringOption(option => option
+            .setName('image_link')
+            .setDescription(imageLinkDescription)
+            .setMaxLength(512)
+        )
+        .addUserOption(option => option
+            .setName('account_image')
+            .setDescription(accountImageDescription)
+        )
+        .addChannelOption(option => option
+            .setName('last_image')
+            .setDescription(lastImageDescription)
+        )
+        .addBooleanOption(option => option
+            .setName('remove_image')
+            .setDescription(removeImageDescription)
+        )
+	,
+	execute: async (interaction) => {
         const { options } = interaction;
 
         if (options._hoistedOptions <= 1) {
@@ -59,7 +58,7 @@ module.exports = {
         let newIconURL = options.getString('image_link')
         const newName = options.getString('new_name')
         const user = options.getUser('account_image')
-        const oldName = options.getString('name');
+        const oldName = options.getString('author');
         const guildId = interaction.guildId;
 
         if (deleteImage) {
