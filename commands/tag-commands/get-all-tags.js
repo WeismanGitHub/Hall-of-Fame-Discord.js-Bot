@@ -1,16 +1,16 @@
 const GuildSchema = require('../../schemas/guild-schema');
 const { basicEmbed } = require('../../helpers/embeds');
+const { SlashCommandBuilder } = require('discord.js');
 const { NotFoundError } = require('../../errors');
 require('dotenv').config();
 
 module.exports = {
-    category:'Tags',
-    name: 'get_tags',
-    description: 'Gets all tags. Tags can be used to classify quotes.',
-    guildOnly: true,
-    slash: true,
-
-    callback: async (interaction) => {
+	data: new SlashCommandBuilder()
+		.setName('get_tags')
+		.setDescription('Gets all tags. Tags can be used to classify quotes.')
+        .setDMPermission(false)
+	,
+	execute: async (interaction) => {
         const guildId = interaction.guildId;
         let message = '';
     
