@@ -1,15 +1,15 @@
 const { errorEmbed, authorEmbed, basicEmbed } = require('../../helpers/embeds');
 const GuildSchema = require('../../schemas/guild-schema');
+const { SlashCommandBuilder } = require('discord.js');
 const { NotFoundError } = require('../../errors');
 
 module.exports = {
-    category:'Authors',
-    name: 'get_authors',
-    description: 'Gets all authors.',
-    guildOnly: true,
-    slash: true,
-
-    callback: async (interaction) => {
+	data: new SlashCommandBuilder()
+		.setName('get_authors')
+		.setDescription('Gets all authors.')
+        .setDMPermission(false)
+	,
+	execute: async (interaction) => {
         const guildId = interaction.guildId;
 
         const authors = (await GuildSchema.findOne({ _id: guildId }).select('-_id authors').lean()).authors
