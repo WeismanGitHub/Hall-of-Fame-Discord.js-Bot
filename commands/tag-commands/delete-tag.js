@@ -1,25 +1,22 @@
 const GuildSchema = require('../../schemas/guild-schema');
-const QuoteSchema = require('../../schemas/quote-schema');
+const QuoteSchema = require('../../schemas/quote-schema')
+const { tagDescription } = require('../../descriptions');
 const { basicEmbed } = require('../../helpers/embeds');
+const { SlashCommandBuilder } = require('discord.js');
 
 module.exports = {
-    category:'Tags',
-    name: 'delete_tag',
-    description: 'Delete a tag. Tags can be used to classify quotes.',
-    guildOnly: true,
-    slash: true,
-
-    options: [
-        {
-            name: 'tag',
-            description: 'The tag you want to delete.',
-            required: true,
-            maxLength: 339,
-     //       type: Constants.ApplicationCommandOptionTypes.STRING
-        }
-    ],
-
-    callback: async (interaction) => {
+	data: new SlashCommandBuilder()
+		.setName('delete_tag')
+		.setDescription('The tag you want to delete.')
+        .setDMPermission(false)
+        .addStringOption(option => option
+            .setName('tag')
+            .setDescription(tagDescription)
+            .setMaxLength(339)
+            .setRequired(true)
+        )
+	,
+	execute: async (interaction) => {
         const { options } = interaction;
         const guildId = interaction.guildId;
         const tag = options.getString('tag');
@@ -34,6 +31,6 @@ module.exports = {
             { $pull: { 'tags': tag } }
         )
 
-        await interaction.reply(basicEmbed(`Deleted '${tag}' tag!`));
+        await interaction.reply(basicEmbed(`Deleted "${tag}" tag!`));
     }
 };
