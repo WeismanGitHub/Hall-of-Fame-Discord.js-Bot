@@ -1,42 +1,42 @@
 const { getLastImage } = require('../../helpers/get-last-item');
 const GuildSchema = require('../../schemas/guild-schema');
 const { authorEmbed } = require('../../helpers/embeds');
+const { SlashCommandBuilder } = require('discord.js');
 const { InvalidInputError } = require('../../errors');
+const {
+    nameDescription,
+    accountImageDescription,
+    imageLinkDescription,
+    lastImageDescription,
+    authorDescription
+} = require('../../descriptions');
 
 module.exports = {
-    category:'Authors',
-    name: 'create_author',
-    description: 'Create an author. To create a quote you need an author.',
-    guildOnly: true,
-    slash: true,
-
-    options: [
-        {
-            name: 'name',
-            description: 'The name of the author you want to create.',
-   //         type: Constants.ApplicationCommandOptionTypes.STRING,
-            required: true,
-            maxLength: 256
-        },
-        {
-            name: "account_image",
-            description: "Use an account image.",
-   //         type: Constants.ApplicationCommandOptionTypes.USER
-        },
-        {
-            name: 'image_link',
-            description: "This will be the author's icon.",
-    //        type: Constants.ApplicationCommandOptionTypes.STRING,
-            maxLength: 512
-        },
-        {
-            name: 'last_image',
-            description: 'Use the last image sent in a channel for the author icon.',
-   //         type: Constants.ApplicationCommandOptionTypes.CHANNEL
-        },
-    ],
-
-    callback: async ({ interaction }) => {
+	data: new SlashCommandBuilder()
+		.setName('create_author')
+		.setDescription(authorDescription)
+        .setDMPermission(false)
+        .addStringOption(option => option
+            .setName('name')
+            .setDescription(nameDescription)
+            .setMaxLength(256)
+            .setRequired(true)
+        )
+        .addStringOption(option => option
+            .setName('image_link')
+            .setDescription(imageLinkDescription)
+            .setMaxLength(512)
+        )
+        .addUserOption(option => option
+            .setName('account_image')
+            .setDescription(accountImageDescription)
+        )
+        .addChannelOption(option => option
+            .setName('last_image')
+            .setDescription(lastImageDescription)
+        )
+	,
+	execute: async (interaction) => {
         const { options } = interaction;
         const guildId = interaction.guildId;
         const name = options.getString('name');
