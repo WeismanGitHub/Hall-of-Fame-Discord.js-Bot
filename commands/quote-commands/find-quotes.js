@@ -24,7 +24,7 @@ module.exports = {
         .addStringOption(option => option
             .setName('author')
             .setDescription(authorDescription)
-            .setMaxLength(339)
+            .setMaxLength(256)
         )
         .addStringOption(option => option
             .setName('first_tag')
