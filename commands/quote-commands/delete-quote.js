@@ -1,31 +1,29 @@
+const { idDescription, lastQuoteDescription } = require('../../descriptions');
 const { getLastQuoteId } = require('../../helpers/get-last-item');
 const QuoteSchema = require('../../schemas/quote-schema');
 const { basicEmbed } = require('../../helpers/embeds');
+const { SlashCommandBuilder } = require('discord.js');
 const { NotFoundError } = require('../../errors');
 
 module.exports = {
-    category:'Quotes',
-    name: 'delete_quote',
-    description: 'Delete a quote. Quotes must have an author and can have up to three tags.',
-    guildOnly: true,
-    slash: true,
-
-    options: [
-        {
-            name: 'id',
-            description: 'The id of the quote.',
-      //      type: Constants.ApplicationCommandOptionTypes.STRING,
-            minLength: 24,
-            maxLength: 24
-        },
-        {
-            name: 'last_quote',
-            description: "Use the last quote sent in a channel. Will grab any type of quote.",
-       //     type: Constants.ApplicationCommandOptionTypes.CHANNEL
-        },
-    ],
-
-    callback: async (interaction) => {
+	data: new SlashCommandBuilder()
+		.setName('delete_quote')
+		.setDescription('Delete a quote. Quotes must have an author and can have up to three tags.')
+        .setDMPermission(false)
+        .addStringOption(option => option
+            .setName('id')
+            .setDescription(idDescription)
+            .setMaxLength(24)
+            .setMinLength(24)
+        )
+        .addChannelOption(option => option
+            .setName('last_quote')
+            .setDescription(lastQuoteDescription)
+            .setMaxLength(339)
+            .setRequired(true)
+        )
+	,
+	execute: async (interaction) => {
         const { options } = interaction;
         const lastQuoteChannel = options.getChannel('last_quote');
         const id = options.getString('id') ?? await getLastQuoteId(lastQuoteChannel)
@@ -35,7 +33,7 @@ module.exports = {
 
         if (!quote) {
             throw new NotFoundError('Quote')
-        } 
+        }
 
         const text = quote.text ? `'${quote.text.substring(0, 245)}'` : 'quote' // substring to fit 256 char title limit.
         await interaction.reply(basicEmbed(`Deleted ${text}!`));
