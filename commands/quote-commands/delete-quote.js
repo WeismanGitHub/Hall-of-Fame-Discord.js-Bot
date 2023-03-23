@@ -19,7 +19,6 @@ module.exports = {
         .addChannelOption(option => option
             .setName('last_quote')
             .setDescription(lastQuoteDescription)
-            .setMaxLength(339)
             .setRequired(true)
         )
 	,
