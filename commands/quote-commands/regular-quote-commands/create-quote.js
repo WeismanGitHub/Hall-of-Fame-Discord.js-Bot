@@ -4,61 +4,58 @@ const { getLastImage } = require('../../../helpers/get-last-item');
 const QuoteSchema = require('../../../schemas/quote-schema');
 const { quoteEmbed } = require('../../../helpers/embeds');
 const { NotFoundError } = require('../../../errors') ;
+const { SlashCommandBuilder } = require('discord.js');
 const client = require('../../../index')
+const {
+    authorDescription,
+    tagDescription,
+    lastImageDescription,
+    imageLinkDescription,
+    textDescription,
+} = require('../../../descriptions');
 
 module.exports = {
-    category:'Quotes',
-    name: 'create_quote',
-    description: 'Create a quote. Quotes must have an author and can have up to three tags.',
-    guildOnly: true,
-    slash: true,
-
-    options: [
-        {
-            name: 'author',
-            description: 'The name of who said the quote. You must first register an author with /createauthor.',
-            required: true,
-   //         type: Constants.ApplicationCommandOptionTypes.STRING,
-            maxLength: 256
-        },
-        {
-            name: 'text',
-            description: 'What was said by the person.',
-   //         type: Constants.ApplicationCommandOptionTypes.STRING,
-            maxLength: 4096
-        },
-        {
-            name: 'image_link',
-            description: 'Image attachment link. Upload an image to Discord and copy the link to that image.',
-    //        type: Constants.ApplicationCommandOptionTypes.STRING,
-            maxLength: 512
-        },
-        {
-            name: 'first_tag',
-            description: 'Tags are used for filtering.',
-       //     type: Constants.ApplicationCommandOptionTypes.STRING,
-            maxLength: 339
-        },
-        {
-            name: 'second_tag',
-            description: 'Tags are used for filtering.',
-   //         type: Constants.ApplicationCommandOptionTypes.STRING,
-            maxLength: 339
-        },
-        {
-            name: 'third_tag',
-            description: 'Tags are used for filtering.',
-   //         type: Constants.ApplicationCommandOptionTypes.STRING,
-            maxLength: 339
-        },
-        {
-            name: 'last_image',
-            description: 'Use the last image sent in a channel to the quote.',
- //           type: Constants.ApplicationCommandOptionTypes.CHANNEL
-        }
-    ],
-
-    callback: async (interaction) => {
+	data: new SlashCommandBuilder()
+		.setName('create_quote')
+		.setDescription('Create a quote. Quotes must have an author and can have up to three tags.')
+        .setDMPermission(false)
+        .addStringOption(option => option
+            .setName('author')
+            .setDescription(authorDescription)
+            .setMaxLength(256)
+            .setRequired(true)
+        )
+        .addStringOption(option => option
+            .setName('text')
+            .setDescription(textDescription)
+            .setMaxLength(4096)
+        )
+        .addStringOption(option => option
+            .setName('image_link')
+            .setDescription(imageLinkDescription)
+            .setMaxLength(512)
+        )
+        .addChannelOption(option => option
+            .setName('last_image')
+            .setDescription(lastImageDescription)
+        )
+        .addStringOption(option => option
+            .setName('first_tag')
+            .setDescription(tagDescription)
+            .setMaxLength(339)
+        )
+        .addStringOption(option => option
+            .setName('second_tag')
+            .setDescription(tagDescription)
+            .setMaxLength(339)
+        )
+        .addStringOption(option => option
+            .setName('third_tag')
+            .setDescription(tagDescription)
+            .setMaxLength(339)
+        )
+	,
+	execute: async (interaction) => {
         const guildId = interaction.guildId;
         const { options } = interaction;
         const inputtedAuthor = options.getString('author')
