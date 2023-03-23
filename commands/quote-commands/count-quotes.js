@@ -2,73 +2,58 @@ const UniversalQuoteSchema = require('../../schemas/universal-quote-schema');
 const { getAuthorByName } = require('../../helpers/get-author');
 const { basicEmbed } = require('../../helpers/embeds');
 const checkTags = require('../../helpers/check-tags');
+const { SlashCommandBuilder } = require('discord.js');
 const { NotFoundError } = require('../../errors')
-
+const {
+    authorDescription,
+    tagDescription,
+    searchPhraseDescription,
+    typeDescription,
+    limitDescription,
+} = require('../../descriptions');
 
 module.exports = {
-    category:'Quotes',
-    name: 'count_quotes',
-    description: 'Count number of quotes. Use options to filter.',
-    guildOnly: true,
-    slash: true,
-
-    options: [
-        {
-            name: 'author',
-            description: 'Sort by author of quote.',
-     //       type: Constants.ApplicationCommandOptionTypes.STRING,
-            maxLength: 256
-        },
-        {
-            name: 'first_tag',
-            description: 'Quote must include this tag.',
-     //       type: Constants.ApplicationCommandOptionTypes.STRING,
-            maxLength: 339
-        },
-        {
-            name: 'second_tag',
-            description: 'Quote must include this tag.',
-    //        type: Constants.ApplicationCommandOptionTypes.STRING,
-            maxLength: 339
-        },
-        {
-            name: 'third_tag',
-            description: 'Quote must include this tag.',
-      //      type: Constants.ApplicationCommandOptionTypes.STRING,
-            maxLength: 339
-        },
-        {
-            name: 'search_phrase',
-            description: 'A phrase to search for in the quote text.',
-      //      type: Constants.ApplicationCommandOptionTypes.STRING,
-            maxLength: 4096
-        },
-        {
-            name: 'type',
-            description: 'Filter by type of quote.',
-     //       type: Constants.ApplicationCommandOptionTypes.STRING,
-            choices: [
-                {
-                    name: 'regular quote',
-                    value: 'regular'
-                },
-                {
-                    name: 'audio quote',
-                    value: 'audio'
-                },
-                {
-                    name: 'multi-quote',
-                    value: 'multi'
-                },
-                {
-                    name: 'image quote',
-                    value: 'image'
-                }
-            ]
-        }
-    ],
-
-    callback: async (interaction) => {
+	data: new SlashCommandBuilder()
+		.setName('count_quotes')
+		.setDescription('Count number of quotes. Use options to filter.')
+        .setDMPermission(false)
+        .addStringOption(option => option
+            .setName('author')
+            .setDescription(authorDescription)
+            .setMaxLength(256)
+        )
+        .addStringOption(option => option
+            .setName('first_tag')
+            .setDescription(tagDescription)
+            .setMaxLength(339)
+        )
+        .addStringOption(option => option
+            .setName('second_tag')
+            .setDescription(tagDescription)
+            .setMaxLength(339)
+        )
+        .addStringOption(option => option
+            .setName('third_tag')
+            .setDescription(tagDescription)
+            .setMaxLength(339)
+        )
+        .addStringOption(option => option
+            .setName('search_phrase')
+            .setDescription(searchPhraseDescription)
+            .setMaxLength(4096)
+        )
+        .addStringOption(option => option
+            .setName('type')
+            .setDescription(typeDescription)
+            .addChoices(
+                { name: 'regular quote', value: 'regular' },
+                { name: 'audio quote', value: 'audio' },
+                { name: 'multi-quote', value: 'multi' },
+                { name: 'image quote', value: 'image' }
+			)
+        )
+	,
+	execute: async (interaction) => {
         const { options } = interaction;
         const searchPhrase = options.getString('search_phrase')
         const inputtedAuthor = options.getString('author');
