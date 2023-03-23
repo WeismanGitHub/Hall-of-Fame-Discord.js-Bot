@@ -48,7 +48,7 @@ async function loadCommands(client) {
 
     await rest.put(Routes.applicationCommands(clientId), { body: commands });
 
-    console.log(`Successfully reloaded ${commands.length} application (/) commands.`);
+    console.log(`Reloaded ${commands.length} commands...`);
 
     client.on('interactionCreate', async interaction => {
         if (!interaction.isCommand()) return;
