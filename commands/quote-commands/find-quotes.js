@@ -1,4 +1,4 @@
-const { MessageActionRow, MessageButton, SlashCommandBuilder } = require('discord.js');
+const { ActionRowBuilder, ButtonBuilder, SlashCommandBuilder } = require('discord.js');
 const UniversalQuoteSchema = require('../../schemas/universal-quote-schema');
 const { getAuthorByName } = require('../../helpers/get-author');
 const FilterSchema = require('../../schemas/filter-schema');
@@ -145,12 +145,12 @@ module.exports = {
         const filterId = (await FilterSchema.create({ query: query, sort: sort }))._id
         const customId = JSON.stringify({ type: 'find-quotes', filterId: filterId, skipAmount: 10 })
 
-        const row = new MessageActionRow()
+        const row = new ActionRowBuilder()
         .addComponents(
-            new MessageButton()
+            new ButtonBuilder()
             .setLabel('Next 10 Quotes ⏩')
             .setCustomId(`${customId}`)
-            .setStyle('PRIMARY')
+            .setStyle('Primary')
         )
         
         await interaction.channel.send({

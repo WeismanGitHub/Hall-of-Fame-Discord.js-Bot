@@ -1,4 +1,4 @@
-const { MessageActionRow, MessageButton, SlashCommandBuilder, ChannelType } = require('discord.js');
+const { ActionRowBuilder, ButtonBuilder, SlashCommandBuilder, ChannelType } = require('discord.js');
 const { channelDescription, removeDescription } = require('../../descriptions');
 const GuildSchema = require('../../schemas/guild-schema');
 const { basicEmbed } = require('../../helpers/embeds');
@@ -42,12 +42,12 @@ module.exports = {
         await GuildSchema.updateOne({ _id: guildId }, { quotesChannelId: channelId })
         const customId = JSON.stringify({ type: 'quotes-channel', channelId: channelId })
 
-        const row = new MessageActionRow()
+        const row = new ActionRowBuilder()
         .addComponents(
-            new MessageButton()
+            new ButtonBuilder()
             .setLabel(`Forward All Quotes`)
             .setCustomId(`${customId}`)
-            .setStyle('PRIMARY')
+            .setStyle('Primary')
         )
 
         await interaction.reply({

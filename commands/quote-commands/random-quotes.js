@@ -133,7 +133,7 @@ module.exports = {
             new ButtonBuilder()
             .setLabel('Next 10 Random Quotes ⏩')
             .setCustomId(`${customId}`)
-            .setStyle('PRIMARY')
+            .setStyle('Primary')
         )
         
         await interaction.channel.send({

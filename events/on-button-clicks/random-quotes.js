@@ -40,7 +40,7 @@ module.exports = {
             new ButtonBuilder()
             .setCustomId(`${customId}`)
             .setLabel('Next 10 Random Quotes ⏩')
-            .setStyle('PRIMARY')
+            .setStyle('Primary')
         )
 
         await interaction.reply(basicEmbed('Started!'));
