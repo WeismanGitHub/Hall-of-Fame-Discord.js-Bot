@@ -1,103 +1,81 @@
+const { MessageActionRow, MessageButton, SlashCommandBuilder } = require('discord.js');
 const UniversalQuoteSchema = require('../../schemas/universal-quote-schema');
-const { MessageActionRow, MessageButton } = require('discord.js');
 const { getAuthorByName } = require('../../helpers/get-author');
 const FilterSchema = require('../../schemas/filter-schema');
 const sendQuotes = require('../../helpers/send-quotes');
 const { basicEmbed } = require('../../helpers/embeds');
 const checkTags = require('../../helpers/check-tags');
 const { NotFoundError } = require('../../errors');
+const {
+    authorDescription,
+    tagDescription,
+    searchPhraseDescription,
+    ageDescription,
+    typeDescription,
+    limitDescription,
+    paginationDescription
+} = require('../../descriptions');
 
 module.exports = {
-    category:'Quotes',
-    name: 'find_quotes',
-    description: 'Get quotes that match your specifications.',
-    guildOnly: true,
-    slash: true,
-
-    options: [
-        {
-            name: 'author',
-            description: 'Sort by author of quote.',
-      //      type: Constants.ApplicationCommandOptionTypes.STRING,
-            maxLength: 256
-        },
-        {
-            name: 'first_tag',
-            description: 'Quote must include this tag.',
-  //          type: Constants.ApplicationCommandOptionTypes.STRING,
-            maxLength: 339
-        },
-        {
-            name: 'second_tag',
-            description: 'Quote must include this tag.',
-        //    type: Constants.ApplicationCommandOptionTypes.STRING,
-            maxLength: 339
-        },
-        {
-            name: 'third_tag',
-            description: 'Quote must include this tag.',
-       //     type: Constants.ApplicationCommandOptionTypes.STRING,
-            maxLength: 339
-        },
-        {
-            name: 'search_phrase',
-            description: 'A phrase to search for in the quote text.',
-      //      type: Constants.ApplicationCommandOptionTypes.STRING,
-            maxLength: 4096
-        },
-        {
-            name: 'age',
-            description: 'Sort by newest/oldest.',
-      //      type: Constants.ApplicationCommandOptionTypes.STRING,
-            choices: [
-                {
-                    name: 'newest',
-                    value: '-1'
-                },
-                {
-                    name: 'oldest',
-                    value: '1'
-                },
-            ]
-        },
-        {
-            name: 'type',
-            description: 'Filter by type of quote.',
-      //      type: Constants.ApplicationCommandOptionTypes.STRING,
-            choices: [
-                {
-                    name: 'regular quote',
-                    value: 'regular'
-                },
-                {
-                    name: 'audio quote',
-                    value: 'audio'
-                },
-                {
-                    name: 'multi-quote',
-                    value: 'multi'
-                },
-                {
-                    name: 'image quote',
-                    value: 'image'
-                }
-            ]
-        },
-        {
-            name: 'limit',
-            description: 'Amount of quotes returned. Must be less than 10.',
-        //    type: Constants.ApplicationCommandOptionTypes.INTEGER,
-            minLength: 1,
-            maxLength: 9,
-        },
-        {
-            name: 'pagination',
-            description: 'Send all quotes at once or ten at a time.',
-    //        type: Constants.ApplicationCommandOptionTypes.BOOLEAN,
-        },
-    ],
-
-    callback: async (interaction) => {
+	data: new SlashCommandBuilder()
+		.setName('find_quotes')
+		.setDescription('Get quotes that match your specifications.')
+        .setDMPermission(false)
+        .addStringOption(option => option
+            .setName('author')
+            .setDescription(authorDescription)
+            .setMaxLength(339)
+        )
+        .addStringOption(option => option
+            .setName('first_tag')
+            .setDescription(tagDescription)
+            .setMaxLength(339)
+        )
+        .addStringOption(option => option
+            .setName('second_tag')
+            .setDescription(tagDescription)
+            .setMaxLength(339)
+        )
+        .addStringOption(option => option
+            .setName('third_tag')
+            .setDescription(tagDescription)
+            .setMaxLength(339)
+        )
+        .addStringOption(option => option
+            .setName('search_phrase')
+            .setDescription(searchPhraseDescription)
+            .setMaxLength(4096)
+        )
+        .addStringOption(option => option
+            .setName('age')
+            .setDescription(ageDescription)
+            .addChoices(
+				{ name: 'newest', value: '-1' },
+				{ name: 'oldest', value: '1' },
+			)
+        )
+        .addStringOption(option => option
+            .setName('type')
+            .setDescription(typeDescription)
+            .addChoices(
+                { name: 'regular quote', value: 'regular' },
+                { name: 'audio quote', value: 'audio' },
+                { name: 'multi-quote', value: 'multi' },
+                { name: 'image quote', value: 'image' }
+			)
+        )
+        .addIntegerOption(option => option
+            .setName('limit')
+            .setDescription(limitDescription)
+            .setMaxValue(9)
+            .setMinValue(1)
+        )
+        .addBooleanOption(option => option
+            .setName('pagination')
+            .setDescription(paginationDescription)
+        )
+	,
+	execute: async (interaction) => {
         const { options } = interaction;
         const sort = options.getString('age') == null ? { createdAt: -1 } : { createdAt: options.getString('age') }
         const limit = options.getInteger('limit') == null ? 10 : options.getInteger('limit')
