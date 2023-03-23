@@ -1,83 +1,67 @@
+const { MessageActionRow, MessageButton, SlashCommandBuilder } = require('discord.js');
 const UniversalQuoteSchema = require('../../schemas/universal-quote-schema');
-const { MessageActionRow, MessageButton } = require('discord.js');
 const { getAuthorByName } = require('../../helpers/get-author');
 const FilterSchema = require('../../schemas/filter-schema');
 const sendQuotes = require('../../helpers/send-quotes');
 const { basicEmbed } = require('../../helpers/embeds');
 const checkTags = require('../../helpers/check-tags');
 const { NotFoundError } = require('../../errors');
+const {
+    authorDescription,
+    tagDescription,
+    searchPhraseDescription,
+    typeDescription,
+    limitDescription,
+} = require('../../descriptions');
 
 module.exports = {
-    category:'Quotes',
-    name: 'random_quotes',
-    description: 'Get random quotes.',
-    guildOnly: true,
-    slash: true,
-
-    options: [
-        {
-            name: 'author',
-            description: 'Sort by author of quote.',
-    //        type: Constants.ApplicationCommandOptionTypes.STRING,
-            maxLength: 256
-        },
-        {
-            name: 'first_tag',
-            description: 'Quote must include this tag.',
-     //       type: Constants.ApplicationCommandOptionTypes.STRING,
-            maxLength: 339
-        },
-        {
-            name: 'second_tag',
-            description: 'Quote must include this tag.',
-      //      type: Constants.ApplicationCommandOptionTypes.STRING,
-            maxLength: 339
-        },
-        {
-            name: 'third_tag',
-            description: 'Quote must include this tag.',
-    //        type: Constants.ApplicationCommandOptionTypes.STRING,
-            maxLength: 339
-        },
-        {
-            name: 'search_phrase',
-            description: 'A phrase to search for in the quote text.',
-         //   type: Constants.ApplicationCommandOptionTypes.STRING,
-            maxLength: 4096
-        },
-        {
-            name: 'type',
-            description: 'Filter by type of quote.',
-      //      type: Constants.ApplicationCommandOptionTypes.STRING,
-            choices: [
-                {
-                    name: 'regular quote',
-                    value: 'regular'
-                },
-                {
-                    name: 'audio quote',
-                    value: 'audio'
-                },
-                {
-                    name: 'multi-quote',
-                    value: 'multi'
-                },
-                {
-                    name: 'image quote',
-                    value: 'image'
-                }
-            ]
-        },
-        {
-            name: 'limit',
-            description: 'Amount of quotes returned. Must be less than 10.',
-   //         type: Constants.ApplicationCommandOptionTypes.INTEGER,
-            minLength: 1,
-            maxLength: 9,
-        }
-    ],
-    
-    callback: async (interaction) => {
+	data: new SlashCommandBuilder()
+		.setName('random_quotes')
+		.setDescription('Get random quotes.')
+        .setDMPermission(false)
+        .addStringOption(option => option
+            .setName('author')
+            .setDescription(authorDescription)
+            .setMaxLength(339)
+        )
+        .addStringOption(option => option
+            .setName('first_tag')
+            .setDescription(tagDescription)
+            .setMaxLength(339)
+        )
+        .addStringOption(option => option
+            .setName('second_tag')
+            .setDescription(tagDescription)
+            .setMaxLength(339)
+        )
+        .addStringOption(option => option
+            .setName('third_tag')
+            .setDescription(tagDescription)
+            .setMaxLength(339)
+        )
+        .addStringOption(option => option
+            .setName('search_phrase')
+            .setDescription(searchPhraseDescription)
+            .setMaxLength(4096)
+        )
+        .addStringOption(option => option
+            .setName('type')
+            .setDescription(typeDescription)
+            .addChoices(
+                { name: 'regular quote', value: 'regular' },
+                { name: 'audio quote', value: 'audio' },
+                { name: 'multi-quote', value: 'multi' },
+                { name: 'image quote', value: 'image' }
+			)
+        )
+        .addIntegerOption(option => option
+            .setName('limit')
+            .setDescription(limitDescription)
+            .setMaxValue(9)
+            .setMinValue(1)
+        )
+	,
+	execute: async (interaction) => {
         const { options } = interaction;
         const searchPhrase = options.getString('search_phrase')
         const limit = options.getInteger('limit') == null ? 10 : options.getInteger('limit')
