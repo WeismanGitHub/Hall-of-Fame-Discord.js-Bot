@@ -99,6 +99,7 @@ async function editQuote(req, res) {
 	}
 
 	// Can't use UniversalQuoteSchema because it has no pre save/update checks like other schemas.
+	// Client inputted type can be trusted because properties that don't belong to a schema are discarded.
 	switch (type) {
 		case 'regular':
 			await QuoteSchema.updateOne({ _id: quoteId, guildId: guildId }, update)
