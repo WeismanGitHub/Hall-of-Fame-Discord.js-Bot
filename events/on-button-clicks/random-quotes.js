@@ -1,5 +1,5 @@
 const UniversalQuoteSchema = require('../../schemas/universal-quote-schema');
-const { MessageActionRow, MessageButton } = require('discord.js');
+const { ActionRowBuilder, ButtonBuilder } = require('discord.js');
 const FilterSchema = require('../../schemas/filter-schema');
 const sendQuotes = require('../../helpers/send-quotes');
 const { basicEmbed } = require('../../helpers/embeds');
@@ -35,9 +35,9 @@ module.exports = {
 
         const customId = JSON.stringify({ type: 'random-quotes', filterId })
 
-        const row = new MessageActionRow()
+        const row = new ActionRowBuilder()
         .addComponents(
-            new MessageButton()
+            new ButtonBuilder()
             .setCustomId(`${customId}`)
             .setLabel('Next 10 Random Quotes ⏩')
             .setStyle('PRIMARY')
