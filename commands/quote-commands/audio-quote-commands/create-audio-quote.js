@@ -3,73 +3,71 @@ const sendToQuotesChannel = require('../../../helpers/send-to-quotes-channel');
 const { InvalidInputError, NotFoundError } = require('../../../errors');
 const AudioQuoteSchema = require('../../../schemas/audio-quote-schema');
 const { getAuthorByName } = require('../../../helpers/get-author');
+const { SlashCommandBuilder, ChannelType } = require('discord.js');
 const { quoteEmbed } = require('../../../helpers/embeds');
+const {
+    authorDescription,
+    tagDescription,
+    lastImageDescription,
+    imageLinkDescription,
+    titleDescription,
+    audioFileLinkDescription,
+    lastAudioDescription,
+} = require('../../../descriptions');
 
 module.exports = {
-    category:'Audio Quotes',
-    name: 'create_audio_quote',
-    description: 'Create an audio quote. Quotes must have an author and can have up to three tags.',
-    guildOnly: true,
-    slash: true,
-
-    options: [
-        {
-            name: 'author',
-            description: 'The name of who said the quote. You must first register an author with /createauthor.',
-            required: true,
-            //type: Constants.ApplicationCommandOptionTypes.STRING,
-            maxLength: 256
-        },
-        {
-            name: 'title',
-            description: 'Title of the audio quote.',
-            required: true,
-            //type: Constants.ApplicationCommandOptionTypes.STRING,
-            maxLength: 4096
-        },
-        {
-            name: 'audio_file_link',
-            description: 'Must be a link to an audio file. You can upload the audio file to discord and copy that link.',
-            //type: Constants.ApplicationCommandOptionTypes.STRING,
-            maxLength: 512
-        },
-        {
-            name: 'first_tag',
-            description: 'Tags are used for filtering.',
-            //type: Constants.ApplicationCommandOptionTypes.STRING,
-            maxLength: 339
-        },
-        {
-            name: 'second_tag',
-            description: 'Tags are used for filtering.',
-            //type: Constants.ApplicationCommandOptionTypes.STRING,
-            maxLength: 339
-        },
-        {
-            name: 'third_tag',
-            description: 'Tags are used for filtering.',
-            //type: Constants.ApplicationCommandOptionTypes.STRING,
-            maxLength: 339
-        },
-        {
-            name: 'last_audio',
-            description: 'Use the last audio file sent in a channel.',
-           // type: Constants.ApplicationCommandOptionTypes.CHANNEL
-        },
-        {
-            name: 'image_link',
-            description: 'Image attachment link. Upload an image to Discord and copy the link to that image.',
-         //   type: Constants.ApplicationCommandOptionTypes.STRING,
-            maxLength: 512
-        },
-        {
-            name: 'last_image',
-            description: 'Use the last image sent in a channel to the quote.',
-           // type: Constants.ApplicationCommandOptionTypes.CHANNEL
-        }
-    ],
-
-    callback: async ({ interaction, client }) => {
+	data: new SlashCommandBuilder()
+		.setName('create_audio_quote')
+		.setDescription('Create an audio quote. Quotes must have an author and can have up to three tags.')
+        .setDMPermission(false)
+        .addStringOption(option => option
+            .setName('author')
+            .setDescription(authorDescription)
+            .setMaxLength(256)
+            .setRequired(true)
+        )
+        .addStringOption(option => option
+            .setName('title')
+            .setDescription(titleDescription)
+            .setMaxLength(4096)
+        )
+        .addStringOption(option => option
+            .setName('audio_file_link')
+            .setDescription(audioFileLinkDescription)
+            .setMaxLength(512)
+        )
+        .addChannelOption(option => option
+            .setName('last_audio')
+            .setDescription(lastAudioDescription)
+            .addChannelTypes(ChannelType.GuildText)
+        )
+        .addStringOption(option => option
+            .setName('image_link')
+            .setDescription(imageLinkDescription)
+            .setMaxLength(512)
+        )
+        .addChannelOption(option => option
+            .setName('last_image')
+            .setDescription(lastImageDescription)
+            .addChannelTypes(ChannelType.GuildText)
+        )
+        .addStringOption(option => option
+            .setName('first_tag')
+            .setDescription(tagDescription)
+            .setMaxLength(339)
+        )
+        .addStringOption(option => option
+            .setName('second_tag')
+            .setDescription(tagDescription)
+            .setMaxLength(339)
+        )
+        .addStringOption(option => option
+            .setName('third_tag')
+            .setDescription(tagDescription)
+            .setMaxLength(339)
+        )
+	,
+	execute: async (interaction) => {
         const guildId = interaction.guildId;
         const { options } = interaction;
         const tags = [
