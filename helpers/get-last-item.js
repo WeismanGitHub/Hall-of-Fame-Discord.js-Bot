@@ -1,10 +1,11 @@
 const { InvalidInputError, NotFoundError } = require('../errors');
 const ObjectId = require('mongoose').Types.ObjectId;
+const { ChannelType } = require('discord.js')
 
 async function getLastImage(channel) {
     let firstImageUrl;
 
-    if (channel.type !== 'GUILD_TEXT') {
+    if (channel.type !== ChannelType.GuildText) {
         throw new InvalidInputError('Channel')
     }
 
@@ -26,7 +27,7 @@ async function getLastImage(channel) {
 async function getLastAudio(channel) {
     let firstAudioUrl;
 
-    if (channel.type !== 'GUILD_TEXT') {
+    if (channel.type !== ChannelType.GuildText) {
         throw new InvalidInputError('Channel')
     }
 
@@ -50,7 +51,7 @@ async function getLastAudio(channel) {
 async function getLastQuoteId(channel) {
     let firstQuoteId;
 
-    if (channel.type !== 'GUILD_TEXT') {
+    if (channel.type !== ChannelType.GuildText) {
         throw new InvalidInputError('Channel')
     }
     
