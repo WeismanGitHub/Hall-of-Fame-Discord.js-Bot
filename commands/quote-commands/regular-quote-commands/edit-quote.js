@@ -37,7 +37,6 @@ module.exports = {
             .setName('new_author')
             .setDescription(authorDescription)
             .setMaxLength(256)
-            .setRequired(true)
         )
         .addStringOption(option => option
             .setName('new_text')
