@@ -5,6 +5,7 @@ const AudioQuoteSchema = require('../../../schemas/audio-quote-schema');
 const { getAuthorByName } = require('../../../helpers/get-author');
 const { SlashCommandBuilder, ChannelType } = require('discord.js');
 const { quoteEmbed } = require('../../../helpers/embeds');
+const client = require('../../../index')
 const {
     authorDescription,
     tagDescription,
