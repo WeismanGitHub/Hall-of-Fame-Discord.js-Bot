@@ -3,93 +3,93 @@ const { getAuthorByName, getAuthorById } = require('../../../helpers/get-author'
 const sendToQuotesChannel = require('../../../helpers/send-to-quotes-channel')
 const AudioQuoteSchema = require('../../../schemas/audio-quote-schema');
 const { InvalidInputError, NotFoundError } = require('../../../errors');
+const { SlashCommandBuilder, ChannelType } = require('discord.js');
 const { quoteEmbed } = require('../../../helpers/embeds');
+const {
+    authorDescription,
+    tagDescription,
+    lastImageDescription,
+    imageLinkDescription,
+    titleDescription,
+    audioFileLinkDescription,
+    lastAudioDescription,
+    lastQuoteDescription,
+    idDescription,
+    removeImageDescription,
+    removeTagsDescription,
+} = require('../../../descriptions');
 
 module.exports = {
-    category:'Audio Quotes',
-    name: 'edit_audio_quote',
-    description: 'Edit an audio quote. Quotes must have an author and can have up to three tags.',
-    guildOnly: true,
-    slash: true,
-
-    options: [
-        {
-            name: 'id',
-            description: 'The id of the audio quote.',
-          //  type: Constants.ApplicationCommandOptionTypes.STRING,
-            minLength: 24,
-            maxLength: 24,
-        },
-        {
-            name: 'new_author',
-            description: 'Name of the new author. You must create an author beforehand.',
-         //   type: Constants.ApplicationCommandOptionTypes.STRING,
-            maxLength: 256
-        },
-        {
-            name: 'new_title',
-            description: 'New audio quote title.',
-       //     type: Constants.ApplicationCommandOptionTypes.STRING,
-            maxLength: 4096
-        },
-        {
-            name: 'new_audio_file_link',
-            description: 'New audio file link.',
-        //    type: Constants.ApplicationCommandOptionTypes.STRING,
-            maxLength: 512
-        },
-        {
-            name: 'remove_tags',
-            description: 'Removes tags from audio quote.',
-       //     type: Constants.ApplicationCommandOptionTypes.BOOLEAN
-        },
-        {
-            name: 'first_tag',
-            description: 'Tags are used for filtering. You must create a tag beforehand. New tags will overwrite the old ones.',
-      //      type: Constants.ApplicationCommandOptionTypes.STRING,
-            maxLength: 339
-        },
-        {
-            name: 'second_tag',
-            description: 'Tags are used for filtering. You must create a tag beforehand. New tags will overwrite the old ones.',
-       //     type: Constants.ApplicationCommandOptionTypes.STRING,
-            maxLength: 339
-        },
-        {
-            name: 'third_tag',
-            description: 'Tags are used for filtering. You must create a tag beforehand. New tags will overwrite the old ones.',
-         //   type: Constants.ApplicationCommandOptionTypes.STRING,
-            maxLength: 339
-        },
-        {
-            name: 'last_audio',
-            description: 'Use the last audio file sent in a channel.',
-       //     type: Constants.ApplicationCommandOptionTypes.CHANNEL
-        },
-        {
-            name: 'last_quote',
-            description: "Use the last quote sent in a channel. Will grab any type of quote.",
-      //      type: Constants.ApplicationCommandOptionTypes.CHANNEL
-        },
-        {
-            name: 'new_image_link',
-            description: 'Image attachment link. Upload an image to Discord and copy the link to that image.',
-     //       type: Constants.ApplicationCommandOptionTypes.STRING,
-            maxLength: 512
-        },
-        {
-            name: 'last_image',
-            description: 'Add the last image sent in a channel to the quote.',
-     //       type: Constants.ApplicationCommandOptionTypes.CHANNEL
-        },
-        {
-            name: 'remove_image',
-            description: 'Removes image from quote.',
-      //      type: Constants.ApplicationCommandOptionTypes.BOOLEAN
-        },
-    ],
-
-    callback: async ({ interaction, client }) => {
+	data: new SlashCommandBuilder()
+		.setName('edit_audio_quote')
+		.setDescription('Edit an audio quote. Quotes must have an author and can have up to three tags.')
+        .setDMPermission(false)
+        .addStringOption(option => option
+            .setName('id')
+            .setDescription(idDescription)
+            .setMaxLength(24)
+            .setMinLength(24)
+        )
+        .addChannelOption(option => option
+            .setName('last_quote')
+            .setDescription(lastQuoteDescription)
+            .addChannelTypes(ChannelType.GuildText)
+        )
+        .addStringOption(option => option
+            .setName('new_author')
+            .setDescription(authorDescription)
+            .setMaxLength(256)
+        )
+        .addStringOption(option => option
+            .setName('new_title')
+            .setDescription(titleDescription)
+            .setMaxLength(4096)
+        )
+        .addStringOption(option => option
+            .setName('new_audio_file_link')
+            .setDescription(audioFileLinkDescription)
+            .setMaxLength(512)
+        )
+        .addChannelOption(option => option
+            .setName('last_audio')
+            .setDescription(lastAudioDescription)
+            .addChannelTypes(ChannelType.GuildText)
+        )
+        .addBooleanOption(option => option
+            .setName('remove_image')
+            .setDescription(removeImageDescription)
+        )
+        .addStringOption(option => option
+            .setName('new_image_link')
+            .setDescription(imageLinkDescription)
+            .setMaxLength(512)
+        )
+        .addChannelOption(option => option
+            .setName('last_image')
+            .setDescription(lastImageDescription)
+            .addChannelTypes(ChannelType.GuildText)
+        )
+        .addBooleanOption(option => option
+            .setName('remove_tags')
+            .setDescription(removeTagsDescription)
+        )
+        .addStringOption(option => option
+            .setName('first_tag')
+            .setDescription(tagDescription)
+            .setMaxLength(339)
+        )
+        .addStringOption(option => option
+            .setName('second_tag')
+            .setDescription(tagDescription)
+            .setMaxLength(339)
+        )
+        .addStringOption(option => option
+            .setName('third_tag')
+            .setDescription(tagDescription)
+            .setMaxLength(339)
+        )
+	,
+	execute: async (interaction) => {
         const { options } = interaction;
         const guildId  = interaction.guildId;
         const lastQuoteChannel = options.getChannel('last_quote');
