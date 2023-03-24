@@ -2,9 +2,9 @@ const { getLastImage, getLastQuoteId } = require('../../../helpers/get-last-item
 const { getAuthorByName, getAuthorById } = require('../../../helpers/get-author');
 const sendToQuotesChannel = require('../../../helpers/send-to-quotes-channel')
 const { InvalidInputError, NotFoundError } = require('../../../errors');
+const { SlashCommandBuilder, ChannelType } = require('discord.js');
 const QuoteSchema= require('../../../schemas/quote-schema');
 const { quoteEmbed } = require('../../../helpers/embeds');
-const { SlashCommandBuilder } = require('discord.js');
 const client = require('../../../index')
 const {
     authorDescription,
@@ -32,6 +32,7 @@ module.exports = {
         .addChannelOption(option => option
             .setName('last_quote')
             .setDescription(lastQuoteDescription)
+            .addChannelTypes(ChannelType.GuildText)
         )
         .addStringOption(option => option
             .setName('new_author')
@@ -55,6 +56,7 @@ module.exports = {
         .addChannelOption(option => option
             .setName('last_image')
             .setDescription(lastImageDescription)
+            .addChannelTypes(ChannelType.GuildText)
         )
         .addBooleanOption(option => option
             .setName('remove_tags')

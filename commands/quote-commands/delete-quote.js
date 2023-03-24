@@ -1,8 +1,8 @@
 const { idDescription, lastQuoteDescription } = require('../../descriptions');
+const { SlashCommandBuilder, ChannelType } = require('discord.js');
 const { getLastQuoteId } = require('../../helpers/get-last-item');
 const QuoteSchema = require('../../schemas/quote-schema');
 const { basicEmbed } = require('../../helpers/embeds');
-const { SlashCommandBuilder } = require('discord.js');
 const { NotFoundError } = require('../../errors');
 
 module.exports = {
@@ -19,6 +19,7 @@ module.exports = {
         .addChannelOption(option => option
             .setName('last_quote')
             .setDescription(lastQuoteDescription)
+            .addChannelTypes(ChannelType.GuildText)
         )
 	,
 	execute: async (interaction) => {

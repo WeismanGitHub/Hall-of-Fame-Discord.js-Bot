@@ -1,10 +1,10 @@
 const sendToQuotesChannel = require('../../../helpers/send-to-quotes-channel')
 const { getAuthorByName } = require('../../../helpers/get-author');
 const { getLastImage } = require('../../../helpers/get-last-item');
+const { SlashCommandBuilder, ChannelType } = require('discord.js');
 const QuoteSchema = require('../../../schemas/quote-schema');
 const { quoteEmbed } = require('../../../helpers/embeds');
 const { NotFoundError } = require('../../../errors') ;
-const { SlashCommandBuilder } = require('discord.js');
 const client = require('../../../index')
 const {
     authorDescription,
@@ -38,6 +38,7 @@ module.exports = {
         .addChannelOption(option => option
             .setName('last_image')
             .setDescription(lastImageDescription)
+            .addChannelTypes(ChannelType.GuildText)
         )
         .addStringOption(option => option
             .setName('first_tag')

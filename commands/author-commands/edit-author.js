@@ -1,8 +1,8 @@
 const { InvalidInputError, NotFoundError } = require('../../errors');
+const { SlashCommandBuilder, ChannelType } = require('discord.js');
 const { getLastImage } = require('../../helpers/get-last-item');
 const GuildSchema = require('../../schemas/guild-schema');
 const { authorEmbed } = require('../../helpers/embeds');
-const { SlashCommandBuilder } = require('discord.js');
 const {
     authorDescription,
     newNameDescription,
@@ -40,6 +40,7 @@ module.exports = {
         .addChannelOption(option => option
             .setName('last_image')
             .setDescription(lastImageDescription)
+            .addChannelTypes(ChannelType.GuildText)
         )
         .addBooleanOption(option => option
             .setName('remove_image')
