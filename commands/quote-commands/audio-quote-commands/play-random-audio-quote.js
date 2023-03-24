@@ -3,7 +3,7 @@ const { NotFoundError, InvalidActionError } = require('../../../errors')
 const AudioQuoteSchema = require('../../../schemas/audio-quote-schema')
 const { quoteEmbed } = require('../../../helpers/embeds');
 const checkTags = require('../../../helpers/check-tags');
-
+const { SlashCommandBuilder } = require('discord.js');
 const {
     createAudioPlayer,
     NoSubscriberBehavior,
@@ -11,48 +11,44 @@ const {
     joinVoiceChannel,
     AudioPlayerStatus
 } = require('@discordjs/voice');
+const {
+    authorDescription,
+    tagDescription,
+    searchPhraseDescription,
+} = require('../../../descriptions');
 
 module.exports = {
-    category:'Audio Quotes',
-    name: 'play_random_quote',
-    description: 'Play a random audio quote.',
-    guildOnly: true,
-    slash: true,
-
-    options: [
-        {
-            name: 'author',
-            description: 'Sort by author of quote.',
-     //       type: Constants.ApplicationCommandOptionTypes.STRING,
-            maxLength: 256
-        },
-        {
-            name: 'first_tag',
-            description: 'Quote must include this tag.',
-       //     type: Constants.ApplicationCommandOptionTypes.STRING,
-            maxLength: 339
-        },
-        {
-            name: 'second_tag',
-            description: 'Quote must include this tag.',
-      //      type: Constants.ApplicationCommandOptionTypes.STRING,
-            maxLength: 339
-        },
-        {
-            name: 'third_tag',
-            description: 'Quote must include this tag.',
-      //      type: Constants.ApplicationCommandOptionTypes.STRING,
-            maxLength: 339
-        },
-        {
-            name: 'search_phrase',
-            description: 'A phrase to search for in the quote text.',
-      //      type: Constants.ApplicationCommandOptionTypes.STRING,
-            maxLength: 4096
-        },
-    ],
-
-    callback: async ({ interaction }) => {
+	data: new SlashCommandBuilder()
+		.setName('play_random_quote')
+		.setDescription('Play a random audio quote.')
+        .setDMPermission(false)
+        .addStringOption(option => option
+            .setName('author')
+            .setDescription(authorDescription)
+            .setMaxLength(256)
+        )
+        .addStringOption(option => option
+            .setName('first_tag')
+            .setDescription(tagDescription)
+            .setMaxLength(339)
+        )
+        .addStringOption(option => option
+            .setName('second_tag')
+            .setDescription(tagDescription)
+            .setMaxLength(339)
+        )
+        .addStringOption(option => option
+            .setName('third_tag')
+            .setDescription(tagDescription)
+            .setMaxLength(339)
+        )
+        .addStringOption(option => option
+            .setName('search_phrase')
+            .setDescription(searchPhraseDescription)
+            .setMaxLength(4096)
+        )
+	,
+	execute: async (interaction) => {
         const guildId = interaction.guildId;
         const { options } = interaction;
 
