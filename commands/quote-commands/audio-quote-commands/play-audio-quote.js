@@ -1,9 +1,9 @@
 const { InvalidInputError, NotFoundError, InvalidActionError } = require('../../../errors')
 const AudioQuoteSchema = require('../../../schemas/audio-quote-schema')
 const { getLastQuoteId } = require('../../../helpers/get-last-item')
+const { SlashCommandBuilder, ChannelType } = require('discord.js');
 const { getAuthorById } = require('../../../helpers/get-author');
 const { quoteEmbed } = require('../../../helpers/embeds');
-
 const {
     createAudioPlayer,
     NoSubscriberBehavior,
@@ -11,36 +11,36 @@ const {
     joinVoiceChannel,
     AudioPlayerStatus
 } = require('@discordjs/voice');
+const {
+    idDescription,
+    titleDescription,
+    lastAudioDescription,
+} = require('../../../descriptions');
 
 module.exports = {
-    category:'Audio Quotes',
-    name: 'play_quote',
-    description: 'Play an audio quote.',
-    guildOnly: true,
-    slash: true,
-
-    options: [
-        {
-            name: 'title',
-            description: 'Play quote with either an id or title.',
-          // type: Constants.ApplicationCommandOptionTypes.STRING,
-            maxLength: 4096
-        },
-        {
-            name: 'id',
-            description: 'Play quote with either an id or title.',
-       //     type: Constants.ApplicationCommandOptionTypes.STRING,
-            minLength: 24,
-            maxLength: 24,
-        },
-        {
-            name: 'last_quote',
-            description: "Use the last quote sent in a channel. Will grab any type of quote.",
-         //   type: Constants.ApplicationCommandOptionTypes.CHANNEL
-        },
-    ],
-
-    callback: async (interaction) => {
+	data: new SlashCommandBuilder()
+		.setName('play_quote')
+		.setDescription('Play an audio quote.')
+        .setDMPermission(false)
+        .addStringOption(option => option
+            .setName('title')
+            .setDescription(titleDescription)
+            .setMaxLength(4096)
+        )
+        .addStringOption(option => option
+            .setName('id')
+            .setDescription(idDescription)
+            .setMaxLength(24)
+            .setMinLength(24)
+        )
+        .addChannelOption(option => option
+            .setName('last_audio')
+            .setDescription(lastAudioDescription)
+            .addChannelTypes(ChannelType.GuildText)
+        )
+	,
+	execute: async (interaction) => {
+        
         const guildId = interaction.guildId;
         const { options } = interaction;
         
