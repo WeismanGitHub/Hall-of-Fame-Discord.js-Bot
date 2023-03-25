@@ -31,6 +31,7 @@ module.exports = {
             .setName('title')
             .setDescription(titleDescription)
             .setMaxLength(4096)
+            .setRequired(true)
         )
         .addStringOption(option => option
             .setName('audio_file_link')
