@@ -3,146 +3,149 @@ const { getLastQuoteId, getLastImage } = require('../../../helpers/get-last-item
 const sendToQuotesChannel = require('../../../helpers/send-to-quotes-channel');
 const MultiQuoteSchema = require('../../../schemas/multi-quote-schema');
 const { NotFoundError, InvalidInputError } = require('../../../errors');
+const { SlashCommandBuilder, ChannelType } = require('discord.js');
 const { quoteEmbed } = require('../../../helpers/embeds');
 const client = require('../../../index')
+const {
+    authorDescription,
+    tagDescription,
+    lastImageDescription,
+    imageLinkDescription,
+    titleDescription,
+    textDescription,
+    idDescription,
+    lastQuoteDescription,
+    removeTagsDescription,
+    fragmentDescription,
+    removeImageDescription,
+} = require('../../../descriptions');
 
 module.exports = {
-    category:'Multi Quotes',
-    name: 'edit_multi_quote',
-    description: 'Multi-quotes have multiple quotes from multiple authors within them.',
-    guildOnly: true,
-    slash: true,
-
-    options: [
-        {
-            name: 'id',
-            description: 'The id of the quote.',
-    //        type: Constants.ApplicationCommandOptionTypes.STRING
-        },
-        {
-            name: 'last_quote',
-            description: "Use the last quote sent in a channel. Will grab any type of quote.",
-   //         type: Constants.ApplicationCommandOptionTypes.CHANNEL
-        },
-        {
-            name: 'new_title',
-            description: 'Title of the multi-quote.',
-   //         type: Constants.ApplicationCommandOptionTypes.STRING
-        },
-        {
-            name: 'first_author',
-            description: 'The name of the first author.',
-     //       type: Constants.ApplicationCommandOptionTypes.STRING,
-        },
-        {
-            name: 'first_text',
-            description: 'The first part of the multi-quote.',
-  //          type: Constants.ApplicationCommandOptionTypes.STRING,
-        },
-        {
-            name: 'second_author',
-            description: 'The name of the second author.',
-  //          type: Constants.ApplicationCommandOptionTypes.STRING,
-        },
-        {
-            name: 'second_text',
-            description: 'The second part of the multi-quote.',
-    //        type: Constants.ApplicationCommandOptionTypes.STRING,
-        },
-        {
-            name: 'third_author',
-            description: 'The name of the third author.',
-    //        type: Constants.ApplicationCommandOptionTypes.STRING,
-        },
-        {
-            name: 'third_text',
-            description: 'The third part of the multi-quote.',
-   //         type: Constants.ApplicationCommandOptionTypes.STRING,
-        },
-        {
-            name: 'fourth_author',
-            description: 'The name of the fourth author.',
-    //        type: Constants.ApplicationCommandOptionTypes.STRING,
-        },
-        {
-            name: 'fourth_text',
-            description: 'The fourth part of the multi-quote.',
-    //        type: Constants.ApplicationCommandOptionTypes.STRING,
-        },
-        {
-            name: 'fifth_author',
-            description: 'The name of the fifth author.',
-    //        type: Constants.ApplicationCommandOptionTypes.STRING,
-        },
-        {
-            name: 'fifth_text',
-            description: 'The fifth part of the multi-quote.',
- //           type: Constants.ApplicationCommandOptionTypes.STRING,
-        },
-        {
-            name: 'first_tag',
-            description: 'Tags are used for filtering.',
-   //         type: Constants.ApplicationCommandOptionTypes.STRING,
-        },
-        {
-            name: 'second_tag',
-            description: 'Tags are used for filtering.',
-    //        type: Constants.ApplicationCommandOptionTypes.STRING
-        },
-        {
-            name: 'third_tag',
-            description: 'Tags are used for filtering.',
-  //          type: Constants.ApplicationCommandOptionTypes.STRING,
-        },
-        {
-            name: 'remove_tags',
-            description: 'Removes tags from quote.',
-    //        type: Constants.ApplicationCommandOptionTypes.BOOLEAN
-        },
-        {
-            name: 'delete_first_fragment',
-            description: 'Remove a text/author pair.',
-   //         type: Constants.ApplicationCommandOptionTypes.BOOLEAN
-        },
-        {
-            name: 'delete_second_fragment',
-            description: 'Remove a text/author pair.',
-    //        type: Constants.ApplicationCommandOptionTypes.BOOLEAN
-        },
-        {
-            name: 'delete_third_fragment',
-            description: 'Remove a text/author pair.',
-   //         type: Constants.ApplicationCommandOptionTypes.BOOLEAN
-        },
-        {
-            name: 'delete_fourth_fragment',
-            description: 'Remove a text/author pair.',
-      //      type: Constants.ApplicationCommandOptionTypes.BOOLEAN
-        },
-        {
-            name: 'delete_fifth_fragment',
-            description: 'Remove a text/author pair.',
- //           type: Constants.ApplicationCommandOptionTypes.BOOLEAN
-        },
-        {
-            name: 'new_image_link',
-            description: 'Image attachment link. Upload an image to Discord and copy the link to that image.',
-   //         type: Constants.ApplicationCommandOptionTypes.STRING,
-            maxLength: 512
-        },
-        {
-            name: 'last_image',
-            description: 'Add the last image sent in a channel to the quote.',
-   //         type: Constants.ApplicationCommandOptionTypes.CHANNEL
-        },
-        {
-            name: 'remove_image',
-            description: 'Removes image from quote.',
-  //          type: Constants.ApplicationCommandOptionTypes.BOOLEAN
-        },
-    ],
-
-    callback: async (interaction) => {
+	data: new SlashCommandBuilder()
+		.setName('edit_multi_quote')
+		.setDescription('Multi-quotes have multiple quotes from multiple authors within them.')
+        .setDMPermission(false)
+        .addStringOption(option => option
+            .setName('id')
+            .setDescription(idDescription)
+            .setMaxLength(24)
+            .setMinLength(24)
+        )
+        .addChannelOption(option => option
+            .setName('last_quote')
+            .setDescription(lastQuoteDescription)
+            .addChannelTypes(ChannelType.GuildText)
+        )
+        .addStringOption(option => option
+            .setName('new_title')
+            .setDescription(titleDescription)
+            .setMaxLength(4096)
+        )
+        .addStringOption(option => option
+            .setName('first_author')
+            .setDescription(authorDescription)
+            .setMaxLength(256)
+        )
+        .addStringOption(option => option
+            .setName('first_text')
+            .setDescription(textDescription)
+            .setMaxLength(819)
+        )
+        .addStringOption(option => option
+            .setName('second_author')
+            .setDescription(authorDescription)
+            .setMaxLength(256)
+        )
+        .addStringOption(option => option
+            .setName('second_text')
+            .setDescription(textDescription)
+            .setMaxLength(819)
+        )
+        .addStringOption(option => option
+            .setName('third_author')
+            .setDescription(authorDescription)
+            .setMaxLength(256)
+        )
+        .addStringOption(option => option
+            .setName('third_text')
+            .setDescription(textDescription)
+            .setMaxLength(819)
+        )
+        .addStringOption(option => option
+            .setName('fourth_author')
+            .setDescription(authorDescription)
+            .setMaxLength(256)
+        )
+        .addStringOption(option => option
+            .setName('fourth_text')
+            .setDescription(textDescription)
+            .setMaxLength(819)
+        )
+        .addStringOption(option => option
+            .setName('fifth_author')
+            .setDescription(authorDescription)
+            .setMaxLength(256)
+        )
+        .addStringOption(option => option
+            .setName('fifth_text')
+            .setDescription(textDescription)
+            .setMaxLength(819)
+        )
+        .addBooleanOption(option => option
+            .setName('remove_image')
+            .setDescription(removeImageDescription)
+        )
+        .addStringOption(option => option
+            .setName('new_image_link')
+            .setDescription(imageLinkDescription)
+            .setMaxLength(512)
+        )
+        .addChannelOption(option => option
+            .setName('last_image')
+            .setDescription(lastImageDescription)
+            .addChannelTypes(ChannelType.GuildText)
+        )
+        .addBooleanOption(option => option
+            .setName('remove_tags')
+            .setDescription(removeTagsDescription)
+        )
+        .addStringOption(option => option
+            .setName('first_tag')
+            .setDescription(tagDescription)
+            .setMaxLength(339)
+        )
+        .addStringOption(option => option
+            .setName('second_tag')
+            .setDescription(tagDescription)
+            .setMaxLength(339)
+        )
+        .addStringOption(option => option
+            .setName('third_tag')
+            .setDescription(tagDescription)
+            .setMaxLength(339)
+        )
+        .addBooleanOption(option => option
+            .setName('delete_first_fragment')
+            .setDescription(fragmentDescription)
+        )
+        .addBooleanOption(option => option
+            .setName('delete_second_fragment')
+            .setDescription(fragmentDescription)
+        )
+        .addBooleanOption(option => option
+            .setName('delete_third_fragment')
+            .setDescription(fragmentDescription)
+        )
+        .addBooleanOption(option => option
+            .setName('delete_fourth_fragment')
+            .setDescription(fragmentDescription)
+        )
+        .addBooleanOption(option => option
+            .setName('delete_fifth_fragment')
+            .setDescription(fragmentDescription)
+        )
+	,
+	execute: async (interaction) => {
         const guildId = interaction.guildId;
         const { options } = interaction;
 
