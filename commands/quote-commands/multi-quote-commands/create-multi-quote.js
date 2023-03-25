@@ -2,16 +2,9 @@ const sendToQuotesChannel = require('../../../helpers/send-to-quotes-channel');
 const MultiQuoteSchema = require('../../../schemas/multi-quote-schema');
 const { getAuthorByName } = require('../../../helpers/get-author');
 const { getLastImage } = require('../../../helpers/get-last-item');
+const { SlashCommandBuilder, ChannelType } = require('discord.js');
 const { quoteEmbed } = require('../../../helpers/embeds');
 const { NotFoundError } = require('../../../errors');
-const client = require('../../../index')
-const sendToQuotesChannel = require('../../../helpers/send-to-quotes-channel')
-const { getAuthorByName } = require('../../../helpers/get-author');
-const { getLastImage } = require('../../../helpers/get-last-item');
-const { SlashCommandBuilder, ChannelType } = require('discord.js');
-const QuoteSchema = require('../../../schemas/quote-schema');
-const { quoteEmbed } = require('../../../helpers/embeds');
-const { NotFoundError } = require('../../../errors') ;
 const client = require('../../../index')
 const {
     authorDescription,
