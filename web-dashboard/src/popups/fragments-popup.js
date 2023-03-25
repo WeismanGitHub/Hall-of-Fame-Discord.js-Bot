@@ -21,7 +21,7 @@ function FragmentsPopup({ authors, setQuoteFragments, quoteFragments }) {
             if (frag.authorId == fragmentBeingEdited.authorId && frag.text == fragmentBeingEdited.text) {
                 frag.authorId = id
 
-                setFragmentBeingEdited(null)
+                setFragmentBeingEdited(frag)
             }
 
             return frag
