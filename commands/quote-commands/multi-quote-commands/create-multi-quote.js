@@ -5,104 +5,115 @@ const { getLastImage } = require('../../../helpers/get-last-item');
 const { quoteEmbed } = require('../../../helpers/embeds');
 const { NotFoundError } = require('../../../errors');
 const client = require('../../../index')
+const sendToQuotesChannel = require('../../../helpers/send-to-quotes-channel')
+const { getAuthorByName } = require('../../../helpers/get-author');
+const { getLastImage } = require('../../../helpers/get-last-item');
+const { SlashCommandBuilder, ChannelType } = require('discord.js');
+const QuoteSchema = require('../../../schemas/quote-schema');
+const { quoteEmbed } = require('../../../helpers/embeds');
+const { NotFoundError } = require('../../../errors') ;
+const client = require('../../../index')
+const {
+    authorDescription,
+    tagDescription,
+    lastImageDescription,
+    imageLinkDescription,
+    titleDescription,
+    textDescription
+} = require('../../../descriptions');
 
 module.exports = {
-    category:'Multi Quotes',
-    name: 'create_multi_quote',
-    description: 'Multi-quotes have multiple quotes from multiple authors within them.',
-    guildOnly: true,
-    slash: true,
-
-    options: [
-        {
-            name: 'title',
-            description: 'Title of the multi-quote.',
-            required: true,
-    //        type: Constants.ApplicationCommandOptionTypes.STRING
-        },
-        {
-            name: 'first_author',
-            description: 'The name of the first author.',
-     //       type: Constants.ApplicationCommandOptionTypes.STRING,
-            required: true,
-        },
-        {
-            name: 'first_text',
-            description: 'The first part of the multi-quote.',
-     //       type: Constants.ApplicationCommandOptionTypes.STRING,
-            required: true,
-        },
-        {
-            name: 'second_author',
-            description: 'The name of the second author.',
-     //       type: Constants.ApplicationCommandOptionTypes.STRING,
-            required: true,
-        },
-        {
-            name: 'second_text',
-            description: 'The second part of the multi-quote.',
-      //      type: Constants.ApplicationCommandOptionTypes.STRING,
-            required: true,
-        },
-        {
-            name: 'first_tag',
-            description: 'Tags are used for filtering.',
-     //       type: Constants.ApplicationCommandOptionTypes.STRING,
-        },
-        {
-            name: 'second_tag',
-            description: 'Tags are used for filtering.',
-      //      type: Constants.ApplicationCommandOptionTypes.STRING
-        },
-        {
-            name: 'third_tag',
-            description: 'Tags are used for filtering.',
-       //     type: Constants.ApplicationCommandOptionTypes.STRING,
-        },
-        {
-            name: 'third_author',
-            description: 'The name of the third author.',
-    //        type: Constants.ApplicationCommandOptionTypes.STRING,
-        },
-        {
-            name: 'third_text',
-            description: 'The third part of the multi-quote.',
-      //      type: Constants.ApplicationCommandOptionTypes.STRING,
-        },
-        {
-            name: 'fourth_author',
-            description: 'The name of the fourth author.',
-     //       type: Constants.ApplicationCommandOptionTypes.STRING,
-        },
-        {
-            name: 'fourth_text',
-            description: 'The fourth part of the multi-quote.',
-   //         type: Constants.ApplicationCommandOptionTypes.STRING,
-        },
-        {
-            name: 'fifth_author',
-            description: 'The name of the fifth author.',
-      //      type: Constants.ApplicationCommandOptionTypes.STRING,
-        },
-        {
-            name: 'fifth_text',
-            description: 'The fifth part of the multi-quote.',
-     //       type: Constants.ApplicationCommandOptionTypes.STRING,
-        },
-        {
-            name: 'image_link',
-            description: 'Image attachment link. Upload an image to Discord and copy the link to that image.',
-    //        type: Constants.ApplicationCommandOptionTypes.STRING,
-            maxLength: 512
-        },
-        {
-            name: 'last_image',
-            description: 'Use the last image sent in a channel to the quote.',
-    //        type: Constants.ApplicationCommandOptionTypes.CHANNEL
-        }
-    ],
-
-    callback: async (interaction) => {
+	data: new SlashCommandBuilder()
+		.setName('create_multi_quote')
+		.setDescription('Multi-quotes have multiple quotes from multiple authors within them.')
+        .setDMPermission(false)
+        .addStringOption(option => option
+            .setName('title')
+            .setDescription(titleDescription)
+            .setMaxLength(4096)
+            .setRequired(true)
+        )
+        .addStringOption(option => option
+            .setName('first_author')
+            .setDescription(authorDescription)
+            .setMaxLength(256)
+            .setRequired(true)
+        )
+        .addStringOption(option => option
+            .setName('first_text')
+            .setDescription(textDescription)
+            .setMaxLength(819)
+            .setRequired(true)
+        )
+        .addStringOption(option => option
+            .setName('second_author')
+            .setDescription(authorDescription)
+            .setMaxLength(256)
+            .setRequired(true)
+        )
+        .addStringOption(option => option
+            .setName('second_text')
+            .setDescription(textDescription)
+            .setMaxLength(819)
+            .setRequired(true)
+        )
+        .addStringOption(option => option
+            .setName('third_author')
+            .setDescription(authorDescription)
+            .setMaxLength(256)
+        )
+        .addStringOption(option => option
+            .setName('third_text')
+            .setDescription(textDescription)
+            .setMaxLength(819)
+        )
+        .addStringOption(option => option
+            .setName('fourth_author')
+            .setDescription(authorDescription)
+            .setMaxLength(256)
+        )
+        .addStringOption(option => option
+            .setName('fourth_text')
+            .setDescription(textDescription)
+            .setMaxLength(819)
+        )
+        .addStringOption(option => option
+            .setName('fifth_author')
+            .setDescription(authorDescription)
+            .setMaxLength(256)
+        )
+        .addStringOption(option => option
+            .setName('fifth_text')
+            .setDescription(textDescription)
+            .setMaxLength(819)
+        )
+        .addStringOption(option => option
+            .setName('image_link')
+            .setDescription(imageLinkDescription)
+            .setMaxLength(512)
+        )
+        .addChannelOption(option => option
+            .setName('last_image')
+            .setDescription(lastImageDescription)
+            .addChannelTypes(ChannelType.GuildText)
+        )
+        .addStringOption(option => option
+            .setName('first_tag')
+            .setDescription(tagDescription)
+            .setMaxLength(339)
+        )
+        .addStringOption(option => option
+            .setName('second_tag')
+            .setDescription(tagDescription)
+            .setMaxLength(339)
+        )
+        .addStringOption(option => option
+            .setName('third_tag')
+            .setDescription(tagDescription)
+            .setMaxLength(339)
+        )
+	,
+	execute: async (interaction) => {
         const guildId = interaction.guildId;
         const { options } = interaction;
         const tags = [
