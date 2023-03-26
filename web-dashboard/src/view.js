@@ -62,6 +62,19 @@ function View({ guildId, guildName }) {
             return
         }
 
+        axios.get(`/api/v1/${guildId}/tags`)
+        .then(res => {
+            const sortedTags = res.data.sort((firstTag, secondTag) =>
+                firstTag.localeCompare(secondTag, undefined, { sensitivity: 'base' })
+            )
+
+            setTags(sortedTags)
+        }).catch(err => { errorToast(err.message || "There's been an error.") })
+
+        axios.get(`/api/v1/${guildId}/quotes`)
+        .then(res => setQuotes(res.data))
+        .catch(err => { errorToast(err.message || "There's been an error.") })
+
         axios.get(`/api/v1/${guildId}/authors`)
         .then(res => {
             const sortedAuthors = res.data.sort((firstAuthor, secondAuthor) =>
@@ -70,20 +83,7 @@ function View({ guildId, guildName }) {
 
             setAuthors(sortedAuthors)
 
-            axios.get(`/api/v1/${guildId}/quotes`)
-            .then(res => setQuotes(res.data))
-
-            axios.get(`/api/v1/${guildId}/tags`)
-            .then(res => {
-                const sortedTags = res.data.sort((firstTag, secondTag) =>
-                    firstTag.localeCompare(secondTag, undefined, { sensitivity: 'base' })
-                )
-    
-                setTags(sortedTags)
-            })
-        }).catch(err => {
-            errorToast(err.message || "There's been an error.")
-        })
+        }).catch(err => { errorToast(err.message || "There's been an error.") })
     }, [guildId])
 
     if (!guildId) {
