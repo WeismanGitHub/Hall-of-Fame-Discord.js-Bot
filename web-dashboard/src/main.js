@@ -21,6 +21,8 @@ function Main() {
     const [searchParams, setSearchParams] = useSearchParams();
     const [guilds, setGuilds] = useState([createQuote])
     const [guildId, setGuildId] = useState(null)
+    const [authors, setAuthors] = useState([])
+    const [tags, setTags] = useState([])
     const navigate = useNavigate()
     const contextId = 'guild_id'
     const contentStyle = {
@@ -44,6 +46,24 @@ function Main() {
 
         switch (id) {
             case "create-quote":
+                axios.get(`/api/v1/${guildId}/authors`)
+                .then(res => {
+                    const sortedAuthors = res.data.sort((firstAuthor, secondAuthor) =>
+                        firstAuthor.name.localeCompare(secondAuthor.name, undefined, { sensitivity: 'base' })
+                    )
+
+                    setAuthors(sortedAuthors)
+                }).catch(err => { errorToast(err.message || "There's been an error.") })
+
+                axios.get(`/api/v1/${guildId}/tags`)
+                .then(res => {
+                    const sortedTags = res.data.sort((firstTag, secondTag) =>
+                        firstTag.localeCompare(secondTag, undefined, { sensitivity: 'base' })
+                    )
+        
+                    setTags(sortedTags)
+                }).catch(err => { errorToast(err.message || "There's been an error.") })
+
                 setShowCreatePopup('quote')
                 setCreateGuildId(guildId)
                 break;
@@ -160,11 +180,12 @@ function Main() {
                 open={Boolean(showCreatePopup)}
                 position="center center"
                 modal
+                nested
                 onClose={() => setShowCreatePopup(null)}
                 {...{ contentStyle: { background: '#2f3136', border: "#232428 2px solid", 'border-radius': '5px' }}}
             >
                 {showCreatePopup == 'author' ? <CreateAuthor guildId={createGuildId}/> : null}
-                {showCreatePopup == 'quote' ? <CreateQuote guildId={createGuildId}/> : null}
+                {showCreatePopup == 'quote' ? <CreateQuote tags={tags} authors={authors} guildId={createGuildId}/> : null}
                 {showCreatePopup == 'tag' ? <CreateTag guildId={createGuildId}/> : null}
             </Popup>
         </body>
