@@ -53,7 +53,7 @@ function Main() {
                     )
 
                     setAuthors(sortedAuthors)
-                }).catch(err => { errorToast(err.message || "There's been an error.") })
+                }).catch(err => errorToast("There's been an error."))
 
                 axios.get(`/api/v1/${guildId}/tags`)
                 .then(res => {
@@ -62,7 +62,7 @@ function Main() {
                     )
         
                     setTags(sortedTags)
-                }).catch(err => { errorToast(err.message || "There's been an error.") })
+                })
 
                 setShowCreatePopup('quote')
                 setCreateGuildId(guildId)
