@@ -122,16 +122,28 @@ function CreateQuote({ guildId, authors, tags }) {
         })
     }
 
+    const typeStyle = {
+        display: 'inline-flex',
+        'border-radius': '10px',
+        'padding-left': '10px',
+        'padding-right': '10px',
+        'padding-bottom': '4px',
+        'float': 'left',
+        'font-size': '15px',
+        'margin-top': '20px',
+        color: '#dcddde',
+    }
     return (<>
         {
-            type == null ?
-            <div class='type_picker'>
+            type == null ? <div style={{'display': 'grid', 'place-items': 'center', margin: 'auto'}}>
                 {types.map(({ color, name }) => {
                     return <div style={{ float: 'left' }}>
-                        <button class='type' style={{ 'background-color': color }} onClick={ () => setType(name) }>{name}</button>
+                        <button style={{ 'background-color': color, ...typeStyle 
+                    }} onClick={ () => setType(name) }>{name}</button>
                     </div>
                 })}
-            </div> : <>
+            </div>
+            : <>
                 <DisplayQuote
                     author={authors.find(author => author._id == quoteAuthorId)}
                     type={type}
