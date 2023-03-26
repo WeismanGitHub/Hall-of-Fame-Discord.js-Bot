@@ -118,41 +118,56 @@ async function editQuote(req, res) {
 }
 
 async function createQuote(req, res) {
-	const { guildId } = req.params
 	const {
-		type,
 		tags,
+		type,
 		authorId,
 		fragments,
-		text,
-		attachmentURL,
 		audioURL,
+		attachmentURL,
+		text,
 	} = req.body
+	
+	const quote = { guildId: req.params.guildId }
 
-	if (authorId) {
-		const authorName = await getAuthorById(authorId)
-
-		if (authorName == 'Deleted Author') {
-            throw new NotFoundError(`Cannot find author: ${quoteId}.`)
-        }
+	if (attachmentURL) {
+		quote.attachmentURL = attachmentURL
 	}
 
+	if (tags) {
+		quote.tags = tags
+	}
+
+	if (text) {
+		quote.text = text
+	}
+	
+	if (authorId) {
+		quote.authorId = authorId
+	}
+	
+	if (fragments) {
+		quote.fragments = fragments
+	}
+
+	if (audioURL) {
+		quote.audioURL = audioURL
+	}
+
+	// Can't use UniversalQuoteSchema because it has no pre save/update checks like other schemas.
+	// Client inputted type can be trusted because properties that don't belong to a schema are discarded.
 	switch (type) {
 		case 'regular':
-			await UniversalQuoteSchema.create({
-				guildId,
-				authorId,
-				text,
-				tags,
-				attachmentURL,
-			})
+			await QuoteSchema.create(quote)
 			break;
 		case 'audio':
-			console.log('audio')
+			await AudioQuoteSchema.create(quote)
 			break;
 		case 'multi':
-			console.log('multi')
+			await MultiQuoteSchema.create(quote)
 			break;
+		default:
+			throw new InvalidInputError('Invalid Quote Type')
 	}
 
 	res.status(200).end()
