@@ -1,9 +1,7 @@
+import { successToast, errorToast } from '../toasts';
 import { useState, useEffect } from 'react';
 import axios, * as others from 'axios'
-import { successToast, errorToast } from '../toasts';
-import axios, * as others from 'axios'
 import 'reactjs-popup/dist/index.css'
-import { useEffect, useState } from 'react';
 import Popup from 'reactjs-popup';
 
 import FragmentsPopup from '../popups/fragments-popup'
@@ -20,20 +18,23 @@ const contentStyle = {
     width: '300px'
 }
 
-function createQuote({ guildId, authors, tags }) {
-    const [quoteFragments, setQuoteFragments] = useState(quoteBeingEdited.fragments)
-    const [quoteAuthorId, setQuoteAuthorId] = useState(quoteBeingEdited.authorId)
-    const [quoteTags, setQuoteTags] = useState(quoteBeingEdited.tags)
-    const [text, setText] = useState(quoteBeingEdited.text)
+const types = [
+    { name: 'regular', color: '#8F00FF' },
+    { name: 'image', color: '#FF7B00' },
+    { name: 'audio', color: '#00A64A' },
+    { name: 'multi', color: '#ff2e95' }
+]
+
+function CreateQuote({ guildId, authors, tags }) {
+    const [quoteFragments, setQuoteFragments] = useState(null)
+    const [quoteAuthorId, setQuoteAuthorId] = useState(null)
     const [removeImage, setRemoveImage] = useState(false)
     const [removeTags, setRemoveTags] = useState(false)
-    const attachmentURL = quoteBeingEdited.attachmentURL
     const [imageFile, setImageFile] = useState(null)
     const [audioFile, setAudioFile] = useState(null)
-    const createdAt = quoteBeingEdited.createdAt
-    const audioURL = quoteBeingEdited.audioURL
-    const quoteId = quoteBeingEdited._id
-    const type = quoteBeingEdited.type
+    const [quoteTags, setQuoteTags] = useState([])
+    const [type, setType] = useState(null)
+    const [text, setText] = useState('')
 
     const [showFragmentsPopup, setShowFragmentsPopup] = useState(false)
     const [showAuthorsPopup, setShowAuthorsPopup] = useState(false)
@@ -72,12 +73,16 @@ function createQuote({ guildId, authors, tags }) {
         });
     }
 
-    async function edit() {
-        const update = { removeImage, removeTags, type }
-        let newImageURL;
-        let newAudioURL;
+    async function create() {
+        const quote = {
+            type,
+            text,
+            tags: quoteTags,
+            authorId: quoteAuthorId,
+            fragments: quoteFragments,
+        }
 
-        if (quoteFragments && quoteFragments !== quoteBeingEdited.fragments) {
+        if (type == 'multi') {
             if (quoteFragments?.length < 2 && quoteFragments?.length > 5) {
                 return errorToast('Must have between 2 and 5 fragments.')
             }
@@ -88,25 +93,13 @@ function createQuote({ guildId, authors, tags }) {
                 }
             }
     
-            update.fragments = quoteFragments
-        }
-
-        if (text !== quoteBeingEdited.text) {
-            update.text = text
-        }
-        
-        if (quoteAuthorId !== quoteBeingEdited.authorId) {
-            update.authorId = quoteAuthorId
-        }
-
-        if (quoteTags !== quoteBeingEdited.tags) {
-            update.tags = quoteTags
+            quote.fragments = quoteFragments
         }
         
         if (imageFile) {
             const base64Image = await getBase64(imageFile)
             
-            newImageURL = (await axios.post(
+            quote.attachmentURL = (await axios.post(
                 'https://api.imgur.com/3/image/',
                 { image: base64Image.split(',')[1] },
                 { headers: {
@@ -116,159 +109,150 @@ function createQuote({ guildId, authors, tags }) {
             ).catch((err) => {
                 errorToast('Error uploading image.')
             })).data.data.link
-
-            update.attachmentURL = newImageURL
         }
 
         if (audioFile) {
             console.log('audio quote stuff')
         }
 
-        axios.patch(`/api/v1/${guildId}/quotes/${quoteId}`, update)
+        axios.post(`/api/v1/${guildId}/quotes`, quote)
         .then(res => {
-            successToast(`Successfully edited quote.`)
-
-            const updatedQuote = {
-                text: text,
-                attachmentURL: removeImage ? null : (newImageURL || attachmentURL),
-                audioURL: newAudioURL,
-                authorId: quoteAuthorId,
-                tags: quoteTags,
-                fragments: quoteFragments,
-                createdAt: createdAt,
-                type: type,
-                _id: quoteId,
-            }
-
-            setQuotes(quotes.map(quote => {
-                return quote._id == quoteId ? updatedQuote : quote
-            }))
-
-            setQuoteBeingEdited(updatedQuote)
+            successToast(`Successfully created quote.`)
         }).catch(err => {
             errorToast(`Failed to edit quote.`)
         })
     }
 
     return (<>
-        <DisplayQuote
-            author={authors.find(author => author._id == quoteAuthorId)}
-            type={type}
-            tags={quoteTags || []}
-            attachmentURL={removeImage ? null : ((imageFile ? URL.createObjectURL(imageFile) : null) || attachmentURL)}
-            text={text}
-            fragments={quoteFragments}
-            audioURL={audioFile || audioURL}
-            authors={authors}
-            createdAt={createdAt}
-        />
-
-        <div class='centered_row'>
-            {type !== 'audio' ? null : <label class="file_upload">
-                <input
-                    type="file"
-                    accept=".mp3,.wav,.ogg"
-                    onChange={(e) => setAudioFile(e.target.files[0])}
-                    onKeyPress={ (event) => { event.key === 'Enter' && edit() } }
-                    hidden
+        {
+            type == null ?
+            <div class='type_picker'>
+                {types.map(({ color, name }) => {
+                    return <div style={{ float: 'left' }}>
+                        <button class='type' style={{ 'background-color': color }} onClick={ () => setType(name) }>{name}</button>
+                    </div>
+                })}
+            </div> : <>
+                <DisplayQuote
+                    author={authors.find(author => author._id == quoteAuthorId)}
+                    type={type}
+                    tags={quoteTags || []}
+                    attachmentURL={removeImage ? null : (imageFile ? URL.createObjectURL(imageFile) : null)}
+                    text={text}
+                    fragments={quoteFragments}
+                    audioURL={audioFile}
+                    authors={authors}
+                    createdAt={new Date()}
                 />
-                Upload Audio
-            </label>}
-            <label class="file_upload">
-                <input
-                    type="file"
-                    accept=".gif,.jpg,.jpeg,.png"
-                    onChange={(e) => setImageFile(e.target.files[0])}
-                    onKeyPress={ (event) => { event.key === 'Enter' && edit() } }
-                    hidden
-                />
-                Upload Image
-            </label>
-            { !quoteBeingEdited.attachmentURL ? null :
-                <button
-                    class={`popup_button ${removeImage ? 'highlighted' : 'unhighlighted'}`}
-                    onClick={() => setRemoveImage(!removeImage)}
-                    style={{ 'min-width': '105px'}}
-                    >
-                        Remove Image
-                </button>
-            }
 
-            {type == 'multi' ?
-                <button class="file_upload" onClick={() => setShowFragmentsPopup(true)}>Change Fragments</button> :
-                <button class="file_upload" onClick={() => setShowAuthorsPopup(true)}>Select Author</button>
-            }
+                <div class='centered_row'>
+                    {type !== 'audio' ? null : <label class="file_upload">
+                        <input
+                            type="file"
+                            accept=".mp3,.wav,.ogg"
+                            onChange={(e) => setAudioFile(e.target.files[0])}
+                            onKeyPress={ (event) => { event.key === 'Enter' && create() } }
+                            hidden
+                        />
+                        Upload Audio
+                    </label>}
+                    <label class="file_upload">
+                        <input
+                            type="file"
+                            accept=".gif,.jpg,.jpeg,.png"
+                            onChange={(e) => setImageFile(e.target.files[0])}
+                            onKeyPress={ (event) => { event.key === 'Enter' && create() } }
+                            hidden
+                        />
+                        Upload Image
+                    </label>
+                    { !imageFile ? null :
+                        <button
+                            class={`popup_button ${removeImage ? 'highlighted' : 'unhighlighted'}`}
+                            onClick={() => setRemoveImage(!removeImage)}
+                            style={{ 'min-width': '105px'}}
+                            >
+                                Remove Image
+                        </button>
+                    }
 
-            { !quoteTags?.length ? null :
-                <button
-                    class={`popup_button ${removeTags ? 'highlighted' : 'unhighlighted'}`}
-                    onClick={() => setRemoveTags(!removeTags)}
-                    style={{ 'min-width': '105px'}}
-                    >
-                        Remove Tags
-                </button>
-            }
+                    {type == 'multi' ?
+                        <button class="file_upload" onClick={() => setShowFragmentsPopup(true)}>Change Fragments</button> :
+                        <button class="file_upload" onClick={() => setShowAuthorsPopup(true)}>Select Author</button>
+                    }
 
-            <button class="file_upload" onClick={() => setShowTagsPopup(true)}>Select Tags</button>
+                    { !quoteTags?.length ? null :
+                        <button
+                            class={`popup_button ${removeTags ? 'highlighted' : 'unhighlighted'}`}
+                            onClick={() => setRemoveTags(!removeTags)}
+                            style={{ 'min-width': '105px'}}
+                            >
+                                Remove Tags
+                        </button>
+                    }
 
-            <div style={{ width: '100%' }}><br/></div>
+                    <button class="file_upload" onClick={() => setShowTagsPopup(true)}>Select Tags</button>
 
-            <input
-                type="text"
-                class='edit_author_name'
-                style={{ width: '550px' }}
-                value={text}
-                onChange={ (e)=> setText(e.target.value) }
-                onKeyPress={ (event) => { event.key === 'Enter' && edit() } }
-                autoFocus
-            />
-            
-            <div style={{ width: '100%' }}><br/></div>
-            <button class='modal_submit' onClick={edit} style={{ 'margin-bottom': '50px' }}>Submit</button>
-        </div>
+                    <div style={{ width: '100%' }}><br/></div>
 
-        <Popup
-            open={showTagsPopup}
-            position="center center"
-            modal onClose={() => setShowTagsPopup(false)}
-            {...{ contentStyle }}
-            nested
-        >
-            <TagsPopup
-                tags={tags}
-                setQuoteTags={setQuoteTags}
-                quoteTags={quoteTags}
-            />
-        </Popup>
+                    <input
+                        type="text"
+                        class='edit_author_name'
+                        style={{ width: '550px' }}
+                        value={text}
+                        onChange={ (e)=> setText(e.target.value) }
+                        onKeyPress={ (event) => { event.key === 'Enter' && create() } }
+                        autoFocus
+                    />
+                    
+                    <div style={{ width: '100%' }}><br/></div>
+                    <button class='modal_submit' onClick={create} style={{ 'margin-bottom': '50px' }}>Submit</button>
+                </div>
 
-        <Popup
-            open={showAuthorsPopup}
-            position="center center"
-            modal onClose={() => setShowAuthorsPopup(false)}
-            {...{ contentStyle }}
-            nested
-        >
-            <AuthorsPopup
-                authors={authors}
-                setQuoteAuthorId={setQuoteAuthorId}
-                quoteAuthorId={quoteAuthorId}
-            />
-        </Popup>
+                <Popup
+                    open={showTagsPopup}
+                    position="center center"
+                    modal onClose={() => setShowTagsPopup(false)}
+                    {...{ contentStyle }}
+                    nested
+                >
+                    <TagsPopup
+                        tags={tags}
+                        setQuoteTags={setQuoteTags}
+                        quoteTags={quoteTags}
+                    />
+                </Popup>
 
-        <Popup
-            open={showFragmentsPopup}
-            position="center center"
-            modal onClose={() => setShowFragmentsPopup(false)}
-            {...{ contentStyle: {...contentStyle, width: '700px', height: '500px' } }}
-            nested
-        >
-            <FragmentsPopup
-                authors={authors}
-                setQuoteFragments={setQuoteFragments}
-                quoteFragments={quoteFragments}
-            />
-        </Popup>
+                <Popup
+                    open={showAuthorsPopup}
+                    position="center center"
+                    modal onClose={() => setShowAuthorsPopup(false)}
+                    {...{ contentStyle }}
+                    nested
+                >
+                    <AuthorsPopup
+                        authors={authors}
+                        setQuoteAuthorId={setQuoteAuthorId}
+                        quoteAuthorId={quoteAuthorId}
+                    />
+                </Popup>
+
+                <Popup
+                    open={showFragmentsPopup}
+                    position="center center"
+                    modal onClose={() => setShowFragmentsPopup(false)}
+                    {...{ contentStyle: {...contentStyle, width: '700px', height: '500px' } }}
+                    nested
+                >
+                    <FragmentsPopup
+                        authors={authors}
+                        setQuoteFragments={setQuoteFragments}
+                        quoteFragments={quoteFragments}
+                    />
+                </Popup>
+            </>
+        }
     </>)
 }
 
-export default createQuote;
+export default CreateQuote;
