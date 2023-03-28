@@ -81,7 +81,10 @@ function CreateQuote({ guildId, authors, tags }) {
             fragments: quoteFragments,
         }
 
-        if (type == 'multi') {
+        if (type !== 'multi') {
+            if (!quoteAuthorId) return errorToast('Missing Author')
+
+        } else if (type == 'multi') {
             if (quoteFragments?.length < 2 && quoteFragments?.length > 5) {
                 return errorToast('Must have between 2 and 5 fragments.')
             }
