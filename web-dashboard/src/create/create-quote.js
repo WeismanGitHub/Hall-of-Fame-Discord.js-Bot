@@ -25,7 +25,7 @@ const types = [
 ]
 
 function CreateQuote({ guildId, authors, tags }) {
-    const [quoteFragments, setQuoteFragments] = useState(null)
+    const [quoteFragments, setQuoteFragments] = useState([])
     const [quoteAuthorId, setQuoteAuthorId] = useState(null)
     const [removeImage, setRemoveImage] = useState(false)
     const [removeTags, setRemoveTags] = useState(false)
