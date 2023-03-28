@@ -2,7 +2,6 @@ const { BadRequestError, NotFoundError, InvalidInputError } = require('../errors
 const UniversalQuoteSchema = require('../../schemas/universal-quote-schema');
 const MultiQuoteSchema = require('../../schemas/multi-quote-schema')
 const AudioQuoteSchema = require('../../schemas/audio-quote-schema')
-const { getAuthorById } = require('../../helpers/get-author');
 const QuoteSchema = require('../../schemas/quote-schema');
 require('express-async-errors')
 
