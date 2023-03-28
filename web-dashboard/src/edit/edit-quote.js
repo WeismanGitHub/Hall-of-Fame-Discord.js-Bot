@@ -165,7 +165,7 @@ function EditQuote({quoteBeingEdited, guildId, setQuotes, quotes, setQuoteBeingE
             {type !== 'audio' ? null : <label class="file_upload">
                 <input
                     type="file"
-                    accept=".mp3,.wav,.ogg"
+                    accept=".mp3,.wav,.ogg,.m4a,.aiff,.aif,.3gpp"
                     onChange={(e) => setAudioFile(e.target.files[0])}
                     onKeyPress={ (event) => { event.key === 'Enter' && edit() } }
                     hidden
