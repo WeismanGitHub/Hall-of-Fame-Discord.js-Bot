@@ -162,6 +162,7 @@ async function editQuote(req, res) {
 }
 
 async function createQuote(req, res) {
+	const { guildId } = req.params
 	const {
 		tags,
 		type,
@@ -171,8 +172,10 @@ async function createQuote(req, res) {
 		attachmentURL,
 		text,
 	} = req.body
-	
-	const quote = { guildId: req.params.guildId }
+
+	const quote = { guildId }
+	const { authors, quotesChannelId } = await GuildSchema.findById(guildId).select('-_id quotesChannelId authors').lean()
+	const client = req.app.get('client')
 
 	if (attachmentURL) {
 		quote.attachmentURL = attachmentURL
@@ -188,6 +191,10 @@ async function createQuote(req, res) {
 	
 	if (authorId) {
 		quote.authorId = authorId
+
+		if (!authors.find(({ _id }) => authorId == _id)) {
+			throw new InvalidInputError('Author could not be found.')
+		}
 	}
 	
 	if (fragments) {
@@ -198,20 +205,57 @@ async function createQuote(req, res) {
 		quote.audioURL = audioURL
 	}
 
+	let quoteDocument;
+
 	// Can't use UniversalQuoteSchema because it has no pre save/update checks like other schemas.
 	// Client inputted type can be trusted because properties that don't belong to a schema are discarded.
 	switch (type) {
 		case 'regular':
-			await QuoteSchema.create(quote)
+			quoteDocument = await QuoteSchema.create(quote)
 			break;
 		case 'audio':
-			await AudioQuoteSchema.create(quote)
+			quoteDocument = await AudioQuoteSchema.create(quote)
 			break;
 		case 'multi':
-			await MultiQuoteSchema.create(quote)
+			quoteDocument = await MultiQuoteSchema.create(quote)
 			break;
 		default:
 			throw new InvalidInputError('Invalid Quote Type')
+	}
+
+	if (quotesChannelId) {
+        const channel = await client?.channels.fetch(quotesChannelId)
+		.catch(err => {
+			throw new Error('Quote successfully updated, but the quotes channel could not be fetched.')
+		})
+
+		const checkedFragments = [];
+		let author;
+
+		if (channel.guildId !== guildId) {
+			throw new ForbiddenError('Quotes channel is not in this server.')
+		}
+
+		if (!channel) {
+			throw new Error("Quote successfully updated, but the quotes channel is invalid.")
+		}
+
+		if (quoteDocument.type == 'multi') {
+			for (let fragment of quoteDocument.fragments) {
+				const authorName = (authors.find(({ _id }) => _id?.equals(fragment.authorId)))?.name
+				fragment.authorName = authorName || 'Deleted Author'
+
+				checkedFragments.push(fragment)
+			}
+		} else {
+			author = (authors.find(({ _id }) => _id.equals(quoteDocument.authorId))) || {
+				name: 'Deleted Author',
+				iconURL: process.env.DEFAULT_ICON_URL
+			}
+		}
+
+        await channel.send(quoteEmbed(quoteDocument, (quoteDocument.type !== 'multi' ? author : checkedFragments)))
+		.catch(err => { throw new Error('Quote successfully updated, but could not be sent to the quotes channel.') })
 	}
 
 	res.status(200).end()
