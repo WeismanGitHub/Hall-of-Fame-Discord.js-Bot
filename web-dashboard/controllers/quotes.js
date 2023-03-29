@@ -1,8 +1,10 @@
-const { BadRequestError, NotFoundError, InvalidInputError } = require('../errors');
+const { BadRequestError, NotFoundError, InvalidInputError, ForbiddenError } = require('../errors');
 const UniversalQuoteSchema = require('../../schemas/universal-quote-schema');
 const MultiQuoteSchema = require('../../schemas/multi-quote-schema')
 const AudioQuoteSchema = require('../../schemas/audio-quote-schema')
 const QuoteSchema = require('../../schemas/quote-schema');
+const GuildSchema = require('../../schemas/guild-schema');
+const { quoteEmbed } = require('../../helpers/embeds');
 require('express-async-errors')
 
 const getQuotes = async (req, res) => {
@@ -67,6 +69,8 @@ async function editQuote(req, res) {
 		text,
 	} = req.body
 	
+	const { authors, quotesChannelId } = await GuildSchema.findById(guildId).select('-_id quotesChannelId authors').lean()
+	const client = req.app.get('client')
 	const update = {}
 
 	if (attachmentURL) {
@@ -86,6 +90,10 @@ async function editQuote(req, res) {
 	}
 	
 	if (authorId) {
+		if (!authors.find(({ _id }) => authorId == _id)) {
+			throw new InvalidInputError('Author could not be found.')
+		}
+		
 		update.authorId = authorId
 	}
 	
@@ -97,20 +105,57 @@ async function editQuote(req, res) {
 		update.audioURL = audioURL
 	}
 
+	let quote;
+
 	// Can't use UniversalQuoteSchema because it has no pre save/update checks like other schemas.
 	// Client inputted type can be trusted because properties that don't belong to a schema are discarded.
 	switch (type) {
 		case 'regular':
-			await QuoteSchema.updateOne({ _id: quoteId, guildId: guildId }, update)
+			quote = await QuoteSchema.findOneAndUpdate({ _id: quoteId, guildId: guildId }, update)
 			break;
 		case 'audio':
-			await AudioQuoteSchema.updateOne({ _id: quoteId, guildId: guildId }, update)
+			quote = await AudioQuoteSchema.findOneAndUpdate({ _id: quoteId, guildId: guildId }, update)
 			break;
 		case 'multi':
-			await MultiQuoteSchema.updateOne({ _id: quoteId, guildId: guildId }, update)
+			quote = await MultiQuoteSchema.findOneAndUpdate({ _id: quoteId, guildId: guildId }, update)
 			break;
 		default:
 			throw new InvalidInputError('Invalid Quote Type')
+	}
+
+    if (quotesChannelId) {
+        const channel = await client?.channels.fetch(quotesChannelId)
+		.catch(err => {
+			throw new Error('Quote successfully updated, but the quotes channel could not be fetched.')
+		})
+
+		const checkedFragments = [];
+		let author;
+
+		if (channel.guildId !== guildId) {
+			throw new ForbiddenError('Quotes channel is not in this server.')
+		}
+
+		if (!channel) {
+			throw new Error("Quote successfully updated, but the quotes channel is invalid.")
+		}
+
+		if (quote.type == 'multi') {
+			for (let fragment of quote.fragments) {
+				const authorName = (authors.find(({ _id }) => _id?.equals(fragment.authorId)))?.name
+				fragment.authorName = authorName || 'Deleted Author'
+
+				checkedFragments.push(fragment)
+			}
+		} else {
+			author = (authors.find(({ _id }) => _id.equals(quote.authorId))) || {
+				name: 'Deleted Author',
+				iconURL: process.env.DEFAULT_ICON_URL
+			}
+		}
+
+        await channel.send(quoteEmbed(quote, (quote.type !== 'multi' ? author : checkedFragments)))
+		.catch(err => { throw new Error('Quote successfully updated, but could not be sent to the quotes channel.') })
 	}
 
 	res.status(200).end()
