@@ -144,7 +144,7 @@ function EditQuote({quoteBeingEdited, guildId, setQuotes, quotes, setQuoteBeingE
 
             setQuoteBeingEdited(updatedQuote)
         }).catch(err => {
-            errorToast(`Failed to edit quote.`)
+            errorToast(err.response.data || 'Error while editing quote.')
         })
     }
 

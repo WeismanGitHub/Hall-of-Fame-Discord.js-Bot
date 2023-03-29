@@ -69,11 +69,11 @@ function View({ guildId, guildName }) {
             )
 
             setTags(sortedTags)
-        }).catch(err => { errorToast(err.message || "There's been an error.") })
+        }).catch(err => { errorToast(err.response.data || "There's been an error.") })
 
         axios.get(`/api/v1/${guildId}/quotes`)
         .then(res => setQuotes(res.data))
-        .catch(err => { errorToast(err.message || "There's been an error.") })
+        .catch(err => { errorToast(err.response.data || "There's been an error.") })
 
         axios.get(`/api/v1/${guildId}/authors`)
         .then(res => {
@@ -83,7 +83,7 @@ function View({ guildId, guildName }) {
 
             setAuthors(sortedAuthors)
 
-        }).catch(err => { errorToast(err.message || "There's been an error.") })
+        }).catch(err => { errorToast(err.response.data || "There's been an error.") })
     }, [guildId])
 
     if (!guildId) {
