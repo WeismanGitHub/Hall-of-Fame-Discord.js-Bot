@@ -8,7 +8,7 @@ async function updateQuotesChannel(quote, guildId, client) {
         const quotesChannel = await client.channels.fetch(quotesChannelId)
         .catch(err => { throw new Error("Can't send quotes to quotes channel.") })
 
-        if (channel.guildId !== guildId) {
+        if (quotesChannel.guildId !== guildId) {
 			throw new Error('Quotes channel is not in this server.')
 		}
 
