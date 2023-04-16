@@ -57,6 +57,7 @@ function Tags({ tags, setQueryTags, queryTags, guildId, setTags }) {
             .then(res => {
                 successToast(`Successfully deleted "${clickedTag}".`)
                 setTags(tags.filter(tag => tag !== clickedTag))
+                setQueryTags(queryTags.filter(queryTag => clickedTag !== queryTag))
             }).catch(err => {
                 errorToast(`Failed to delete "${clickedTag}".`)
             })
