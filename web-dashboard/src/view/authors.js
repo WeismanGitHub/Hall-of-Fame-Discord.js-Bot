@@ -46,6 +46,7 @@ function Authors({ authors, setQueryAuthorId, queryAuthorId, guildId, setAuthors
             .then(res => {
                 successToast(`Successfully deleted "${name}".`)
                 setAuthors(authors.filter(author => author.name !== name))
+                if (queryAuthorId == _id) setQueryAuthorId(null)
             }).catch(err => {
                 errorToast(`Failed to delete "${name}".`)
             })
