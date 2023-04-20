@@ -20,7 +20,7 @@ const contentStyle = {
 
 const types = [
     { name: 'regular', color: '#8F00FF' },
-    { name: 'audio', color: '#00A64A' },
+    // { name: 'audio', color: '#00A64A' },
     { name: 'multi', color: '#ff2e95' }
 ]
 

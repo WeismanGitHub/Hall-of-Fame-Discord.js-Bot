@@ -162,7 +162,7 @@ function EditQuote({quoteBeingEdited, guildId, setQuotes, quotes, setQuoteBeingE
         />
 
         <div class='centered_row'>
-            {type !== 'audio' ? null : <label class="file_upload">
+            {/* {type !== 'audio' ? null : <label class="file_upload">
                 <input
                     type="file"
                     accept=".mp3,.wav,.ogg,.m4a,.aiff,.aif,.3gpp"
@@ -171,7 +171,7 @@ function EditQuote({quoteBeingEdited, guildId, setQuotes, quotes, setQuoteBeingE
                     hidden
                 />
                 Upload Audio
-            </label>}
+            </label>} */}
             <label class="file_upload">
                 <input
                     type="file"
