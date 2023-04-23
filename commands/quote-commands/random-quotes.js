@@ -11,7 +11,6 @@ const {
     tagDescription,
     searchPhraseDescription,
     typeDescription,
-    limitDescription,
 } = require('../../descriptions');
 
 module.exports = {
@@ -54,17 +53,10 @@ module.exports = {
                 { name: 'image quote', value: 'image' }
 			)
         )
-        .addIntegerOption(option => option
-            .setName('limit')
-            .setDescription(limitDescription)
-            .setMaxValue(9)
-            .setMinValue(1)
-        )
 	,
 	execute: async (interaction) => {
         const { options } = interaction;
         const searchPhrase = options.getString('search_phrase')
-        const limit = options.getInteger('limit') == null ? 10 : options.getInteger('limit')
         const inputtedAuthor = options.getString('author');
         const type = options.getString('type')
 
@@ -107,37 +99,16 @@ module.exports = {
 
         const quotes = await UniversalQuoteSchema.aggregate([
             { $match: query },
-            { $sample: { size: limit } }
+            { $sample: { size: 10 } }
         ])
 
         if (!quotes.length) {
             throw new NotFoundError('Quotes')
         }
 
-        await interaction.reply(basicEmbed('Started!'))
-
-        // sendQuotes modifies quotes array so gotta use a copy.
-        await sendQuotes([...quotes], interaction.channel)
-
-        if (quotes.length < 10) {
-            // Putting the message and return on the same line doesn't actually cause it to return. IDFK why.
-            await interaction.channel.send(basicEmbed('Done!'))
-            return
-        }
-
         const filterId = (await FilterSchema.create({ query }))._id
-        const customId = JSON.stringify({ type: 'random-quotes', filterId })
+        const customId = { type: 'random-quotes', filterId }
 
-        const row = new ActionRowBuilder()
-        .addComponents(
-            new ButtonBuilder()
-            .setLabel('Next 10 Random Quotes ⏩')
-            .setCustomId(`${customId}`)
-            .setStyle('Primary')
-        )
-        
-        await interaction.channel.send({
-            components: [row]
-        })
+        await sendQuotes(quotes, interaction, customId, 0)
     }
 };
