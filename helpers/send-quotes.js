@@ -1,48 +1,59 @@
-const { quoteEmbed, errorEmbed } = require('./embeds');
+const { ActionRowBuilder, ButtonBuilder} = require('discord.js')
+const { quoteEmbed, errorEmbed } = require('./embeds')
 const GuildSchema = require('../schemas/guild-schema')
 
-async function sendQuotes(quotes, channel) {
+async function sendQuotes(quotes, channel, customId, skipAmount) {
     const authors = (await GuildSchema.findById(channel.guild.id).select('-_id authors').lean()).authors
-    const quoteGroups = [];
+    const quoteEmbeds = []
 
-    while (quotes.length > 0) {
-        quoteGroups.push(quotes.splice(0, 10))
-    }
+    for (let quote of quotes) {
+        const checkedFragments = [];
+        let author = null;
 
-    for (let quoteGroup of quoteGroups) {
-        const quoteEmbeds = []
+        if (quote.type == 'multi') {
+            for (let fragment of quote.fragments) {
+                const authorName = (authors.find(({ _id }) => _id?.equals(fragment.authorId) ))?.name
+                fragment.authorName = authorName ?? 'Deleted Author'
 
-        for (let quote of quoteGroup) {
-            const checkedFragments = [];
-            let author = null;
-
-            if (quote.type == 'multi') {
-                for (let fragment of quote.fragments) {
-                    const authorName = (authors.find(({ _id }) => _id?.equals(fragment.authorId) ))?.name
-                    fragment.authorName = authorName ?? 'Deleted Author'
-
-                    checkedFragments.push(fragment)
-                }
-            } else {
-                author = (authors.find(({ _id }) => _id?.equals(quote.authorId) )) || {
-                    name: 'Deleted Author',
-                    iconURL: process.env.DEFAULT_ICON_URL
-                }
+                checkedFragments.push(fragment)
             }
-
-            quoteEmbeds.push(...quoteEmbed(quote, author ?? checkedFragments).embeds)
+        } else {
+            author = (authors.find(({ _id }) => _id?.equals(quote.authorId) )) || {
+                name: 'Deleted Author',
+                iconURL: process.env.DEFAULT_ICON_URL
+            }
         }
 
-        await channel.send({ embeds: quoteEmbeds })
-        .catch(async _ => {
-            for (let quote of quoteEmbeds) {
-                await channel.send({ embeds: [quote] })
-                .catch(async err => {
-                    channel.send(errorEmbed(err, `Quote Id: ${quote.fields[0]['value']}`));
-                });
-            }
-        })
-    };
+        quoteEmbeds.push(...quoteEmbed(quote, author ?? checkedFragments).embeds)
+    }
+
+    const row = new ActionRowBuilder()
+    .addComponents(
+        new ButtonBuilder()
+        .setCustomId(JSON.stringify({...customId, ...{ skipAmount: Number(skipAmount) - 10 } }))
+        .setDisabled(Number(skipAmount) <= 0)
+        .setLabel('⏪')
+        .setStyle('Primary')
+    )
+    .addComponents(
+        new ButtonBuilder()
+        .setCustomId(JSON.stringify({...customId, ...{ skipAmount: Number(skipAmount) + 10 } }))
+        .setLabel('⏩')
+        .setDisabled(quotes.length !== 10)
+        .setStyle('Primary')
+    )
+
+    await channel.send({ embeds: quoteEmbeds, components: [row] })
+    .catch(async err => {
+        // figure out proper error handling solution. display fucked up quote somehow
+
+        // for (let quote of quoteEmbeds) {
+        //     await channel.send({ embeds: [quote] })
+        //     .catch(async err => {
+        //         channel.send(errorEmbed(err, `Quote Id: ${quote.fields[0]['value']}`));
+        //     });
+        // }
+    })
 }
 
 module.exports = sendQuotes
