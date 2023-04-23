@@ -2,8 +2,8 @@ const { ActionRowBuilder, ButtonBuilder} = require('discord.js')
 const { quoteEmbed, errorEmbed } = require('./embeds')
 const GuildSchema = require('../schemas/guild-schema')
 
-async function sendQuotes(quotes, channel, customId, skipAmount) {
-    const authors = (await GuildSchema.findById(channel.guild.id).select('-_id authors').lean()).authors
+async function sendQuotes(quotes, interaction, customId, skipAmount) {
+    const authors = (await GuildSchema.findById(interaction.guild.id).select('-_id authors').lean()).authors
     const quoteEmbeds = []
 
     for (let quote of quotes) {
@@ -43,7 +43,7 @@ async function sendQuotes(quotes, channel, customId, skipAmount) {
         .setStyle('Primary')
     )
 
-    await channel.send({ embeds: quoteEmbeds, components: [row] })
+    await interaction.reply({ embeds: quoteEmbeds, components: [row] })
     .catch(async err => {
         // figure out proper error handling solution. display fucked up quote somehow
 
