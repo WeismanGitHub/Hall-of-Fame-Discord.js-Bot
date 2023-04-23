@@ -1,10 +1,9 @@
-const { ActionRowBuilder, ButtonBuilder, SlashCommandBuilder } = require('discord.js');
 const UniversalQuoteSchema = require('../../schemas/universal-quote-schema');
 const { getAuthorByName } = require('../../helpers/get-author');
 const FilterSchema = require('../../schemas/filter-schema');
 const sendQuotes = require('../../helpers/send-quotes');
-const { basicEmbed } = require('../../helpers/embeds');
 const checkTags = require('../../helpers/check-tags');
+const { SlashCommandBuilder } = require('discord.js');
 const { NotFoundError } = require('../../errors');
 const {
     authorDescription,
@@ -12,8 +11,6 @@ const {
     searchPhraseDescription,
     ageDescription,
     typeDescription,
-    limitDescription,
-    paginationDescription
 } = require('../../descriptions');
 
 module.exports = {
@@ -64,23 +61,11 @@ module.exports = {
                 { name: 'image quote', value: 'image' }
 			)
         )
-        .addIntegerOption(option => option
-            .setName('limit')
-            .setDescription(limitDescription)
-            .setMaxValue(9)
-            .setMinValue(1)
-        )
-        .addBooleanOption(option => option
-            .setName('pagination')
-            .setDescription(paginationDescription)
-        )
 	,
 	execute: async (interaction) => {
         const { options } = interaction;
         const sort = options.getString('age') == null ? { createdAt: -1 } : { createdAt: options.getString('age') }
-        const limit = options.getInteger('limit') == null ? 10 : options.getInteger('limit')
         const searchPhrase = options.getString('search_phrase')
-        const pagination = options.getBoolean('pagination')
         const inputtedAuthor = options.getString('author');
         const type = options.getString('type')
         const guildId = interaction.guildId;
@@ -121,40 +106,15 @@ module.exports = {
         }
 
         const quotes = await UniversalQuoteSchema.find(query).sort(sort)
-        .limit(pagination == false ? Infinity : limit).lean();
+        .limit(10).lean();
 
         if (!quotes.length) {
             throw new NotFoundError('Quotes')
         }
 
-        await interaction.reply(basicEmbed('Started!'))
-
-        // sendQuotes modifies quotes array so gotta use a copy.
-        await sendQuotes([...quotes], interaction.channel)
-
-        if (quotes.length < 10) {
-            // Putting the message and return on the same line doesn't actually cause it to return. IDFK why.
-            await interaction.channel.send(basicEmbed('Done!'))
-            return
-        }
-
-        if (pagination == false) {
-            return await interaction.channel.send(basicEmbed('Done!'))
-        }
-
         const filterId = (await FilterSchema.create({ query: query, sort: sort }))._id
-        const customId = JSON.stringify({ type: 'find-quotes', filterId: filterId, skipAmount: 10 })
+        const customId = { type: 'find-quotes', filterId: filterId, skipAmount: 10 }
 
-        const row = new ActionRowBuilder()
-        .addComponents(
-            new ButtonBuilder()
-            .setLabel('Next 10 Quotes ⏩')
-            .setCustomId(`${customId}`)
-            .setStyle('Primary')
-        )
-        
-        await interaction.channel.send({
-            components: [row]
-        })
+        await sendQuotes(quotes, interaction.channel, customId, 0)
     }
 };
