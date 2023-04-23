@@ -113,7 +113,7 @@ module.exports = {
         }
 
         const filterId = (await FilterSchema.create({ query: query, sort: sort }))._id
-        const customId = { type: 'find-quotes', filterId: filterId, skipAmount: 10 }
+        const customId = { type: 'find-quotes', filterId: filterId }
 
         await sendQuotes(quotes, interaction.channel, customId, 0)
     }
