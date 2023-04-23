@@ -1,8 +1,6 @@
 const UniversalQuoteSchema = require('../../schemas/universal-quote-schema');
-const { ActionRowBuilder, ButtonBuilder } = require('discord.js');
 const FilterSchema = require('../../schemas/filter-schema');
-const sendQuotes = require('../../helpers/send-quotes');
-const { basicEmbed } = require('../../helpers/embeds');
+const updateQuotes = require('../../helpers/update-quotes');
 const { InvalidActionError } = require('../../errors');
 const { Events } = require('discord.js');
 
@@ -33,27 +31,8 @@ module.exports = {
             { $sample: { size: 10 } }
         ])
 
-        const customId = JSON.stringify({ type: 'random-quotes', filterId })
+        const customId = { type: 'random-quotes', filterId }
 
-        const row = new ActionRowBuilder()
-        .addComponents(
-            new ButtonBuilder()
-            .setCustomId(`${customId}`)
-            .setLabel('Next 10 Random Quotes ⏩')
-            .setStyle('Primary')
-        )
-
-        await interaction.reply(basicEmbed('Started!'));
-
-        // sendQuotes modifies quotes array so gotta use a copy.
-        await sendQuotes([...quotes], interaction.channel)
-
-        if (quotes.length !== 10) {
-            return await interaction.channel.send(basicEmbed('End of the line!'))
-        }
-
-        await interaction.channel.send({
-            components: [row]
-        })
+        await updateQuotes(quotes, interaction, customId, 0)
 	}
 };
