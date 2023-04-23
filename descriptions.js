@@ -16,8 +16,6 @@ const textDescription = "Text you're quoting."
 const nameDescription = "The name of the author."
 const fragmentDescription = "A fragment is an author/text pair."
 const accountImageDescription = "Use an account image."
-const limitDescription = "How many quotes you want returned."
-const paginationDescription = "Send every quote at once."
 const channelDescription = "A channel to showcase every quote. New quotes will be added here."
 const ageDescription = "Sort by newest/oldest."
 const notificationsDescription = "Turn notifications on or off."
@@ -43,8 +41,6 @@ module.exports = {
     nameDescription,
     fragmentDescription,
     accountImageDescription,
-    limitDescription,
-    paginationDescription,
     channelDescription,
     ageDescription,
     notificationsDescription,
