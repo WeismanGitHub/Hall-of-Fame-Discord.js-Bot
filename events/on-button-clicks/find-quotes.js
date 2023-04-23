@@ -1,9 +1,7 @@
 const UniversalQuoteSchema = require('../../schemas/universal-quote-schema');
-const { ActionRowBuilder, ButtonBuilder } = require('discord.js');
 const FilterSchema = require('../../schemas/filter-schema');
-const sendQuotes = require('../../helpers/send-quotes');
+const updateQuotes = require('../../helpers/update-quotes');
 const { InvalidActionError } = require('../../errors');
-const { basicEmbed } = require('../../helpers/embeds');
 const { Events } = require('discord.js');
 
 module.exports = {
@@ -19,7 +17,7 @@ module.exports = {
         if (type !== 'find-quotes') {
             return
         }
-        
+
         const filter = await FilterSchema.findById(filterId).lean()
 
         if (!filter) {
@@ -31,27 +29,8 @@ module.exports = {
         const quotes = await UniversalQuoteSchema.find(query)
         .sort(sort).skip(skipAmount).limit(10).lean();
 
-        const customId = JSON.stringify({ type: 'find-quotes', filterId: filterId, skipAmount: Number(skipAmount) + 10 })
+        const customId = { type: 'find-quotes', filterId: filterId }
 
-        const row = new ActionRowBuilder()
-        .addComponents(
-            new ButtonBuilder()
-            .setCustomId(`${customId}`)
-            .setLabel('Next 10 Quotes ⏩')
-            .setStyle('Primary')
-        )
-
-        await interaction.reply(basicEmbed('Started!'));
-
-        // sendQuotes modifies quotes array so gotta use a copy.
-        await sendQuotes([...quotes], interaction.channel)
-
-        if (quotes.length !== 10) {
-            return await interaction.channel.send(basicEmbed('End of the line!'))
-        }
-
-        await interaction.channel.send({
-            components: [row]
-        })
+        await updateQuotes(quotes, interaction, customId, skipAmount)
     }
 }
