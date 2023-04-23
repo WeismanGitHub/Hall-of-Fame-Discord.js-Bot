@@ -9,7 +9,6 @@ const {
     tagDescription,
     searchPhraseDescription,
     typeDescription,
-    limitDescription,
 } = require('../../descriptions');
 
 module.exports = {
