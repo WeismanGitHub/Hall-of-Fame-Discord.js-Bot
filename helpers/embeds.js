@@ -25,50 +25,63 @@ const notificationEmbed = function(title, body, color='#FFFE00') {
 
 // Multi-quote isn't separate embed because easier to determine what to do here than anywhere there could be a multi-quote.
 const quoteEmbed = function(quote, extraData, color='#8F00FF') { // color == purple
-	let tags = quote.tags.filter(x => x !== null).map(tag => tag)
-    tags = tags.length ? tags : ['no tags']
-	const colorChange = (color !== '#8F00FF')
-
-	const embed = new EmbedBuilder()
-	.setDescription(quote.text || '[No Text]')
-	.addFields({ name: 'Tags:', value: tags.join(', ') })
-	.addFields({ name: 'ID:', value: `${quote._id}` })
-	.setImage(quote.attachmentURL)
-	.setTimestamp(quote.createdAt)
-	.setFooter({ text: quote.attachmentURL ? 'image' : quote.type })
+	try {
+		let tags = quote.tags.filter(x => x !== null).map(tag => tag)
+		tags = tags.length ? tags : ['no tags']
+		const colorChange = (color !== '#8F00FF')
 	
-	if (quote.type == 'multi') {
-		const formattedFragments = extraData.map(fragment => { // Extra data is fragments.
-			return `${fragment.authorName}: ${fragment.text}`
-		}).join('\n')
-
-		embed.setTitle(quote.text)
-		embed.setDescription(formattedFragments)
-	} else {
-		const author = extraData // Extra data is author.
+		const embed = new EmbedBuilder()
+		.setDescription(quote.text || '[No Text]')
+		.addFields({ name: 'Tags:', value: tags.join(', ') })
+		.addFields({ name: 'ID:', value: `${quote._id}` })
+		.setImage(quote.attachmentURL)
+		.setTimestamp(quote.createdAt)
+		.setFooter({ text: quote.attachmentURL ? 'image' : quote.type })
 		
-		embed.setAuthor({ name: author.name, iconURL: author.iconURL || process.env.DEFAULT_ICON_URL })
-	}
-
-	if (!colorChange) {
-		switch (quote.type) {
-			case 'multi':
-				color = '#ff2e95' // pink
-				break;
-
-				case 'audio':
-				color = '#00A64A'// green
-				break;
-		}
-	}
-
-	if (quote.attachmentURL) {
-		color = '#FF7B00'// orange
-	}
+		if (quote.type == 'multi') {
+			const formattedFragments = extraData.map(fragment => { // Extra data is fragments.
+				return `${fragment.authorName}: ${fragment.text}`
+			}).join('\n')
 	
-	embed.setColor(color)
-
-	return { embeds: [embed] };
+			embed.setTitle(quote.text)
+			embed.setDescription(formattedFragments)
+		} else {
+			const author = extraData // Extra data is author.
+			
+			embed.setAuthor({ name: author.name, iconURL: author.iconURL || process.env.DEFAULT_ICON_URL })
+		}
+	
+		if (!colorChange) {
+			switch (quote.type) {
+				case 'multi':
+					color = '#ff2e95' // pink
+					break;
+	
+					case 'audio':
+					color = '#00A64A'// green
+					break;
+			}
+		}
+	
+		if (quote.attachmentURL) {
+			color = '#FF7B00'// orange
+		}
+		
+		embed.setColor(color)
+	
+		return { embeds: [embed] };
+	} catch(err) {
+		return {
+			embeds: [
+				new EmbedBuilder()
+				.setTitle(`Error in quote \`${quote._id}\``)
+				.setDescription(err.errors.map((error) => {
+					return String(error)
+				}).join('\n'))
+				.setColor('#FF0000') // red
+			],
+		};
+	}
 };
 
 const errorEmbed = function(error, title='Theres been an error!', color='#FF0000', ephemeral=false) {
