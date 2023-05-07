@@ -1,5 +1,4 @@
 const { getAuthorByName, getAuthorById } = require('../../../helpers/get-author');
-const { getLastQuoteId, getLastImage } = require('../../../helpers/get-last-item');
 const sendToQuotesChannel = require('../../../helpers/send-to-quotes-channel');
 const MultiQuoteSchema = require('../../../schemas/multi-quote-schema');
 const { NotFoundError, InvalidInputError } = require('../../../errors');
@@ -14,7 +13,6 @@ const {
     titleDescription,
     textDescription,
     idDescription,
-    lastQuoteDescription,
     removeTagsDescription,
     fragmentDescription,
     removeImageDescription,
@@ -30,11 +28,7 @@ module.exports = {
             .setDescription(idDescription)
             .setMaxLength(24)
             .setMinLength(24)
-        )
-        .addChannelOption(option => option
-            .setName('last_quote')
-            .setDescription(lastQuoteDescription)
-            .addChannelTypes(ChannelType.GuildText)
+            .setRequired(true)
         )
         .addStringOption(option => option
             .setName('new_title')
@@ -159,8 +153,7 @@ module.exports = {
             options.getString('third_tag'),
         ];
 
-        const lastQuoteChannel = options.getChannel('last_quote');
-        const id = options.getString('id') ?? await getLastQuoteId(lastQuoteChannel)
+        const id = options.getString('id')
         const newTitle = options.getString('new_title')
         const lastImageChannel = options.getChannel('last_image');
         const newImageLink = options.getString('new_image_link');

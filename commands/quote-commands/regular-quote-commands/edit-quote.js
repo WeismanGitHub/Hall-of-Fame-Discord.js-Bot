@@ -1,7 +1,7 @@
-const { getLastImage, getLastQuoteId } = require('../../../helpers/get-last-item');
 const { getAuthorByName, getAuthorById } = require('../../../helpers/get-author');
 const sendToQuotesChannel = require('../../../helpers/send-to-quotes-channel')
 const { InvalidInputError, NotFoundError } = require('../../../errors');
+const { getLastImage } = require('../../../helpers/get-last-item');
 const { SlashCommandBuilder, ChannelType } = require('discord.js');
 const QuoteSchema= require('../../../schemas/quote-schema');
 const { quoteEmbed } = require('../../../helpers/embeds');
@@ -28,11 +28,7 @@ module.exports = {
             .setDescription(idDescription)
             .setMaxLength(24)
             .setMinLength(24)
-        )
-        .addChannelOption(option => option
-            .setName('last_quote')
-            .setDescription(lastQuoteDescription)
-            .addChannelTypes(ChannelType.GuildText)
+            .setRequired(true)
         )
         .addStringOption(option => option
             .setName('new_author')
@@ -81,8 +77,7 @@ module.exports = {
 	execute: async (interaction) => {
         const { options } = interaction;
         const guildId  = interaction.guildId;
-        const lastQuoteChannel = options.getChannel('last_quote');
-        const id = options.getString('id') ?? await getLastQuoteId(lastQuoteChannel)
+        const id = options.getString('id')
         const tags = [
             options.getString('first_tag'),
             options.getString('second_tag'),

@@ -1,8 +1,7 @@
-const { idDescription, lastQuoteDescription } = require('../../descriptions');
-const { SlashCommandBuilder, ChannelType } = require('discord.js');
-const { getLastQuoteId } = require('../../helpers/get-last-item');
 const QuoteSchema = require('../../schemas/quote-schema');
+const { idDescription } = require('../../descriptions');
 const { basicEmbed } = require('../../helpers/embeds');
+const { SlashCommandBuilder } = require('discord.js');
 const { NotFoundError } = require('../../errors');
 
 module.exports = {
@@ -16,16 +15,11 @@ module.exports = {
             .setMaxLength(24)
             .setMinLength(24)
         )
-        .addChannelOption(option => option
-            .setName('last_quote')
-            .setDescription(lastQuoteDescription)
-            .addChannelTypes(ChannelType.GuildText)
-        )
+
 	,
 	execute: async (interaction) => {
         const { options } = interaction;
-        const lastQuoteChannel = options.getChannel('last_quote');
-        const id = options.getString('id') ?? await getLastQuoteId(lastQuoteChannel)
+        const id = options.getString('id')
         const guildId = interaction.guildId;
 
         const quote = await QuoteSchema.findOneAndDelete({ _id: id, guildId: guildId }).select('-_id text').lean()

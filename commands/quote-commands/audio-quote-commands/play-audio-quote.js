@@ -1,6 +1,5 @@
 const { InvalidInputError, NotFoundError, InvalidActionError } = require('../../../errors')
 const AudioQuoteSchema = require('../../../schemas/audio-quote-schema')
-const { getLastQuoteId } = require('../../../helpers/get-last-item')
 const { SlashCommandBuilder, ChannelType } = require('discord.js');
 const { getAuthorById } = require('../../../helpers/get-author');
 const { quoteEmbed } = require('../../../helpers/embeds');
@@ -44,13 +43,8 @@ module.exports = {
         const guildId = interaction.guildId;
         const { options } = interaction;
         
-        const lastQuoteChannel = options.getChannel('last_quote');
         const title = options.getString('title');
         let id = options.getString('id')
-
-        if (!id && !title) {
-            await getLastQuoteId(lastQuoteChannel)
-        }
         
         if (!title && !id) {
             throw new InvalidInputError('ID/Title')
