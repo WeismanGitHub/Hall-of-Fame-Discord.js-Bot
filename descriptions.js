@@ -34,7 +34,6 @@ module.exports = {
     lastImageDescription,
     idDescription,
     removeTagsDescription,
-    lastQuoteDescription,
     removeImageDescription,
     textDescription,
     nameDescription,
