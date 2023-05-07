@@ -48,28 +48,4 @@ async function getLastAudio(channel) {
     return firstAudioUrl
 }
 
-async function getLastQuoteId(channel) {
-    let firstQuoteId;
-
-    if (channel.type !== ChannelType.GuildText) {
-        throw new InvalidInputError('Channel')
-    }
-    
-    (await channel.messages.fetch({ limit: 50 }))
-    .find(message => message.embeds.find(embed => {
-        const _id = embed.fields[1]?.value
-        
-        if (ObjectId.isValid(_id)) {
-            firstQuoteId = _id
-            return true
-        }
-    }))
-
-    if (!firstQuoteId) {
-        throw new NotFoundError('Quote')
-    }
-
-    return firstQuoteId
-}
-
-module.exports = { getLastImage, getLastAudio, getLastQuoteId }
+module.exports = { getLastImage, getLastAudio }
