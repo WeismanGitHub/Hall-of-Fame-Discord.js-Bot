@@ -7,7 +7,8 @@
   ## [Web Dashboard Link](https://hall-of-fame-discordjs-bot.weisman.repl.co/)
   
   ## Description
-  A hall of fame bot with 28 commands that allow you save text, images, and audio. This bot's purpose is to allow users to organize memorable moments so they can be easily classified and accessed with authors, tags, types, text, and more. Use the web dashboard as an easier alternative. Authors and tags must be defined before creating a quote.
+  In this project, I designed and developed a comprehensive "Hall of Fame" bot, equipped with 28 commands, enabling users to capture and organize memorable moments in various formats such as text, images, and audio. The bot's primary objective is to provide users with a seamless experience in saving and categorizing cherished memories, making them easily accessible through attributes like authors, tags, types, and text. To facilitate user interaction, a user-friendly web dashboard serves as a convenient alternative to interacting with the bot directly, which necessitated the creation of a robust API.
+
   <hr class="rounded">
   
   ## Web Dashboard
